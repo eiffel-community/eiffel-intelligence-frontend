@@ -26,18 +26,27 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.sun.glass.ui.Application;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
 public class SubscriptionFilesController {
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
 	
 	@Value("${ei.subscriptionFilePath}") private String subscriptionFilePath;
     private static final String APPLICATION_JSON = "application/json";
@@ -45,9 +54,11 @@ public class SubscriptionFilesController {
     
     @RequestMapping(value = "/download/subscriptiontemplate", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public @ResponseBody void getSubscriptionJsonTemplate(HttpServletResponse response) throws IOException {
-        File file = getFile(subscriptionFilePath);
-        InputStream in = new FileInputStream(file);
 
+    	Resource resource = resourceLoader.getResource("classpath:" + subscriptionFilePath);
+    	File file = resource.getFile();
+    	InputStream in = new FileInputStream(file);
+    	
         response.setContentType(APPLICATION_JSON);
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
         response.setHeader("Content-Length", String.valueOf(file.length()));
