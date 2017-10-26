@@ -361,12 +361,49 @@ $(document).ready(function() {
     	event.stopPropagation();
         event.preventDefault();
         
-        function validateSubscriptionFormat(subscriptionFile) {
+        function tryToCreateSubscription(subscriptionJson) {
         	// Send Subscription JSON file to Spring MVC
-        	
+            // AJAX Callback handling
+            var callback = {
+                beforeSend : function () {
+                },
+                success : function (data, textStatus) {
+
+                    var returnData = [data];
+                    if (returnData.length > 0) {
+                        $.jGrowl("Successful created subscription " + subscriptionJson.subscriptionName, {
+                            sticky : false,
+                            theme : 'Error'
+                        });
+                        reload_table();
+                    }
+
+                },
+                error : function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    $.jGrowl("Failed to create Subscription: " + subscriptionJson.subscriptionName + " Error: " + XMLHttpRequest.responseText, {
+                        sticky : false,
+                        theme : 'Error'
+                    });
+
+                },
+                complete : function () {
+                }
+            };
+
+            // Fetch Date and format
+            var now = new Date();
+            var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
+
+            // Update property created with datetime (formatted)
+            subscriptionJson.created = String(nowStr);
+
+            // Perform AJAX
+            var ajaxHttpSender = new AjaxHttpSender();
+            ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
         }
         
-        function validateJsonandSubscriptionFormat(subscriptionFile){
+        function validateJsonAndCreateSubscriptions(subscriptionFile){
         	
             var reader = new FileReader();
             
@@ -386,7 +423,10 @@ $(document).ready(function() {
                 theme : 'Notify'
             });  
             
-              validateSubscriptionFormat(subscriptionFile);
+            var subscriptionJsonList = JSON.parse(fileContent);
+            for (i=0; i < subscriptionJsonList.length; i++) {
+            	tryToCreateSubscription(subscriptionJsonList[i]);
+            }
             };
             
             reader.readAsText(subscriptionFile);
@@ -411,7 +451,7 @@ $(document).ready(function() {
             // All other Web Browser
             pom.onchange = function uploadFinished() {
             	var subscriptionFile = pom.files[0];
-        		validateJsonandSubscriptionFormat(subscriptionFile);
+            	validateJsonAndCreateSubscriptions(subscriptionFile);
         	};
 
             if (document.createEvent) {
