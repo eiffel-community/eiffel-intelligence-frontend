@@ -33,6 +33,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class SubscriptionFilesController {
@@ -42,7 +44,7 @@ public class SubscriptionFilesController {
 
     
     @RequestMapping(value = "/download/subscriptiontemplate", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public @ResponseBody void downloadA(HttpServletResponse response) throws IOException {
+    public @ResponseBody void getSubscriptionJsonTemplate(HttpServletResponse response) throws IOException {
         File file = getFile(subscriptionFilePath);
         InputStream in = new FileInputStream(file);
 
@@ -51,6 +53,13 @@ public class SubscriptionFilesController {
         response.setHeader("Content-Length", String.valueOf(file.length()));
         FileCopyUtils.copy(in, response.getOutputStream());
     }
+    
+    
+//    @RequestMapping(value = "/upload/subscriptions", method = RequestMethod.GET, produces = APPLICATION_JSON)
+//    public @ResponseBody void validateAndCreateSubscriptions(@RequestBody File subscriptionJsonFile) throws IOException {
+//    	
+//
+//    }
 
     
     private File getFile(String filePath) throws FileNotFoundException {
