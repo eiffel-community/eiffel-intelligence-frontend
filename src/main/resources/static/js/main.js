@@ -459,8 +459,12 @@ $(document).ready(function() {
         var indexToRemove = context.$index();
         
         // Removing Requirement(Condition), based on index position, from Requirement form in Add_Subscription window.
-        vm.subscription()[0].requirements.splice(indexToRemove,1);
-
+        if (indexToRemove > 0 ){
+          vm.subscription()[0].requirements.splice(indexToRemove,1);
+        }
+        else {
+          $.alert("You need to have atleast one Condition.");
+        }
     });
     // /Stop ## Delete Condition ################################################
 
