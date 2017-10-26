@@ -1,3 +1,11 @@
+/***********************************************************************
+ *                                                                     *
+ * Copyright Ericsson AB 2017                                          *
+ *                                                                     * 
+ * No part of this software may be reproduced in any form without the  *   
+ * written permission of the copyright owner.                          *             
+ *                                                                     *
+ ***********************************************************************/
 package com.ericsson.ei.frontend;
 
 import java.io.File;
