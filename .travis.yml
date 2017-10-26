@@ -1,0 +1,14 @@
+sudo: required
+
+language: java
+
+services: 
+
+jdk:
+  - oraclejdk8
+  
+before_install:
+  - chmod +x pom.xml
+  
+script:
+  - mvn -DskipTests
