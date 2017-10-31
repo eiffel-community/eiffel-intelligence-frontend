@@ -16,16 +16,27 @@
 */  
 package com.ericsson.ei.frontend;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.omg.IOP.Encoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -37,7 +48,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.io.CharStreams;
 import com.sun.glass.ui.Application;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -48,29 +61,31 @@ public class SubscriptionFilesController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
+	@Autowired
+	ServletContext servletContext;
+	
 	@Value("${ei.subscriptionFilePath}") private String subscriptionFilePath;
     private static final String APPLICATION_JSON = "application/json";
 
     
     @RequestMapping(value = "/download/subscriptiontemplate", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public @ResponseBody void getSubscriptionJsonTemplate(HttpServletResponse response) throws IOException {
+    public void getSubscriptionJsonTemplate(HttpServletResponse response) throws IOException {
 
-    	Resource resource = resourceLoader.getResource("classpath:" + subscriptionFilePath);
-    	File file = resource.getFile();
-    	InputStream in = new FileInputStream(file);
+    	InputStream is = null;
+    	try {
+    		is = getClass().getResourceAsStream("/subscriptionsTemplate.json");
+    	} catch (NullPointerException e) {
+    		System.out.println("ERROR: " + e.getMessage());
+    	}
+        
+    	try {
+    		IOUtils.copy(is, response.getOutputStream());
+    		response.getOutputStream().flush();
+    	} catch (IOException e) {
+    		System.out.println("Error :- " + e.getMessage());
+    	}
     	
-        response.setContentType(APPLICATION_JSON);
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-        response.setHeader("Content-Length", String.valueOf(file.length()));
-        FileCopyUtils.copy(in, response.getOutputStream());
     }
-    
-    
-//    @RequestMapping(value = "/upload/subscriptions", method = RequestMethod.GET, produces = APPLICATION_JSON)
-//    public @ResponseBody void validateAndCreateSubscriptions(@RequestBody File subscriptionJsonFile) throws IOException {
-//    	
-//
-//    }
 
     
     private File getFile(String filePath) throws FileNotFoundException {
