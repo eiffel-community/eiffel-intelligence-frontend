@@ -41,7 +41,8 @@
 
     <div class="container">
         <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${backendServiceUrl}"></span>)
-        <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button" id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status</button>        
+        <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button" id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status</button>
+        <button data-toggle="tooltip" title="Eiffel intelligence instance information" type="button" id="btnInfo" class="btn btnEIInstanceInfo"><i class="glyphicon"></i> EI Info</button>
         </h1>
 		
 		
@@ -173,6 +174,12 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<div id = "modal_info" class="modal_instance">
+    <div class="modal_info-content">
+        <span class="close_instance">&times;</span>
+        <p id="info_text" type="application/json"></p>
+    </div>
+</div>
 <!-- End Bootstrap modal -->
 
 
