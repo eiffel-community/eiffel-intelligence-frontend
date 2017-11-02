@@ -55,7 +55,7 @@ $(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
-    
+    var checkEiBackend = false;
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
@@ -74,14 +74,31 @@ $(document).ready(function() {
 //                  	console.log("EI BACKEND ONLINE");
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
+                  		checkEiBackend=true;
                   },
     		      complete: function (XMLHttpRequest, textStatus) {
     		      }
     		   });
 
     }
+    function getInstanceInfo() {
+        var text = document.getElementById('info_text');
+        $.ajax({
+              url: backendServiceUrl + "/information",
+              contentType : 'application/json;charset=UTF-8',
+              type: 'GET',
+              error : function (XMLHttpRequest, textStatus, errorThrown) {
+                      document.getElementById('info_text').innerHTML = errorThrown;
+              },
+              success : function (data, textStatus, xhr) {
 
-    
+              },
+        	  complete: function (XMLHttpRequest, textStatus) {
+        	            var s = JSON.parse(XMLHttpRequest.responseText);
+                        text.innerHTML = JSON.stringify(s,undefined, 2);
+              }
+              });
+    }
     // Check if EI Backend Server is online every X seconds
     window.setInterval(function(){
     	checkEiBackendServer();
@@ -94,6 +111,23 @@ $(document).ready(function() {
         event.preventDefault();
 
         checkEiBackendServer();
+    });
+
+    $('.container').on( 'click', 'button.btnEIInstanceInfo', function () {
+    if(checkEiBackend){
+       getInstanceInfo();
+       var modal = document.getElementById('modal_info');
+       var span = document.getElementsByClassName("close_instance")[0];
+       modal.style.display = "block";
+       span.onclick = function() {
+            modal.style.display = "none";
+       }
+       window.onclick = function(event) {
+       if (event.target == modal) {
+           modal.style.display = "none";
+       }}}else{
+         alert("EI BACKEND OFFLINE");
+    }
     });
     // END OF EI Backend Server check ######################################### 
     
