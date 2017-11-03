@@ -194,19 +194,51 @@ jQuery(document).ready(function() {
         self.repeat_in  = ko.observableArray([true, false]);
 
 
+        self.add_requirement = function(data, event) {
 
-        // removeSelected_cc_decision_cni_in_list
-        self.add_conditions_test = function(item) {
+            var conditions_array = [];
+            conditions_array.push(new jmespath_model({"jmespath": ko.observable("")}));
+            self.subscription()[0].requirements().push(new conditions_model(conditions_array));
 
-            self.subscription()[0].requirements()[0].conditions().push(new jmespath_model({"jmespath": ko.observable("cc")}));
-
-            console.log(ko.toJSON(self.subscription()[0].requirements()[0].conditions()));
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
 
             self.subscription.valueHasMutated();
 
         };
 
-    };
+
+
+        self.add_condition = function(data, event, requirement_index) {
+
+            self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().push(new jmespath_model({"jmespath": ko.observable("")}));
+
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+
+            self.subscription.valueHasMutated();
+        };
+
+
+        self.delete_condition = function (data, event, requirement_item , condition_index, requirement_index) {
+
+            self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions.remove(data);
+            if(self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().length <= 0)
+            {
+                self.subscription()[0].requirements.remove(self.subscription()[0].requirements()[ko.toJSON(requirement_index)]);
+            }
+
+        };
+
+
+
+
+    };// var SubscriptionViewModel = function(){
+
 
     // Apply bindings
     var vm = new SubscriptionViewModel();
@@ -523,6 +555,7 @@ jQuery(document).ready(function() {
     // /END ## upload_subscriptions #################################################
     
     // /Start ## Add Condition ##############################################
+   /*
     $('div.modal-content').on( 'click', 'button.add_condition', function (event) {
 
     	event.stopPropagation();
@@ -535,38 +568,16 @@ jQuery(document).ready(function() {
     					  }
     			      ]
     				}
-*/
+*
         var condition = {
                     "jmespath" : ko.observable("test")
         }
-
-        //var nisse = [];
-        //nisse.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
-
-        //new conditions_model(nisse);
-
-        //new conditions_model(new jmespath_model({"jmespath": ko.observable(jmespath_temp)})
-
-        // Not sure if its correct to use index 0(zero) here,, is it correct??
-        //vm.subscription()[0].requirements.conditions.push(condition);
-
-        //vm.subscription()[0].requirements.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
-
-        //vm.subscription()[0].requirements[0].conditions.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
-
-        //vm.subscription()[0].requirements[0].push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
-
-
-       // vm.subscription()[0].requirements.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
-
-        //vm.subscription()[0].requirements[0].conditions.push([new jmespath_model({"jmespath": ko.observable("")})]);
-
 
 
 
         vm.subscription()[0].requirements()[0].conditions().push(new jmespath_model({"jmespath": ko.observable("cc")}));
 
-        //vm.subscription()[0].requirements()[0].conditions().push({"jmespath": ko.observable("cc")});
+        vm.subscription()[0].requirements()[0].conditions().push({"jmespath": ko.observable("cc")});
 
 
 
@@ -581,12 +592,13 @@ jQuery(document).ready(function() {
        // ko.cleanNode(document.getElementById(element_id))
        // ko.applyBindings(viewModel, document.getElementById(element_id))
 
-    });
+    });*/
     // /Stop ## Add Condition ################################################
 
 
     // /Start ## Delete Condition ##############################################
-    $('div.modal-content').on( 'click', 'button.condition_delete', function (event) {
+    /* $('div.modal-content').on( 'click', 'button.condition_delete', function (event) {
+
 
     	event.stopPropagation();
         event.preventDefault();
@@ -601,7 +613,7 @@ jQuery(document).ready(function() {
         else {
           $.alert("You need to have atleast one Condition.");
         }
-    });
+    });*/
     // /Stop ## Delete Condition ################################################
 
     
@@ -673,18 +685,8 @@ jQuery(document).ready(function() {
 
                     // Map JSON to Model and observableArray
                     var mappedPackageInfo = $.map(returnData, function (item) {
-                    	
+
                     	// Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
-                        /*
-                        for (i=0; i < item[0].requirements.length; i++){
-                            var jmespath_temp = item[0].requirements[i].conditions[0].jmespath;
-                            item[0].requirements[i].conditions[0] = {"jmespath" : ko.observable(jmespath_temp)};
-                            
-                            var type_temp = item[0].requirements[i].type;
-                            item[0].requirements[i].type = ko.observable(type_temp);
-                        }*/
-
-
 
                         for (i=0; i < item[0].requirements.length; i++) {
 
@@ -695,16 +697,6 @@ jQuery(document).ready(function() {
                               var jmespath_temp = item[0].requirements[i].conditions[k].jmespath;
 
                                 conditions_array.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
-
-                                //item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)};
-
-                                //item[0].requirements[i].conditions.push([{"jmespath": ko.observable(jmespath_temp)}])
-
-                                //item[0].requirements[i].conditions.push(item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)});
-
-                                //item[0].requirements[i] = {"conditions": ko.observableArray([item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)}])};
-
-                                //item[0].requirements[i] = {"conditions": ko.observableArray([item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)}])};
 
                             }
 

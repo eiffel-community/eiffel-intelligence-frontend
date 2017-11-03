@@ -77,7 +77,7 @@
                     <input type="hidden" value="" name="id" />
                     <div class="form-body">
 
-                        <!-- ko foreach:  $root.subscription() -->
+                        <!-- ko foreach:  subscription -->
                         <div class="form-group">
                             <label class="control-label col-md-3">SubscriptionName</label>
                             <div class="col-md-9">
@@ -134,40 +134,28 @@
                             </div>
                         </div>
 
-                                <!-- ko foreach: $data.requirements() -->
+                                <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Requirements</label>
                                         <div class="col-md-9">
 
-                                            <!-- ko foreach: $data.conditions() -->
+                                            <!-- ko foreach: requirements_item.conditions -->
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Conditions</label>
                                                 <div class="col-md-9">
-                                                 <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
-                                                 <span class="help-block"></span>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3"></label>
-                                                <div class="col-md-9">
-                                                    <button data-toggle="tooltip" title="Delete condition" class="btn btn-danger condition_delete" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
+                                                 <p data-bind="text: $parentContext.$index() + ':' + $index()"></p>
+                                                    <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
+                                                    <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false" data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
                                                     <span class="help-block"></span>
                                                 </div>
                                             </div>
 
 
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3"></label>
-                                                <div class="col-md-9">
-                                                    <button data-bind="click: $root.add_conditions_test, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Condition  XX</button>
-                                                    <span class="help-block"></span>
-                                                </div>
-                                            </div>
                                             <!-- /ko -->
 	
                                          </div>
 
+                                    <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
 
 
 
@@ -175,8 +163,8 @@
                                 </div>
                                 <!-- /ko -->
                                 <div class="container">
-                              		<button data-toggle="tooltip" title="Add a new condition" class="btn btn-success add_condition"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
-							    </div>
+                                    <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Requirement</button>
+                                </div>
 
 
                         <!-- /ko -->
@@ -207,109 +195,6 @@
 </div>
 
 
-<!-- ko foreach:  $root.subscription() -->
-<div class="form-group">
-    <label class="control-label col-md-3">SubscriptionName</label>
-    <div class="col-md-9">
-        <input data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName" name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text" />
-        <span class="help-block"></span>
-    </div>
-</div>
-<div class="form-group" data-bind="visible: created()">
-    <label class="control-label col-md-3">Created</label>
-    <div class="col-md-9">
-        <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.created" name="created" placeholder="created" class="form-control" type="text" />
-        <span class="help-block"></span>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-md-3">Type</label>
-    <div class="col-md-9">
-        <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype" name="aggregationtype" placeholder="aggregation_type" class="form-control" type="text" />
-        <span class="help-block"></span>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-md-3">NotificationType</label>
-    <div class="col-md-9">
-        <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
-                                               optionsText: 'text',
-                                               optionsValue: 'value',
-                                               value: $data.notificationType,
-                                               optionsCaption: 'Choose...'"></select>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-md-3">NotificationMeta</label>
-    <div class="col-md-9">
-        <input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />
-        <span class="help-block"></span>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-md-3">Repeat</label>
-    <div class="col-md-9">
-        <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
-                                               optionsText: $data.repeat(),
-                                               value: $data.repeat,
-                                               optionsCaption: 'Choose...'"></select>
-        <span class="help-block"></span>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-md-3">NotificationMessage</label>
-    <div class="col-md-9">
-        <input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
-        <span class="help-block"></span>
-    </div>
-</div>
-
-<!-- ko foreach: $data.requirements() -->
-<div class="form-group">
-    <label class="control-label col-md-3">Requirements</label>
-    <div class="col-md-9">
-
-        <!-- ko foreach: $data.conditions() -->
-        <div class="form-group">
-            <label class="control-label col-md-3">Conditions</label>
-            <div class="col-md-9">
-                <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
-                <span class="help-block"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="col-md-9">
-                <button data-toggle="tooltip" title="Delete condition" class="btn btn-danger condition_delete" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
-                <span class="help-block"></span>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="col-md-9">
-                <button data-bind="click: $root.add_conditions_test, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Condition  XX</button>
-                <span class="help-block"></span>
-            </div>
-        </div>
-        <!-- /ko -->
-
-    </div>
-
-
-
-
-
-</div>
-<!-- /ko -->
-<div class="container">
-    <button data-toggle="tooltip" title="Add a new condition" class="btn btn-success add_condition"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
-</div>
-
-
-<!-- /ko -->
 
 
 </body>
