@@ -4,7 +4,7 @@ var table;
 var backendServiceUrl;
 var subscriptionTemplateFile;
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
 
 
     /*
@@ -134,10 +134,16 @@ $(document).ready(function() {
         	}
         });
     }
-    
+
+
+
 
     function conditions_model(condition){
-        this.jmepath = ko.observable(condition.conditions.jmepath);
+        this.conditions = ko.observableArray(condition);
+    }
+
+    function jmespath_model(jmespath){
+        this.jmespath = ko.observable(jmespath.jmespath);
     }
 
 
@@ -152,6 +158,19 @@ $(document).ready(function() {
         		]);
 
         self.repeat_in  = ko.observableArray([true, false]);
+
+
+
+        // removeSelected_cc_decision_cni_in_list
+        self.add_conditions_test = function(item) {
+
+            self.subscription()[0].requirements()[0].conditions().push(new jmespath_model({"jmespath": ko.observable("cc")}));
+
+            console.log(ko.toJSON(self.subscription()[0].requirements()[0].conditions()));
+
+            self.subscription.valueHasMutated();
+
+        };
 
     };
 
@@ -435,16 +454,59 @@ $(document).ready(function() {
     	event.stopPropagation();
         event.preventDefault();
     	            
-        var condition = {
+        /*var condition = {
     				  "conditions" : [
     					  {
     						  "jmespath" : ko.observable("")
     					  }
     			      ]
     				}
-                
+*/
+        var condition = {
+                    "jmespath" : ko.observable("test")
+        }
+
+        //var nisse = [];
+        //nisse.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
+
+        //new conditions_model(nisse);
+
+        //new conditions_model(new jmespath_model({"jmespath": ko.observable(jmespath_temp)})
+
         // Not sure if its correct to use index 0(zero) here,, is it correct??
-        vm.subscription()[0].requirements.push(condition);
+        //vm.subscription()[0].requirements.conditions.push(condition);
+
+        //vm.subscription()[0].requirements.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
+
+        //vm.subscription()[0].requirements[0].conditions.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
+
+        //vm.subscription()[0].requirements[0].push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
+
+
+       // vm.subscription()[0].requirements.push([new conditions_model([new jmespath_model({"jmespath": ko.observable("")})])]);
+
+        //vm.subscription()[0].requirements[0].conditions.push([new jmespath_model({"jmespath": ko.observable("")})]);
+
+
+
+
+        vm.subscription()[0].requirements()[0].conditions().push(new jmespath_model({"jmespath": ko.observable("cc")}));
+
+        //vm.subscription()[0].requirements()[0].conditions().push({"jmespath": ko.observable("cc")});
+
+
+
+        console.log(ko.toJSON(vm.subscription()[0].requirements()[0].conditions()));
+
+        vm.subscription.valueHasMutated();
+
+
+        //var vm = new SubscriptionViewModel();
+        //ko.applyBindings(vm);
+
+       // ko.cleanNode(document.getElementById(element_id))
+       // ko.applyBindings(viewModel, document.getElementById(element_id))
+
     });
     // /Stop ## Add Condition ################################################
 
@@ -535,15 +597,45 @@ $(document).ready(function() {
                     var mappedPackageInfo = $.map(returnData, function (item) {
                     	
                     	// Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
+                        /*
                         for (i=0; i < item[0].requirements.length; i++){
                             var jmespath_temp = item[0].requirements[i].conditions[0].jmespath;
                             item[0].requirements[i].conditions[0] = {"jmespath" : ko.observable(jmespath_temp)};
                             
                             var type_temp = item[0].requirements[i].type;
                             item[0].requirements[i].type = ko.observable(type_temp);
-                        }
-                    	
+                        }*/
+
+
+
+                        for (i=0; i < item[0].requirements.length; i++) {
+
+                            var conditions_array = [];
+
+                            for (k = 0; k < item[0].requirements[i].conditions.length; k++) {
+
+                              var jmespath_temp = item[0].requirements[i].conditions[k].jmespath;
+
+                                conditions_array.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
+
+                                //item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)};
+
+                                //item[0].requirements[i].conditions.push([{"jmespath": ko.observable(jmespath_temp)}])
+
+                                //item[0].requirements[i].conditions.push(item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)});
+
+                                //item[0].requirements[i] = {"conditions": ko.observableArray([item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)}])};
+
+                                //item[0].requirements[i] = {"conditions": ko.observableArray([item[0].requirements[i].conditions[k] = {"jmespath": ko.observable(jmespath_temp)}])};
+
+                            }
+
+                            item[0].requirements[i] = new conditions_model(conditions_array);
+
+                         }
                         return new subscription_model(item[0]);
+
+
                     });
 
                     // Load data into observable array
@@ -620,7 +712,8 @@ $(document).ready(function() {
             });
             return;
         }
-        
+
+        /*
         var requirementsArray = vm.subscription()[0].requirements();
         for (i=0; i < requirementsArray.length; i++){
         	if (requirementsArray[i].conditions[0].jmespath() == "") {
@@ -630,7 +723,7 @@ $(document).ready(function() {
             	});
             	return;
         	}
-        }
+        }*/
         //END: Check of other subscription fields values
 
         var id = ko.toJSON(vm.subscription()[0].subscriptionName).trim();
