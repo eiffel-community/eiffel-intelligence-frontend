@@ -55,7 +55,7 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
-    
+    var checkEiBackend = false;
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
@@ -74,14 +74,31 @@ jQuery(document).ready(function() {
 //                  	console.log("EI BACKEND ONLINE");
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
+                  		checkEiBackend=true;
                   },
     		      complete: function (XMLHttpRequest, textStatus) {
     		      }
     		   });
 
     }
+    function getInstanceInfo() {
+        var text = document.getElementById('info_text');
+        $.ajax({
+              url: backendServiceUrl + "/information",
+              contentType : 'application/json;charset=UTF-8',
+              type: 'GET',
+              error : function (XMLHttpRequest, textStatus, errorThrown) {
+                      document.getElementById('info_text').innerHTML = errorThrown;
+              },
+              success : function (data, textStatus, xhr) {
 
-    
+              },
+        	  complete: function (XMLHttpRequest, textStatus) {
+        	            var s = JSON.parse(XMLHttpRequest.responseText);
+                        text.innerHTML = JSON.stringify(s,undefined, 2);
+              }
+              });
+    }
     // Check if EI Backend Server is online every X seconds
     window.setInterval(function(){
     	checkEiBackendServer();
@@ -94,6 +111,23 @@ jQuery(document).ready(function() {
         event.preventDefault();
 
         checkEiBackendServer();
+    });
+
+    $('.container').on( 'click', 'button.btnEIInstanceInfo', function () {
+    if(checkEiBackend){
+       getInstanceInfo();
+       var modal = document.getElementById('modal_info');
+       var span = document.getElementsByClassName("close_instance")[0];
+       modal.style.display = "block";
+       span.onclick = function() {
+            modal.style.display = "none";
+       }
+       window.onclick = function(event) {
+       if (event.target == modal) {
+           modal.style.display = "none";
+       }}}else{
+         alert("EI BACKEND OFFLINE");
+    }
     });
     // END OF EI Backend Server check ######################################### 
     
@@ -380,12 +414,49 @@ jQuery(document).ready(function() {
     	event.stopPropagation();
         event.preventDefault();
         
-        function validateSubscriptionFormat(subscriptionFile) {
+        function tryToCreateSubscription(subscriptionJson) {
         	// Send Subscription JSON file to Spring MVC
-        	
+            // AJAX Callback handling
+            var callback = {
+                beforeSend : function () {
+                },
+                success : function (data, textStatus) {
+
+                    var returnData = [data];
+                    if (returnData.length > 0) {
+                        $.jGrowl("Successful created subscription " + subscriptionJson.subscriptionName, {
+                            sticky : false,
+                            theme : 'Error'
+                        });
+                        reload_table();
+                    }
+
+                },
+                error : function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    $.jGrowl("Failed to create Subscription: " + subscriptionJson.subscriptionName + " Error: " + XMLHttpRequest.responseText, {
+                        sticky : false,
+                        theme : 'Error'
+                    });
+
+                },
+                complete : function () {
+                }
+            };
+
+            // Fetch Date and format
+            var now = new Date();
+            var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
+
+            // Update property created with datetime (formatted)
+            subscriptionJson.created = String(nowStr);
+
+            // Perform AJAX
+            var ajaxHttpSender = new AjaxHttpSender();
+            ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
         }
         
-        function validateJsonandSubscriptionFormat(subscriptionFile){
+        function validateJsonAndCreateSubscriptions(subscriptionFile){
         	
             var reader = new FileReader();
             
@@ -405,7 +476,10 @@ jQuery(document).ready(function() {
                 theme : 'Notify'
             });  
             
-              validateSubscriptionFormat(subscriptionFile);
+            var subscriptionJsonList = JSON.parse(fileContent);
+            for (i=0; i < subscriptionJsonList.length; i++) {
+            	tryToCreateSubscription(subscriptionJsonList[i]);
+            }
             };
             
             reader.readAsText(subscriptionFile);
@@ -430,7 +504,7 @@ jQuery(document).ready(function() {
             // All other Web Browser
             pom.onchange = function uploadFinished() {
             	var subscriptionFile = pom.files[0];
-        		validateJsonandSubscriptionFormat(subscriptionFile);
+            	validateJsonAndCreateSubscriptions(subscriptionFile);
         	};
 
             if (document.createEvent) {
@@ -521,8 +595,12 @@ jQuery(document).ready(function() {
         var indexToRemove = context.$index();
         
         // Removing Requirement(Condition), based on index position, from Requirement form in Add_Subscription window.
-        vm.subscription()[0].requirements.splice(indexToRemove,1);
-
+        if (indexToRemove > 0 ){
+          vm.subscription()[0].requirements.splice(indexToRemove,1);
+        }
+        else {
+          $.alert("You need to have atleast one Condition.");
+        }
     });
     // /Stop ## Delete Condition ################################################
 
