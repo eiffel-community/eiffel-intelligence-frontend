@@ -14,7 +14,6 @@
                             "jmespath" : ""
                         }
                     ],
-                    "type" : ""
                 }
             ],
             "subscriptionName" : ""

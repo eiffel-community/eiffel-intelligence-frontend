@@ -33,13 +33,14 @@
 
     </head>
 <body>
+
 <div class="hidden" id="backendServiceUrl" th:text="${backendServiceUrl}"></div>
 <div class="hidden" id="subscriptionTemplate" th:text="${subscriptionTemplate}"></div>
 
 <script type="text/javascript" src="resources\subscription_templates.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 
-    <div class="container">
+<div class="container">
         <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${backendServiceUrl}"></span>)
         <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button" id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status</button>
         <button data-toggle="tooltip" title="Eiffel intelligence instance information" type="button" id="btnInfo" class="btn btnEIInstanceInfo"><i class="glyphicon"></i> EI Backend Instance Info</button>
@@ -134,7 +135,9 @@
                             </div>
                         </div>
 
-                                <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
+                        <img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/>
+
+                        <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Requirements</label>
                                         <div class="col-md-9">
@@ -143,7 +146,6 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Conditions</label>
                                                 <div class="col-md-9">
-                                                 <p data-bind="text: $parentContext.$index() + ':' + $index()"></p>
                                                     <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
                                                     <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false" data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
                                                     <span class="help-block"></span>
@@ -155,7 +157,13 @@
 	
                                          </div>
 
-                                    <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3"></label>
+                                        <div class="col-md-9">
+                                            <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
 
 
 
@@ -163,7 +171,7 @@
                                 </div>
                                 <!-- /ko -->
                                 <div class="container">
-                                    <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Requirement</button>
+                                    <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Requirement</button>
                                 </div>
 
 
@@ -188,12 +196,12 @@
 <!-- End Bootstrap modal -->
 
 
+<!--
   <code class="hint mt15">DEBUG INFO</code>
 <div data-bind = "visible: subscription().length > 0" >
     <p data-bind="text: ko.toJSON(subscription())"></p>
-    <!--<p data-bind="text: ko.toJSON(subscription().requirements)"></p>-->
 </div>
-
+-->
 
 
 
