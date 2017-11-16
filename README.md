@@ -15,12 +15,19 @@
    limitations under the License.
 --->
 
-# Eiffel Intelligence
-Eiffel Intelligence is a real time data aggregation and analysis solution for Eiffel events. While Eiffel represents an event based architecture, Eiffel Intelligence addresses the need of stakeholders to view the current state of the system by bridging the divide from immutable events to mutable state representation.
+# Eiffel Intelligence Frontend
+Eiffel Intelligence Frontend is part of the [Eiffel Intelligence](https://github.com/Ericsson/eiffel-intelligence) implementation of [Eiffel](https://github.com/Ericsson/eiffel). Eiffel Intelligence Frontend allows the configuration of subscription and aggregation rules in Eiffel Intelligence.
+
+Potential future features for Eiffel Intelligence Frontend include:
+* Real time testing of aggregation models for new bounded contexts
+* Web hooks
+* Much more
+
+Join the development and contribute, or simply post a new [Issue](https://github.com/Ericsson/eiffel-intelligence-frontend/issues) with your ideas or requests for functionality!
 
 This repository contains a software implementation based on the Eiffel protocol. For more information on Eiffel, its vocabulary, descriptions, guides and schemas, please see [the Eiffel repository](https://github.com/Ericsson/eiffel). For news, discussions and questions, please visit the [Eiffel Community Google group](https://groups.google.com/forum/#!forum/eiffel-community).
 
-Eiffel Intelligence is licensed under the [Apache License 2.0](./LICENSE).
+Eiffel Intelligence Frontend is licensed under the [Apache License 2.0](./LICENSE).
 
 ## How to Propose Changes
 
@@ -72,4 +79,3 @@ When John Doe makes a subsequent contribution the following year, the notice wil
 
 > Copyright 2017-2018 Ericsson AB and others.  
 > For a full list of individual contributors, please see the commit history.
-
