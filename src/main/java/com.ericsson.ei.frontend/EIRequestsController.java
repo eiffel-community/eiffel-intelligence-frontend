@@ -31,9 +31,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.apache.http.impl.client.HttpClients;
+
 
 //import reactor.core.publisher.Mono;
 
@@ -96,13 +101,13 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information" }, method = RequestMethod.GET)
     public ResponseEntity<?> getRequests(Model model, HttpServletRequest request) {
-    	System.out.println("Get Subscriptions with method GET.");
+    	System.out.println("Request with method GET.");
     	String eiBackendAddressSuffix = request.getServletPath();
     	System.out.println("URL suffix received: " + eiBackendAddressSuffix);
     	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
     	System.out.println("New EI request URL: " + newRequestUrl);
 
-    	HttpClient client = new DefaultHttpClient();
+    	HttpClient client = HttpClients.createDefault();
     	HttpGet eiRequest = new HttpGet(newRequestUrl);
 
     	String JsonContent = "";
@@ -131,18 +136,68 @@ public class EIRequestsController {
     }
 
 
-//	
-//    /**
-//     * Takes the subscription rules, the name for subscription and the user name of the person registering this subscription and saves the subscription in subscription database. The name needs to be unique.
-//     * 
-//     */
-//	@CrossOrigin
-//	@RequestMapping(value = "", method = RequestMethod.POST)
-//	public ResponseEntity<?> createSubscription(HttpServletResponse response,
-//			HttpServletRequest request) {
-//		 return new ResponseEntity<>(response, HttpStatus.OK);
-//				 //"redirect:" + eiBackendServiceAddress;
-//	}
+	
+    /**
+     * Bridge all EI Http Requests with POST method. E.g. Making Create Subscription Request.
+     * 
+     */
+	@CrossOrigin
+	@RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
+	public ResponseEntity<?> createSubscription(Model model, HttpServletRequest request) {
+		
+    	System.out.println("Request with method POST.");
+    	String eiBackendAddressSuffix = request.getServletPath();
+    	System.out.println("URL suffix received: " + eiBackendAddressSuffix);
+    	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
+    	System.out.println("New EI request URL: " + newRequestUrl);
+    	
+    	String inputReqJsonContent = "";
+    	try {
+    		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
+    		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
+    			inputReqJsonContent += line;
+    		}
+    		inputBufReader.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println("ERROR CLIENT: " + e);
+    	}
+
+    	System.out.println("Request JSON Content: " + inputReqJsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+    	
+    	
+    	HttpClient client = HttpClients.createDefault();
+    	HttpPost eiRequest = new HttpPost(newRequestUrl);
+    	eiRequest.setEntity(inputReqJsonEntity);
+    	eiRequest.setHeader("Content-type", "application/json");
+
+    	
+    	String JsonContent = "";
+    	HttpResponse eiResponse = null;
+    	try {
+    		eiResponse = client.execute(eiRequest);
+
+    		InputStream inStream = eiResponse.getEntity().getContent();
+    		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+    		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
+    			JsonContent += line;
+    		}
+    		bufReader.close();
+    		inStream.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println("ERROR CLIENT: " + e);
+    	}
+
+    	System.out.println("HTTP STATUS: " + eiResponse.getStatusLine().getStatusCode());
+    	System.out.println(JsonContent);
+		
+		
+		ResponseEntity<String> responseEntity = new ResponseEntity<>("[]",
+    			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
+		 return responseEntity;
+	}
 //	
 //    /**
 //     * Modify an existing Subscription.
