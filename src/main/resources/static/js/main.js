@@ -4,7 +4,7 @@ var table;
 var backendServiceUrl;
 var subscriptionTemplateFile;
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
 
 
     /*
@@ -168,10 +168,16 @@ $(document).ready(function() {
         	}
         });
     }
-    
+
+
+
 
     function conditions_model(condition){
-        this.jmepath = ko.observable(condition.conditions.jmepath);
+        this.conditions = ko.observableArray(condition);
+    }
+
+    function jmespath_model(jmespath){
+        this.jmespath = ko.observable(jmespath.jmespath);
     }
 
 
@@ -187,7 +193,52 @@ $(document).ready(function() {
 
         self.repeat_in  = ko.observableArray([true, false]);
 
-    };
+
+        self.add_requirement = function(data, event) {
+
+            var conditions_array = [];
+            conditions_array.push(new jmespath_model({"jmespath": ko.observable("")}));
+            self.subscription()[0].requirements().push(new conditions_model(conditions_array));
+
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+
+            self.subscription.valueHasMutated();
+
+        };
+
+
+
+        self.add_condition = function(data, event, requirement_index) {
+
+            self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().push(new jmespath_model({"jmespath": ko.observable("")}));
+
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+
+            self.subscription.valueHasMutated();
+        };
+
+
+        self.delete_condition = function (data, event, requirement_item , condition_index, requirement_index) {
+
+            self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions.remove(data);
+            if(self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().length <= 0)
+            {
+                self.subscription()[0].requirements.remove(self.subscription()[0].requirements()[ko.toJSON(requirement_index)]);
+            }
+
+        };
+
+
+
+
+    };// var SubscriptionViewModel = function(){
+
 
     // Apply bindings
     var vm = new SubscriptionViewModel();
@@ -503,83 +554,21 @@ $(document).ready(function() {
     });
     // /END ## upload_subscriptions #################################################
     
-    // /Start ## Add Condition ##############################################
-    $('div.modal-content').on( 'click', 'button.add_condition', function (event) {
 
-    	event.stopPropagation();
-        event.preventDefault();
-    	            
-        var condition = {
-    				  "conditions" : [
-    					  {
-    						  "jmespath" : ko.observable("")
-    					  }
-    			      ]
-    				}
-                
-        // Not sure if its correct to use index 0(zero) here,, is it correct??
-        vm.subscription()[0].requirements.push(condition);
-    });
-    // /Stop ## Add Condition ################################################
-
-
-    // /Start ## Delete Condition ##############################################
-    $('div.modal-content').on( 'click', 'button.condition_delete', function (event) {
-
-    	event.stopPropagation();
-        event.preventDefault();
-
-        var context = ko.contextFor(event.target);
-        var indexToRemove = context.$index();
-        
-        // Removing Requirement(Condition), based on index position, from Requirement form in Add_Subscription window.
-        if (indexToRemove > 0 ){
-          vm.subscription()[0].requirements.splice(indexToRemove,1);
-        }
-        else {
-          $.alert("You need to have atleast one Condition.");
-        }
-    });
-    // /Stop ## Delete Condition ################################################
-
-    
     // /Start ## Add Subscription ########################################
     $('.container').on( 'click', 'button.btn.btn-success.add_subscription', function (event) {
 
         event.stopPropagation();
         event.preventDefault();
-        
-        // Clear observable array
-        vm.subscription([]);        
 
-        // Map JSON to Model and observableArray
-        var mappedPackageInfo = $.map(default_json_empty, function (item) {
-        	
-        	// Removing old Requirements and conditions from previous Add_subscription window.
-        	item.requirements.splice(1,item.requirements.length - 1);
-        	
-        	// Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
-        	item.requirements[0].conditions[0] = {"jmespath" : ko.observable("")};
-        	item.requirements[0].type = ko.observable("");
 
-            return new subscription_model(item);
-        });
-        
-        // Load data into observable array
-        vm.subscription(mappedPackageInfo);
+        json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
 
-        save_method = 'add';
+        populate_json(json_obj_clone, "add");
 
-        $('.form-group').removeClass('has-error'); // clear error class
-        $('.help-block').empty(); // clear error string
-
-        $('#modal_form').modal('show'); // show bootstrap modal
-        $('.modal-title').text('Add Subscription'); // Set Title to Bootstrap modal title
 
     });
     // /Stop ## Add Subscription ############################################
-
-
 
 
     // /Start ## Reload Datatables ###########################################
@@ -606,33 +595,7 @@ $(document).ready(function() {
             },
             success : function (data, textStatus) {
 
-                var returnData = [data];
-                if (returnData.length > 0) {
-
-                    // Map JSON to Model and observableArray
-                    var mappedPackageInfo = $.map(returnData, function (item) {
-                    	
-                    	// Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
-                        for (i=0; i < item[0].requirements.length; i++){
-                            var jmespath_temp = item[0].requirements[i].conditions[0].jmespath;
-                            item[0].requirements[i].conditions[0] = {"jmespath" : ko.observable(jmespath_temp)};
-                            
-                            var type_temp = item[0].requirements[i].type;
-                            item[0].requirements[i].type = ko.observable(type_temp);
-                        }
-                    	
-                        return new subscription_model(item[0]);
-                    });
-
-                    // Load data into observable array
-                    vm.subscription(mappedPackageInfo);
-
-
-                    $('#modal_form').modal('show');
-                    $('.modal-title').text('Subscription: ' + data.subscriptionName);
-
-                    save_method = 'edit';
-                }
+                populate_json(data, "edit");
 
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -651,6 +614,64 @@ $(document).ready(function() {
 
     });
     // /Stop ## Edit Subscription ###########################################
+
+
+   // /Start ## pupulate JSON  ###########################################
+    function populate_json(data, save_method_in)
+    {
+        var returnData = [data];
+        if (returnData.length > 0) {
+
+
+            vm.subscription([]);
+
+            // Map JSON to Model and observableArray
+            var mappedPackageInfo = $.map(returnData, function (item) {
+
+                // Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
+
+                for (i=0; i < item[0].requirements.length; i++) {
+
+                    var conditions_array = [];
+
+                    for (k = 0; k < item[0].requirements[i].conditions.length; k++) {
+
+                        var jmespath_temp = item[0].requirements[i].conditions[k].jmespath;
+
+                        conditions_array.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
+
+                    }
+
+                    item[0].requirements[i] = new conditions_model(conditions_array);
+
+                }
+                return new subscription_model(item[0]);
+
+
+            });
+
+            // Load data into observable array
+            vm.subscription(mappedPackageInfo);
+
+
+            $('#modal_form').modal('show');
+            
+			if(data === "edit")				
+			{
+				title_ = 'Subscription: ' + data.subscriptionName
+				
+			}else
+			{
+				title_ = 'Add Subscription';
+			}
+			
+			$('.modal-title').text(title_);
+
+            save_method = save_method_in;
+        }
+
+    }
+   // /Stop ## pupulate JSON  ###########################################
 
 
     // /Start ## Save Subscription ##########################################
@@ -698,16 +719,21 @@ $(document).ready(function() {
             });
             return;
         }
-        
+
+
         var requirementsArray = vm.subscription()[0].requirements();
         for (i=0; i < requirementsArray.length; i++){
-        	if (requirementsArray[i].conditions[0].jmespath() == "") {
-            	$.jGrowl("Error: jmepath field must have a value", {
-                	sticky : true,
-                	theme : 'Error'
-            	});
-            	return;
-        	}
+            var conditionsArray = requirementsArray[i].conditions();
+            for (k=0; k < conditionsArray.length; k++) {
+                var test_me = ko.toJSON(conditionsArray[k].jmespath());
+                if (test_me === '""') {
+                    $.jGrowl("Error: jmepath field must have a value", {
+                        sticky: true,
+                        theme: 'Error'
+                    });
+                    return;
+                }
+            }
         }
         //END: Check of other subscription fields values
 

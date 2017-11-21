@@ -13,7 +13,7 @@
     <link href="assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"/>
     <link href="assets/jquery-confirm/css/jquery-confirm.css" rel="stylesheet"/>
     <link href="assets/jgrowl/jquery.jgrowl.min.css" rel="stylesheet"/>
-    <link href="assets\jquery-ui\jquery-ui.min.css" rel="stylesheet"/>
+    <link href="assets/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
 
     <!-- JavaScript imports -->
 
@@ -26,26 +26,26 @@
     <script type="text/javascript" src="assets/knockout/knockout.mapping.js"></script>
     <script type="text/javascript" src="assets/jquery-confirm/js/jquery-confirm.js"></script>
     <script type="text/javascript" src="assets/jgrowl/jquery.jgrowl.min.js"></script>
-    <script type="text/javascript" src="assets\jquery-ui\jquery-ui.min.js"></script>
-    <script type="text/javascript" src="assets\dateformat\date.format.js"></script>
+    <script type="text/javascript" src="assets/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="assets/dateformat/date.format.js"></script>
     <script type="text/javascript" src="assets/jsonlint/jsonlint.js"></script>
 
 
     </head>
 <body>
+
 <div class="hidden" id="backendServiceUrl" th:text="${backendServiceUrl}"></div>
 <div class="hidden" id="subscriptionTemplate" th:text="${subscriptionTemplate}"></div>
 
 <script type="text/javascript" src="resources\subscription_templates.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 
-    <div class="container">
+<div class="container">
         <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${backendServiceUrl}"></span>)
         <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button" id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status</button>
         <button data-toggle="tooltip" title="Eiffel intelligence instance information" type="button" id="btnInfo" class="btn btnEIInstanceInfo"><i class="glyphicon"></i> EI Backend Instance Info</button>
         </h1>
-		
-		
+
         <h3>Subscription Data</h3>
         <br />
         <button data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription"><i class="glyphicon glyphicon-plus"></i> Add Subscription</button>
@@ -59,7 +59,6 @@
 
         <!-- Datatable -->
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
-
     </div>
 
 
@@ -67,24 +66,28 @@
 <div class="modal fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">Subscription Form</h3>
+            <div class="modal-header float-right">
+
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+               <img class ="float-right" data-dismiss="modal" src="assets/images/11656-200.png" height="15" width="15"/>
+               <h3 class="modal-title text-center">Subscription Form</h3>
+
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
                     <input type="hidden" value="" name="id" />
                     <div class="form-body">
-                        <!-- ko foreach: subscription -->
+
+                        <!-- ko foreach:  subscription -->
                         <div class="form-group">
-                            <label class="control-label col-md-3">subscriptionName</label>
+                            <label class="control-label col-md-3">SubscriptionName</label>
                             <div class="col-md-9">
                                 <input data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName" name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group" data-bind="visible: created()">
-                            <label class="control-label col-md-3">created</label>
+                            <label class="control-label col-md-3">Created</label>
                             <div class="col-md-9">
                                 <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.created" name="created" placeholder="created" class="form-control" type="text" />
                                 <span class="help-block"></span>
@@ -98,7 +101,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">notificationType</label>
+                            <label class="control-label col-md-3">NotificationType</label>
                             <div class="col-md-9">
                             <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
@@ -108,14 +111,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">notificationMeta</label>
+                            <label class="control-label col-md-3">NotificationMeta</label>
                             <div class="col-md-9">
                                 <input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">repeat</label>
+                            <label class="control-label col-md-3">Repeat</label>
                             <div class="col-md-9">
                                 <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
                                                optionsText: $data.repeat(),
@@ -125,43 +128,53 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">notificationMessage</label>
+                            <label class="control-label col-md-3">NotificationMessage</label>
                             <div class="col-md-9">
                                 <input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
 
-                                <!-- ko foreach: requirements -->
+                        <img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/>
+
+                        <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">requirements</label>
+                                    <label class="control-label col-md-3">Requirements</label>
                                         <div class="col-md-9">
 
-                                            <!-- ko foreach: conditions -->
+                                            <!-- ko foreach: requirements_item.conditions -->
                                             <div class="form-group">
-                                                <label class="control-label col-md-3">conditions</label>
+                                                <label class="control-label col-md-3">Conditions</label>
                                                 <div class="col-md-9">
-                                                 <input data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
-                                                 <span class="help-block"></span>
+                                                    <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
+                                                    <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false" data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
+                                                    <span class="help-block"></span>
                                                 </div>
                                             </div>
+
+
                                             <!-- /ko -->
 	
                                          </div>
 
-                                         <div class="form-group">
-                                            <label class="control-label col-md-3"></label>
-                                            <div class="col-md-9">
-                                                <button data-toggle="tooltip" title="Delete condition" class="btn btn-danger condition_delete" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
-                                                <span class="help-block"></span>
-                                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3"></label>
+                                        <div class="col-md-9">
+                                            <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
+                                            <span class="help-block"></span>
                                         </div>
+                                    </div>
+
+
+
+
                                 </div>
                                 <!-- /ko -->
                                 <div class="container">
-                              		<button data-toggle="tooltip" title="Add a new condition" class="btn btn-success add_condition"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
-							    </div>
-                                        
+                                    <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Requirement</button>
+                                </div>
+
+
                         <!-- /ko -->
 
                     </div>
@@ -183,10 +196,13 @@
 <!-- End Bootstrap modal -->
 
 
-<!-- <code class="hint mt15">DEBUG INFO</code>
+<!--
+  <code class="hint mt15">DEBUG INFO</code>
 <div data-bind = "visible: subscription().length > 0" >
     <p data-bind="text: ko.toJSON(subscription())"></p>
-</div> -->
+</div>
+-->
+
 
 
 </body>
