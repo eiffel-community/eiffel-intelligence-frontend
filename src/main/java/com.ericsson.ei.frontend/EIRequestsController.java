@@ -34,8 +34,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -129,6 +131,10 @@ public class EIRequestsController {
 
     	System.out.println("HTTP STATUS: " + eiResponse.getStatusLine().getStatusCode());
     	System.out.println(JsonContent);
+    	
+    	if (JsonContent.isEmpty()) {
+    		JsonContent="[]";
+    	}
 
     	ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
     			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
@@ -143,7 +149,7 @@ public class EIRequestsController {
      */
 	@CrossOrigin
 	@RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
-	public ResponseEntity<?> createSubscription(Model model, HttpServletRequest request) {
+	public ResponseEntity<?> createRequests(Model model, HttpServletRequest request) {
 		
     	System.out.println("Request with method POST.");
     	String eiBackendAddressSuffix = request.getServletPath();
@@ -193,40 +199,124 @@ public class EIRequestsController {
     	System.out.println("HTTP STATUS: " + eiResponse.getStatusLine().getStatusCode());
     	System.out.println(JsonContent);
 		
-		
-		ResponseEntity<String> responseEntity = new ResponseEntity<>("[]",
+    	if (JsonContent.isEmpty()) {
+    		JsonContent="[]";
+    	}
+    	
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
     			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
 		 return responseEntity;
 	}
-//	
-//    /**
-//     * Modify an existing Subscription.
-//     * 
-//     */
-//	@CrossOrigin
-//	@RequestMapping(value = "", method = RequestMethod.PUT)
-//	public ResponseEntity<?> updateSubscriptions(HttpServletResponse response,
-//			HttpServletRequest request) {
-//		 return new ResponseEntity<>(response, HttpStatus.OK);
-//				 //"redirect:" + eiBackendServiceAddress;
-//	}
-//	
+
+	/**
+     * Bridge all EI Http Requests with PUT method. E.g. Making Update Subscription Request.
+     * 
+     */
+	@CrossOrigin
+	@RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
+	public ResponseEntity<?> putRequests(Model model, HttpServletRequest request) {
+		
+    	System.out.println("Request with method PUT.");
+    	String eiBackendAddressSuffix = request.getServletPath();
+    	System.out.println("URL suffix received: " + eiBackendAddressSuffix);
+    	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
+    	System.out.println("New EI request URL: " + newRequestUrl);
+    	
+    	String inputReqJsonContent = "";
+    	try {
+    		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
+    		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
+    			inputReqJsonContent += line;
+    		}
+    		inputBufReader.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println("ERROR CLIENT: " + e);
+    	}
+
+    	System.out.println("Request JSON Content: " + inputReqJsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+    	
+    	
+    	HttpClient client = HttpClients.createDefault();
+    	HttpPut eiRequest = new HttpPut(newRequestUrl);
+    	eiRequest.setEntity(inputReqJsonEntity);
+    	eiRequest.setHeader("Content-type", "application/json");
+
+    	
+    	String JsonContent = "";
+    	HttpResponse eiResponse = null;
+    	try {
+    		eiResponse = client.execute(eiRequest);
+
+    		InputStream inStream = eiResponse.getEntity().getContent();
+    		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+    		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
+    			JsonContent += line;
+    		}
+    		bufReader.close();
+    		inStream.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println("ERROR CLIENT: " + e);
+    	}
+
+    	System.out.println("HTTP STATUS: " + eiResponse.getStatusLine().getStatusCode());
+    	System.out.println(JsonContent);
+		
+    	if (JsonContent.isEmpty()) {
+    		JsonContent="[]";
+    	}
+    	
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
+    			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
+		 return responseEntity;
+	}
 
 
-//    /**
-//     * Removes the subscription from the database.
-//     * 
-//     */
-//	@CrossOrigin
-//	@RequestMapping(value = "/{subscriptionName}", method = RequestMethod.DELETE)
-//	public ResponseEntity<?> deleteSubscriptionById(@PathVariable String subscriptionName,
-//			HttpServletResponse response,
-//			HttpServletRequest request) {
-//		
-//		System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-//		return new ResponseEntity<>(response, HttpStatus.OK);
-//				//"forward:" + eiBackendServiceAddress + "/{" + subscriptionName + "}";
-//	}
-//	
+    /**
+     * Bridge all EI Http Requests with DELETE method. Used for DELETE subscriptions.
+     * 
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteRequests(Model model, HttpServletRequest request) {
+    	System.out.println("Request with method GET.");
+    	String eiBackendAddressSuffix = request.getServletPath();
+    	System.out.println("URL suffix received: " + eiBackendAddressSuffix);
+    	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
+    	System.out.println("New EI request URL: " + newRequestUrl);
+
+    	HttpClient client = HttpClients.createDefault();
+    	HttpDelete eiRequest = new HttpDelete(newRequestUrl);
+
+    	String JsonContent = "";
+    	HttpResponse eiResponse = null;
+    	try {
+    		eiResponse = client.execute(eiRequest);
+
+    		InputStream inStream = eiResponse.getEntity().getContent();
+    		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+    		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
+    			JsonContent += line;
+    		}
+    		bufReader.close();
+    		inStream.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println("ERROR CLIENT: " + e);
+    	}
+
+    	System.out.println("HTTP STATUS: " + eiResponse.getStatusLine().getStatusCode());
+    	System.out.println(JsonContent);
+    	
+    	if (JsonContent.isEmpty()) {
+    		JsonContent="[]";
+    	}
+
+    	ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
+    			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
+    	return responseEntity;
+    }
 	
 }
