@@ -16,6 +16,10 @@
 */   
 package com.ericsson.ei.frontend;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -27,6 +31,20 @@ public class EI_FrontEnd_Application {
     public static final Logger log = LoggerFactory.getLogger(EI_FrontEnd_Application.class);
 
     public static void main(String[] args) {
+    	
+        List<String> logLevels = new ArrayList<>();
+        Collections.addAll(logLevels, "ALL", "DEBUG", "ERROR", "FATAL", "INFO", "TRACE", "WARN");
+
+        if(args != null && args.length > 0 && logLevels.contains(args[0])) {
+            System.setProperty("logging.level.root", args[0]);
+            System.setProperty("logging.level.org.springframework.web", args[0]);
+            System.setProperty("logging.level.com.ericsson.ei", args[0]);
+        } else {
+            System.setProperty("logging.level.root", "INFO");
+            System.setProperty("logging.level.org.springframework.web", "INFO");
+            System.setProperty("logging.level.com.ericsson.ei", "INFO");
+        }
+        
         SpringApplication.run(EI_FrontEnd_Application.class, args);
     }
 }
