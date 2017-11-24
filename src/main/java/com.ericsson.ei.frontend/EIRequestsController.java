@@ -93,7 +93,7 @@ public class EIRequestsController {
     }
     
     public String getEIBackendSubscriptionAddress() {
-    	return "http://" + getBackendServerHost() + ":" + getBackendServerPort();
+    	return "http://" + this.getBackendServerHost() + ":" + this.getBackendServerPort();
 	}
 
     
@@ -113,7 +113,7 @@ public class EIRequestsController {
     	HttpClient client = HttpClients.createDefault();
     	HttpGet eiRequest = new HttpGet(newRequestUrl);
 
-    	String JsonContent = "";
+    	String jsonContent = "";
     	HttpResponse eiResponse = null;
     	try {
     		eiResponse = client.execute(eiRequest);
@@ -121,7 +121,7 @@ public class EIRequestsController {
     		InputStream inStream = eiResponse.getEntity().getContent();
     		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
     		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-    			JsonContent += line;
+    			jsonContent += line;
     		}
     		bufReader.close();
     		inStream.close();
@@ -130,17 +130,18 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Http Status Code: " + eiResponse.getStatusLine().getStatusCode());
-    	LOG.debug("Recevied JsonContent:\n" + JsonContent);
+    	LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode() + 
+    			"\nEI Recevied jsonContent:\n" + jsonContent +
+    			"\nForwarding response back to EI Frontend WebUI.");
     	
-    	if (JsonContent.isEmpty()) {
-    		JsonContent="[]";
+    	if (jsonContent.isEmpty()) {
+    		jsonContent="[]";
     	}
     	
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-    	ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
+    	ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonContent,
     			headers,
     			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
     	return responseEntity;
@@ -161,11 +162,11 @@ public class EIRequestsController {
     	LOG.info("Got HTTP Request with method POST.\nUrlSuffix: " + eiBackendAddressSuffix +
     			"\nForwarding Request to EI Backend with url: " + newRequestUrl);
     	
-    	String inputReqJsonContent = "";
+    	String inputReqjsonContent = "";
     	try {
     		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
     		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-    			inputReqJsonContent += line;
+    			inputReqjsonContent += line;
     		}
     		inputBufReader.close();
     	}
@@ -173,8 +174,8 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
-    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqjsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqjsonContent.getBytes());
     	
     	
     	HttpClient client = HttpClients.createDefault();
@@ -183,7 +184,7 @@ public class EIRequestsController {
     	eiRequest.setHeader("Content-type", "application/json");
 
     	
-    	String JsonContent = "";
+    	String jsonContent = "";
     	HttpResponse eiResponse = null;
     	try {
     		eiResponse = client.execute(eiRequest);
@@ -191,7 +192,7 @@ public class EIRequestsController {
     		InputStream inStream = eiResponse.getEntity().getContent();
     		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
     		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-    			JsonContent += line;
+    			jsonContent += line;
     		}
     		bufReader.close();
     		inStream.close();
@@ -200,17 +201,18 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Http Status Code: " + eiResponse.getStatusLine().getStatusCode());
-    	LOG.debug("Recevied JsonContent: \n" + JsonContent);
+    	LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode() + 
+    			"\nEI Recevied jsonContent:\n" + jsonContent +
+    			"\nForwarding response back to EI Frontend WebUI.");
     	
-    	if (JsonContent.isEmpty()) {
-    		JsonContent="[]";
+    	if (jsonContent.isEmpty()) {
+    		jsonContent="[]";
     	}
 
     	
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-		ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonContent,
 				headers,
     			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
 		 return responseEntity;
@@ -229,11 +231,11 @@ public class EIRequestsController {
     	LOG.info("Got HTTP Request with method PUT.\nUrlSuffix: " + eiBackendAddressSuffix +
     			"\nForwarding Request to EI Backend with url: " + newRequestUrl);
     	
-    	String inputReqJsonContent = "";
+    	String inputReqjsonContent = "";
     	try {
     		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
     		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-    			inputReqJsonContent += line;
+    			inputReqjsonContent += line;
     		}
     		inputBufReader.close();
     	}
@@ -241,8 +243,8 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
-    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqjsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqjsonContent.getBytes());
     	
     	
     	HttpClient client = HttpClients.createDefault();
@@ -251,7 +253,7 @@ public class EIRequestsController {
     	eiRequest.setHeader("Content-type", "application/json");
 
     	
-    	String JsonContent = "";
+    	String jsonContent = "";
     	HttpResponse eiResponse = null;
     	try {
     		eiResponse = client.execute(eiRequest);
@@ -259,7 +261,7 @@ public class EIRequestsController {
     		InputStream inStream = eiResponse.getEntity().getContent();
     		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
     		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-    			JsonContent += line;
+    			jsonContent += line;
     		}
     		bufReader.close();
     		inStream.close();
@@ -268,17 +270,18 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Http Status Code: " + eiResponse.getStatusLine().getStatusCode());
-    	LOG.debug("Recevied JsonContent:\n" + JsonContent);
+    	LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode() + 
+    			"\nEI Recevied jsonContent:\n" + jsonContent +
+    			"\nForwarding response back to EI Frontend WebUI.");
 		
-    	if (JsonContent.isEmpty()) {
-    		JsonContent="[]";
+    	if (jsonContent.isEmpty()) {
+    		jsonContent="[]";
     	}
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         
-		ResponseEntity<String> responseEntity = new ResponseEntity<String>(JsonContent,
+		ResponseEntity<String> responseEntity = new ResponseEntity<String>(jsonContent,
 				headers,
 				HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
 
@@ -301,7 +304,7 @@ public class EIRequestsController {
     	HttpClient client = HttpClients.createDefault();
     	HttpDelete eiRequest = new HttpDelete(newRequestUrl);
 
-    	String JsonContent = "";
+    	String jsonContent = "";
     	HttpResponse eiResponse = null;
     	try {
     		eiResponse = client.execute(eiRequest);
@@ -309,7 +312,7 @@ public class EIRequestsController {
     		InputStream inStream = eiResponse.getEntity().getContent();
     		BufferedReader bufReader =  new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
     		for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-    			JsonContent += line;
+    			jsonContent += line;
     		}
     		bufReader.close();
     		inStream.close();
@@ -318,17 +321,18 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Http Status Code: " + eiResponse.getStatusLine().getStatusCode());
-    	LOG.debug("Recevied JsonContent:\n" + JsonContent);
+    	LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode() + 
+    			"\nEI Recevied jsonContent:\n" + jsonContent +
+    			"\nForwarding response back to EI Frontend WebUI.");
     	
-    	if (JsonContent.isEmpty()) {
-    		JsonContent="[]";
+    	if (jsonContent.isEmpty()) {
+    		jsonContent="[]";
     	}
     	
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     	
-        ResponseEntity<String> responseEntity = new ResponseEntity<>(JsonContent,
+        ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonContent,
         		headers,
     			HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
     	return responseEntity;

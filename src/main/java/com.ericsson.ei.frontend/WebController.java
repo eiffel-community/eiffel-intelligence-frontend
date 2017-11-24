@@ -27,35 +27,35 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix="ei")
 public class WebController {
 
-    private String backendServiceHost;
-    private int backendServicePort;
+    private String frontendServiceHost;
+    private int frontendServicePort;
 
 
     @RequestMapping("/")
     public String greeting(Model model) {
 
-        String backendServiceUrl = String.format("http://%s:%d", backendServiceHost, backendServicePort);
+        String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
 
-        model.addAttribute("backendServiceUrl", backendServiceUrl);  // inject in DOM for AJAX etc
+        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
 
         return "index";
     }
 
     // Backend host and port (Getter & Setters), application.properties -> greeting.xxx
-    public String getBackendServiceHost() {
-        return backendServiceHost;
+    public String getFrontendServiceHost() {
+        return frontendServiceHost;
     }
 
-    public void setBackendServiceHost(String backendServiceHost) {
-        this.backendServiceHost = backendServiceHost;
+    public void setFrontendServiceHost(String frontendServiceHost) {
+        this.frontendServiceHost = frontendServiceHost;
     }
 
-    public int getBackendServicePort() {
-        return backendServicePort;
+    public int getFrontendServicePort() {
+        return frontendServicePort;
     }
 
-    public void setBackendServicePort(int backendServicePort) {
-        this.backendServicePort = backendServicePort;
+    public void setFrontendServicePort(int frontendServicePort) {
+        this.frontendServicePort = frontendServicePort;
     }
 
 }
