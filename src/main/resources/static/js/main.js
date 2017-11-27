@@ -1,7 +1,7 @@
 // Global vars
 var save_method;
 var table;
-var backendServiceUrl;
+var frontendServiceUrl;
 var subscriptionTemplateFile;
 
 jQuery(document).ready(function() {
@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
 
 
     // Fetch injected URL from DOM
-    backendServiceUrl = $('#backendServiceUrl').text();
+    frontendServiceUrl = $('#frontendServiceUrl').text();
 
     // /Start ## Global AJAX Sender function ##################################
     var AjaxHttpSender = function () {};
@@ -61,17 +61,14 @@ jQuery(document).ready(function() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
 
     	   $.ajax({
-    		      url: backendServiceUrl + "/subscriptions/testDummySubscription",
+    		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
     		      contentType : 'application/json; charset=utf-8',
     		      type: 'GET',
                   error : function (XMLHttpRequest, textStatus, errorThrown) {
-//                  	console.log("EI BACKEND OFFLINE");
                   		var red="#ff0000";
                   		EIConnBtn.style.background = red;
                   },
                   success : function (data, textStatus, xhr) {
-//                	  	console.log("DATA: " + xhr.responseText);
-//                  	console.log("EI BACKEND ONLINE");
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
                   		checkEiBackend=true;
@@ -84,7 +81,7 @@ jQuery(document).ready(function() {
     function getInstanceInfo() {
         var text = document.getElementById('info_text');
         $.ajax({
-              url: backendServiceUrl + "/information",
+              url: frontendServiceUrl + "/information",
               contentType : 'application/json;charset=UTF-8',
               type: 'GET',
               error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -261,7 +258,7 @@ jQuery(document).ready(function() {
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": backendServiceUrl + "/subscriptions",
+            "url": frontendServiceUrl + "/subscriptions",
             "type": "GET",
             "dataSrc": ""   // Flat structure from EI backend REST API
 
@@ -401,7 +398,7 @@ jQuery(document).ready(function() {
                      confirm: function () {
                     	 var ajaxHttpSender = new AjaxHttpSender();
                     	 for (i=0; i < subScriptionsToDelete.length; i++){
-                    		 ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions/"+subScriptionsToDelete[i], "DELETE", null, callback);
+                    		 ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+subScriptionsToDelete[i], "DELETE", null, callback);
                     	 }
                      },
                      cancel: function () {
@@ -485,7 +482,7 @@ jQuery(document).ready(function() {
 
             // Perform AJAX
             var ajaxHttpSender = new AjaxHttpSender();
-            ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
+            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
         }
         
         function validateJsonAndCreateSubscriptions(subscriptionFile){
@@ -502,7 +499,6 @@ jQuery(document).ready(function() {
             	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
             	return false;
             }
-//              console.log("JsonLint Result: " + jsonLintResult.toSource());
             $.jGrowl('JSON Format Check Succeeded', {
                 sticky : false,
                 theme : 'Notify'
@@ -610,7 +606,7 @@ jQuery(document).ready(function() {
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
+        ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
 
     });
     // /Stop ## Edit Subscription ###########################################
@@ -742,11 +738,11 @@ jQuery(document).ready(function() {
         var url;
         var type;
         if(save_method === 'add') {  // Add new
-            url = backendServiceUrl + "/subscriptions";
+            url = frontendServiceUrl + "/subscriptions";
             type = "POST";
 
         } else {  // Update existing
-            url = backendServiceUrl + "/subscriptions";
+            url = frontendServiceUrl + "/subscriptions";
             type = "PUT";
         }
 
@@ -845,7 +841,7 @@ jQuery(document).ready(function() {
              buttons: {
                  confirm: function () {
                      var ajaxHttpSender = new AjaxHttpSender();
-                     ajaxHttpSender.sendAjax(backendServiceUrl + "/subscriptions/"+id, "DELETE", null, callback);
+                     ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "DELETE", null, callback);
                  },
                  cancel: function () {
                  }
