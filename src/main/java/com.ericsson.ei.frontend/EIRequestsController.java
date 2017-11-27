@@ -162,11 +162,11 @@ public class EIRequestsController {
     	LOG.info("Got HTTP Request with method POST.\nUrlSuffix: " + eiBackendAddressSuffix +
     			"\nForwarding Request to EI Backend with url: " + newRequestUrl);
     	
-    	String inputReqjsonContent = "";
+    	String inputReqJsonContent = "";
     	try {
     		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
     		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-    			inputReqjsonContent += line;
+    			inputReqJsonContent += line;
     		}
     		inputBufReader.close();
     	}
@@ -174,8 +174,8 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqjsonContent);
-    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqjsonContent.getBytes());
+    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
     	
     	
     	HttpClient client = HttpClients.createDefault();
@@ -231,11 +231,11 @@ public class EIRequestsController {
     	LOG.info("Got HTTP Request with method PUT.\nUrlSuffix: " + eiBackendAddressSuffix +
     			"\nForwarding Request to EI Backend with url: " + newRequestUrl);
     	
-    	String inputReqjsonContent = "";
+    	String inputReqJsonContent = "";
     	try {
     		BufferedReader inputBufReader =  new BufferedReader(request.getReader());
     		for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-    			inputReqjsonContent += line;
+    			inputReqJsonContent += line;
     		}
     		inputBufReader.close();
     	}
@@ -243,8 +243,8 @@ public class EIRequestsController {
     		LOG.error("Forward Request Errors: " + e);
     	}
 
-    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqjsonContent);
-    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqjsonContent.getBytes());
+    	LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
+    	HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
     	
     	
     	HttpClient client = HttpClients.createDefault();
