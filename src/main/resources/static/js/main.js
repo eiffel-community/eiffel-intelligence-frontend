@@ -65,13 +65,10 @@ jQuery(document).ready(function() {
     		      contentType : 'application/json; charset=utf-8',
     		      type: 'GET',
                   error : function (XMLHttpRequest, textStatus, errorThrown) {
-//                  	console.log("EI BACKEND OFFLINE");
                   		var red="#ff0000";
                   		EIConnBtn.style.background = red;
                   },
                   success : function (data, textStatus, xhr) {
-//                	  	console.log("DATA: " + xhr.responseText);
-//                  	console.log("EI BACKEND ONLINE");
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
                   		checkEiBackend=true;
@@ -502,7 +499,6 @@ jQuery(document).ready(function() {
             	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
             	return false;
             }
-//              console.log("JsonLint Result: " + jsonLintResult.toSource());
             $.jGrowl('JSON Format Check Succeeded', {
                 sticky : false,
                 theme : 'Notify'
