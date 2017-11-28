@@ -416,6 +416,22 @@ jQuery(document).ready(function() {
     	event.stopPropagation();
         event.preventDefault();
         
+        // Special handling for MS Explorer Download file window
+        function createDownloadWindowMSExplorer(filename, url) {
+        		  
+        		  var blob = null;
+        		  var xhr = new XMLHttpRequest();
+        		  xhr.open("GET", url);
+        		  xhr.responseType = "blob";
+        		  xhr.onload = function()
+        		  {
+        		      blob = xhr.response;
+                  	  window.navigator.msSaveBlob(blob, filename);
+        		  }
+        		  xhr.send();
+        }
+        
+        // HTML5 Download File window handling
         function createDownloadWindow(filename, url) {
             var pom = document.createElement('a');
             pom.setAttribute('href', url);
@@ -430,9 +446,16 @@ jQuery(document).ready(function() {
                 pom.click();
             }
         }
-                
-        createDownloadWindow("SubscriptionsTemplate.json","\/download\/subscriptiontemplate");
-    	
+        
+        // If MS Internet Explorer -> special handling for creating download file window. 
+        if (window.navigator.msSaveBlob) {
+        	createDownloadWindowMSExplorer("SubscriptionsTemplate.json", "/download/subscriptiontemplate");
+
+        }
+        else {
+        	// HTML5 Download File window handling
+        	createDownloadWindow("SubscriptionsTemplate.json","\/download\/subscriptiontemplate");
+    	}
     });
     // /END ## get_subscription_template #################################################
 
