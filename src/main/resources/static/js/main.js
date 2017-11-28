@@ -539,20 +539,11 @@ jQuery(document).ready(function() {
         
         function createUploadWindow() {
         	
-        	
             var pom = document.createElement('input');
             pom.setAttribute('id', 'uploadFile');
             pom.setAttribute('type', 'file');
             pom.setAttribute('name', 'upFile');
-          
-            // Internet Explorer adaptation
-            pom.setAttribute('onchange', "function uploadFinished() {" +
-            		"var subscriptionFile = pom.files[0];" +
-            		"console.log('Uploaded File: ' + subscriptionFile);" +
-            		"validateJsonandSubscriptionFormat(subscriptionFile);" +
-            		"};");
-          
-            // All other Web Browser
+       
             pom.onchange = function uploadFinished() {
             	var subscriptionFile = pom.files[0];
             	validateJsonAndCreateSubscriptions(subscriptionFile);
@@ -567,9 +558,22 @@ jQuery(document).ready(function() {
                 pom.click();
             }
         }
-
-        createUploadWindow();
-    	
+        
+        function createUploadWindowMSExplorer() {
+        	
+            $('#upload_subscription_file').click();
+        	var file = $('#upload_subscription_file').prop('files')[0];
+        	validateJsonAndCreateSubscriptions(file);
+        }
+        
+        // If MS Internet Explorer -> special handling for creating download file window. 
+        if (window.navigator.msSaveOrOpenBlob) {
+        	createUploadWindowMSExplorer();
+        }
+        else {
+        	// HTML5 Download File window handling
+        	createUploadWindow();
+        }
     });
     // /END ## upload_subscriptions #################################################
     
