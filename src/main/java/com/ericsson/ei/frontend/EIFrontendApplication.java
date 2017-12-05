@@ -26,9 +26,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EI_FrontEnd_Application {
+public class EIFrontendApplication {
 
-    public static final Logger log = LoggerFactory.getLogger(EI_FrontEnd_Application.class);
+    public static final Logger log = LoggerFactory.getLogger(EIFrontendApplication.class);
 
     public static void main(String[] args) {
     	
@@ -45,6 +45,6 @@ public class EI_FrontEnd_Application {
             System.setProperty("logging.level.com.ericsson.ei", "INFO");
         }
         
-        SpringApplication.run(EI_FrontEnd_Application.class, args);
+        SpringApplication.run(EIFrontendApplication.class, args);
     }
 }
