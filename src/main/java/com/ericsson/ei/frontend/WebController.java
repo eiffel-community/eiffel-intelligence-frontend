@@ -34,11 +34,27 @@ public class WebController {
     @RequestMapping("/")
     public String greeting(Model model) {
 
+//        String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
+
+//        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+
+        return "index";
+    }
+    
+    @RequestMapping("/subscriptionpage")
+    public String subscription(Model model) {
+
         String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
 
         model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
 
-        return "index";
+        return "subscription";
+    }
+    
+    @RequestMapping("/testrules")
+    public String testRules(Model model) {
+
+        return "testRules";
     }
 
     // Backend host and port (Getter & Setters), application.properties -> greeting.xxx
