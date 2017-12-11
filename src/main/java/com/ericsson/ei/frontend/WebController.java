@@ -41,7 +41,7 @@ public class WebController {
         return "index";
     }
     
-    @RequestMapping("/subscriptionpage")
+    @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
 
         String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
@@ -51,7 +51,7 @@ public class WebController {
         return "subscription";
     }
     
-    @RequestMapping("/testrules")
+    @RequestMapping("/testRules.html")
     public String testRules(Model model) {
 
         return "testRules";
