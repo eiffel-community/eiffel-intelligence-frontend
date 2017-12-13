@@ -57,6 +57,12 @@ public class WebController {
         return "testRules";
     }
     
+    @RequestMapping("/eiInfo.html")
+    public String eiInfo(Model model) {
+
+        return "eiInfo";
+    }
+    
     @RequestMapping("/login.html")
     public String login(Model model) {
 

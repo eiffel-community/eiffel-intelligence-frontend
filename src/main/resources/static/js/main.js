@@ -7,6 +7,13 @@ jQuery(document).ready(function() {
     	iframe.src = "http://localhost:8080/testRules.html";    
 	}
 	
+	document.getElementById("eiInfoBtn").onclick = function() {		  
+		
+    	var iframe = document.getElementById("mainFrame");
+    	iframe.src = "http://localhost:8080/eiInfo.html";    
+	}
+	
+	
 	function loadLoginPage() {
     	var iframe = document.getElementById("mainFrame");
     	iframe.src = "http://localhost:8080/login.html";  
