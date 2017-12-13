@@ -6,7 +6,34 @@ jQuery(document).ready(function() {
     	var iframe = document.getElementById("mainFrame");
     	iframe.src = "http://localhost:8080/testRules.html";    
 	}
-
+	
+	function loadLoginPage() {
+    	var iframe = document.getElementById("mainFrame");
+    	iframe.src = "http://localhost:8080/login.html";  
+	}
+	
+	document.getElementById("loginBtn").onclick = function() {		  
+		
+		loadLoginPage();
+	}
+	
+	document.getElementById("logoutLoginBtn").onclick = function() {		  
+		
+		loadLoginPage();
+	}
+	
+	document.getElementById("registerBtn").onclick = function() {		  
+		
+    	var iframe = document.getElementById("mainFrame");
+    	iframe.src = "http://localhost:8080/register.html";
+	}
+	
+	document.getElementById("forgotPasswordBtn").onclick = function() {		  
+		
+    	var iframe = document.getElementById("mainFrame");
+    	iframe.src = "http://localhost:8080/forgot-password.html";
+	}
+	
 	function loadMainPage() {
 		var iframe = document.getElementById("mainFrame");
     	iframe.src = "http://localhost:8080/subscriptionpage.html";

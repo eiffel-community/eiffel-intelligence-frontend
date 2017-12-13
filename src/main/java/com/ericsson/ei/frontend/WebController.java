@@ -56,6 +56,25 @@ public class WebController {
 
         return "testRules";
     }
+    
+    @RequestMapping("/login.html")
+    public String login(Model model) {
+
+        return "login";
+    }
+    
+    @RequestMapping("/register.html")
+    public String register(Model model) {
+
+        return "register";
+    }
+    
+    @RequestMapping("/forgot-password.html")
+    public String forgotPassword(Model model) {
+
+        return "forgot-password";
+    }
+    
 
     // Backend host and port (Getter & Setters), application.properties -> greeting.xxx
     public String getFrontendServiceHost() {
