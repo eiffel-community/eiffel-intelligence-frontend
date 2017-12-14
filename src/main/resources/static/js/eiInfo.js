@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
         tbl.style.align = 'right';
         tbl.setAttribute('border', '3');
         tbl.setAttribute('align', 'center');
-        tbl.setAttribute('class', 'table table-bordered');
+        tbl.setAttribute('class', 'table table-bordered table-striped dataTable no-footer');
         return tbl;
     }
 	
