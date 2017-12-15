@@ -6,16 +6,17 @@ jQuery(document).ready(function() {
     // Fetch injected URL from DOM
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var backendServerUrl = $('#backendServerUrl').text();
+    
+    var tableTdKeyWidth = '250';
 
     var body = document.getElementsByTagName('body')[0];
 
     function createTable() {
         var tbl = document.createElement('table');
         tbl.style.width = '40%';
-        tbl.style.align = 'right';
         tbl.setAttribute('border', '3');
         tbl.setAttribute('align', 'center');
-        tbl.setAttribute('class', 'table table-bordered table-striped dataTable no-footer');
+        tbl.setAttribute('class', 'table table-bordered table-striped dataTable');
         return tbl;
     }
 	
@@ -36,9 +37,11 @@ jQuery(document).ready(function() {
 
         var tr = document.createElement('tr');
         var tdKey = document.createElement('td');
+        tdKey.setAttribute('width', tableTdKeyWidth);
         tdKey.appendChild(document.createTextNode('ApplicationName'));
         tr.appendChild(tdKey);
         var tdValue = document.createElement('td');
+//        tdValue.setAttribute('width', '30px');
         tdValue.appendChild(document.createTextNode(data.applicationName));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
@@ -46,6 +49,7 @@ jQuery(document).ready(function() {
         
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
+        tdKey.setAttribute('width', tableTdKeyWidth);
         tdKey.appendChild(document.createTextNode('Version'));
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
@@ -55,6 +59,7 @@ jQuery(document).ready(function() {
         
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
+        tdKey.setAttribute('width', tableTdKeyWidth);
         tdKey.appendChild(document.createTextNode('EI RestApi Requests Via Server'));
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
@@ -64,6 +69,7 @@ jQuery(document).ready(function() {
         
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
+        tdKey.setAttribute('width', tableTdKeyWidth);
         tdKey.appendChild(document.createTextNode('EI Backend Connected Server'));
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
@@ -97,6 +103,7 @@ jQuery(document).ready(function() {
         	    	console.log(dataKey + " : " +  dataSubList[dataKey]);
         	        var tr = document.createElement('tr');
         	        var tdKey = document.createElement('td');
+        	        tdKey.setAttribute('width', tableTdKeyWidth);
         	        tdKey.appendChild(document.createTextNode(dataKey));
         	        tr.appendChild(tdKey);
         	        var tdValue = document.createElement('td');
