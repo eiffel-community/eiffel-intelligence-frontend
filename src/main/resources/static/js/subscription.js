@@ -124,7 +124,7 @@ jQuery(document).ready(function() {
         
         // Validating notificationMeta inputs
         this.notificationMeta.subscribe(function (notificationMeta) {
-        	if (!(/[a-z]|[A-Z]|[0-9]/.test(String(notificationMeta).slice(-1)))) {
+        	if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(notificationMeta).slice(-1)))) {
                 $.jGrowl("Only numbers and letters is valid to type in notificationMeta field.", {
                     sticky : false,
                     theme : 'Error'
