@@ -54,11 +54,8 @@ jQuery(document).ready(function() {
         body.appendChild(document.createElement('br'));
 	}
 	
-	function generateEIInformationBasedOnList(data, listComponentName, tableLabel) {
-		var rabbitMqInstancesList = data[listComponentName];
-		
-        body.appendChild(document.createElement('br'));
-        
+	function generateEIInformationBasedOnList(dataList, tableLabel) {
+		        
         var label = document.createElement('p');
         label.innerHTML = tableLabel;
         label.setAttribute('align', 'center');
@@ -67,25 +64,24 @@ jQuery(document).ready(function() {
         var tbdy = null;
         var tbl = null;
         
-        rabbitMqInstancesList.forEach(function(rabbitMqInstanceSubList) {
+        dataList.forEach(function(dataSubList) {
         		tbdy = document.createElement('tbody');
         		tbl = createTable();
 
-        	    console.log(rabbitMqInstanceSubList);
-        	    Object.keys(rabbitMqInstanceSubList).forEach(function(rabbitMqInstanceKey) {
-        	    	console.log(rabbitMqInstanceKey + " : " +  rabbitMqInstanceSubList[rabbitMqInstanceKey]);
+        	    console.log(dataSubList);
+        	    Object.keys(dataSubList).forEach(function(dataKey) {
+        	    	console.log(dataKey + " : " +  dataSubList[dataKey]);
         	        var tr = document.createElement('tr');
         	        var tdKey = document.createElement('td');
-        	        tdKey.appendChild(document.createTextNode(rabbitMqInstanceKey));
+        	        tdKey.appendChild(document.createTextNode(dataKey));
         	        tr.appendChild(tdKey);
         	        var tdValue = document.createElement('td');
-        	        tdValue.appendChild(document.createTextNode(rabbitMqInstanceSubList[rabbitMqInstanceKey]));
+        	        tdValue.appendChild(document.createTextNode(dataSubList[dataKey]));
         	        tr.appendChild(tdValue);
         	        tbdy.appendChild(tr);
         	    	
         	    });
         	    
-        	    body.appendChild(document.createElement('br'));
         });
 		
         tbl.appendChild(tbdy);
@@ -94,7 +90,7 @@ jQuery(document).ready(function() {
         body.appendChild(document.createElement('br'));
         
 	}
-	
+
     function getInstanceInfo() {
         var eiInfoContainer = document.getElementById('eiInfoContainer');
         $.ajax({
@@ -113,11 +109,15 @@ jQuery(document).ready(function() {
         	            
         	            generateGeneralEiInfo(data);
         	            
-        	            generateEIInformationBasedOnList(data, "rabbitmq", "Eiffel Intelligence Connected RabbitMq Instances");
-        	            generateEIInformationBasedOnList(data, "mongodb", "Eiffel Intelligence Connected MongoDb Instances");
-        	            generateEIInformationBasedOnList(data, "threads", "Eiffel Intelligence Backend CPU Threads settings");
-        	            generateEIInformationBasedOnList(data, "email", "Eiffel Intelligence Backend e-mail settings");
-        	            generateEIInformationBasedOnList(data, "waitList", "Eiffel Intelligence Backend WaitList settings");
+        	            generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+        	            generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
+        	            generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
+        	            generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
+        	            generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
+        	            generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
+        	            generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
+        	            generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
+        	            generateEIInformationBasedOnList([data.erUrl], "Eiffel Intelligence Backend EventRepository Url");
         	  		}
         	  });
 
