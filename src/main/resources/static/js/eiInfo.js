@@ -1,5 +1,11 @@
 
+
+
 jQuery(document).ready(function() {
+	
+    // Fetch injected URL from DOM
+    var frontendServiceUrl = $('#frontendServiceUrl').text();
+    var backendServerUrl = $('#backendServerUrl').text();
 
     var body = document.getElementsByTagName('body')[0];
 
@@ -44,6 +50,24 @@ jQuery(document).ready(function() {
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
         tdValue.appendChild(document.createTextNode(data.version));
+        tr.appendChild(tdValue);
+        tbdy.appendChild(tr);
+        
+        tr = document.createElement('tr');
+        tdKey = document.createElement('td');
+        tdKey.appendChild(document.createTextNode('EI RestApi Requests Via Server'));
+        tr.appendChild(tdKey);
+        tdValue = document.createElement('td');
+        tdValue.appendChild(document.createTextNode(frontendServiceUrl));
+        tr.appendChild(tdValue);
+        tbdy.appendChild(tr);
+        
+        tr = document.createElement('tr');
+        tdKey = document.createElement('td');
+        tdKey.appendChild(document.createTextNode('EI Backend Connected Server'));
+        tr.appendChild(tdKey);
+        tdValue = document.createElement('td');
+        tdValue.appendChild(document.createTextNode(backendServerUrl));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
         

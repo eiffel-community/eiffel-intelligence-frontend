@@ -29,7 +29,8 @@ public class WebController {
 
     private String frontendServiceHost;
     private int frontendServicePort;
-
+    private String backendServerHost;
+    private int backendServerPort;
 
     @RequestMapping("/")
     public String greeting(Model model) {
@@ -61,8 +62,9 @@ public class WebController {
     public String eiInfo(Model model) {
     	
     	String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
-
-      	model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+    	model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+    	String backendServerUrl = String.format("http://%s:%d", backendServerHost, backendServerPort);
+    	model.addAttribute("backendServerUrl", backendServerUrl);
 
         return "eiInfo";
     }
@@ -101,6 +103,22 @@ public class WebController {
 
     public void setFrontendServicePort(int frontendServicePort) {
         this.frontendServicePort = frontendServicePort;
+    }
+    
+    public String getBackendServerHost() {
+        return backendServerHost;
+    }
+
+    public void setBackendServerHost(String backendServerHost) {
+        this.backendServerHost = backendServerHost;
+    }
+
+    public int getBackendServerPort() {
+        return backendServerPort;
+    }
+
+    public void setBackendServerPort(int backendServerPort) {
+        this.backendServerPort = backendServerPort;
     }
 
 }
