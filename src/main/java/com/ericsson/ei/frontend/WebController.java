@@ -32,13 +32,18 @@ public class WebController {
     private String backendServerHost;
     private int backendServerPort;
 
+    private String eiffelDocumentationUrl;
+
+
     @RequestMapping("/")
     public String greeting(Model model) {
 
-//        String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
+        String eiffelDocumentationUrlLink = String.format("%s", eiffelDocumentationUrl);
 
-//        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+        model.addAttribute("eiffelDocumentationUrlLink", eiffelDocumentationUrlLink);  // inject in DOM for AJAX etc
 
+    	
+    	
         return "index";
     }
     
@@ -121,4 +126,11 @@ public class WebController {
         this.backendServerPort = backendServerPort;
     }
 
+    public String getEiffelDocumentationUrl() {
+        return eiffelDocumentationUrl;
+    }
+
+    public void setEiffelDocumentationUrl(String eiffelDocumentationUrl) {
+        this.eiffelDocumentationUrl = eiffelDocumentationUrl;
+    }
 }
