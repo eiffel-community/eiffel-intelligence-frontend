@@ -1,6 +1,9 @@
 
 jQuery(document).ready(function() {
 	
+    // Fetch injected URL from DOM
+    var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
+	
 	document.getElementById("testRulesBtn").onclick = function() {		  
 		
     	var iframe = document.getElementById("mainFrame");
@@ -51,8 +54,34 @@ jQuery(document).ready(function() {
     	loadMainPage();    
 	}
 	
+	function loadDocumentLinks(){
+		// eiffelDocumentationUrlLinks variable is configure in application.properties
+		var linksList = JSON.parse(eiffelDocumentationUrlLinks);
+
+	    var docLinksDoc = document.getElementById('collapseDocPages');
+		var liTag = null;
+		var aTag = null;
+		
+    	Object.keys(linksList).forEach(function(linkKey) {
+    			liTag = document.createElement('li');
+    			aTag = document.createElement('a');
+    			aTag.innerHTML = linkKey;
+    			aTag.setAttribute('href', linksList[linkKey]);
+    			aTag.setAttribute('target', '_blanc');
+    			liTag.appendChild(aTag);
+    			docLinksDoc.appendChild(liTag);
+    	    	});
+    	    
+		
+		
+		
+
+		
+	}
+	
 	var initOneTime = function(){
 		initOneTime = function(){}; // kill it as soon as it was called
+		 loadDocumentLinks();
 	     loadMainPage();
 	};
 	
