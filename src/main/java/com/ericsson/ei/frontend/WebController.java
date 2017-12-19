@@ -29,17 +29,69 @@ public class WebController {
 
     private String frontendServiceHost;
     private int frontendServicePort;
+    private String backendServerHost;
+    private int backendServerPort;
+
+    private String eiffelDocumentationUrls;
 
 
     @RequestMapping("/")
     public String greeting(Model model) {
 
+        String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
+
+        model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);  // inject in DOM for AJAX etc
+
+    	
+    	
+        return "index";
+    }
+    
+    @RequestMapping("/subscriptionpage.html")
+    public String subscription(Model model) {
+
         String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
 
         model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
 
-        return "index";
+        return "subscription";
     }
+    
+    @RequestMapping("/testRules.html")
+    public String testRules(Model model) {
+
+        return "testRules";
+    }
+    
+    @RequestMapping("/eiInfo.html")
+    public String eiInfo(Model model) {
+    	
+    	String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
+    	model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+    	String backendServerUrl = String.format("http://%s:%d", backendServerHost, backendServerPort);
+    	model.addAttribute("backendServerUrl", backendServerUrl);
+
+        return "eiInfo";
+    }
+    
+    @RequestMapping("/login.html")
+    public String login(Model model) {
+
+        return "login";
+    }
+    
+    @RequestMapping("/register.html")
+    public String register(Model model) {
+
+        return "register";
+    }
+    
+    @RequestMapping("/forgot-password.html")
+    public String forgotPassword(Model model) {
+
+        return "forgot-password";
+    }
+    
 
     // Backend host and port (Getter & Setters), application.properties -> greeting.xxx
     public String getFrontendServiceHost() {
@@ -57,5 +109,28 @@ public class WebController {
     public void setFrontendServicePort(int frontendServicePort) {
         this.frontendServicePort = frontendServicePort;
     }
+    
+    public String getBackendServerHost() {
+        return backendServerHost;
+    }
 
+    public void setBackendServerHost(String backendServerHost) {
+        this.backendServerHost = backendServerHost;
+    }
+
+    public int getBackendServerPort() {
+        return backendServerPort;
+    }
+
+    public void setBackendServerPort(int backendServerPort) {
+        this.backendServerPort = backendServerPort;
+    }
+
+    public String getEiffelDocumentationUrls() {
+        return eiffelDocumentationUrls;
+    }
+
+    public void setEiffelDocumentationUrls(String eiffelDocumentationUrls) {
+        this.eiffelDocumentationUrls = eiffelDocumentationUrls;
+    }
 }
