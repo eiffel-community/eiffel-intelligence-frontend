@@ -1,7 +1,7 @@
 
 jQuery(document).ready(function() {
 	
-    // Fetch injected URL from DOM
+    // Fetch injected URL from DOM 
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
