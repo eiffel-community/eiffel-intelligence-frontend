@@ -3,23 +3,24 @@ jQuery(document).ready(function() {
 	
     // Fetch injected URL from DOM
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
-	
+	var frontendServiceUrl = $('#frontendServiceUrl').text();
+
 	document.getElementById("testRulesBtn").onclick = function() {		  
 		
     	var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/testRules.html";    
+    	iframe.src = frontendServiceUrl + "/testRules.html";    
 	}
 	
 	document.getElementById("eiInfoBtn").onclick = function() {		  
 		
     	var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/eiInfo.html";    
+    	iframe.src = frontendServiceUrl + "/eiInfo.html";    
 	}
 	
 	
 	function loadLoginPage() {
     	var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/login.html";  
+    	iframe.src = frontendServiceUrl + "/login.html";  
 	}
 	
 	document.getElementById("loginBtn").onclick = function() {		  
@@ -35,18 +36,18 @@ jQuery(document).ready(function() {
 	document.getElementById("registerBtn").onclick = function() {		  
 		
     	var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/register.html";
+    	iframe.src = frontendServiceUrl + "/register.html";
 	}
 	
 	document.getElementById("forgotPasswordBtn").onclick = function() {		  
 		
     	var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/forgot-password.html";
+    	iframe.src = frontendServiceUrl + "/forgot-password.html";
 	}
 	
 	function loadMainPage() {
 		var iframe = document.getElementById("mainFrame");
-    	iframe.src = "http://localhost:8080/subscriptionpage.html";
+    	iframe.src = frontendServiceUrl + "/subscriptionpage.html";
 	}
 	
 	document.getElementById("subscriptionBtn").onclick = function() {
