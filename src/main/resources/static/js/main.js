@@ -6,21 +6,19 @@ jQuery(document).ready(function() {
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	document.getElementById("testRulesBtn").onclick = function() {		  
-		
-    	var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/testRules.html";    
+
+    	$("#mainFrame").load("testRules.html");
 	}
 	
 	document.getElementById("eiInfoBtn").onclick = function() {		  
-		
-    	var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/eiInfo.html";    
+  
+    	$("#mainFrame").load("eiInfo.html");
 	}
 	
 	
 	function loadLoginPage() {
-    	var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/login.html";  
+ 
+    	$("#mainFrame").load("login.html");
 	}
 	
 	document.getElementById("loginBtn").onclick = function() {		  
@@ -34,20 +32,18 @@ jQuery(document).ready(function() {
 	}
 	
 	document.getElementById("registerBtn").onclick = function() {		  
-		
-    	var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/register.html";
+
+    	$("#mainFrame").load("register.html");
 	}
 	
 	document.getElementById("forgotPasswordBtn").onclick = function() {		  
-		
-    	var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/forgot-password.html";
+
+    	$("#mainFrame").load("forgot-password.html");
 	}
 	
 	function loadMainPage() {
-		var iframe = document.getElementById("mainFrame");
-    	iframe.src = frontendServiceUrl + "/subscriptionpage.html";
+
+    	$("#mainFrame").load("subscriptionpage.html");
 	}
 	
 	document.getElementById("subscriptionBtn").onclick = function() {

@@ -114,8 +114,8 @@ jQuery(document).ready(function() {
         
         // Validating subscriptionName inputs
         this.subscriptionName.subscribe(function (subscriptionName) {
-        	if (!(/[a-z]|[A-Z]|[0-9]/.test(String(subscriptionName).slice(-1)))) {
-                $.jGrowl("Only numbers and letters is valid to type in subscriptionName field.", {
+        	if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(subscriptionName).slice(-1)))) {
+                $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
                     sticky : false,
                     theme : 'Error'
                 });
