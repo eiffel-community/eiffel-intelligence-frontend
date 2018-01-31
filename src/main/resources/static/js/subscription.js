@@ -59,7 +59,9 @@ jQuery(document).ready(function() {
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
-
+    	if (EIConnBtn == null ) {
+    		return;
+    	}
     	   $.ajax({
     		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
     		      contentType : 'application/json; charset=utf-8',

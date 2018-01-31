@@ -9,33 +9,39 @@
 
 <!-- Style Sheets -->
 
-<link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+ <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet" />
 
 <!-- JavaScript imports -->
 
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <script type="text/javascript" src="assets/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript"
-	src="assets/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="assets/knockout/knockout-3.4.2.js"></script>
 <script type="text/javascript" src="assets/knockout/knockout.mapping.js"></script>
 <script type="text/javascript"
 	src="assets/jquery-confirm/js/jquery-confirm.js"></script>
 <script type="text/javascript" src="assets/jgrowl/jquery.jgrowl.min.js"></script>
 <script type="text/javascript" src="assets/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="assets/datatables/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="assets/datatables/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript" src="js/eiInfo.js"></script>
 
 
 </head>
 
 <body class="nav-link">
-	<div class="hidden" id="frontendServiceUrl"
+	<div class="hidden" id="frontendServiceUrl" style="display: none"
 		th:text="${frontendServiceUrl}"></div>
-	<div class="hidden" id="backendServerUrl"
+	<div class="hidden" id="backendServerUrl" style="display: none"
 		th:text="${backendServerUrl}"></div>
+		
+	<div id="eiPageFrame"></div>
 	
-	<script type="text/javascript" src="js/eiInfo.js"></script>
 </body>
 </html>
