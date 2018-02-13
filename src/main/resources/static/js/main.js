@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
 	
 	document.getElementById("subscriptionBtn").onclick = function() {
 		
-    	loadMainPage();    
+    	loadMainPage();
 	}
 	
 	function loadDocumentLinks(){

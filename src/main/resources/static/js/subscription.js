@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var subscriptionTemplateFile;
 
+
 jQuery(document).ready(function() {
 
 
