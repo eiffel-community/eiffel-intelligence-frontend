@@ -32,9 +32,6 @@
 </head>
 <body>
 
-<div id="ViewModelDOMObject"></div>
-
-
 <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
 <div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
 
@@ -79,7 +76,7 @@
             <div class="modal-body form" align="left">
                 <form action="#" id="form" class="form-horizontal">
                     <input type="hidden" value="" name="id" />
-                    <div class="form-body">
+                    <div id="ViewModelDOMObject" class="form-body">
 
                         <!-- ko foreach:  subscription -->
                         <div class="form-group">
