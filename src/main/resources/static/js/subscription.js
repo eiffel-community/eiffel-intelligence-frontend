@@ -669,7 +669,7 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Save Subscription ##########################################
-    $('div.modal-content').on( 'click', 'button.save_record', function (event) {
+    $('div.modal-footer').on( 'click', 'button.save_record', function (event) {
 
         event.stopPropagation();
         event.preventDefault();
