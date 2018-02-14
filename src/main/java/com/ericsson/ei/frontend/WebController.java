@@ -31,6 +31,8 @@ public class WebController {
     private int frontendServicePort;
     private String backendServerHost;
     private int backendServerPort;
+    private String frontendContextPath;
+    private boolean useSecureHttp;
 
     private String eiffelDocumentationUrls;
 
@@ -49,11 +51,21 @@ public class WebController {
     
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
+    	
+    	String httpMethod = "http";
+    	if (useSecureHttp) {
+    		httpMethod = "https";
+    	}
 
-        String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
-
+    	String frontendServiceUrl;
+    	if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
+    		frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod , frontendServiceHost, frontendServicePort, frontendContextPath);
+    	}
+    	else {
+    		frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
+    	}
         model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
-
+                
         return "subscription";
     }
     
@@ -108,6 +120,22 @@ public class WebController {
 
     public void setFrontendServicePort(int frontendServicePort) {
         this.frontendServicePort = frontendServicePort;
+    }
+    
+    public String getFrontendContextPath() {
+        return frontendContextPath;
+    }
+
+    public void setFrontendContextPath(String contextPath) {
+        this.frontendContextPath = contextPath;
+    }
+    
+    public boolean getUseSecureHttp() {
+        return useSecureHttp;
+    }
+
+    public void setUseSecureHttp(boolean useSecureHttp) {
+        this.useSecureHttp = useSecureHttp;
     }
     
     public String getBackendServerHost() {

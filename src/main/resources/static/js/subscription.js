@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var subscriptionTemplateFile;
 
+
 jQuery(document).ready(function() {
 
 
@@ -59,7 +60,9 @@ jQuery(document).ready(function() {
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
-
+    	if (EIConnBtn == null ) {
+    		return;
+    	}
     	   $.ajax({
     		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
     		      contentType : 'application/json; charset=utf-8',
@@ -114,8 +117,8 @@ jQuery(document).ready(function() {
         
         // Validating subscriptionName inputs
         this.subscriptionName.subscribe(function (subscriptionName) {
-        	if (!(/[a-z]|[A-Z]|[0-9]/.test(String(subscriptionName).slice(-1)))) {
-                $.jGrowl("Only numbers and letters is valid to type in subscriptionName field.", {
+        	if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(subscriptionName).slice(-1)))) {
+                $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
                     sticky : false,
                     theme : 'Error'
                 });
@@ -203,11 +206,12 @@ jQuery(document).ready(function() {
 
     };// var SubscriptionViewModel = function(){
 
-
+	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
+    var observableObject = $('#ViewModelDOMObject')[0]; 
+    ko.cleanNode(observableObject);
     // Apply bindings
-    var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm);
-
+	var vm = new SubscriptionViewModel();
+    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
 
 
     // /Stop ## Knockout #####################################################
@@ -291,7 +295,7 @@ jQuery(document).ready(function() {
             },
 
         ],
-
+      
     });
     // /Stop ## Datatables ##################################################
 
@@ -665,7 +669,7 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Save Subscription ##########################################
-    $('div.modal-content').on( 'click', 'button.save_record', function (event) {
+    $('div.modal-footer').on( 'click', 'button.save_record', function (event) {
 
         event.stopPropagation();
         event.preventDefault();
