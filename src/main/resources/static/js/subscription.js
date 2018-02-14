@@ -206,11 +206,12 @@ jQuery(document).ready(function() {
 
     };// var SubscriptionViewModel = function(){
 
-
+	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
+    var observableObject = $('#ViewModelDOMObject')[0]; 
+    ko.cleanNode(observableObject);
     // Apply bindings
-    var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm);
-
+	var vm = new SubscriptionViewModel();
+    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
 
 
     // /Stop ## Knockout #####################################################
@@ -294,7 +295,7 @@ jQuery(document).ready(function() {
             },
 
         ],
-
+      
     });
     // /Stop ## Datatables ##################################################
 
