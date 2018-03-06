@@ -155,6 +155,7 @@ jQuery(document).ready(function() {
         self.notificationType_in  = ko.observableArray(
         		[
         			{"text": "REST_POST", value:"REST_POST"},
+                    {"text": "REST_POST_JENKINS", value:"REST_POST_JENKINS"},
         			{"text": "MAIL", value:"MAIL"}
         		]);
 
