@@ -263,8 +263,13 @@ jQuery(document).ready(function() {
             {
                 "targets": [ 3 ],
                 "orderable": true,
-                "title": "Created",
-                "data": "created"
+                "title": "Date",
+                "data": "created",
+                "mRender" : function (data, type, row, meta) {
+                    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+                    d.setUTCMilliseconds(data);
+                    return d;  // Is now a date (in client time zone)
+                }
             },
             {
                 "targets": [ 4 ],
@@ -467,13 +472,6 @@ jQuery(document).ready(function() {
                 complete : function () {
                 }
             };
-
-            // Fetch Date and format
-            var now = new Date();
-            var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
-
-            // Update property created with datetime (formatted)
-            subscriptionJson.created = String(nowStr);
 
             // Perform AJAX
             var ajaxHttpSender = new AjaxHttpSender();
@@ -780,12 +778,6 @@ jQuery(document).ready(function() {
             }
         };
 
-        // Fetch Date and format
-        var now = new Date();
-        var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
-
-        // Update property created with datetime (formatted)
-        vm.subscription()[0].created(String(nowStr));
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
@@ -852,8 +844,6 @@ jQuery(document).ready(function() {
 
 
 
+
 });  // $(document).ready(function() {
-
-
-
 
