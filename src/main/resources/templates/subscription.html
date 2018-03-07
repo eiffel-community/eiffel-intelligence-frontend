@@ -18,7 +18,7 @@
 
 <script type="text/javascript" src="resources/subscription_templates.js"></script>
 
-	<div class="container pull-left">
+	<div style="max-width: 100%;" class="container pull-left">
         <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${frontendServiceUrl}"></span>)
         <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button" id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status</button>
         </h1>
@@ -45,7 +45,7 @@
 
 <!-- Bootstrap modal -->
 <div class="modal fade" id="modal_form" role="dialog">
-    <div class="modal-dialog">
+    <div style="max-width: 50%;" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
 				<div class="container pull-left">
@@ -61,29 +61,29 @@
 
                         <!-- ko foreach:  subscription -->
                         <div class="form-group">
-                            <label class="control-label col-md-3">SubscriptionName</label>
-                            <div class="col-md-9">
+                            <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
+                            <div>
                                 <input data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName" name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group" data-bind="visible: created()">
-                            <label class="control-label col-md-3">Created</label>
-                            <div class="col-md-9">
-                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.created" name="created" placeholder="created" class="form-control" type="text" />
+                            <label class="pl-1 control-label font-weight-bold">Date</label>
+                            <div>
+                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text: $root.getUTCDate($data.created())" name="created" placeholder="created" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">Type</label>
-                            <div class="col-md-9">
+                            <label class="pl-1 control-label font-weight-bold">Type</label>
+                            <div>
                                 <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype" name="aggregationtype" placeholder="aggregation_type" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationType</label>
-                            <div class="col-md-9">
+                            <label class="pl-1 control-label font-weight-bold">NotificationType</label>
+                            <div>
                             <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
@@ -92,15 +92,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationMeta</label>
-                            <div class="col-md-9">
-                                <input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Repeat</label>
-                            <div class="col-md-9">
+                            <label class="pl-1 control-label font-weight-bold">Repeat</label>
+                            <div>
                                 <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
                                                optionsText: $data.repeat(),
                                                value: $data.repeat,
@@ -109,24 +102,37 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationMessage</label>
-                            <div class="col-md-9">
-                                <input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
+                            <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
+                            <div>
+                                <!--<input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />-->
+
+                                <textarea data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />
+
+
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
+                            <div>
+                                <!--<input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />-->
+                                <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
+
                                 <span class="help-block"></span>
                             </div>
                         </div>
 
-                        <img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/>
 
                         <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Requirements</label>
-                                        <div class="col-md-9">
+                        <div class="pl-0 ml-0"><img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/></div>
+                        <div class="pb-3 border border-primary form-group">
+                            <label class="pl-1 control-label font-weight-bold">Requirement</label>
+                                        <div>
 
                                             <!-- ko foreach: requirements_item.conditions -->
                                             <div class="form-group">
-                                                <label class="control-label col-md-3">Conditions</label>
-                                                <div class="col-md-9">
+                                                <label class="pl-3 control-label font-weight-bold">Condition</label>
+                                                <div class="p-3">
                                                     <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
                                                     <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false" data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
                                                     <span class="help-block"></span>
@@ -135,22 +141,26 @@
 
 
                                             <!-- /ko -->
+
+                                            <div >
+                                                <label class="p-3"></label>
+                                                <div>
+                                                    <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
+
+                                                </div>
+                                            </div>
 	
                                          </div>
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3"></label>
-                                        <div class="col-md-9">
-                                            <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
+
 
 
 
 
                                 </div>
+                                <label class="control-label pt-15 col-md-3"></label>
                                 <!-- /ko -->
+
                                 <div class="container">
                                     <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Requirement</button>
                                 </div>
