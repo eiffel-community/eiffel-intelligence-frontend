@@ -138,7 +138,6 @@ jQuery(document).ready(function() {
 
 
 
-
     function conditions_model(condition){
         this.conditions = ko.observableArray(condition);
     }
@@ -179,6 +178,13 @@ jQuery(document).ready(function() {
 
 
 
+        self.getUTCDate= function(epochtime){
+            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+            d.setUTCMilliseconds(epochtime);
+            return d;  // Is now a date (in client time zone)
+        }
+
+
         self.add_condition = function(data, event, requirement_index) {
 
             self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().push(new jmespath_model({"jmespath": ko.observable("")}));
@@ -216,6 +222,7 @@ jQuery(document).ready(function() {
 
 
     // /Stop ## Knockout #####################################################
+
 
 
 
@@ -266,9 +273,7 @@ jQuery(document).ready(function() {
                 "title": "Date",
                 "data": "created",
                 "mRender" : function (data, type, row, meta) {
-                    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-                    d.setUTCMilliseconds(data);
-                    return d;  // Is now a date (in client time zone)
+                    return vm.getUTCDate(data);
                 }
             },
             {
@@ -609,7 +614,7 @@ jQuery(document).ready(function() {
     // /Stop ## Edit Subscription ###########################################
 
 
-   // /Start ## pupulate JSON  ###########################################
+   // /Start ## populate JSON  ###########################################
     function populate_json(data, save_method_in)
     {
         var returnData = [data];

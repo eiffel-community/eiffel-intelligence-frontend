@@ -61,28 +61,28 @@
 
                         <!-- ko foreach:  subscription -->
                         <div class="form-group">
-                            <label class="control-label col-md-3">SubscriptionName</label>
+                            <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                             <div>
                                 <input data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName" name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group" data-bind="visible: created()">
-                            <label class="control-label col-md-3">Date</label>
+                            <label class="pl-1 control-label font-weight-bold">Date</label>
                             <div>
-                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.created" name="created" placeholder="created" class="form-control" type="text" />
+                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text: $root.getUTCDate($data.created())" name="created" placeholder="created" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div>
-                            <label class="control-label col-md-3">Type</label>
+                        <div class="form-group">
+                            <label class="pl-1 control-label font-weight-bold">Type</label>
                             <div>
                                 <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype" name="aggregationtype" placeholder="aggregation_type" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationType</label>
+                            <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                             <div>
                             <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">Repeat</label>
+                            <label class="pl-1 control-label font-weight-bold">Repeat</label>
                             <div>
                                 <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
                                                optionsText: $data.repeat(),
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationMeta</label>
+                            <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                             <div>
                                 <!--<input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />-->
 
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">NotificationMessage</label>
+                            <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
                             <div>
                                 <!--<input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />-->
                                 <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
@@ -126,12 +126,12 @@
                         <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                         <div class="pl-0 ml-0"><img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/></div>
                         <div class="pb-3 border border-primary form-group">
-                            <label class="pl-1 control-label font-weight-bold">Requirements</label>
+                            <label class="pl-1 control-label font-weight-bold">Requirement</label>
                                         <div>
 
                                             <!-- ko foreach: requirements_item.conditions -->
                                             <div class="form-group">
-                                                <label class="control-label col-md-3">Conditions</label>
+                                                <label class="pl-3 control-label font-weight-bold">Condition</label>
                                                 <div class="p-3">
                                                     <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control" type="text" />
                                                     <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false" data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
