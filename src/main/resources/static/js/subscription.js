@@ -784,7 +784,7 @@ jQuery(document).ready(function() {
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()[0]), callback);
+        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()), callback);
 
 
 
