@@ -503,9 +503,7 @@ jQuery(document).ready(function() {
             });  
             
             var subscriptionJsonList = JSON.parse(fileContent);
-            for (i=0; i < subscriptionJsonList.length; i++) {
-            	tryToCreateSubscription(subscriptionJsonList[i]);
-            }
+                tryToCreateSubscription(subscriptionJsonList);
             };
             
             reader.readAsText(subscriptionFile);
