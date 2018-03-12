@@ -3,7 +3,7 @@
 
 	<groupId>com.github.ericsson</groupId>
 	<artifactId>eiffel-intelligence-frontend</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>war</packaging>
 
 	<parent>
@@ -52,7 +52,7 @@
                <dependency>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-tomcat</artifactId>
-                        <scope>provided</scope>
+                        <scope>compile</scope>
               </dependency>
 	</dependencies>
 	<build>

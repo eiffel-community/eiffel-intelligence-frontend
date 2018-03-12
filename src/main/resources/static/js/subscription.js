@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var subscriptionTemplateFile;
 
+
 jQuery(document).ready(function() {
 
 
@@ -59,7 +60,9 @@ jQuery(document).ready(function() {
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
-
+    	if (EIConnBtn == null ) {
+    		return;
+    	}
     	   $.ajax({
     		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
     		      contentType : 'application/json; charset=utf-8',
@@ -114,8 +117,8 @@ jQuery(document).ready(function() {
         
         // Validating subscriptionName inputs
         this.subscriptionName.subscribe(function (subscriptionName) {
-        	if (!(/[a-z]|[A-Z]|[0-9]/.test(String(subscriptionName).slice(-1)))) {
-                $.jGrowl("Only numbers and letters is valid to type in subscriptionName field.", {
+        	if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(subscriptionName).slice(-1)))) {
+                $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
                     sticky : false,
                     theme : 'Error'
                 });
@@ -135,7 +138,6 @@ jQuery(document).ready(function() {
 
 
 
-
     function conditions_model(condition){
         this.conditions = ko.observableArray(condition);
     }
@@ -152,6 +154,7 @@ jQuery(document).ready(function() {
         self.notificationType_in  = ko.observableArray(
         		[
         			{"text": "REST_POST", value:"REST_POST"},
+                    {"text": "REST_POST_JENKINS", value:"REST_POST_JENKINS"},
         			{"text": "MAIL", value:"MAIL"}
         		]);
 
@@ -173,6 +176,13 @@ jQuery(document).ready(function() {
 
         };
 
+
+
+        self.getUTCDate= function(epochtime){
+            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+            d.setUTCMilliseconds(epochtime);
+            return d;  // Is now a date (in client time zone)
+        }
 
 
         self.add_condition = function(data, event, requirement_index) {
@@ -203,14 +213,16 @@ jQuery(document).ready(function() {
 
     };// var SubscriptionViewModel = function(){
 
-
+	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
+    var observableObject = $('#ViewModelDOMObject')[0]; 
+    ko.cleanNode(observableObject);
     // Apply bindings
-    var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm);
-
+	var vm = new SubscriptionViewModel();
+    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
 
 
     // /Stop ## Knockout #####################################################
+
 
 
 
@@ -258,8 +270,11 @@ jQuery(document).ready(function() {
             {
                 "targets": [ 3 ],
                 "orderable": true,
-                "title": "Created",
-                "data": "created"
+                "title": "Date",
+                "data": "created",
+                "mRender" : function (data, type, row, meta) {
+                    return vm.getUTCDate(data);
+                }
             },
             {
                 "targets": [ 4 ],
@@ -291,7 +306,7 @@ jQuery(document).ready(function() {
             },
 
         ],
-
+      
     });
     // /Stop ## Datatables ##################################################
 
@@ -463,13 +478,6 @@ jQuery(document).ready(function() {
                 }
             };
 
-            // Fetch Date and format
-            var now = new Date();
-            var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
-
-            // Update property created with datetime (formatted)
-            subscriptionJson.created = String(nowStr);
-
             // Perform AJAX
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
@@ -495,9 +503,7 @@ jQuery(document).ready(function() {
             });  
             
             var subscriptionJsonList = JSON.parse(fileContent);
-            for (i=0; i < subscriptionJsonList.length; i++) {
-            	tryToCreateSubscription(subscriptionJsonList[i]);
-            }
+                tryToCreateSubscription(subscriptionJsonList);
             };
             
             reader.readAsText(subscriptionFile);
@@ -606,7 +612,7 @@ jQuery(document).ready(function() {
     // /Stop ## Edit Subscription ###########################################
 
 
-   // /Start ## pupulate JSON  ###########################################
+   // /Start ## populate JSON  ###########################################
     function populate_json(data, save_method_in)
     {
         var returnData = [data];
@@ -665,7 +671,7 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Save Subscription ##########################################
-    $('div.modal-content').on( 'click', 'button.save_record', function (event) {
+    $('div.modal-footer').on( 'click', 'button.save_record', function (event) {
 
         event.stopPropagation();
         event.preventDefault();
@@ -775,16 +781,10 @@ jQuery(document).ready(function() {
             }
         };
 
-        // Fetch Date and format
-        var now = new Date();
-        var nowStr = now.format("isoDate") + ' ' + now.format("isoTime");
-
-        // Update property created with datetime (formatted)
-        vm.subscription()[0].created(String(nowStr));
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()[0]), callback);
+        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()), callback);
 
 
 
@@ -847,8 +847,6 @@ jQuery(document).ready(function() {
 
 
 
+
 });  // $(document).ready(function() {
-
-
-
 
