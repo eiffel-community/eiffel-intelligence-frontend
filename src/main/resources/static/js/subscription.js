@@ -394,50 +394,21 @@ jQuery(document).ready(function() {
     
     // /Start ## get_subscription_template #################################################
     $('.container').on( 'click', 'button.get_subscription_template', function (event) {
-    
     	event.stopPropagation();
         event.preventDefault();
-        
-        // Special handling for MS Explorer Download file window
-        function createDownloadWindowMSExplorer(filename, url) {
-        		  
-        		  var blob = null;
-        		  var xhr = new XMLHttpRequest();
-        		  xhr.open("GET", url);
-        		  xhr.responseType = "blob";
-        		  xhr.onload = function()
-        		  {
-        		      blob = xhr.response;
-                  	  window.navigator.msSaveBlob(blob, filename);
-        		  }
-        		  xhr.send();
-        }
-        
-        // HTML5 Download File window handling
-        function createDownloadWindow(filename, url) {
-            var pom = document.createElement('a');
-            pom.setAttribute('href', url);
-            pom.setAttribute('download', filename);
-
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            }
-            else {
-                pom.click();
-            }
-        }
-        
-        // If MS Internet Explorer -> special handling for creating download file window. 
-        if (window.navigator.msSaveBlob) {
-        	createDownloadWindowMSExplorer("SubscriptionsTemplate.json", "/download/subscriptiontemplate");
-
-        }
-        else {
-        	// HTML5 Download File window handling
-        	createDownloadWindow("SubscriptionsTemplate.json","\/download\/subscriptiontemplate");
-    	}
+        function getTemplate(){
+            var req = new XMLHttpRequest();
+            req.open("GET", '/download/subscriptiontemplate', true);
+            req.responseType = "blob";
+            req.onload = function (event) {
+                var blob = req.response;
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'subscriptionsTemplate.json';
+                link.click();
+            };
+            req.send();}
+        getTemplate();
     });
     // /END ## get_subscription_template #################################################
 
