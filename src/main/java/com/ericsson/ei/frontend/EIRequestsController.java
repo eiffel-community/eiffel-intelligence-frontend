@@ -128,7 +128,7 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate"}, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
     	String eiBackendAddressSuffix = request.getServletPath();
     	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;

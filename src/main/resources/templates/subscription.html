@@ -59,6 +59,19 @@
                     <input type="hidden" value="" name="id" />
                     <div id="ViewModelDOMObject" class="form-body">
 
+
+                        <div class="form-group">
+                            <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
+                            <div>
+                                <select data-toggle="tooltip" data-placement="right" title="Choose a Subscription Template" data-bind="options: subscription_templates_in,
+                                               optionsText: 'text',
+                                               optionsValue: 'value',
+                                               value: choosen_subscription_template,
+                                               optionsCaption: 'Choose...'"></select>
+                            </div>
+                        </div>
+
+
                         <!-- ko foreach:  subscription -->
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
@@ -74,7 +87,7 @@
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-bind="visible: $data.aggregationtype()">
                             <label class="pl-1 control-label font-weight-bold">Type</label>
                             <div>
                                 <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype" name="aggregationtype" placeholder="aggregation_type" class="form-control" type="text" />
@@ -91,7 +104,52 @@
                                                optionsCaption: 'Choose...'"></select>
                             </div>
                         </div>
-                        <div class="form-group">
+
+                        <div class="form-group" data-bind="visible: notificationType() == 'REST_POST'">
+                            <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
+                            <div>
+                                <select data-toggle="tooltip" title="Choose a REST POST Media Type" data-bind="options: $root.restPostBodyType_in,
+                                               optionsText: 'text',
+                                               optionsValue: 'value',
+                                               value: $data.restPostBodyMediaType,
+                                               optionsCaption: 'Choose...'"></select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="pb-3 border border-primary form-group">
+                            <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
+
+                            <table width="100%">
+                                <thead>
+                                <tr><th width="20%" data-bind="visible: $root.formpostkeyvaluepairs">Key</th>
+                                    <th width="70%">Value</th>
+                                    <th width="10%" data-bind="visible: $root.formpostkeyvaluepairs"></th></tr>
+                                </thead>
+                                <tbody data-bind="foreach: notificationMessageKeyValues">
+                                <tr>
+                                    <td data-bind="visible: $root.formpostkeyvaluepairs">
+                                        <input data-toggle="tooltip" title="Specify a Key" data-bind="textInput:$data.formkey" name="formkey" placeholder="Key" class="form-control" type="text" />
+                                    </td>
+                                    <td>
+                                        <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.formvalue" name="formvalue" placeholder="Value" class="form-control" type="text" />
+                                    </td>
+                                    <td data-bind="visible: $root.formpostkeyvaluepairs">
+                                        <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Delete Key/Value Pair" class="btn btn-danger float-right" ><i class="glyphicon glyphicon-trash"></i>Delete</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div data-bind="visible: $root.formpostkeyvaluepairs" class="container p-1">
+                                <button data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" data-toggle="tooltip" title="Add a new Form Key/Value Pair" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair</button>
+                            </div>
+
+                        </div>
+
+
+                        <div class="pt-3 form-group">
                             <label class="pl-1 control-label font-weight-bold">Repeat</label>
                             <div>
                                 <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
@@ -104,27 +162,15 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                             <div>
-                                <!--<input data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />-->
-
                                 <textarea data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta" name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text" />
-
-
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
-                            <div>
-                                <!--<input data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />-->
-                                <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.notificationMessage" name="notificationMessage" placeholder="notificationMessage" class="form-control" type="text" />
 
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
 
 
                         <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
-                        <div class="pl-0 ml-0"><img width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/></div>
+                        <div class="pl-0 ml-0"><img data-toggle="tooltip" data-placement="top" width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/></div>
                         <div class="pb-3 border border-primary form-group">
                             <label class="pl-1 control-label font-weight-bold">Requirement</label>
                                         <div>
@@ -146,7 +192,6 @@
                                                 <label class="p-3"></label>
                                                 <div>
                                                     <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i class="glyphicon glyphicon-plus"></i> Add Condition</button>
-
                                                 </div>
                                             </div>
 	
