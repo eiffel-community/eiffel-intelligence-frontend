@@ -2,29 +2,13 @@
 var save_method;
 var table;
 var frontendServiceUrl;
-var subscriptionTemplateFile;
+var defaultFormKeyValuePair = {"formkey" : "","formvalue" : ""};
 
 
 jQuery(document).ready(function() {
 
-
-    /*
-    $('.modal-content').resizable({
-        //minHeight: 300,
-        //minWidth: 300
-    });
-    $('#modal_form').on('show.bs.modal', function () {
-        $(this).find('.modal-body').css({
-            'max-height':'100%'
-        });
-    });
-    */
-
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-
-
-
-
+    $('[data-toggle="tooltip"]').tooltip();
 
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
@@ -103,40 +87,39 @@ jQuery(document).ready(function() {
 
     // Subscription model
     function subscription_model(data){
-    	
+
         this.created = ko.observable(data.created);
-        this.notificationMessage = ko.observable(data.notificationMessage);
         this.notificationMeta = ko.observable(data.notificationMeta);
         this.notificationType = ko.observable(data.notificationType);
+        this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
+        this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
         this.subscriptionName = ko.observable(data.subscriptionName);
         this.aggregationtype = ko.observable(data.aggregationtype);
 
+        this.notificationType.subscribe(function (new_value) {
+            vm.delete_BulkNotificationMsgKeyValuePair();
+            vm.subscription()[0].restPostBodyMediaType(null);
+            vm.formpostkeyvaluepairs(false);
 
-        
-        // Validating subscriptionName inputs
-        this.subscriptionName.subscribe(function (subscriptionName) {
-        	if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(subscriptionName).slice(-1)))) {
-                $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
-                    sticky : false,
-                    theme : 'Error'
-                });
-        	}
         });
-        
-        // Validating notificationMeta inputs
-        this.notificationMeta.subscribe(function (notificationMeta) {
-        	if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(notificationMeta).slice(-1)))) {
-                $.jGrowl("Only numbers and letters is valid to type in notificationMeta field.", {
-                    sticky : false,
-                    theme : 'Error'
-                });
-        	}
+
+        this.restPostBodyMediaType.subscribe(function (new_value) {
+            vm.delete_BulkNotificationMsgKeyValuePair();
+            if(new_value=="application/x-www-form-urlencoded"){
+                vm.formpostkeyvaluepairs(true);
+            }else{
+                vm.formpostkeyvaluepairs(false);
+            }
         });
+
     }
 
-
+    function formdata_model(formdata){
+        this.formkey = ko.observable(formdata.formkey);
+        this.formvalue = ko.observable(formdata.formvalue);
+    }
 
     function conditions_model(condition){
         this.conditions = ko.observableArray(condition);
@@ -151,15 +134,27 @@ jQuery(document).ready(function() {
     var SubscriptionViewModel = function(){
         var self = this;
         self.subscription  = ko.observableArray([]);
+        self.subscription_templates_in  = ko.observableArray(
+            [
+                {"text": "Jenkins Pipeline Parameterized Job Trigger", value:"templatejenkinsPipelineParameterizedBuildTrigger"},
+                {"text": "REST POST (Raw Body : JSON)", value:"templateRestPostJsonRAWBodyTrigger"},
+                {"text": "Mail Trigger", value:"templateEmailTrigger"}
+            ]);
+        self.choosen_subscription_template = ko.observable();
+        self.formpostkeyvaluepairs = ko.observable(false);
         self.notificationType_in  = ko.observableArray(
         		[
         			{"text": "REST_POST", value:"REST_POST"},
-                    {"text": "REST_POST_JENKINS", value:"REST_POST_JENKINS"},
         			{"text": "MAIL", value:"MAIL"}
         		]);
 
-        self.repeat_in  = ko.observableArray([true, false]);
+        self.restPostBodyType_in  = ko.observableArray(
+            [
+                {"text": "FORM/POST Parameters (application/x-www-form-urlencoded)", value:"application/x-www-form-urlencoded"},
+                {"text": "RAW BODY: JSON (application/json)", value:"application/json"}
+            ]);
 
+        self.repeat_in  = ko.observableArray([true, false]);
 
         self.add_requirement = function(data, event) {
 
@@ -177,6 +172,24 @@ jQuery(document).ready(function() {
         };
 
 
+        self.choosen_subscription_template.subscribe(function (template_var) {
+            if (self.choosen_subscription_template() != null) { // only execute if value exists
+                json_obj_clone = JSON.parse(JSON.stringify(template_vars[template_var]));
+                populate_json(json_obj_clone, "add");
+            }
+        });
+
+
+        self.addNotificationMsgKeyValuePair = function(data, event) {
+            self.subscription()[0].notificationMessageKeyValues.push(new formdata_model(defaultFormKeyValuePair));
+
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+            self.subscription.valueHasMutated();
+        };
+
 
         self.getUTCDate= function(epochtime){
             var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
@@ -186,26 +199,37 @@ jQuery(document).ready(function() {
 
 
         self.add_condition = function(data, event, requirement_index) {
-
             self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().push(new jmespath_model({"jmespath": ko.observable("")}));
-
             // Force update
             var data = self.subscription().slice(0);
             self.subscription([]);
             self.subscription(data);
-
             self.subscription.valueHasMutated();
         };
 
 
         self.delete_condition = function (data, event, requirement_item , condition_index, requirement_index) {
-
             self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions.remove(data);
             if(self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().length <= 0)
             {
                 self.subscription()[0].requirements.remove(self.subscription()[0].requirements()[ko.toJSON(requirement_index)]);
             }
+        };
 
+
+        self.delete_NotificationMsgKeyValuePair = function (data, event, index) {
+            if(self.subscription()[0].notificationMessageKeyValues().length > 1) {
+                self.subscription()[0].notificationMessageKeyValues.remove(self.subscription()[0].notificationMessageKeyValues()[ko.toJSON(index)]);
+            }
+        };
+
+
+        self.delete_BulkNotificationMsgKeyValuePair = function () {
+            $.each(self.subscription()[0].notificationMessageKeyValues(), function (index, value) {
+                if(self.subscription()[0].notificationMessageKeyValues().length > 1) {
+                    self.subscription()[0].notificationMessageKeyValues.remove(self.subscription()[0].notificationMessageKeyValues()[ko.toJSON(index)]);
+                }
+            });
         };
 
 
@@ -234,16 +258,12 @@ jQuery(document).ready(function() {
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
         "order": [], //Initial no order.
-
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": frontendServiceUrl + "/subscriptions",
             "type": "GET",
             "dataSrc": ""   // Flat structure from EI backend REST API
-
         },
-
-
         //Set column definition initialisation properties.
         "columnDefs": [
             {
@@ -301,12 +321,8 @@ jQuery(document).ready(function() {
                 "data": null,
                 "width":"150px",
                 "defaultContent": '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button><button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>'
-
-
             },
-
         ],
-      
     });
     // /Stop ## Datatables ##################################################
 
@@ -331,7 +347,6 @@ jQuery(document).ready(function() {
     	var data = table.rows().nodes();
     	$.each(data, function (index, value) {
     		if ($(this).find('input').prop('checked') == true){
-//    			console.log("Index: " + index + " Checked: " + $(this).find('input').prop('checked') + " SubscriptionName: " + table.row(index).data().subscriptionName)
     			subScriptionsToDelete.push(table.row(index).data().subscriptionName)
     	    }
     	});
@@ -346,8 +361,7 @@ jQuery(document).ready(function() {
     	for (i=0; i < subScriptionsToDelete.length; i++) {
     		subScriptionsToDeleteString += subScriptionsToDelete[i] + "\n";
     	}
-    	//alert('Do you really want to delete these subscriptions:\n' + subScriptionsToDeleteString);
-        
+
     	var callback = {
                 beforeSend : function () {
                 },
@@ -356,11 +370,9 @@ jQuery(document).ready(function() {
                         sticky : false,
                         theme : 'Notify'
                     });
-
                     //if success reload ajax table
                     $('#modal_form').modal('hide');
                     reload_table();
-
                 },
                 error : function (XMLHttpRequest, textStatus, errorThrown) {
                     $.jGrowl("Error: " + XMLHttpRequest.responseText, {
@@ -371,7 +383,6 @@ jQuery(document).ready(function() {
                 complete : function () {
                 }
             };
-
 
              $.confirm({
                  title: 'Confirm!',
@@ -387,7 +398,6 @@ jQuery(document).ready(function() {
                      }
                  }
              });
-
     });
     // /Stop ## Bulk delete##################################################
 
@@ -415,10 +425,8 @@ jQuery(document).ready(function() {
 
     // /Start ## upload_subscriptions #################################################
     $('.container').on( 'click', 'button.upload_subscriptions', function (event) {
-    
     	event.stopPropagation();
         event.preventDefault();
-        
         function tryToCreateSubscription(subscriptionJson) {
         	// Send Subscription JSON file to Spring MVC
             // AJAX Callback handling
@@ -426,7 +434,6 @@ jQuery(document).ready(function() {
                 beforeSend : function () {
                 },
                 success : function (data, textStatus) {
-
                     var returnData = [data];
                     if (returnData.length > 0) {
                         $.jGrowl("Successful created subscription " + subscriptionJson.subscriptionName, {
@@ -435,32 +442,25 @@ jQuery(document).ready(function() {
                         });
                         reload_table();
                     }
-
                 },
                 error : function (XMLHttpRequest, textStatus, errorThrown) {
-
                     $.jGrowl("Failed to create Subscription: " + subscriptionJson.subscriptionName + " Error: " + XMLHttpRequest.responseText, {
                         sticky : false,
                         theme : 'Error'
                     });
-
                 },
                 complete : function () {
                 }
             };
-
             // Perform AJAX
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
         }
         
         function validateJsonAndCreateSubscriptions(subscriptionFile){
-        	
             var reader = new FileReader();
-            
             reader.onload = function() {
             var fileContent = reader.result;
-            
             var jsonLintResult="";
             try {
             	jsonLintResult = jsonlint.parse(fileContent);
@@ -471,28 +471,23 @@ jQuery(document).ready(function() {
             $.jGrowl('JSON Format Check Succeeded', {
                 sticky : false,
                 theme : 'Notify'
-            });  
-            
+            });
             var subscriptionJsonList = JSON.parse(fileContent);
                 tryToCreateSubscription(subscriptionJsonList);
             };
-            
             reader.readAsText(subscriptionFile);
-        	
         }
-        
+
+
         function createUploadWindow() {
-        	
             var pom = document.createElement('input');
             pom.setAttribute('id', 'uploadFile');
             pom.setAttribute('type', 'file');
             pom.setAttribute('name', 'upFile');
-       
             pom.onchange = function uploadFinished() {
             	var subscriptionFile = pom.files[0];
             	validateJsonAndCreateSubscriptions(subscriptionFile);
         	};
-
             if (document.createEvent) {
                 var event = document.createEvent('MouseEvents');
                 event.initEvent('click', true, true);
@@ -502,9 +497,9 @@ jQuery(document).ready(function() {
                 pom.click();
             }
         }
-        
+
+
         function createUploadWindowMSExplorer() {
-        	
             $('#upload_subscription_file').click();
         	var file = $('#upload_subscription_file').prop('files')[0];
         	validateJsonAndCreateSubscriptions(file);
@@ -524,16 +519,11 @@ jQuery(document).ready(function() {
 
     // /Start ## Add Subscription ########################################
     $('.container').on( 'click', 'button.btn.btn-success.add_subscription', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
-
-
+        vm.choosen_subscription_template(null);
         json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
-
         populate_json(json_obj_clone, "add");
-
-
     });
     // /Stop ## Add Subscription ############################################
 
@@ -548,22 +538,17 @@ jQuery(document).ready(function() {
 
     // /Start ## Edit Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
-
         // Fetch datatable row -> subscriptionName
         var datatable_row_data = table.row( $(this).parents('tr') ).data();
         var id = datatable_row_data.subscriptionName;
-
         // AJAX Callback handling
         var callback = {
             beforeSend : function () {
             },
             success : function (data, textStatus) {
-
                 populate_json(data, "edit");
-
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 $.jGrowl("Error: " + XMLHttpRequest.responseText, {
@@ -574,11 +559,9 @@ jQuery(document).ready(function() {
             complete : function () {
             }
         };
-
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
-
     });
     // /Stop ## Edit Subscription ###########################################
 
@@ -588,66 +571,70 @@ jQuery(document).ready(function() {
     {
         var returnData = [data];
         if (returnData.length > 0) {
-
-
             vm.subscription([]);
-
             // Map JSON to Model and observableArray
             var mappedPackageInfo = $.map(returnData, function (item) {
-
                 // Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
-
                 for (i=0; i < item[0].requirements.length; i++) {
-
                     var conditions_array = [];
-
                     for (k = 0; k < item[0].requirements[i].conditions.length; k++) {
-
                         var jmespath_temp = item[0].requirements[i].conditions[k].jmespath;
-
                         conditions_array.push(new jmespath_model({"jmespath": ko.observable(jmespath_temp)}));
-
                     }
-
                     item[0].requirements[i] = new conditions_model(conditions_array);
-
+                }
+                for (i=0; i < item[0].notificationMessageKeyValues.length; i++) {
+                    item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
                 }
                 return new subscription_model(item[0]);
-
-
             });
-
             // Load data into observable array
             vm.subscription(mappedPackageInfo);
-
-
+            // Force update
+            vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
             $('#modal_form').modal('show');
-            
-			if(data === "edit")				
+			if(save_method_in === "edit")
 			{
-				title_ = 'Subscription: ' + data.subscriptionName
+				title_ = 'Edit Subscription';
 				
 			}else
 			{
 				title_ = 'Add Subscription';
 			}
-			
 			$('.modal-title').text(title_);
-
             save_method = save_method_in;
         }
-
     }
    // /Stop ## pupulate JSON  ###########################################
 
 
     // /Start ## Save Subscription ##########################################
     $('div.modal-footer').on( 'click', 'button.save_record', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
+        var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
+        if(!vm.formpostkeyvaluepairs())
+        {
+            notificationMessageKeyValuesArray[0].formkey=""; // OBS must be empty when NOT using REST POST Form key/value pairs
+        }
 
         //START: Make sure all datatables field has a value
+        if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
+            $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
+                sticky : false,
+                theme : 'Error'
+            });
+            return;
+        }
+
+        if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
+            $.jGrowl("Only numbers and letters is valid to type in notificationMeta field.", {
+                sticky : false,
+                theme : 'Error'
+            });
+            return;
+        }
+
         if (vm.subscription()[0].subscriptionName() == "") {
             $.jGrowl("Error: SubscriptionName field must have a value", {
                 sticky : true,
@@ -678,13 +665,47 @@ jQuery(document).ready(function() {
         }
         //END OF: Make sure all datatables field has a value
 
-        //START: Check of other subscription fields values
-        if (vm.subscription()[0].notificationMessage() == "") {
-            $.jGrowl("Error: notificationMessage field must have a value", {
-                sticky : true,
-                theme : 'Error'
-            });
-            return;
+
+
+
+         //START: Check of other subscription fields values
+        for (i=0; i < notificationMessageKeyValuesArray.length; i++) {
+            var test_key = ko.toJSON(notificationMessageKeyValuesArray[i].formkey);
+            var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
+            if(vm.formpostkeyvaluepairs()){
+               if(test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""'){
+                    $.jGrowl("Error: Value & Key  in notificationMessage must have a values!", {
+                        sticky: true,
+                        theme: 'Error'
+                    });
+                    return;
+                }
+            }
+            else
+            {
+                if(notificationMessageKeyValuesArray.length !== 1)
+                {
+                    $.jGrowl("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!", {
+                        sticky: true,
+                        theme: 'Error'
+                    });
+                    return;
+                }
+                else if(test_key !== '""'){
+                    $.jGrowl("Error: Key in notificationMessage must be empty when NOT using key/value pairs!", {
+                        sticky: true,
+                        theme: 'Error'
+                    });
+                    return;
+                }
+                else if(test_value.replace(/\s/g, "") === '""'){
+                    $.jGrowl("Error: Value in notificationMessage must have a value when NOT using key/value pairs!", {
+                        sticky: true,
+                        theme: 'Error'
+                    });
+                    return;
+                }
+            }
         }
 
 
@@ -725,26 +746,19 @@ jQuery(document).ready(function() {
                 $('#btnSave').attr('disabled',true); //set button disable
             },
             success : function (data, textStatus) {
-
                 var returnData = [data];
                 if (returnData.length > 0) {
-
                     $('#modal_form').modal('hide');
                     reload_table();
-
                     // Clear ObservableArray
                     vm.subscription([]);
-
                 }
-
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
-
                 $.jGrowl("Error: " + XMLHttpRequest.responseText, {
                     sticky : true,
                     theme : 'Error'
                 });
-
             },
             complete : function () {
                 $('#btnSave').text('save'); //change button text
@@ -767,14 +781,10 @@ jQuery(document).ready(function() {
 
     // /Start ## Delete Subscription ########################################
     $('#table').on( 'click', 'tbody tr td button.delete_record', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
-
         var datatable_row_data = table.row( $(this).parents('tr') ).data();
         var id = datatable_row_data.subscriptionName.trim();
-
-
         var callback = {
             beforeSend : function () {
             },
@@ -812,7 +822,6 @@ jQuery(document).ready(function() {
                  }
              }
          });
-
     });
     // /Stop ## Delete Subscription #########################################
 
