@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<mvc:resources mapping="/resources/**" location="/resources/" />
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<script type="text/javascript" src="js/testrules.js"></script>
 </head>
-
 <body>
-<div class="container pull-left">
-	<br />
-	<br />
-	<div align="center"><label>Test Rules Page</label></div>
-</div>
+    <div class="container pull-left">
+        <br /> <br />
+        <div align="center">
+            <label>Test Rules Page</label>
+        </div>
+        <div style="max-width: 100%;" class="container pull-left">
+            <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_rules">
+                <i class="glyphicon glyphicon-upload"></i>Upload Rules
+            </button>
+            <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rules</th>
+                </tr>
+            </thead>
+            <tr>
+                <td><textarea id="rulesListID" cols="100" rows="15" data-bind="text:rulesBindingList"></textarea></td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
