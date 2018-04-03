@@ -88,9 +88,9 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
 template_vars["templateEmailTrigger"] =
                 [{
                     "created": "",
-                    "notificationMeta" : "mymail@company.com",
-                    "notificationType" : "MAIL",
-                    "restPostBodyMediaType" : "",
+                    "notificationMeta" : "http://<MyHost:port>/api/doit",
+                    "notificationType" : "REST_POST",
+                    "restPostBodyMediaType" : "application/json",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
@@ -107,5 +107,5 @@ template_vars["templateEmailTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Mail_Trigger>"
+                    "subscriptionName" : "<Subscription_Template_Rest_Post_Raw_Body_Json_Trigger>"
                 }];
