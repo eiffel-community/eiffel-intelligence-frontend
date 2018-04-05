@@ -11,7 +11,6 @@
 </head>
 <body>
 <div class="container pull-left">
-    <br/> <br/>
     <div align="center">
         <label>JMESPath Rules setup</label>
     </div>
@@ -46,7 +45,7 @@
     <p>Rules for object aggregation consist from JSON object with a defined structure inside it. Key in this object is rule specification and
         value is JMESPath identifier. Separate rule is created for each event type that is going to take participation in creating of aggregated
         object. This means that if you want to create your aggregated object from 3 event types and all rest event types discard, you will need 3
-        set of rules. Each rule might contain some of these keys, that have not null or empty values. Explicit list of rule keys are bellow:
+        set of rules. Each rule might contain some of these keys, that have not null or empty values. Explicit list of rule keys are bellow:</p>
     <ul>
         <li><code>"TemplateName"</code> - used for specifying a template group, any string you like to name your template</li>
         <li><code>"Type"</code> - Eiffel event <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">type</a>,
@@ -68,10 +67,10 @@
         <li><code>"MatchIdRules"</code> - denotes the received event id of the object, example <code>"%IdentifyRules_objid%"</code></li>
         <li><code>"IdentifyRules"</code> - JMESPath identifier of event id that will be used in aggregated object. Should produce an JSON array,
             for example <code>"[meta.id]"</code> which will return the specified field in array
-            <code>["sb6e51h0-25ch-4dh7-b9sd-876g8e6kde47"]</code>.<br>
+            <code>["sb6e51h0-25ch-4dh7-b9sd-876g8e6kde47"]</code>.
             And other common example is
             <code>"links | [?type=='CAUSE'].target"</code> which will extract the event id from <code>links</code> array value of
-            <code>target</code>, where "type" is equal "CAUSE". <br>
+            <code>target</code>, where "type" is equal "CAUSE".
             Links look like <code>{"links": [
                 {
                 "target": "f37d59a3-069e-4f4c-8cc5-a52e73501a75",
@@ -94,12 +93,12 @@
             to the inner structure of aggregated object depending on MergeResolverRules.
         </li>
         <li><code>"MergeResolverRules"</code> - JMESPath identifier of the place where to insert the JSON object form "ExtractionRules".
-            If MergeResolverRules is <code>null</code> ExtractionRules object will be inserted to the root of aggregated object.<br>
+            If MergeResolverRules is <code>null</code> ExtractionRules object will be inserted to the root of aggregated object.
             Other example is <code>"[{NONEPATH:NONE}, {test_suite: [{ test_case : [{ trigger_event_id:meta.id}]} ]} ]"</code> which consists from
             array with two fields, first is expression <code>{NONEPATH:NONE}</code> that <strong>should not exist</strong> in aggregated object,
             actually it could be any words you like.
             Second part is <code>{test_suite: [{ test_case : [{ trigger_event_id:meta.id}]}</code> that will form a new JSON object that will be
-            inserted to the aggregated object after evaluation of "meta.id".<br>
+            inserted to the aggregated object after evaluation of "meta.id".
             Another example could be insertion of object obtained in "ExtractionRules" to the array element that has <code>trigger_event_id</code>
             matching the event id target field from incoming event "TEST_CASE_EXECUTION" link JSON object.
         </li>
@@ -128,17 +127,17 @@
         <li><code>"ProcessFunction"</code> - Reserved for future use.</li>
 
     </ul>
-    </p>
-    <hr>
+
+
     <h3>The most common operation you would do</h3>
 
     <h4>Creating new aggregated object from Eiifel event</h4>
     <p>Lets consider that aggregated object should be created on receiving the EiffelArtifactCreated event, and it should form the aggregated object
         from the received event. Aggregated object should contain fields "id", "artifactId", and "temp", where id will be extracted from the received
-        event field "id", artifactId will be extracted from the this event too and temp will be set to true.
-        <details>
-            <summary>EiffelArtifactCreatedEvent example, click to unfold</summary>
-            <pre>
+        event field "id", artifactId will be extracted from the this event too and temp will be set to true.</p>
+    <details>
+        <summary>EiffelArtifactCreatedEvent example, click to unfold</summary>
+        <pre>
 {
    "meta":{
       "id":"66208918-4422-42cb-a0bf-17b15d1043d2",
@@ -189,9 +188,9 @@
 
    ]
 }</pre>
-        </details>
-        So we need to form a set of basic rules for Eiffel event that will fulfill our aggregated object.
-        Keep in mind that we are adding to the root of aggregated object so no need to specify MergeResolverRules.
+    </details>
+    <p>So we need to form a set of basic rules for Eiffel event that will fulfill our aggregated object.
+        Keep in mind that we are adding to the root of aggregated object so no need to specify MergeResolverRules.</p>
     <pre>
 {
    "TemplateName":"ARTIFACT_1",
@@ -217,8 +216,8 @@
       "TemplateName":"ARTIFACT_1"
    }
 }</pre>
-    </p>
-    <hr>
+
+
 
     <h4>Inserting a JSON array to aggregated object</h4>
     <p>Lets consider that on receiving of EiffelConfidenceLevelModifiedEvent message, confidence levels array should be inserted to the aggregated
@@ -241,7 +240,7 @@
         array is located. Each element of array is valid JSON object. There are key-value pairs in this array, and in one of those there is a key
         <code>"type"</code> and value is
         <code>"SUBJECT"</code> and we need to extract the value of <code>"target"</code> which will be our id for aggreagated object.
-        Such identifier for that is placed in <code>"IdentifyRules":"links | [?type=='SUBJECT'].target"</code>.<br>
+        Such identifier for that is placed in <code>"IdentifyRules":"links | [?type=='SUBJECT'].target"</code>.
         At this point we know the needed aggregated object id and now we need to specify the desired location for confidence level information.
         Lets move the data obtained in "ExtractionRules" under <code>"confidenceLevels"</code> key in the root of aggregated object and the value
         of it should be array. The identifier for such expression will be <code>{confidenceLevels: [{ eventId: meta.id }]}</code>. To insert the
@@ -370,13 +369,13 @@
 </pre>
     </details>
 
-    <hr>
+
     <h4>Updating array of JSON objects where the some field is pointing to Eiffel message id</h4>
 
     <p>Lets consider that on receiving EiffelTestCaseStartedEvent message we need to update the array object, which has
         in the <code>"TEST_CASE_EXECUTION"</code> link type id, that
         matches aggregated object and the data in that JSON object need to be updated. As a result of applying the rule, field ongoing in aggregated
-    object will change the value from <code>{
+        object will change the value from <code>{
             "ongoing":"false",
             "test_data":null,
             "trigger_event_id":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
@@ -499,7 +498,7 @@
 }</pre>
     </details>
 
-    <hr>
+
 
     <h4>Upstream events</h4>
     <p>Under upstream events to some specified event in Eiffel we mean those event that were processed/issued before or were the cause to
@@ -509,7 +508,7 @@
         EiffelSourceChangeSubmittedEvent, EiffelArtifactCreatedEvent, EiffelArtifactPublishedEvent, so the upstream event for
         EiffelArtifactCreatedEvent will be EiffelSourceChangeCreatedEvent andEiffelSourceChangeSubmittedEvent.
     </p>
-    <hr>
+
 
     <h4>Downstream events</h4>
     <p>Under downstream events to some specified event in Eiffel we mean those event that will be issued after or were the outcome to
@@ -519,7 +518,7 @@
         EiffelSourceChangeSubmittedEvent, EiffelArtifactCreatedEvent, EiffelArtifactPublishedEvent, so the downstream event for
         EiffelArtifactCreatedEvent will be EiffelArtifactPublishedEvent.
     </p>
-    <hr>
+
 
 
     <p>Rule examples</p>
