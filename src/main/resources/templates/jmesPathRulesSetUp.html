@@ -14,6 +14,14 @@
     <div align="center">
         <label>JMESPath Rules setup</label>
     </div>
+    <h3>Rule testing mechanism via "Test Rules" GUI inteface</h3>
+    <p>Graphical User interface for rule tesing consists from two panes. Left pane is intended to upload the rule. To do this one will need to chose
+        the rule type from dropdown menu, then insert the rule content and upload the rule. Right pane is intended for uploading the Eiffel events.
+        After uploading the events one may check the result of applying rules by pressing "Find Aggregated Object" button specifying the UUID of
+        this object.
+    </p>
+    <picture><img src="assets/images/GUI_frontend_example.jpg" alt="Test Rules Example" height="500"></img></picture>
+
     <h3>Introduction</h3>
     <p>JMESPath is a query language for JSON. You can extract and transform elements from a JSON document.
         The result of applying a JMESPath expression against a JSON document will always result in valid JSON,
@@ -216,7 +224,6 @@
       "TemplateName":"ARTIFACT_1"
    }
 }</pre>
-
 
 
     <h4>Inserting a JSON array to aggregated object</h4>
@@ -499,7 +506,6 @@
     </details>
 
 
-
     <h4>Upstream events</h4>
     <p>Under upstream events to some specified event in Eiffel we mean those event that were processed/issued before or were the cause to
         the specified event, such dependency works via
@@ -518,7 +524,6 @@
         EiffelSourceChangeSubmittedEvent, EiffelArtifactCreatedEvent, EiffelArtifactPublishedEvent, so the downstream event for
         EiffelArtifactCreatedEvent will be EiffelArtifactPublishedEvent.
     </p>
-
 
 
     <p>Rule examples</p>
