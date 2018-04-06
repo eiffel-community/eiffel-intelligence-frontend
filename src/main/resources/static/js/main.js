@@ -50,7 +50,17 @@ jQuery(document).ready(function() {
 		
     	loadMainPage();
 	}
-	
+
+	function loadJmesPathRulesSetUpPage() {
+
+    	$("#mainFrame").load("jmesPathRulesSetUp.html");
+	}
+
+	document.getElementById("jmesPathRulesSetUpBtn").onclick = function() {
+
+    	loadJmesPathRulesSetUpPage();
+    }
+
 	function loadDocumentLinks(){
 		// eiffelDocumentationUrlLinks variable is configure in application.properties
 		var linksList = JSON.parse(eiffelDocumentationUrlLinks);

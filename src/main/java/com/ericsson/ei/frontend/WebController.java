@@ -97,6 +97,13 @@ public class WebController {
         return "forgot-password";
     }
 
+    // Added documentation for JMESPath rules usage
+    @RequestMapping("/jmesPathRulesSetUp.html")
+    public String jmesPathRulesSetUp(Model model) {
+
+        return "jmesPathRulesSetUp";
+    }
+
     // Backend host and port (Getter & Setters), application.properties ->
     // greeting.xxx
     public String getFrontendServiceHost() {
