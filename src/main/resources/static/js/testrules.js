@@ -6,6 +6,48 @@ jQuery(document).ready(
 
       frontendServiceUrl = $('#frontendServiceUrl').text();
 
+      // /Start ## Global AJAX Sender function ##################################
+      var AjaxHttpSender = function() {
+      };
+
+      AjaxHttpSender.prototype.sendAjax = function(url, type, data, callback) {
+        $.ajax({
+          url : url,
+          type : type,
+          data : data,
+          contentType : 'application/json; charset=utf-8',
+          dataType : "json",
+          cache : false,
+          beforeSend : function() {
+            callback.beforeSend();
+          },
+          error : function(XMLHttpRequest, textStatus, errorThrown) {
+            callback.error(XMLHttpRequest, textStatus, errorThrown);
+          },
+          success : function(data, textStatus) {
+            callback.success(data, textStatus);
+          },
+          complete : function(XMLHttpRequest, textStatus) {
+            callback.complete();
+          }
+        });
+      }
+      // /Stop ## Global AJAX Sender function ##################################
+
+      //Function for validating the json format, it accepts only string json
+      function isValidJSON(str) {
+        if (typeof (str) !== 'string') {
+          return false;
+        }
+        try {
+          JSON.parse(str);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // Model for knockout(KO) binding
       function AppViewModel(rulesList) {
         var self = this;
         self.rulesBindingList = ko.observableArray(rulesList);
@@ -18,6 +60,7 @@ jQuery(document).ready(
           return JSON.stringify(item, null, 2);
         };
 
+        //After adding a rule, this function remove the type from dropdown
         self.removeDropdown = function(name) {
           var index = self.dropdown.indexOf(name);
           if (index !== -1) {
@@ -26,31 +69,46 @@ jQuery(document).ready(
           return name;
         };
 
+        // Removing the rule
         self.removeRule = function(name) {
           self.rulesBindingList.remove(name);
           self.dropdown.push(name.Type);
         };
+        
+        //This submit function for finding the aggregated object from the rules and events, This function internally call the ajax call
         self.submit = function() {
-          var inputs = $("#eventsListID").val();
+          var events = $("#eventsListID").val();
           var formRules = [];
-          $('.formRules').each (function() {
-            formRules.push($(this).val());
+          $('.formRules').each(function() {
+            try {
+              formRules.push(JSON.parse($(this).val()));
+            } catch (e) {
+              $.jGrowl("Invalid json format :\n" + $(this).val(), {
+                sticky : false,
+                theme : 'Error'
+              });
+              return false;
+            }
           });
-          console.log("Rules : "+formRules.length);
-          console.log(formRules.toString());
-          console.log("Events : ");
-          console.log(inputs.toString());
+
           var callback = {
             beforeSend : function() {
             },
             success : function(data, textStatus) {
-              var returnData = [ data ];
+              var returnData = data;
               if (returnData.length > 0) {
                 $.jGrowl("Successfully aggregated object generated", {
                   sticky : false,
                   theme : 'Error'
                 });
-                reload_table();
+
+                $('#aggregatedresultData').text(JSON.stringify(data, null, 2));
+                var divText = document.getElementById("aggregatedresult").outerHTML;
+                var myWindow = window.open('', '', 'width=700,height=1000');
+                var doc = myWindow.document;
+                doc.open();
+                doc.write(divText);
+                doc.close();
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -62,13 +120,18 @@ jQuery(document).ready(
             complete : function() {
             }
           };
-          // Perform AJAX
-//          var ajaxHttpSender = new AjaxHttpSender();
-//          ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", ko.toJSON("{'listRulesJson':"
-//              + self.parsedToString(self.rulesBindingList()) + ",'listEventsJson':" + self.eventsBindingList.toString() + "}"), callback);
-
+          var eventsValid = isValidJSON(events.toString());
+          if (!eventsValid) {
+            alert("Events are not a valid json format");
+          } else {
+            var ajaxHttpSender = new AjaxHttpSender();
+            //console.log(JSON.stringify(JSON.parse('{"listRulesJson":' + JSON.stringify(formRules) + ',"listEventsJson":' + events.toString() + '}')));
+            ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", JSON.stringify(JSON.parse('{"listRulesJson":'
+                + JSON.stringify(formRules) + ',"listEventsJson":' + events.toString() + '}')), callback);
+          }
         };
 
+        // This function for adding rule
         self.addRule = function(viewModel, event) {
           var newValue = event.target.value;
           if (newValue != '') {
@@ -83,14 +146,19 @@ jQuery(document).ready(
         return self;
       }
 
+      
       var vm = new AppViewModel([]);
       ko.applyBindings(vm, $("#submitButton")[0]);
-      // ko.applyBindings(vm, $(".testTulesDOMObject")[0]);
+      vm.rulesBindingList.push({
+        "TemplateName" : "",
+        "Type" : "EiffelArtifactCreatedEvent"
 
-      $(".container").on(
-          "click",
-          "button.upload_rules",
-          function(event) {
+      });
+      vm.removeDropdown("EiffelArtifactCreatedEvent");
+      ko.applyBindings(vm, $("#testTulesDOMObject")[0]);
+
+      //Upload events list json data
+      $(".container").on("click","button.upload_rules", function(event) {
             event.stopPropagation();
             event.preventDefault();
 
@@ -163,6 +231,7 @@ jQuery(document).ready(
             }
           });
 
+      //Upload list of events json data
       $(".container").on("click", "button.upload_events", function(event) {
         event.stopPropagation();
         event.preventDefault();
@@ -226,4 +295,52 @@ jQuery(document).ready(
         }
       });
 
+      // Download the modified rule
+      $('.container').on('click', 'button.download_rules', function() {
+        var formRules = [];
+        $('.formRules').each(function() {
+          try {
+            formRules.push(JSON.parse($(this).val()));
+          } catch (e) {
+            $.jGrowl("Invalid json format :\n" + $(this).val(), {
+              sticky : false,
+              theme : 'Error'
+            });
+            return false;
+          }
+        });
+        if (formRules.length !== 0) {
+          var contentType = "application/json;charset=utf-8";
+          var jsonData = JSON.stringify(formRules, null, 2);
+          var fileName = "rules.json"
+
+          function downloadFile(data, type, title) {
+            var link = document.createElement('a');
+            link.setAttribute("href", "data:" + type + "," + encodeURIComponent(data));
+            link.setAttribute("download", fileName);
+            link.setAttribute("class", "hidden");
+            link.click();
+          }
+
+          function downloadFileMSExplorer(data, type, title) {
+            var blob = new Blob([ data ], {
+              type : type
+            });
+            window.navigator.msSaveOrOpenBlob(blob, title);
+          }
+
+          if (window.navigator.msSaveOrOpenBlob) {
+            downloadFileMSExplorer(jsonData, contentType, fileName);
+          } else {
+            downloadFile(jsonData, contentType, fileName);
+          }
+        }
+        else{
+          $.jGrowl("Data not available for download!", {
+            sticky : false,
+            theme : 'Error'
+          });
+        }
+
+      });
     });

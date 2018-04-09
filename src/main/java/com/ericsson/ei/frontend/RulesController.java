@@ -1,21 +1,18 @@
 package com.ericsson.ei.frontend;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,31 +44,32 @@ public class RulesController {
     private boolean useSecureHttp;
 
     @CrossOrigin
-    @RequestMapping(value = "/aggregate", method = RequestMethod.POST)
+    @RequestMapping(value = "/rule-check/aggregation", method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(HttpServletRequest request) {
 
         String eiBackendAddressSuffix = request.getServletPath();
         String newRequestUrl = getEIBackendRulesRestPointAddress() + eiBackendAddressSuffix;
         LOG.info("Got HTTP Request with method POST.\nUrlSuffix: " + eiBackendAddressSuffix
                 + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
-
-        HttpClient client = HttpClients.createDefault();
-        HttpPost eiRequest = new HttpPost(newRequestUrl);
-
-        ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("listRulesJson", request.getParameter("listRulesJson")));
-        postParameters.add(new BasicNameValuePair("listEventsJson", request.getParameter("listEventsJson")));
-
+        String inputReqJsonContent = "";
         try {
-            eiRequest.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
-        } catch (UnsupportedEncodingException e1) {
+            BufferedReader inputBufReader = new BufferedReader(request.getReader());
+            for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
+                inputReqJsonContent += line;
+            }
+            inputBufReader.close();
 
-        }
-        eiRequest.setHeader("Content-type", "application/json");
+            LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
+            StringEntity entity = new StringEntity(inputReqJsonContent);
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
-        String jsonContent = "";
-        HttpResponse eiResponse = null;
-        try {
+            HttpClient client = HttpClients.createDefault();
+            HttpPost eiRequest = new HttpPost(newRequestUrl);
+            eiRequest.setEntity(entity);
+            eiRequest.setHeader("Content-type", "application/json");
+
+            String jsonContent = "";
+            HttpResponse eiResponse = null;
             eiResponse = client.execute(eiRequest);
 
             InputStream inStream = eiResponse.getEntity().getContent();
@@ -81,22 +79,27 @@ public class RulesController {
             }
             bufReader.close();
             inStream.close();
-        } catch (IOException e) {
+
+            LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode()
+                    + "\nEI Recevied jsonContent:\n" + jsonContent
+                    + "\nForwarding response back to EI Frontend WebUI.");
+
+            if (jsonContent.isEmpty()) {
+                jsonContent = "[]";
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonContent, headers,
+                    HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
+            return responseEntity;
+        } catch (Exception e) {
             LOG.error("Forward Request Errors: " + e);
+            ResponseEntity<String> responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return responseEntity;
         }
 
-        LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode()
-                + "\nEI Recevied jsonContent:\n" + jsonContent + "\nForwarding response back to EI Frontend WebUI.");
-
-        if (jsonContent.isEmpty()) {
-            jsonContent = "[]";
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonContent, headers,
-                HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
-        return responseEntity;
+        
     }
 
     private String getEIBackendRulesRestPointAddress() {
