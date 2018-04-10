@@ -73,6 +73,17 @@ jQuery(document).ready(
         self.removeRule = function(name) {
           self.rulesBindingList.remove(name);
           self.dropdown.push(name.Type);
+          if(self.rulesBindingList().length == 0){
+            $.jGrowl("Deleted all rule types, but we need atleast one Rule type, Here add default rule type", {
+              sticky : false,
+              theme : 'Error'
+            });
+            self.rulesBindingList.push({
+              "TemplateName" : "",
+              "Type" : "EiffelArtifactCreatedEvent"
+
+            });
+          }
         };
         
         //This submit function for finding the aggregated object from the rules and events, This function internally call the ajax call
@@ -181,7 +192,7 @@ jQuery(document).ready(
                 var rulesList = JSON.parse(fileContent);
                 ko.cleanNode($("#testTulesDOMObject")[0]);
                 ko.cleanNode($("#submitButton")[0]);
-
+                $("#testTulesDOMObject").css('min-height', $(".navbar-sidenav").height() - 180);
                 vm.rulesBindingList.removeAll();
                 $('.eventsListDisplay > div:gt(0)').remove();
                 vm.rulesBindingList = ko.observableArray(rulesList);

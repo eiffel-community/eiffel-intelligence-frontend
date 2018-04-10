@@ -155,14 +155,12 @@ public class EIRequestsController {
     }
 
     /**
-     * Bridge all EI Http Requests with POST method. E.g. Making Create
-     * Subscription Request.
+     * Bridge all EI Http Requests with POST method.
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
+    @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation"}, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
-
         String eiBackendAddressSuffix = request.getServletPath();
         String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
         LOG.info("Got HTTP Request with method POST.\nUrlSuffix: " + eiBackendAddressSuffix
