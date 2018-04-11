@@ -13,33 +13,32 @@
     <div class="container pull-left" style="max-width: 100%; max-height: 100%">
         <br /> <br />
         <div align="center">
-            <h2>Test Rules</h2>
+            <h1>Test Rules</h1>
         </div>
         <p><span style="color: #333333; background-color: #ffff00;">Upload Rules and events are in json list, Ex : [{},{}]</span></p>
-        <div class="row">
-            <div class="col-6 border border-right border-success " id="testTulesDOMObject">
-                <div class="row butt">
+        <div class="row" style="max-height: 950;padding: 10px">
+            <div class="col-6 border border-right border-success" style="padding: 10px" id="testTulesDOMObject">
+                <div class="row butt divpad">
                     <div class="col-3">
                         <button data-toggle="tooltip" title="Upload List of Rules" class="btn btn-primary upload_rules">
                             Upload Rules <i class="fa fa-fw  fa-upload"></i>
                         </button>
                         <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
                     </div>
-                    <div class="col-2">Rule Type :</div>
                     <div class="col-6">
                         <select class="form-control dropdownvalues"
-                            data-bind="options: dropdown,event: { change: addRule },optionsCaption: 'Please select rule type'"></select>
+                            data-bind="options: dropdown,event: { change: addRule },optionsCaption: 'Add Rule'"></select>
                     </div>
                 </div>
-                <div class="row-fluid">Rules</div>
+                <div class="row-fluid divpad"><h3>Rules</h3></div>
                 <div class="row-fluid eventsListDisplay" data-bind="foreach: rulesBindingList">
                     <div class="testClass" data-bind="attr: { id: 'foo' + Type }">
                         <div class="row top15">
                             <div class="col-8">
-                                <h4>
-                                    <span class="badge-info"
+                                <h5>
+                                    <span
                                         data-bind="text : 'Rule : '+$root.removeDropdown(Type)"></span>
-                                </h4>
+                                </h5>
                             </div>
                             <div class="col-3"></div>
                             <div class="col-1">
@@ -54,8 +53,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 border border-right border-success" id="eventsDOMObject" style="max-height: 100%">
-                <div class="row butt">
+            <div class="col-6 border border-right border-success" id="eventsDOMObject" style="max-height: 100%;padding: 10px">
+                <div class="row butt divpad">
                     <div class="col-4">
                         <button data-toggle="tooltip" title="Upload List of events" class="btn btn-primary upload_events">
                             Upload Events <i class="fa fa-fw  fa-upload"></i>
@@ -63,13 +62,13 @@
                         <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
                     </div>
                 </div>
-                <div class="row-fluid">Events</div>
+                <div class="row-fluid divpad" ><h3>Events</h3></div>
                 <div class="row-fluid top15">
                     <textarea class="form-control top15 textareaCustom" id="eventsListID"></textarea>
                 </div>
             </div>
         </div>
-        <div class="row-fluid" id="submitButton">
+        <div class="row-fluid divpad" id="submitButton" >
             <div class="row">
                 <div class="col-5"><button data-toggle="tooltip" title="download the above rules into a json file" class="btn btn-success download_rules"
                         >Download Rules<i class="fa fa-fw  fa-download"></i></button></div>
