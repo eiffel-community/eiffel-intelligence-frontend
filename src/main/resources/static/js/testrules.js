@@ -274,7 +274,6 @@ jQuery(document).ready(
               sticky : false,
               theme : 'Notify'
             });
-            console.log("I am ghere");
             var eventsList = JSON.parse(fileContent);
             ko.cleanNode($("#testEventsDOMObject")[0]);
             vm.eventsBindingList.removeAll();
