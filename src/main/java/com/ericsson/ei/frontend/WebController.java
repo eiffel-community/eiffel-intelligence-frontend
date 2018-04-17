@@ -89,20 +89,6 @@ public class WebController {
     @RequestMapping("/login.html")
     public String login(Model model) {
 
-        String httpMethod = "http";
-        if (useSecureHttp) {
-            httpMethod = "https";
-        }
-
-        String frontendServiceUrl;
-        if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-            frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod , frontendServiceHost, frontendServicePort, frontendContextPath);
-        }
-        else {
-            frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
-        }
-        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
-
         return "login";
     }
     

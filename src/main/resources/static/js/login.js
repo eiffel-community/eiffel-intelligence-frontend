@@ -1,9 +1,6 @@
 
 jQuery(document).ready(function() {
 
-    // Fetch injected URL from DOM
-    frontendServiceUrl = $('#frontendServiceUrl').text();
-
     // /Start ## Global AJAX Sender function ##################################
     var AjaxHttpSender = function () {};
 
@@ -21,9 +18,8 @@ jQuery(document).ready(function() {
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, errorThrown);
             },
-            success : function (data, textStatus) {
-
-                callback.success();
+            success : function (responseData, textStatus) {
+                callback.success(data);
             },
             complete : function (XMLHttpRequest, textStatus) {
                 callback.complete();
@@ -32,22 +28,55 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
+    // /Start ## Cookies functions ###########################################
+    function setCookie(name, value) {
+        var expiry = new Date(new Date().getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
+        if(window.location.protocol == "https:") {
+            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString() + "; secure; HttpOnly";
+        } else {
+            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+        }
+    }
+
+    function saveCookies(data, remember) {
+        if(remember) {
+            setCookie("ei-username", JSON.parse(data).username);
+            setCookie("ei-password", JSON.parse(data).password);
+        }
+    }
+
+    function getCookie(name) {
+        var re = new RegExp(name + "=([^;]+)");
+        var value = re.exec(document.cookie);
+        return (value != null) ? unescape(value[1]) : null;
+    }
+
+    function getValuesFromCookie(key) {
+        var value = "";
+        if(cookie = getCookie(key)) {
+            value = cookie;
+        }
+        return value;
+    }
+    // /Stop ## Cookies functions ############################################
+
     // /Start ## Knockout ####################################################
     function loginModel() {
         this.userState = {
-            username: ko.observable(""),
-            password: ko.observable(""),
-            remember: ko.observable(false)
+            username: ko.observable(getValuesFromCookie("ei-username")),
+            password: ko.observable(getValuesFromCookie("ei-password"))
         };
+        this.remember = ko.observable(false);
 
-        this.login = function(userState) {
+        this.login = function(userState, remember) {
             var callback = {
                 beforeSend : function () {},
-                success : function () {
+                success : function (data) {
                     $.jGrowl("Welcome", {
                         sticky : false,
                         theme : 'Notify'
                     });
+                    saveCookies(data, remember);
                     $("#mainFrame").load("subscriptionpage.html");
                 },
                 error : function (XMLHttpRequest, errorThrown) {
@@ -67,7 +96,7 @@ jQuery(document).ready(function() {
                 });
             } else {
                 var ajaxHttpSender = new AjaxHttpSender();
-                ajaxHttpSender.sendAjax(frontendServiceUrl + "/auth/login", "POST", dataJSON, callback);
+                ajaxHttpSender.sendAjax("/auth/login", "POST", dataJSON, callback);
             }
         }
     }
@@ -76,6 +105,6 @@ jQuery(document).ready(function() {
     ko.cleanNode(observableObject);
     var model = new loginModel();
     ko.applyBindings(model, document.getElementById("viewModelDOMObject"));
-    // /Stop ## Knockout ####################################################
+    // /Stop ## Knockout #####################################################
 
 });
