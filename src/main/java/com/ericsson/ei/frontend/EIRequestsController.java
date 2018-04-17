@@ -180,7 +180,7 @@ public class EIRequestsController {
      * 
      */
 	@CrossOrigin
-	@RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
+	@RequestMapping(value = {"/subscriptions", "/auth/*"}, method = RequestMethod.POST)
 	public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
 		
     	String eiBackendAddressSuffix = request.getServletPath();
