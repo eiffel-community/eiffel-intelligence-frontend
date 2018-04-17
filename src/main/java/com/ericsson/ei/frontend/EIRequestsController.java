@@ -72,6 +72,8 @@ public class EIRequestsController {
 	
 	private String backendServerHost;
     private int backendServerPort;
+    private String backendContextPath;
+    private boolean useSecureHttp;
 
     private static final String APPLICATION_JSON = "application/json";
 
@@ -91,9 +93,33 @@ public class EIRequestsController {
     public void setBackendServerPort(int backendServerPort) {
         this.backendServerPort = backendServerPort;
     }
+
+    public String getBackendContextPath() {
+        return backendContextPath;
+    }
+
+    public void setBackendContextPath(String backendContextPath) {
+        this.backendContextPath = backendContextPath;
+    }
+    
+    public boolean getUseSecureHttp() {
+        return useSecureHttp;
+    }
+
+    public void setUseSecureHttp(boolean useSecureHttp) {
+        this.useSecureHttp = useSecureHttp;
+    }
     
     public String getEIBackendSubscriptionAddress() {
-    	return "http://" + this.getBackendServerHost() + ":" + this.getBackendServerPort();
+    	String httpMethod = "http";
+    	if (useSecureHttp) {
+    		httpMethod = "https";
+    	}
+    	
+    	if (backendContextPath != null && !backendContextPath.isEmpty()) {
+        	return httpMethod + "://" + this.getBackendServerHost() + ":" + this.getBackendServerPort() + "/" + backendContextPath;
+    	}
+    	return httpMethod + "://" + this.getBackendServerHost() + ":" + this.getBackendServerPort();
 	}
 
     
@@ -102,7 +128,7 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate"}, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
     	String eiBackendAddressSuffix = request.getServletPath();
     	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;

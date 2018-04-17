@@ -9,8 +9,8 @@ jQuery(document).ready(function() {
     
     var tableTdKeyWidth = '250';
 
-    var body = document.getElementsByTagName('body')[0];
-
+    var body = document.getElementById('eiPageFrame');
+    
     function createTable() {
         var tbl = document.createElement('table');
         tbl.style.width = '40%';
