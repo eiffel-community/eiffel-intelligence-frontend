@@ -9,12 +9,9 @@ jQuery(document).ready(function() {
             url : url,
             type : type,
             contentType : 'application/json; charset=utf-8',
-            headers : {
-                'Authorization' : 'Basic ' + token
-            },
             cache: false,
-            beforeSend : function (xhr) {
-                callback.beforeSend(xhr, token);
+            beforeSend : function (request) {
+                callback.beforeSend(request, token);
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, errorThrown);
@@ -57,9 +54,7 @@ jQuery(document).ready(function() {
         this.login = function(userState, remember) {
             var callback = {
                 beforeSend : function (xhr, data) {
-//                    var token = window.btoa(JSON.parse(data).username + ":" + JSON.parse(data).password);
-//                    $.alert(token);
-//                    xhr.setRequestHeader("Authorization", "Basic " + token);
+                    xhr.setRequestHeader("Authorization", "Basic " + token);
                 },
                 success : function (data) {
                     $.jGrowl("Welcome", {
