@@ -128,7 +128,7 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate", "/auth/login"}, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
     	String eiBackendAddressSuffix = request.getServletPath();
     	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
@@ -138,6 +138,11 @@ public class EIRequestsController {
 
     	HttpClient client = HttpClients.createDefault();
     	HttpGet eiRequest = new HttpGet(newRequestUrl);
+
+		String header = request.getHeader("Authorization");
+    	if(header != null) {
+			eiRequest.addHeader("Authorization", header);
+		}
 
     	String jsonContent = "";
     	HttpResponse eiResponse = null;
@@ -180,7 +185,7 @@ public class EIRequestsController {
      * 
      */
 	@CrossOrigin
-	@RequestMapping(value = {"/subscriptions", "/auth/*"}, method = RequestMethod.POST)
+	@RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
 	public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
 		
     	String eiBackendAddressSuffix = request.getServletPath();

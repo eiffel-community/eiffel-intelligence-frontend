@@ -4,22 +4,23 @@ jQuery(document).ready(function() {
     // /Start ## Global AJAX Sender function ##################################
     var AjaxHttpSender = function () {};
 
-    AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
+    AjaxHttpSender.prototype.sendAjax = function (url, type, token, callback) {
         $.ajax({
             url : url,
             type : type,
-            data : data,
             contentType : 'application/json; charset=utf-8',
-            dataType : "json",
+            headers : {
+                'Authorization' : 'Basic ' + token
+            },
             cache: false,
-            beforeSend : function () {
-                callback.beforeSend();
+            beforeSend : function (xhr) {
+                callback.beforeSend(xhr, token);
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, errorThrown);
             },
             success : function (responseData, textStatus) {
-                callback.success(data);
+                callback.success(responseData);
             },
             complete : function (XMLHttpRequest, textStatus) {
                 callback.complete();
@@ -30,18 +31,11 @@ jQuery(document).ready(function() {
 
     // /Start ## Cookies functions ###########################################
     function setCookie(name, value) {
-        var expiry = new Date(new Date().getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
+        var expiry = new Date(new Date().getTime() + 3 * 3600 * 1000); // plus 3 hours
         if(window.location.protocol == "https:") {
             document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString() + "; secure; HttpOnly";
         } else {
             document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
-        }
-    }
-
-    function saveCookies(data, remember) {
-        if(remember) {
-            setCookie("ei-username", JSON.parse(data).username);
-            setCookie("ei-password", JSON.parse(data).password);
         }
     }
 
@@ -50,33 +44,31 @@ jQuery(document).ready(function() {
         var value = re.exec(document.cookie);
         return (value != null) ? unescape(value[1]) : null;
     }
-
-    function getValuesFromCookie(key) {
-        var value = "";
-        if(cookie = getCookie(key)) {
-            value = cookie;
-        }
-        return value;
-    }
     // /Stop ## Cookies functions ############################################
 
     // /Start ## Knockout ####################################################
     function loginModel() {
         this.userState = {
-            username: ko.observable(getValuesFromCookie("ei-username")),
-            password: ko.observable(getValuesFromCookie("ei-password"))
+            username: ko.observable(""),
+            password: ko.observable("")
         };
         this.remember = ko.observable(false);
 
         this.login = function(userState, remember) {
             var callback = {
-                beforeSend : function () {},
+                beforeSend : function (xhr, data) {
+//                    var token = window.btoa(JSON.parse(data).username + ":" + JSON.parse(data).password);
+//                    $.alert(token);
+//                    xhr.setRequestHeader("Authorization", "Basic " + token);
+                },
                 success : function (data) {
                     $.jGrowl("Welcome", {
                         sticky : false,
                         theme : 'Notify'
                     });
-                    saveCookies(data, remember);
+                    if(remember) {
+                        setCookie("sessionID", data);
+                    }
                     $("#mainFrame").load("subscriptionpage.html");
                 },
                 error : function (XMLHttpRequest, errorThrown) {
@@ -95,8 +87,9 @@ jQuery(document).ready(function() {
                     theme : 'Error'
                 });
             } else {
+                var token = window.btoa(JSON.parse(dataJSON).username + ":" + JSON.parse(dataJSON).password);
                 var ajaxHttpSender = new AjaxHttpSender();
-                ajaxHttpSender.sendAjax("/auth/login", "POST", dataJSON, callback);
+                ajaxHttpSender.sendAjax("/auth/login", "GET", token, callback);
             }
         }
     }
