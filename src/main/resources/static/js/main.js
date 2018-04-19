@@ -15,20 +15,21 @@ jQuery(document).ready(function() {
     	$("#mainFrame").load("eiInfo.html");
 	}
 	
-	
-	function loadLoginPage() {
- 
-    	$("#mainFrame").load("login.html");
-	}
-	
 	document.getElementById("loginBtn").onclick = function() {		  
 		
-		loadLoginPage();
+		$("#mainFrame").load("login.html");
 	}
 	
-	document.getElementById("logoutLoginBtn").onclick = function() {		  
-		
-		loadLoginPage();
+	document.getElementById("logoutBtn").onclick = function() {
+		$.ajax({
+		    url : "/auth/logout",
+		    type : "GET",
+		    contentType : 'application/json; charset=utf-8',
+		    cache: false,
+		    complete : function (XMLHttpRequest, textStatus) {
+		        loadMainPage();
+		    }
+		});
 	}
 	
 	document.getElementById("registerBtn").onclick = function() {		  
@@ -68,12 +69,6 @@ jQuery(document).ready(function() {
     			liTag.appendChild(aTag);
     			docLinksDoc.appendChild(liTag);
     	    	});
-    	    
-		
-		
-		
-
-		
 	}
 	
 	var initOneTime = function(){

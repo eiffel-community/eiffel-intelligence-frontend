@@ -83,7 +83,7 @@ public class EIRequestsController {
     public void setBackendContextPath(String backendContextPath) {
         this.backendContextPath = backendContextPath;
     }
-    
+
     public boolean getUseSecureHttp() {
         return useSecureHttp;
     }
@@ -91,7 +91,7 @@ public class EIRequestsController {
     public void setUseSecureHttp(boolean useSecureHttp) {
         this.useSecureHttp = useSecureHttp;
     }
-    
+
     private String getEIBackendSubscriptionAddress() {
     	String httpMethod = "http";
     	if (useSecureHttp) {
@@ -108,7 +108,7 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate", "/auth/login"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information", "/download/subscriptiontemplate", "/auth/*"}, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
     	String eiBackendAddressSuffix = request.getServletPath();
     	String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;

@@ -57,12 +57,13 @@ jQuery(document).ready(function() {
                     xhr.setRequestHeader("Authorization", "Basic " + token);
                 },
                 success : function (data) {
-                    $.jGrowl("Welcome", {
+                    var currentUser = JSON.parse(ko.toJSON(data)).user;
+                    $.jGrowl("Welcome " + currentUser, {
                         sticky : false,
                         theme : 'Notify'
                     });
                     if(remember) {
-                        setCookie("sessionID", data);
+                        setCookie("sessionID", currentUser);
                     }
                     $("#mainFrame").load("subscriptionpage.html");
                 },
