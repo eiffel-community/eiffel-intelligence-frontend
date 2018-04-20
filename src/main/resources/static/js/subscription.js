@@ -58,15 +58,13 @@ jQuery(document).ready(function() {
                   		if(XMLHttpRequest.status == 401) {
                   		    document.getElementById("loginBlock").style.display = "block";
                   		    document.getElementById("logoutBlock").style.display = "none";
-                  		    document.getElementById("userName").value = "Guest";
+                  		    document.getElementById("userName").innerHTML = "";
                   		}
                   },
                   success : function (data, textStatus, xhr) {
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
                   		checkEiBackend=true;
-                  		document.getElementById("loginBlock").style.display = "none";
-                  		document.getElementById("logoutBlock").style.display = "block";
                   },
     		      complete: function (XMLHttpRequest, textStatus) {
     		      }

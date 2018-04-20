@@ -62,7 +62,9 @@ jQuery(document).ready(function() {
                         sticky : false,
                         theme : 'Notify'
                     });
-                    document.getElementById("userName").value = currentUser;
+                    document.getElementById("userName").innerHTML = currentUser;
+                    document.getElementById("loginBlock").style.display = "none";
+                    document.getElementById("logoutBlock").style.display = "block";
                     if(remember) {
                         setCookie("user", currentUser);
                     }
