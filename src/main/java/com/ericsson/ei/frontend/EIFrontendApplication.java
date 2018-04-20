@@ -13,7 +13,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/   
+*/
 package com.ericsson.ei.frontend;
 
 import java.util.ArrayList;
@@ -38,11 +38,11 @@ public class EIFrontendApplication extends SpringBootServletInitializer {
     public static final Logger log = LoggerFactory.getLogger(EIFrontendApplication.class);
 
     public static void main(String[] args) {
-    	
+
         List<String> logLevels = new ArrayList<>();
         Collections.addAll(logLevels, "ALL", "DEBUG", "ERROR", "FATAL", "INFO", "TRACE", "WARN");
 
-        if(args != null && args.length > 0 && logLevels.contains(args[0])) {
+        if (args != null && args.length > 0 && logLevels.contains(args[0])) {
             System.setProperty("logging.level.root", args[0]);
             System.setProperty("logging.level.org.springframework.web", args[0]);
             System.setProperty("logging.level.com.ericsson.ei", args[0]);
@@ -51,7 +51,7 @@ public class EIFrontendApplication extends SpringBootServletInitializer {
             System.setProperty("logging.level.org.springframework.web", "INFO");
             System.setProperty("logging.level.com.ericsson.ei", "INFO");
         }
-        
+
         SpringApplication.run(EIFrontendApplication.class, args);
     }
 }
