@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
 
     // /Start ## Cookies functions ###########################################
     function setCookie(name, value) {
-        var expiry = new Date(new Date().getTime() + 3 * 3600 * 1000); // plus 3 hours
+        var expiry = new Date(new Date().getTime() + 1800 * 1000); // plus 30 min
         if(window.location.protocol == "https:") {
             document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString() + "; secure; HttpOnly";
         } else {
@@ -62,8 +62,9 @@ jQuery(document).ready(function() {
                         sticky : false,
                         theme : 'Notify'
                     });
+                    document.getElementById("userName").value = currentUser;
                     if(remember) {
-                        setCookie("sessionID", currentUser);
+                        setCookie("user", currentUser);
                     }
                     $("#mainFrame").load("subscriptionpage.html");
                 },

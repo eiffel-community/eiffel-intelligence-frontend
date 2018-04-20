@@ -54,11 +54,19 @@ jQuery(document).ready(function() {
                   error : function (XMLHttpRequest, textStatus, errorThrown) {
                   		var red="#ff0000";
                   		EIConnBtn.style.background = red;
+
+                  		if(XMLHttpRequest.status == 401) {
+                  		    document.getElementById("loginBlock").style.display = "block";
+                  		    document.getElementById("logoutBlock").style.display = "none";
+                  		    document.getElementById("userName").value = "Guest";
+                  		}
                   },
                   success : function (data, textStatus, xhr) {
                   		var green="#00ff00";
                   		EIConnBtn.style.background = green;
                   		checkEiBackend=true;
+                  		document.getElementById("loginBlock").style.display = "none";
+                  		document.getElementById("logoutBlock").style.display = "block";
                   },
     		      complete: function (XMLHttpRequest, textStatus) {
     		      }
@@ -237,6 +245,7 @@ jQuery(document).ready(function() {
 
     };// var SubscriptionViewModel = function(){
 
+    checkEiBackendServer();
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);
