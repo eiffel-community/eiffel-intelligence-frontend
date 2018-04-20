@@ -56,23 +56,6 @@
             <span class="nav-link-text">Eiffel Intelligence Info</span>
           </a>
         </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account Handling">
-          <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-file"></i>
-            <span class="nav-link-text">Account Handling</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-            <li>
-              <a id="loginBtn" href="#">Login Page</a>
-            </li>
-            <li>
-              <a id="registerBtn" href="#">Registration Page</a>
-            </li>
-            <li>
-              <a id="forgotPasswordBtn" href="#">Forgot Password Page</a>
-            </li>
-          </ul>
-        </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Documentation Links">
           <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseDocPages" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa-file"></i>
@@ -181,7 +164,15 @@
           </form>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+          <a class="nav-link" id="userName">
+            <i class="fa fa-fw fa-user"></i>Guest</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="loginBtn" href="#">
+            <i class="fa fa-fw fa-sign-in"></i>Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="logoutDialog" data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Logout</a>
         </li>
       </ul>

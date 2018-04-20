@@ -32,16 +32,6 @@ jQuery(document).ready(function() {
 		});
 	}
 	
-	document.getElementById("registerBtn").onclick = function() {		  
-
-    	$("#mainFrame").load("register.html");
-	}
-	
-	document.getElementById("forgotPasswordBtn").onclick = function() {		  
-
-    	$("#mainFrame").load("forgot-password.html");
-	}
-	
 	function loadMainPage() {
 
     	$("#mainFrame").load("subscriptionpage.html");
