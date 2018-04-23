@@ -62,6 +62,7 @@ jQuery(document).ready(function() {
                         sticky : false,
                         theme : 'Notify'
                     });
+                    sessionStorage.setItem("currentUser", currentUser);
                     $("#userName").text(currentUser);
                     $("#loginBlock").hide();
                     $("#logoutBlock").show();

@@ -5,55 +5,45 @@ jQuery(document).ready(function() {
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
-	document.getElementById("testRulesBtn").onclick = function() {		  
+    function loadMainPage() {
+    	$("#mainFrame").load("subscriptionpage.html");
+	}
 
+	$("#testRulesBtn").click(function() {
     	$("#mainFrame").load("testRules.html");
-	}
+	});
 	
-	document.getElementById("eiInfoBtn").onclick = function() {		  
-  
+	$("#eiInfoBtn").click(function() {
     	$("#mainFrame").load("eiInfo.html");
-	}
+	});
 	
-	document.getElementById("loginBtn").onclick = function() {		  
-		
+	$("#loginBtn").click(function() {
 		$("#mainFrame").load("login.html");
-	}
+	});
 	
-	document.getElementById("logoutBtn").onclick = function() {
+	$("#logoutBtn").click(function() {
 		$.ajax({
 		    url : "/auth/logout",
 		    type : "GET",
 		    contentType : 'application/json; charset=utf-8',
 		    cache: false,
 		    complete : function (XMLHttpRequest, textStatus) {
+		        sessionStorage.removeItem("currentUser");
 		        $("#userName").text("Guest");
 		        $("#loginBlock").show();
 		        $("#logoutBlock").hide();
 		        loadMainPage();
 		    }
 		});
-	}
+	});
 	
-	function loadMainPage() {
-
-    	$("#mainFrame").load("subscriptionpage.html");
-	}
-	
-	document.getElementById("subscriptionBtn").onclick = function() {
-		
+	$("#subscriptionBtn").click(function() {
     	loadMainPage();
-	}
+	});
 
-	function loadJmesPathRulesSetUpPage() {
-
+	$("#jmesPathRulesSetUpBtn").click(function() {
     	$("#mainFrame").load("jmesPathRulesSetUp.html");
-	}
-
-	document.getElementById("jmesPathRulesSetUpBtn").onclick = function() {
-
-    	loadJmesPathRulesSetUpPage();
-    }
+    });
 
 	function loadDocumentLinks(){
 		// eiffelDocumentationUrlLinks variable is configure in application.properties
@@ -76,9 +66,15 @@ jQuery(document).ready(function() {
 	
 	var initOneTime = function(){
 		initOneTime = function(){}; // kill it as soon as it was called
-		 loadDocumentLinks();
-	     loadMainPage();
+		loadDocumentLinks();
+	    loadMainPage();
 	};
+
+    var currentUser = sessionStorage.getItem("currentUser");
+	if(currentUser != "") {
+	    $("#userName").text(currentUser);
+	    $("#logoutBlock").show();
+	}
 	
 	initOneTime();
 });

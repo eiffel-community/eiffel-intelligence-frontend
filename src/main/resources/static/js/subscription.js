@@ -54,6 +54,7 @@ jQuery(document).ready(function() {
                   error : function (XMLHttpRequest, textStatus, errorThrown) {
                   		var red="#ff0000";
                   		EIConnBtn.style.background = red;
+                  		sessionStorage.removeItem("currentUser");
                   		$("#userName").text("Guest");
                   		$("#loginBlock").show();
                   		$("#logoutBlock").hide();
