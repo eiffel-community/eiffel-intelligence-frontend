@@ -62,12 +62,9 @@ jQuery(document).ready(function() {
                         sticky : false,
                         theme : 'Notify'
                     });
-                    document.getElementById("userName").innerHTML = currentUser;
-                    document.getElementById("loginBlock").style.display = "none";
-                    document.getElementById("logoutBlock").style.display = "block";
-                    if(remember) {
-                        setCookie("user", currentUser);
-                    }
+                    $("#userName").text(currentUser);
+                    $("#loginBlock").hide();
+                    $("#logoutBlock").show();
                     $("#mainFrame").load("subscriptionpage.html");
                 },
                 error : function (XMLHttpRequest, errorThrown) {
@@ -93,10 +90,10 @@ jQuery(document).ready(function() {
         }
     }
 
-    var observableObject = $('#viewModelDOMObject')[0];
+    var observableObject = $("#viewModelDOMObject")[0];
     ko.cleanNode(observableObject);
     var model = new loginModel();
-    ko.applyBindings(model, document.getElementById("viewModelDOMObject"));
+    ko.applyBindings(model, observableObject);
     // /Stop ## Knockout #####################################################
 
 });

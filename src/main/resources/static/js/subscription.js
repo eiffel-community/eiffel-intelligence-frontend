@@ -54,12 +54,9 @@ jQuery(document).ready(function() {
                   error : function (XMLHttpRequest, textStatus, errorThrown) {
                   		var red="#ff0000";
                   		EIConnBtn.style.background = red;
-
-                  		if(XMLHttpRequest.status == 401) {
-                  		    document.getElementById("loginBlock").style.display = "block";
-                  		    document.getElementById("logoutBlock").style.display = "none";
-                  		    document.getElementById("userName").innerHTML = "";
-                  		}
+                  		$("#userName").text("Guest");
+                  		$("#loginBlock").show();
+                  		$("#logoutBlock").hide();
                   },
                   success : function (data, textStatus, xhr) {
                   		var green="#00ff00";
@@ -87,7 +84,7 @@ jQuery(document).ready(function() {
     });
 
     // END OF EI Backend Server check ######################################### 
-    
+
     
     // /Start ## Knockout ####################################################
 

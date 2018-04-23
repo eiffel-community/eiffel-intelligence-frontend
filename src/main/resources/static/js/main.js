@@ -27,7 +27,9 @@ jQuery(document).ready(function() {
 		    contentType : 'application/json; charset=utf-8',
 		    cache: false,
 		    complete : function (XMLHttpRequest, textStatus) {
-		        document.getElementById("userName").innerHTML = "";
+		        $("#userName").text("Guest");
+		        $("#loginBlock").show();
+		        $("#logoutBlock").hide();
 		        loadMainPage();
 		    }
 		});
