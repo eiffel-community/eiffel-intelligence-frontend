@@ -409,13 +409,10 @@ jQuery(document).ready(function() {
         function getTemplate(){
             var req = new XMLHttpRequest();
             req.open("GET", '/download/subscriptiontemplate', true);
-            req.responseType = "blob";
+            req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
-                var blob = req.response;
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'subscriptionsTemplate.json';
-                link.click();
+                var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
+                downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
             };
             req.send();}
         getTemplate();
