@@ -333,30 +333,8 @@ jQuery(document).ready(
           }
         });
         if (formRules.length !== 0) {
-          var contentType = "application/json;charset=utf-8";
           var jsonData = JSON.stringify(formRules, null, 2);
-          var fileName = "rules.json"
-
-          function downloadFile(data, type, title) {
-            var link = document.createElement('a');
-            link.setAttribute("href", "data:" + type + "," + encodeURIComponent(data));
-            link.setAttribute("download", fileName);
-            link.setAttribute("class", "hidden");
-            link.click();
-          }
-
-          function downloadFileMSExplorer(data, type, title) {
-            var blob = new Blob([ data ], {
-              type : type
-            });
-            window.navigator.msSaveOrOpenBlob(blob, title);
-          }
-
-          if (window.navigator.msSaveOrOpenBlob) {
-            downloadFileMSExplorer(jsonData, contentType, fileName);
-          } else {
-            downloadFile(jsonData, contentType, fileName);
-          }
+          downloadFile(jsonData, "application/json;charset=utf-8", "rules.json");
         } else {
           $.jGrowl("Data not available for download!", {
             sticky : false,
