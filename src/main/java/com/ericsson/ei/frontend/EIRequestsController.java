@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ericsson.ei.frontend.model.BackEndInformation;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,6 +35,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,64 +48,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@ConfigurationProperties(prefix = "ei")
-// @RequestMapping(value = "")
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
 
-    private String backendServerHost;
-    private int backendServerPort;
-    private String backendContextPath;
-    private boolean useSecureHttp;
+    @Autowired
+    private BackEndInformation backEndInformation;
 
-    private static final String APPLICATION_JSON = "application/json";
-
-    // Backend host and port (Getter & Setters), application.properties ->
-    // greeting.xxx
-    public String getBackendServerHost() {
-        return backendServerHost;
-    }
-
-    public void setBackendServerHost(String backendServerHost) {
-        this.backendServerHost = backendServerHost;
-    }
-
-    public int getBackendServerPort() {
-        return backendServerPort;
-    }
-
-    public void setBackendServerPort(int backendServerPort) {
-        this.backendServerPort = backendServerPort;
-    }
-
-    public String getBackendContextPath() {
-        return backendContextPath;
-    }
-
-    public void setBackendContextPath(String backendContextPath) {
-        this.backendContextPath = backendContextPath;
-    }
-
-    public boolean getUseSecureHttp() {
-        return useSecureHttp;
-    }
-
-    public void setUseSecureHttp(boolean useSecureHttp) {
-        this.useSecureHttp = useSecureHttp;
-    }
-
-    public String getEIBackendSubscriptionAddress() {
+    private String getEIBackendSubscriptionAddress() {
         String httpMethod = "http";
-        if (useSecureHttp) {
+        if (backEndInformation.isHttps()) {
             httpMethod = "https";
         }
 
-        if (backendContextPath != null && !backendContextPath.isEmpty()) {
-            return httpMethod + "://" + this.getBackendServerHost() + ":" + this.getBackendServerPort() + "/"
-                    + backendContextPath;
+        if (backEndInformation.getPath() != null && !backEndInformation.getPath().isEmpty()) {
+            return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort() + "/"
+                    + backEndInformation.getPath();
         }
-        return httpMethod + "://" + this.getBackendServerHost() + ":" + this.getBackendServerPort();
+        return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort();
     }
 
     /**
@@ -326,5 +288,4 @@ public class EIRequestsController {
                 HttpStatus.valueOf(eiResponse.getStatusLine().getStatusCode()));
         return responseEntity;
     }
-
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+</head>
+<body class="bg-dark">
+<div class="container pull-left">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Switch backend</div>
+        <div class="card-body">
+            <form th:action="@{/switch-backend}" th:object="${listWrapper}" method="POST">
+                <table>
+                    <tr>
+                        <th id="checker"></th>
+                        <th id="name">Name</th>
+                        <th id="host">Host</th>
+                        <th id="port">Port</th>
+                    </tr>
+                    <tr th:each="instance, stat: *{backEndInformation}">
+                        <td headers="checker">
+                            <input id="check" type="checkbox" th:object="${index}" th:value="${stat.index}"
+                                   th:field="*{index}"/>
+                        </td>
+                        <td headers="name" th:text="${instance.getName()}"></td>
+                        <td headers="host" th:text="${instance.getHost()}"></td>
+                        <td headers="port" th:text="${instance.getPort()}"></td>
+                    </tr>
+                </table>
+                <input id="deleteBtn" type="submit" class="btn btn-primary btn-block" name="delete" value="Delete"/>
+                <input id="switcher"  class="btn btn-primary btn-block" type="submit" name="switch" value="Switch"/>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/switch-instances.js"></script>
+</body>
+</html>

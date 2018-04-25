@@ -40,7 +40,27 @@ jQuery(document).ready(function() {
 
     	$("#mainFrame").load("forgot-password.html");
 	}
-	
+
+    function loadAddInstancePage(){
+
+        $("#mainFrame").load("add-instances.html");
+    }
+
+    function loadSwitchPage(){
+
+        $("#mainFrame").load("switch-backend.html");
+    }
+
+	document.getElementById("addInstanceBtn").onclick = function() {
+
+      	loadAddInstancePage();
+    }
+
+    document.getElementById("switcherBtn").onclick = function() {
+
+      	loadSwitchPage();
+    }
+
 	function loadMainPage() {
 
     	$("#mainFrame").load("subscriptionpage.html");
