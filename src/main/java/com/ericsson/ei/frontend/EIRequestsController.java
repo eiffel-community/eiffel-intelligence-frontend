@@ -243,6 +243,9 @@ public class EIRequestsController {
             for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
                 jsonContent += line;
             }
+            if (jsonContent.isEmpty()) {
+                jsonContent = "[]";
+            }
             statusCode = eiResponse.getStatusLine().getStatusCode();
             LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode()
                 + "\nEI Recevied jsonContent:\n" + jsonContent
@@ -251,10 +254,6 @@ public class EIRequestsController {
             inStream.close();
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
-        }
-
-        if (jsonContent.isEmpty()) {
-            jsonContent = "[]";
         }
 
         HttpHeaders headers = new HttpHeaders();

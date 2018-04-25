@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
 			contentType : 'application/json; charset=utf-8',
 			cache: false,
 			complete : function (XMLHttpRequest, textStatus) {
-				sessionStorage.removeItem("currentUser");
+				localStorage.removeItem("currentUser");
 				$("#userName").text("Guest");
 				$("#loginBlock").show();
 				$("#logoutBlock").hide();
@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
 		loadMainPage();
 	};
 
-	var currentUser = sessionStorage.getItem("currentUser");
+	var currentUser = localStorage.getItem("currentUser");
 	if(currentUser != "") {
 		$("#userName").text(currentUser);
 		$("#logoutBlock").show();
