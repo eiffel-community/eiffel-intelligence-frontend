@@ -69,11 +69,12 @@ jQuery(document).ready(function() {
 		loadMainPage();
 	};
 
+	initOneTime();
+
+
 	var currentUser = localStorage.getItem("currentUser");
 	if(currentUser != "") {
 		$("#userName").text(currentUser);
 		$("#logoutBlock").show();
 	}
-
-	initOneTime();
 });
