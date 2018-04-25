@@ -71,7 +71,6 @@ jQuery(document).ready(function() {
 
 	initOneTime();
 
-
 	var currentUser = localStorage.getItem("currentUser");
 	if(currentUser != "") {
 		$("#userName").text(currentUser);
