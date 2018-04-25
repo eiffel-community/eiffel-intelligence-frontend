@@ -28,10 +28,7 @@ jQuery(document).ready(function() {
 			contentType : 'application/json; charset=utf-8',
 			cache: false,
 			complete : function (XMLHttpRequest, textStatus) {
-				localStorage.removeItem("currentUser");
-				$("#userName").text("Guest");
-				$("#loginBlock").show();
-				$("#logoutBlock").hide();
+				doIfUserLoggedOut();
 				loadMainPage();
 			}
 		});
@@ -44,6 +41,13 @@ jQuery(document).ready(function() {
 	$("#jmesPathRulesSetUpBtn").click(function() {
 		$("#mainFrame").load("jmesPathRulesSetUp.html");
 	});
+
+	function doIfUserLoggedOut() {
+		localStorage.removeItem("currentUser");
+		$("#userName").text("Guest");
+		$("#loginBlock").show();
+		$("#logoutBlock").hide();
+	}
 
 	function loadDocumentLinks(){
 		// eiffelDocumentationUrlLinks variable is configure in application.properties
@@ -71,9 +75,4 @@ jQuery(document).ready(function() {
 
 	initOneTime();
 
-	var currentUser = localStorage.getItem("currentUser");
-	if(currentUser != "") {
-		$("#userName").text(currentUser);
-		$("#logoutBlock").show();
-	}
 });

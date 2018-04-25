@@ -54,10 +54,7 @@ jQuery(document).ready(function() {
 			contentType : 'application/json; charset=utf-8',
 			type: 'GET',
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				localStorage.removeItem("currentUser");
-				$("#userName").text("Guest");
-				$("#loginBlock").show();
-				$("#logoutBlock").hide();
+				doIfUserLoggedOut();
 				if(XMLHttpRequest.status == 401) {
 					EIConnBtn.style.background = green;
 					checkEiBackend = true;
@@ -72,7 +69,21 @@ jQuery(document).ready(function() {
 			},
 			complete: function (XMLHttpRequest, textStatus) { }
 		});
+    }
 
+	function doIfUserLoggedIn() {
+		var currentUser = localStorage.getItem("currentUser");
+		if(currentUser != "") {
+			$("#userName").text(currentUser);
+			$("#logoutBlock").show();
+		}
+	}
+
+    function doIfUserLoggedOut() {
+	    localStorage.removeItem("currentUser");
+	    $("#userName").text("Guest");
+	    $("#loginBlock").show();
+	    $("#logoutBlock").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
@@ -243,6 +254,7 @@ jQuery(document).ready(function() {
     };// var SubscriptionViewModel = function(){
 
     checkEiBackendServer();
+    doIfUserLoggedIn();
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);

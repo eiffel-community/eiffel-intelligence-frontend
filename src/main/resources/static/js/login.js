@@ -62,11 +62,7 @@ jQuery(document).ready(function() {
 						sticky : false,
 						theme : 'Notify'
 					});
-					localStorage.removeItem("currentUser");
-					localStorage.setItem("currentUser", currentUser);
-					$("#userName").text(currentUser);
-					$("#loginBlock").hide();
-					$("#logoutBlock").show();
+					doIfUserLoggedIn(currentUser);
 					$("#mainFrame").load("subscriptionpage.html");
 				},
 				error : function (XMLHttpRequest, errorThrown) {
@@ -90,6 +86,14 @@ jQuery(document).ready(function() {
 				ajaxHttpSender.sendAjax("/auth/login", "GET", token, callback);
 			}
 		}
+	}
+
+	function doIfUserLoggedIn(name) {
+		localStorage.removeItem("currentUser");
+		localStorage.setItem("currentUser", name);
+		$("#userName").text(name);
+		$("#loginBlock").hide();
+		$("#logoutBlock").show();
 	}
 
 	var observableObject = $("#viewModelDOMObject")[0];
