@@ -1,16 +1,82 @@
 jQuery(document).ready(function() {
-    function loadSwitchPage(){
 
-        $("#mainFrame").load("switch-backend.html");
-    }
+	function singleInstanceModel(name, host, port, path, https, checked) {
+		this.name = ko.observable(name),
+		this.host = ko.observable(host),
+		this.port = ko.observable(port),
+		this.path = ko.observable(path),
+		this.https = ko.observable(https),
+		this.checked = ko.observable(checked)
+	}
 
-	document.getElementById("deleteBtn").onclick = function() {
+	function multipleInstancesModel(data) {
+		var self = this;
+		self.instances = ko.observableArray();
 
-      	 loadSwitchPage();
-    }
-var sendbtn = document.getElementById('switcher').disabled = true;
-$('input[type="checkbox"]').on('change', function() {
-    var sendbtn = document.getElementById('switcher').disabled = false;
-    $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-});
+		var json = JSON.parse(data);
+		for(var i = 0; i < json.length; i++) {
+			var obj = json[i];
+			var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.checked);
+			self.instances.push(instance);
+		}
+
+		self.removeInstance = function() {
+			self.instances.remove(this);
+		}
+
+		self.submit = function(instances) {
+			$.ajax({
+				url: "/switch-backend",
+				type: "POST",
+				data: ko.toJSON(instances),
+				contentType: 'application/json; charset=utf-8',
+				cache: false,
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					$.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+				},
+				success: function (responseData, textStatus) {
+					$.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+					$("#mainFrame").load("subscriptionpage.html");
+				}
+			});
+		}
+	}
+
+	$.ajax({
+		url: "/get-instances",
+		type: "GET",
+		contentType: 'application/json; charset=utf-8',
+		cache: false,
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			$.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+		},
+		success: function (responseData, textStatus) {
+			var observableObject = $("#instancesModel")[0];
+            ko.cleanNode(observableObject);
+            ko.applyBindings(new multipleInstancesModel(responseData), observableObject);
+
+		}
+	})
+
+	var selectedBox = null;
+	$(".activeInstance").click(function() {
+        selectedBox = this.id;
+
+        $(".activeInstance").each(function() {
+            if ( this.id == selectedBox )
+            {
+                this.checked = true;
+            }
+            else
+            {
+                this.checked = false;
+            };
+        });
+    });
+
+//	$("#activeInstance").change(function() {
+//		$("#activeInstance").prop('checked', false);
+//		$(this).prop('checked', true);
+//	});
+
 });
