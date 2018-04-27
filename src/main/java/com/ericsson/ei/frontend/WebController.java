@@ -115,14 +115,19 @@ public class WebController {
         return "jmesPathRulesSetUp";
     }
 
+    @RequestMapping("/add-instances.html")
+    public String addInstance(Model model) {
+        return "add-instances";
+    }
+
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
         return "switch-backend";
     }
 
-    @RequestMapping("/add-instances.html")
-    public String addInstance(Model model) {
-        return "add-instances";
+    @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
+    public ResponseEntity<String> getInstances(Model model) {
+        return new ResponseEntity<>(utils.getInstances().toString(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
@@ -172,10 +177,5 @@ public class WebController {
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
-    public ResponseEntity<String> getInstances(Model model) {
-        return new ResponseEntity<>(utils.getInstances().toString(), HttpStatus.OK);
     }
 }
