@@ -17,10 +17,7 @@
 package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.model.Index;
-import com.ericsson.ei.frontend.model.ListWrapper;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -34,14 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -61,55 +51,11 @@ public class WebController {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
-    @Value("${ei.backendInstancesPath}")
-    private String eiInstancesPath;
-
-    @Value("${ei.backendServerHost}")
-    private String host;
-
-    @Value("${ei.backendServerPort}")
-    private int port;
-
-    @Value("${ei.backendContextPath}")
-    private String path;
-
-    @Value("${ei.useSecureHttp}")
-    private boolean https;
-
     @Autowired
     private BackEndInformation backEndInformation;
 
     @Autowired
-    private ListWrapper wrapper;
-
-    @Autowired
-    private Index index;
-
-    private List<BackEndInformation> information = new ArrayList<>();
-
-    private JSONArray instances = new JSONArray();
-
-    @PostConstruct
-    public void init() {
-        instances.put(getCurrentInstance());
-//        index.setIndex(0);
-//        information.add(backEndInformation);
-//        if (eiInstancesPath != null) {
-//            try {
-//                JSONArray inputBackEndInstances = new JSONArray(new String(Files.readAllBytes(Paths.get(eiInstancesPath))));
-//                for (Object o : inputBackEndInstances) {
-//                    JSONObject instance = (JSONObject) o;
-//                    BackEndInformation backEndInformations = new ObjectMapper().readValue(instance.toString(), BackEndInformation.class);
-//                    if (!checkIfInstanceAlreadyExist(backEndInformations)) {
-//                        information.add(backEndInformations);
-//                    }
-//                }
-//            } catch (IOException e) {
-//                LOG.error("Failure when try to parse json file" + e.getMessage());
-//            }
-//        }
-//        writeIntoFile();
-    }
+    private BackEndInstancesUtils utils;
 
     @RequestMapping("/")
     public String greeting(Model model) {
@@ -183,14 +129,14 @@ public class WebController {
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
         try {
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            instances = new JSONArray(body);
-            LOG.info(instances.toString());
-//            for(int i = 0; i < instances.length(); i++) {
-//                if(instances.getJSONObject(i).get("checked").equals(true) {
-//                    instances.getJSONObject(i);
-//                    break;
-//                }
-//            }
+            utils.setInstances(new JSONArray(body));
+            utils.writeIntoFile();
+            utils.parseBackEndInstancesFile();
+            for (BackEndInformation backEndInformation : utils.getInformation()) {
+                if (backEndInformation.isChecked()) {
+                    utils.setBackEndProperties(backEndInformation);
+                }
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -202,10 +148,10 @@ public class WebController {
         try {
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JSONObject instance = new JSONObject(body);
-            if(!checkIfInstanceAlreadyExist(instance)) {
+            if (!utils.checkIfInstanceAlreadyExist(instance)) {
                 instance.put("checked", false);
-                instances.put(instance);
-                LOG.info(instances.toString());
+                utils.getInstances().put(instance);
+                utils.writeIntoFile();
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Instance already exist", HttpStatus.BAD_REQUEST);
@@ -217,46 +163,6 @@ public class WebController {
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model) {
-        return new ResponseEntity<>(instances.toString(), HttpStatus.OK);
-    }
-
-    private JSONObject getCurrentInstance() {
-        JSONObject instance = new JSONObject();
-        instance.put("name", "core");
-        instance.put("host", host);
-        instance.put("port", port);
-        instance.put("path", path);
-        instance.put("https", https);
-        instance.put("checked", true);
-        return instance;
-    }
-
-    private void setBackEndProperties(JSONObject instance) {
-        backEndInformation.setName(information.get(index.getIndex()).getName());
-        backEndInformation.setHost(information.get(index.getIndex()).getHost());
-        backEndInformation.setPort(information.get(index.getIndex()).getPort());
-        backEndInformation.setPath(information.get(index.getIndex()).getPath());
-        backEndInformation.setHttps(information.get(index.getIndex()).isHttps());
-    }
-
-    private boolean checkIfInstanceAlreadyExist(JSONObject instance) {
-        for(int i = 0; i < instances.length(); i++) {
-            if(instances.getJSONObject(i).get("host").equals(instance.get("host")) &&
-                instances.getJSONObject(i).get("port").equals(instance.get("port"))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void writeIntoFile() {
-        if (eiInstancesPath != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            try (JsonGenerator add = mapper.getFactory().createGenerator(new FileOutputStream(eiInstancesPath))) {
-                mapper.writeValue(add, information);
-            } catch (IOException e) {
-                LOG.error("Couldn't add instance to file " + e.getMessage());
-            }
-        }
+        return new ResponseEntity<>(utils.getInstances().toString(), HttpStatus.OK);
     }
 }

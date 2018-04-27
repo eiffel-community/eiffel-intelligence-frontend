@@ -57,26 +57,4 @@ jQuery(document).ready(function() {
 
 		}
 	})
-
-	var selectedBox = null;
-	$(".activeInstance").click(function() {
-        selectedBox = this.id;
-
-        $(".activeInstance").each(function() {
-            if ( this.id == selectedBox )
-            {
-                this.checked = true;
-            }
-            else
-            {
-                this.checked = false;
-            };
-        });
-    });
-
-//	$("#activeInstance").change(function() {
-//		$("#activeInstance").prop('checked', false);
-//		$(this).prop('checked', true);
-//	});
-
 });

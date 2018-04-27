@@ -1,5 +1,6 @@
 package com.ericsson.ei.frontend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.NotBlank;
@@ -36,4 +37,7 @@ public class BackEndInformation {
     @JsonProperty("https")
     @Value("${ei.useSecureHttp}")
     private boolean https;
+
+    @JsonIgnore
+    private boolean checked;
 }
