@@ -44,44 +44,60 @@ jQuery(document).ready(function() {
     // Check EI Backend Server Status ########################################
     function checkEiBackendServer() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
-    	if (EIConnBtn == null ) {
+    	if (EIConnBtn == null) {
     		return;
     	}
-    	   $.ajax({
-    		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
-    		      contentType : 'application/json; charset=utf-8',
-    		      type: 'GET',
-                  error : function (XMLHttpRequest, textStatus, errorThrown) {
-                  		var red="#ff0000";
-                  		EIConnBtn.style.background = red;
-                  },
-                  success : function (data, textStatus, xhr) {
-                  		var green="#00ff00";
-                  		EIConnBtn.style.background = green;
-                  		checkEiBackend=true;
-                  },
-    		      complete: function (XMLHttpRequest, textStatus) {
-    		      }
-    		   });
+    	var red="#ff0000";
+    	var green="#00ff00";
+		$.ajax({
+			url: "/subscriptions/testDummySubscription",
+			contentType : 'application/json; charset=utf-8',
+			type: 'GET',
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				doIfUserLoggedOut();
+				if(XMLHttpRequest.status == 401) {
+					EIConnBtn.style.background = green;
+					checkEiBackend = true;
+				} else {
+					EIConnBtn.style.background = red;
+					checkEiBackend = false;
+				}
+			},
+			success : function (data, textStatus, xhr) {
+				EIConnBtn.style.background = green;
+				checkEiBackend = true;
+			},
+			complete: function (XMLHttpRequest, textStatus) { }
+		});
+    }
 
+	function doIfUserLoggedIn() {
+		var currentUser = localStorage.getItem("currentUser");
+		if(currentUser != "") {
+			$("#userName").text(currentUser);
+			$("#logoutBlock").show();
+		}
+	}
+
+    function doIfUserLoggedOut() {
+	    localStorage.removeItem("currentUser");
+	    $("#userName").text("Guest");
+	    $("#loginBlock").show();
+	    $("#logoutBlock").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function(){
-    	checkEiBackendServer();
-    }, 15000);
+    window.setInterval(function(){ checkEiBackendServer(); }, 15000);
     
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $('.container').on( 'click', 'button.btnEIConnectionStatus', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
 
         checkEiBackendServer();
     });
+    // END OF EI Backend Server check #########################################
 
-    // END OF EI Backend Server check ######################################### 
-    
     
     // /Start ## Knockout ####################################################
 
@@ -237,6 +253,8 @@ jQuery(document).ready(function() {
 
     };// var SubscriptionViewModel = function(){
 
+    checkEiBackendServer();
+    doIfUserLoggedIn();
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);
