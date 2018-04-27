@@ -76,6 +76,7 @@ jQuery(document).ready(function() {
 		if(currentUser != "") {
 			$("#userName").text(currentUser);
 			$("#logoutBlock").show();
+			$("#crudBtns").show();
 		}
 	}
 
@@ -84,6 +85,7 @@ jQuery(document).ready(function() {
 	    $("#userName").text("Guest");
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
+	    $("#crudBtns").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
@@ -260,7 +262,7 @@ jQuery(document).ready(function() {
     ko.cleanNode(observableObject);
     // Apply bindings
 	var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
+    ko.applyBindings(vm,  observableObject);
 
 
     // /Stop ## Knockout #####################################################
@@ -270,8 +272,8 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Datatables ##################################################
+    var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
-
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
@@ -280,7 +282,8 @@ jQuery(document).ready(function() {
         "ajax": {
             "url": frontendServiceUrl + "/subscriptions",
             "type": "GET",
-            "dataSrc": ""   // Flat structure from EI backend REST API
+            "dataSrc": "",   // Flat structure from EI backend REST API
+            "error": function () {}
         },
         //Set column definition initialisation properties.
         "columnDefs": [
@@ -294,19 +297,25 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 1 ],
+	            "targets": [ 1 ],
+	            "orderable": true,
+	            "title": "UserName",
+	            "data": "userName"
+            },
+            {
+                "targets": [ 2 ],
                 "orderable": true,
                 "title": "SubscriptionName",
                 "data": "subscriptionName"
             },
             {
-                "targets": [ 2 ],
+                "targets": [ 3 ],
                 "orderable": true,
                 "title": "Type",
                 "data": "aggregationtype"
             },
             {
-                "targets": [ 3 ],
+                "targets": [ 4 ],
                 "orderable": true,
                 "title": "Date",
                 "data": "created",
@@ -315,32 +324,39 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 4 ],
+                "targets": [ 5 ],
                 "orderable": true,
                 "title": "NotificationType",
                 "data": "notificationType"
             },
             {
-                "targets": [ 5 ],
+                "targets": [ 6 ],
                 "orderable": true,
                 "title": "NotificationMeta",
                 "data": "notificationMeta"
             },
             {
-                "targets": [ 6 ],
+                "targets": [ 7 ],
                 "orderable": true,
                 "title": "Repeat",
                 "data": "repeat"
             },
             {
-                "targets": [ 7 ], //last column
+                "targets": [ 8 ], //last column
                 "orderable": false,
                 "title": "Action",
                 "data": null,
                 "width":"150px",
-                "defaultContent": '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button><button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>'
-            },
-        ],
+                "render": function ( data, type, row, meta ) {
+                    if(row.userName == currentUser) {
+	                    return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
+	                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else {
+                        return '';
+                    }
+                }
+            }
+        ]
     });
     // /Stop ## Datatables ##################################################
 
