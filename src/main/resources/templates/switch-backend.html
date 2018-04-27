@@ -26,12 +26,13 @@
                 </thead>
                 <tbody data-bind="foreach: instances">
                 <tr>
-                    <td align="center"><input align="center" id="activeInstance" type="checkbox" data-bind="checked: checked" /></td>
+                    <td align="center"><input align="center" id="activeInstance" type="checkbox"
+                                              data-bind="checked: checked"/></td>
                     <td data-bind="text: name" align="center"></td>
                     <td data-bind="text: host" align="center"></td>
                     <td data-bind="text: port" align="center"></td>
                     <td data-bind="text: path" align="center"></td>
-                    <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https" /></td>
+                    <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
                     <td align="center"><a href="#" data-bind="click: $parent.removeInstance">Remove</a></td>
                 </tr>
                 </tbody>

@@ -21,6 +21,14 @@ jQuery(document).ready(function() {
 		$("#mainFrame").load("login.html");
 	});
 
+	$("#addInstanceBtn").click(function() {
+      	$("#mainFrame").load("add-instances.html");
+    });
+
+    $("#switcherBtn").click(function() {
+      	$("#mainFrame").load("switch-backend.html");
+    });
+
 	$("#logoutBtn").click(function() {
 		$.ajax({
 			url : "/auth/logout",

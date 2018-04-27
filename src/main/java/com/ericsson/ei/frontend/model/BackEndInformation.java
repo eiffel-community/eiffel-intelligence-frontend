@@ -19,7 +19,6 @@ package com.ericsson.ei.frontend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +34,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class BackEndInformation {
     @JsonProperty("name")
-    @NotBlank
+    @NotNull
     private String name;
 
     @JsonProperty("host")
     @Value("${ei.backendServerHost}")
-    @NotBlank
+    @NotNull
     private String host;
 
     @JsonProperty("port")

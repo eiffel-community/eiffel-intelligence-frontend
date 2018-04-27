@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 @Controller
 public class WebController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebController.class);
-
     @Value("${ei.frontendServiceHost}")
     private String frontendServiceHost;
 
@@ -53,9 +51,6 @@ public class WebController {
 
     @Autowired
     private BackEndInformation backEndInformation;
-
-    @Autowired
-    private BackEndInstancesUtils utils;
 
     @RequestMapping("/")
     public String greeting(Model model) {
@@ -123,59 +118,5 @@ public class WebController {
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
         return "switch-backend";
-    }
-
-    @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
-    public ResponseEntity<String> getInstances(Model model) {
-        return new ResponseEntity<>(utils.getInstances().toString(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
-    public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
-        try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            utils.setInstances(new JSONArray(body));
-            utils.writeIntoFile();
-            utils.parseBackEndInstancesFile();
-            for (BackEndInformation backEndInformation : utils.getInformation()) {
-                if (backEndInformation.isChecked()) {
-                    utils.setBackEndProperties(backEndInformation);
-                }
-            }
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
-        try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            utils.setInstances(new JSONArray(body));
-            utils.writeIntoFile();
-            utils.parseBackEndInstancesFile();
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
-    public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
-        try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JSONObject instance = new JSONObject(body);
-            if (!utils.checkIfInstanceAlreadyExist(instance)) {
-                instance.put("checked", false);
-                utils.getInstances().put(instance);
-                utils.writeIntoFile();
-                return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Instance already exist", HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }
