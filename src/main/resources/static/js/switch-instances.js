@@ -22,6 +22,20 @@ jQuery(document).ready(function() {
 
 		self.removeInstance = function() {
 			self.instances.remove(this);
+			    $.ajax({
+            	    url: "/switch-backend",
+            		type: "DELETE",
+            		data: ko.toJSON(self.instances),
+            		contentType: 'application/json; charset=utf-8',
+            		cache: false,
+            		error: function (XMLHttpRequest, textStatus, errorThrown) {
+            		    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            		},
+            		success: function (responseData, textStatus) {
+            		    $.jGrowl("Backend instance was deleted", {sticky: false, theme: 'Notify'});
+            			$("#mainFrame").load("switch-backend.html");
+            		}
+           		});
 		}
 
 		self.submit = function(instances) {

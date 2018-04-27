@@ -143,6 +143,19 @@ public class WebController {
         }
     }
 
+    @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
+        try {
+            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            utils.setInstances(new JSONArray(body));
+            utils.writeIntoFile();
+            utils.parseBackEndInstancesFile();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
         try {

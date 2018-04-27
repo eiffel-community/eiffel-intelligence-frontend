@@ -1,1 +1,18 @@
-[{"path":"","port":8090,"name":"core","host":"localhost","checked":true,"https":false},{"path":"","port":8098,"name":"test","host":"localhost23","checked":false,"https":false},{"path":"","port":"567","name":"hgjghj","host":"ghjghj","checked":false,"https":false}]
+[
+  {
+    "path": "",
+    "port": 8091,
+    "name": "core",
+    "host": "localhost",
+    "checked": false,
+    "https": false
+  },
+  {
+    "path": "/eiffel",
+    "port": 8080,
+    "name": "test",
+    "host": "localhost23",
+    "checked": true,
+    "https": false
+  }
+]

@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -27,7 +29,7 @@ public class BackEndInformation {
 
     @JsonProperty("port")
     @Value("${ei.backendServerPort}")
-    @NotNull
+    @NotNull @Min(1) @Max(65535)
     private int port;
 
     @JsonProperty("path")
