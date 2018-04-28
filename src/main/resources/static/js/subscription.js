@@ -40,9 +40,9 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
-    var checkEiBackend = false;
     // Check EI Backend Server Status ########################################
-    function checkEiBackendServer() {
+	var backendStatus = false;
+    function checkBackendStatus() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
     	if (EIConnBtn == null) {
     		return;
@@ -50,24 +50,25 @@ jQuery(document).ready(function() {
     	var red="#ff0000";
     	var green="#00ff00";
 		$.ajax({
-			url: "/subscriptions/testDummySubscription",
-			contentType : 'application/json; charset=utf-8',
+			url: "/auth/checkStatus",
+			contentType: 'application/json; charset=utf-8',
 			type: 'GET',
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				doIfUserLoggedOut();
+			error: function (XMLHttpRequest) {
 				if(XMLHttpRequest.status == 401) {
+					if(isSecured == "true") {
+						doIfUserLoggedOut();
+					}
 					EIConnBtn.style.background = green;
-					checkEiBackend = true;
+					backendStatus = true;
 				} else {
 					EIConnBtn.style.background = red;
-					checkEiBackend = false;
+					backendStatus = false;
 				}
 			},
-			success : function (data, textStatus, xhr) {
+			success: function () {
 				EIConnBtn.style.background = green;
-				checkEiBackend = true;
-			},
-			complete: function (XMLHttpRequest, textStatus) { }
+				backendStatus = true;
+			}
 		});
     }
 
@@ -76,27 +77,28 @@ jQuery(document).ready(function() {
 		if(currentUser != "") {
 			$("#userName").text(currentUser);
 			$("#logoutBlock").show();
-			$("#crudBtns").show();
+			$("#addSubscription").show();
+			$("#bulkDelete").show();
 		}
 	}
-
     function doIfUserLoggedOut() {
 	    localStorage.removeItem("currentUser");
 	    $("#userName").text("Guest");
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
-	    $("#crudBtns").hide();
+	    $("#addSubscription").hide();
+	    $("#bulkDelete").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function(){ checkEiBackendServer(); }, 15000);
+    window.setInterval(function(){ checkBackendStatus(); }, 15000);
     
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $('.container').on( 'click', 'button.btnEIConnectionStatus', function (event) {
         event.stopPropagation();
         event.preventDefault();
 
-        checkEiBackendServer();
+        checkBackendStatus();
     });
     // END OF EI Backend Server check #########################################
 
@@ -253,10 +255,27 @@ jQuery(document).ready(function() {
 
 
 
-    };// var SubscriptionViewModel = function(){
+    };
 
-    checkEiBackendServer();
-    doIfUserLoggedIn();
+	// Start to check is backend secured
+	var isSecured = "false";
+	$.ajax({
+		url: "/auth",
+		contentType : 'application/json; charset=utf-8',
+		type: 'GET',
+		error: function () {},
+		success: function (data) {
+			isSecured = JSON.parse(ko.toJSON(data)).security;
+			if(isSecured == "true") {
+				doIfUserLoggedIn();
+			}
+		},
+		complete: function () {
+	        checkBackendStatus();
+		}
+	});
+	// Finish to check is backend secured
+
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);
@@ -300,7 +319,8 @@ jQuery(document).ready(function() {
 	            "targets": [ 1 ],
 	            "orderable": true,
 	            "title": "UserName",
-	            "data": "userName"
+	            "data": "userName",
+	            "defaultContent": ""
             },
             {
                 "targets": [ 2 ],
@@ -348,15 +368,23 @@ jQuery(document).ready(function() {
                 "data": null,
                 "width":"150px",
                 "render": function ( data, type, row, meta ) {
-                    if(row.userName == currentUser) {
+                    if(isSecured == "true" && row.userName == currentUser && row.userName != null) {
 	                    return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
 	                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else if(isSecured == "false") {
+                        return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
+                        + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
                         return '';
                     }
                 }
             }
-        ]
+        ],
+        "initComplete": function () {
+            if(isSecured == "false") {
+                table.column(1).visible(false);
+            }
+        }
     });
     // /Stop ## Datatables ##################################################
 
