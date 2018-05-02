@@ -27,19 +27,19 @@
 
     <h3>Subscription Data</h3>
     <br/>
-    <button data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription" id="addSubscription">
+    <button data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
         <i class="glyphicon glyphicon-plus"></i> Add Subscription
     </button>
     <button data-toggle="tooltip" title="Reload all subscriptions data from EI" class="btn btn-default table_reload">
         <i class="glyphicon glyphicon-refresh"></i> Reload
     </button>
-    <button data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete" id="bulkDelete">
+    <button data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete show_if_authorized">
         <i class="glyphicon glyphicon-trash"></i> Bulk Delete
     </button>
     <button data-toggle="tooltip" title="Download Subscription JSON template" class="btn btn-primary get_subscription_template">
         <i class="glyphicon glyphicon-download"></i> Get Template
     </button>
-    <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_subscriptions">
+    <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_subscriptions show_if_authorized">
         <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
     </button>
     <input class="hidden" type='file' id='upload_subscription_file' name='file' style="display: none"/>

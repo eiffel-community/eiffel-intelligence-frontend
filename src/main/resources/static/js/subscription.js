@@ -55,9 +55,7 @@ jQuery(document).ready(function() {
 			type: 'GET',
 			error: function (XMLHttpRequest) {
 				if(XMLHttpRequest.status == 401) {
-					if(isSecured == "true") {
-						doIfUserLoggedOut();
-					}
+					doIfUserLoggedOut();
 					EIConnBtn.style.background = green;
 					backendStatus = true;
 				} else {
@@ -77,8 +75,7 @@ jQuery(document).ready(function() {
 		if(currentUser != "") {
 			$("#userName").text(currentUser);
 			$("#logoutBlock").show();
-			$("#addSubscription").show();
-			$("#bulkDelete").show();
+			$(".show_if_authorized").show();
 		}
 	}
     function doIfUserLoggedOut() {
@@ -86,8 +83,7 @@ jQuery(document).ready(function() {
 	    $("#userName").text("Guest");
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
-	    $("#addSubscription").hide();
-	    $("#bulkDelete").hide();
+	    $(".show_if_authorized").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
