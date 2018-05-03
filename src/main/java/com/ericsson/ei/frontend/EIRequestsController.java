@@ -84,6 +84,7 @@ public class EIRequestsController {
     @RequestMapping(value = {"/subscriptions", "/subscriptions/*", "/information",
             "/download/subscriptiontemplate"}, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
+        LOG.info("------------------------------------------>"+backEndInformation.getHost()+backEndInformation.getPort());
         String eiBackendAddressSuffix = request.getServletPath();
         String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
         LOG.info("Got HTTP Request with method GET.\nUrlSuffix: " + eiBackendAddressSuffix

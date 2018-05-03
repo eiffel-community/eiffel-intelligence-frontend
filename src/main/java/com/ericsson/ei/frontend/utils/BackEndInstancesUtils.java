@@ -42,6 +42,7 @@ import java.util.List;
 public class BackEndInstancesUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
+    private static final String PATH = "src/main/resources/EIBackendInstancesExample.json";
 
     @Value("${ei.backendServerHost}")
     private String host;
@@ -71,6 +72,9 @@ public class BackEndInstancesUtils {
             instances.put(getCurrentInstance());
         }
         writeIntoFile();
+        if (eiInstancesPath.equals("")) {
+            setEiInstancesPath(PATH);
+        }
     }
 
     private JSONObject getCurrentInstance() {
@@ -118,13 +122,13 @@ public class BackEndInstancesUtils {
     public void parseBackEndInstancesFile() {
         if (eiInstancesPath != null) {
             try {
+                information.clear();
+                instances = new JSONArray();
                 JSONArray inputBackEndInstances = new JSONArray(new String(Files.readAllBytes(Paths.get(eiInstancesPath))));
                 for (Object o : inputBackEndInstances) {
                     JSONObject instance = (JSONObject) o;
-                    if (!checkIfInstanceAlreadyExist(instance)) {
-                        information.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
-                        instances.put(instance);
-                    }
+                    information.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
+                    instances.put(instance);
                 }
             } catch (IOException e) {
                 LOG.error("Failure when try to parse json file" + e.getMessage());

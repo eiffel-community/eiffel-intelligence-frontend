@@ -64,7 +64,6 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             utils.setInstances(new JSONArray(body));
             utils.writeIntoFile();
-            utils.parseBackEndInstancesFile();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -94,16 +94,6 @@ public class WebController {
         return "login";
     }
 
-    @RequestMapping("/register.html")
-    public String register(Model model) {
-        return "register";
-    }
-
-    @RequestMapping("/forgot-password.html")
-    public String forgotPassword(Model model) {
-        return "forgot-password";
-    }
-
     // Added documentation for JMESPath rules usage
     @RequestMapping("/jmesPathRulesSetUp.html")
     public String jmesPathRulesSetUp(Model model) {

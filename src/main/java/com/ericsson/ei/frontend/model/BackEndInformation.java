@@ -16,7 +16,6 @@
 */
 package com.ericsson.ei.frontend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +43,9 @@ public class BackEndInformation {
 
     @JsonProperty("port")
     @Value("${ei.backendServerPort}")
-    @NotNull @Min(1) @Max(65535)
+    @NotNull
+    @Min(1)
+    @Max(65535)
     private int port;
 
     @JsonProperty("path")
@@ -55,6 +56,5 @@ public class BackEndInformation {
     @Value("${ei.useSecureHttp}")
     private boolean https;
 
-    @JsonIgnore
     private boolean checked;
 }

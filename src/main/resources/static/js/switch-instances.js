@@ -34,22 +34,35 @@ function multipleInstancesModel(data) {
            		});
 	}
 	self.submit = function(instances) {
-		$.ajax({
-			url: "/switch-backend",
-			type: "POST",
-			data: ko.toJSON(instances),
-			contentType: 'application/json; charset=utf-8',
-			cache: false,
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
-			},
-			success: function (responseData, textStatus) {
-				$.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
-				$("#mainFrame").load("subscriptionpage.html");
-			}
+	    var count = 0;
+	    var json = JSON.parse(ko.toJSON(instances));
+	    console.log(json);
+	    for(var i = 0; i < json.length; i++){
+	        var obj = json[i];
+	        if(obj.checked == true){
+	            count++;
+	        }
+	    }
+	    if(count == 1){
+		    $.ajax({
+			    url: "/switch-backend",
+			    type: "POST",
+			    data: ko.toJSON(instances),
+			    contentType: 'application/json; charset=utf-8',
+			    cache: false,
+			    error: function (XMLHttpRequest, textStatus, errorThrown) {
+				    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+			    },
+			    success: function (responseData, textStatus) {
+				    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+				    $("#mainFrame").load("subscriptionpage.html");
+			    }
 			});
-		}
+		 } else {
+		     $.jGrowl("Please choose one backend instance", {sticky: false, theme: 'Error'});
+		   }
 	}
+}
 	$.ajax({
 		url: "/get-instances",
 		type: "GET",

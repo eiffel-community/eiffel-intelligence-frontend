@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping
 public interface BackEndInformationController {
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)

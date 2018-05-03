@@ -31,7 +31,7 @@ function instanceModel() {
 		}
 	}
 }
-var observableObject = $("#instanceModel")[0];
-ko.cleanNode(observableObject);
-ko.applyBindings(new instanceModel(), observableObject);
+    var observableObject = $("#instanceModel")[0];
+    ko.cleanNode(observableObject);
+    ko.applyBindings(new instanceModel(), observableObject);
 });
