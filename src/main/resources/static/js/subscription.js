@@ -293,6 +293,7 @@ jQuery(document).ready(function() {
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
         "order": [], //Initial no order.
+        "searching": true,
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": frontendServiceUrl + "/subscriptions",

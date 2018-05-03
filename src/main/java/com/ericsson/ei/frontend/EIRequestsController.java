@@ -93,7 +93,7 @@ public class EIRequestsController {
      *
      */
     @CrossOrigin
-    @RequestMapping(value = {"/auth/login", "/auth/logout"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/login", method = RequestMethod.GET)
     public ResponseEntity<String> getAuthRequests(Model model, HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
@@ -124,7 +124,7 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/auth",
-        "/auth/checkStatus", "/download/subscriptiontemplate" }, method = RequestMethod.GET)
+        "/auth/checkStatus", "/auth/logout", "/download/subscriptiontemplate" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
@@ -236,7 +236,7 @@ public class EIRequestsController {
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String jsonContent = "";
-        int statusCode = 0;
+        int statusCode = 102;
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
             InputStream inStream = eiResponse.getEntity().getContent();
             BufferedReader bufReader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
