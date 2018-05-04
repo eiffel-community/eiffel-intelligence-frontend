@@ -42,7 +42,7 @@ import java.util.List;
 public class BackEndInstancesUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
-    private static final String PATH = "src/main/resources/EIBackendInstancesExample.json";
+    private static final String PATH = "src/main/resources/EIBackendInstancesInformation.json";
 
     @Value("${ei.backendServerHost}")
     private String host;
@@ -71,10 +71,10 @@ public class BackEndInstancesUtils {
         if (!checkIfInstanceAlreadyExist(getCurrentInstance())) {
             instances.put(getCurrentInstance());
         }
-        writeIntoFile();
         if (eiInstancesPath.equals("")) {
             setEiInstancesPath(PATH);
         }
+        writeIntoFile();
     }
 
     private JSONObject getCurrentInstance() {
@@ -84,7 +84,7 @@ public class BackEndInstancesUtils {
         instance.put("port", port);
         instance.put("path", path);
         instance.put("https", https);
-        instance.put("checked", true);
+        instance.put("active", true);
         return instance;
     }
 

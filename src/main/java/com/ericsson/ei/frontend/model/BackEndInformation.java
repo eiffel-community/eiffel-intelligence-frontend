@@ -56,5 +56,5 @@ public class BackEndInformation {
     @Value("${ei.useSecureHttp}")
     private boolean https;
 
-    private boolean checked;
+    private boolean active;
 }

@@ -1,11 +1,11 @@
 jQuery(document).ready(function() {
-function singleInstanceModel(name, host, port, path, https, checked) {
+function singleInstanceModel(name, host, port, path, https, active) {
 	this.name = ko.observable(name),
 	this.host = ko.observable(host),
 	this.port = ko.observable(port),
 	this.path = ko.observable(path),
 	this.https = ko.observable(https),
-	this.checked = ko.observable(checked)
+	this.active = ko.observable(active)
 }
 function multipleInstancesModel(data) {
 	var self = this;
@@ -13,7 +13,7 @@ function multipleInstancesModel(data) {
 	var json = JSON.parse(data);
 	for(var i = 0; i < json.length; i++) {
 		var obj = json[i];
-		var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.checked);
+		var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
 		self.instances.push(instance);
 	}
 	self.removeInstance = function() {
@@ -39,7 +39,7 @@ function multipleInstancesModel(data) {
 	    console.log(json);
 	    for(var i = 0; i < json.length; i++){
 	        var obj = json[i];
-	        if(obj.checked == true){
+	        if(obj.active == true){
 	            count++;
 	        }
 	    }

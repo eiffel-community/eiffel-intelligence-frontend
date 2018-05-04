@@ -49,7 +49,7 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
             utils.writeIntoFile();
             utils.parseBackEndInstancesFile();
             for (BackEndInformation backEndInformation : utils.getInformation()) {
-                if (backEndInformation.isChecked()) {
+                if (backEndInformation.isActive()) {
                     utils.setBackEndProperties(backEndInformation);
                 }
             }
