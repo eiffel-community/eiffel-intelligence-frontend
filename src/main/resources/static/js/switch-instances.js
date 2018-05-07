@@ -36,7 +36,6 @@ function multipleInstancesModel(data) {
 	self.submit = function(instances) {
 	    var count = 0;
 	    var json = JSON.parse(ko.toJSON(instances));
-	    console.log(json);
 	    for(var i = 0; i < json.length; i++){
 	        var obj = json[i];
 	        if(obj.active == true){

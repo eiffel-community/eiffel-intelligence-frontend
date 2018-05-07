@@ -18,8 +18,8 @@ package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
         try {
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            utils.setInstances(new JSONArray(body));
+            utils.setInstances(new JsonParser().parse(body).getAsJsonArray());
             utils.writeIntoFile();
             utils.parseBackEndInstancesFile();
             for (BackEndInformation backEndInformation : utils.getInformation()) {
@@ -62,7 +62,7 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
         try {
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            utils.setInstances(new JSONArray(body));
+            utils.setInstances(new JsonParser().parse(body).getAsJsonArray());
             utils.writeIntoFile();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -73,10 +73,10 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
         try {
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JSONObject instance = new JSONObject(body);
+            JsonObject instance = new JsonParser().parse(body).getAsJsonObject();
             if (!utils.checkIfInstanceAlreadyExist(instance)) {
-                instance.put("checked", false);
-                utils.getInstances().put(instance);
+                instance.addProperty("checked", false);
+                utils.getInstances().add(instance);
                 utils.writeIntoFile();
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {

@@ -18,10 +18,12 @@ package com.ericsson.ei.frontend.utils;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +65,13 @@ public class BackEndInstancesUtils {
     private BackEndInformation backEndInformation;
 
     private List<BackEndInformation> information = new ArrayList<>();
-    private JSONArray instances = new JSONArray();
+    private JsonArray instances = new JsonArray();
 
     @PostConstruct
     public void init() {
         parseBackEndInstancesFile();
         if (!checkIfInstanceAlreadyExist(getCurrentInstance())) {
-            instances.put(getCurrentInstance());
+            instances.add(getCurrentInstance());
         }
         if (eiInstancesPath.equals("")) {
             setEiInstancesPath(PATH);
@@ -77,14 +79,14 @@ public class BackEndInstancesUtils {
         writeIntoFile();
     }
 
-    private JSONObject getCurrentInstance() {
-        JSONObject instance = new JSONObject();
-        instance.put("name", "core");
-        instance.put("host", host);
-        instance.put("port", port);
-        instance.put("path", path);
-        instance.put("https", https);
-        instance.put("active", true);
+    private JsonObject getCurrentInstance() {
+        JsonObject instance = new JsonObject();
+        instance.addProperty("name", "core");
+        instance.addProperty("host", host);
+        instance.addProperty("port", port);
+        instance.addProperty("path", path);
+        instance.addProperty("https", https);
+        instance.addProperty("active", true);
         return instance;
     }
 
@@ -96,11 +98,11 @@ public class BackEndInstancesUtils {
         backEndInformation.setHttps(properties.isHttps());
     }
 
-    public boolean checkIfInstanceAlreadyExist(JSONObject instance) {
-        for (int i = 0; i < instances.length(); i++) {
-            if (instances.getJSONObject(i).get("host").equals(instance.get("host")) &&
-                    instances.getJSONObject(i).get("port").equals(instance.get("port")) &&
-                    instances.getJSONObject(i).get("path").equals(instance.get("path"))) {
+    public boolean checkIfInstanceAlreadyExist(JsonObject instance) {
+        for (JsonElement element : instances) {
+            if (element.getAsJsonObject().get("host").equals(instance.get("host")) &&
+                    element.getAsJsonObject().get("port").equals(instance.get("port")) &&
+                    element.getAsJsonObject().get("path").equals(instance.get("path"))) {
                 return true;
             }
         }
@@ -123,12 +125,11 @@ public class BackEndInstancesUtils {
         if (eiInstancesPath != null) {
             try {
                 information.clear();
-                instances = new JSONArray();
-                JSONArray inputBackEndInstances = new JSONArray(new String(Files.readAllBytes(Paths.get(eiInstancesPath))));
-                for (Object o : inputBackEndInstances) {
-                    JSONObject instance = (JSONObject) o;
-                    information.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
-                    instances.put(instance);
+                instances = new JsonArray();
+                JsonArray inputBackEndInstances = new JsonParser().parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
+                for (JsonElement element : inputBackEndInstances) {
+                    information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
+                    instances.add(element);
                 }
             } catch (IOException e) {
                 LOG.error("Failure when try to parse json file" + e.getMessage());
