@@ -44,7 +44,13 @@ import java.util.List;
 public class BackEndInstancesUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
-    private static final String PATH = "src/main/resources/EIBackendInstancesInformation.json";
+    private static final String PATH_TO_WRITE = "src/main/resources/EIBackendInstancesInformation.json";
+    private static final String NAME = "name";
+    private static final String HOST = "host";
+    private static final String PORT = "port";
+    private static final String PATH = "path";
+    private static final String HTTPS = "https";
+    private static final String ACTIVE = "active";
 
     @Value("${ei.backendServerHost}")
     private String host;
@@ -74,19 +80,19 @@ public class BackEndInstancesUtils {
             instances.add(getCurrentInstance());
         }
         if (eiInstancesPath.equals("")) {
-            setEiInstancesPath(PATH);
+            setEiInstancesPath(PATH_TO_WRITE);
         }
         writeIntoFile();
     }
 
     private JsonObject getCurrentInstance() {
         JsonObject instance = new JsonObject();
-        instance.addProperty("name", "core");
-        instance.addProperty("host", host);
-        instance.addProperty("port", port);
-        instance.addProperty("path", path);
-        instance.addProperty("https", https);
-        instance.addProperty("active", true);
+        instance.addProperty(NAME, "core");
+        instance.addProperty(HOST, host);
+        instance.addProperty(PORT, port);
+        instance.addProperty(PATH, path);
+        instance.addProperty(HTTPS, https);
+        instance.addProperty(ACTIVE, true);
         return instance;
     }
 
@@ -100,9 +106,9 @@ public class BackEndInstancesUtils {
 
     public boolean checkIfInstanceAlreadyExist(JsonObject instance) {
         for (JsonElement element : instances) {
-            if (element.getAsJsonObject().get("host").equals(instance.get("host")) &&
-                    element.getAsJsonObject().get("port").equals(instance.get("port")) &&
-                    element.getAsJsonObject().get("path").equals(instance.get("path"))) {
+            if (element.getAsJsonObject().get(HOST).equals(instance.get(HOST)) &&
+                    element.getAsJsonObject().get(PORT).equals(instance.get(PORT)) &&
+                    element.getAsJsonObject().get(PATH).equals(instance.get(PATH))) {
                 return true;
             }
         }
