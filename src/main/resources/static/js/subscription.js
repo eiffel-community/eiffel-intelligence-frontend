@@ -254,7 +254,7 @@ jQuery(document).ready(function() {
     };
 
 	// Start to check is backend secured
-	var isSecured = "false";
+	var isSecured = false;
 	$.ajax({
 		url: "/auth",
 		contentType : 'application/json; charset=utf-8',
@@ -262,7 +262,7 @@ jQuery(document).ready(function() {
 		error: function () {},
 		success: function (data) {
 			isSecured = JSON.parse(ko.toJSON(data)).security;
-			if(isSecured == "true") {
+			if(isSecured == true) {
 				doIfUserLoggedIn();
 			}
 		},
@@ -365,10 +365,10 @@ jQuery(document).ready(function() {
                 "data": null,
                 "width":"150px",
                 "render": function ( data, type, row, meta ) {
-                    if(isSecured == "true" && row.userName == currentUser && row.userName != null) {
+                    if(isSecured == true && row.userName == currentUser && row.userName != null) {
 	                    return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
 	                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else if(isSecured == "false") {
+                    } else if(isSecured == false) {
                         return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
                         + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
@@ -378,7 +378,7 @@ jQuery(document).ready(function() {
             }
         ],
         "initComplete": function () {
-            if(isSecured == "false") {
+            if(isSecured == false) {
                 table.column(1).visible(false);
             }
         }
