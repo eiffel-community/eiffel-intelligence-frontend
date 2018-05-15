@@ -16,19 +16,24 @@
             <h1>Test Rules</h1>
         </div>
         <p>
-            <span style="color: #333333; background-color: #ffff00;">Upload Rules and events are in json list, Ex
-                : [{},{}]</span>
+            <span style="color: #333333; background-color: #ffff00;">Upload Rules and events are in json list, Ex: [{},{}]</span>
         </p>
         <div class="row" style="max-height: 950; padding: 10px">
             <div class="col-6 border border-right border-success" id="testRulesDOMObject" style="padding: 10px">
                 <div class="row butt divpad">
-                    <div class="col-3">
+                    <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Upload List of Rules" class="btn btn-primary upload_rules">
                             Upload Rules <i class="fa fa-fw  fa-upload"></i>
                         </button>
                         <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
                     </div>
-                    <div class="col-6">
+                    <div style="padding: 10px">
+                        <button data-toggle="tooltip" title="Download rules template"
+                                class="btn btn-primary download_rules_template">
+                            Get Template <i class="fa fa-fw  fa-download"></i>
+                        </button>
+                    </div>
+                    <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary"
                             data-bind="click : $root.addRule.bind()">
                             Add Rule<i class="fa fa-fw  fa-plus"></i>
@@ -56,14 +61,20 @@
             <div class="col-6 border border-right border-success" id="testEventsDOMObject"
                 style="max-height: 100%; padding: 10px">
                 <div class="row butt divpad">
-                    <div class="col-4">
+                    <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Upload List of events"
                             class="btn btn-primary upload_events">
                             Upload Events <i class="fa fa-fw  fa-upload"></i>
                         </button>
-                        <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
+                        <input class="hidden" type='file' id='upload_events_file' name='file' style="display: none" />
                     </div>
-                    <div class="col-6">
+                    <div style="padding: 10px">
+                        <button data-toggle="tooltip" title="Download events template"
+                            class="btn btn-primary download_events_template">
+                            Get Template <i class="fa fa-fw  fa-download"></i>
+                        </button>
+                    </div>
+                    <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary"
                             data-bind="click : $root.addEvent.bind()">
                             Add Event<i class="fa fa-fw  fa-plus"></i>
