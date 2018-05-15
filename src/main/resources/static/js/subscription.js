@@ -465,15 +465,16 @@ jQuery(document).ready(function() {
     $('.container').on( 'click', 'button.get_subscription_template', function (event) {
     	event.stopPropagation();
         event.preventDefault();
-        function getTemplate(){
+        function getTemplate() {
             var req = new XMLHttpRequest();
-            req.open("GET", '/download/subscriptiontemplate', true);
+            req.open("GET", '/download/subscriptionsTemplate', true);
             req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
             };
-            req.send();}
+            req.send();
+        }
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
