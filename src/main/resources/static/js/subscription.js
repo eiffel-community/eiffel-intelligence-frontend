@@ -365,7 +365,7 @@ jQuery(document).ready(function() {
                 "data": null,
                 "render": function ( data, type, row, meta ) {
                     if(isSecured == true && row.userName == currentUser && row.userName != null) {
-		                    return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+                        return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
 	                      + '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
 		                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else if(isSecured == false) {
@@ -587,16 +587,13 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Reload Datatables ###########################################
-    function reload_table()
-    {
+    function reload_table() {
         table.ajax.reload(null,false); //reload datatable ajax
     }
     // /Stop ## Reload Datatables ############################################
 
-
-    // /Start ## Edit Subscription ###########################################
-    $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-        event.stopPropagation();
+		function get_subscription_data(mode) {
+				event.stopPropagation();
         event.preventDefault();
         // Fetch datatable row -> subscriptionName
         var datatable_row_data = table.row( $(this).parents('tr') ).data();
@@ -605,7 +602,7 @@ jQuery(document).ready(function() {
         var callback = {
             beforeSend : function () {},
             success : function (data, textStatus) {
-                populate_json(data, "edit");
+                populate_json(data, mode);
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 $.jGrowl("Error: " + XMLHttpRequest.responseText, {
@@ -618,33 +615,17 @@ jQuery(document).ready(function() {
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
+    }
+
+    // /Start ## Edit Subscription ###########################################
+    $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
+        get_subscription_data("edit");
     });
     // /Stop ## Edit Subscription ###########################################
 
 		// /Start ## View Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.view_record', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        // Fetch datatable row -> subscriptionName
-        var datatable_row_data = table.row( $(this).parents('tr') ).data();
-        var id = datatable_row_data.subscriptionName;
-        // AJAX Callback handling
-        var callback = {
-            beforeSend : function () {},
-            success : function (data, textStatus) {
-                populate_json(data, "view");
-            },
-            error : function (XMLHttpRequest, textStatus, errorThrown) {
-                $.jGrowl("Error: " + XMLHttpRequest.responseText, {
-                    sticky : true,
-                    theme : 'Error'
-                });
-            },
-            complete : function () {}
-        };
-        // Perform AJAX
-        var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
+        get_subscription_data("view");
     });
     // /Stop ## View Subscription ###########################################
 
