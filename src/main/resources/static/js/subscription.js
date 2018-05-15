@@ -40,9 +40,9 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
-    var checkEiBackend = false;
     // Check EI Backend Server Status ########################################
-    function checkEiBackendServer() {
+	var backendStatus = false;
+    function checkBackendStatus() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
     	if (EIConnBtn == null) {
     		return;
@@ -50,24 +50,23 @@ jQuery(document).ready(function() {
     	var red="#ff0000";
     	var green="#00ff00";
 		$.ajax({
-			url: "/subscriptions/testDummySubscription",
-			contentType : 'application/json; charset=utf-8',
+			url: "/auth/checkStatus",
+			contentType: 'application/json; charset=utf-8',
 			type: 'GET',
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				doIfUserLoggedOut();
+			error: function (XMLHttpRequest) {
 				if(XMLHttpRequest.status == 401) {
+					doIfUserLoggedOut();
 					EIConnBtn.style.background = green;
-					checkEiBackend = true;
+					backendStatus = true;
 				} else {
 					EIConnBtn.style.background = red;
-					checkEiBackend = false;
+					backendStatus = false;
 				}
 			},
-			success : function (data, textStatus, xhr) {
+			success: function () {
 				EIConnBtn.style.background = green;
-				checkEiBackend = true;
-			},
-			complete: function (XMLHttpRequest, textStatus) { }
+				backendStatus = true;
+			}
 		});
     }
 
@@ -76,25 +75,26 @@ jQuery(document).ready(function() {
 		if(currentUser != "") {
 			$("#userName").text(currentUser);
 			$("#logoutBlock").show();
+			$(".show_if_authorized").show();
 		}
 	}
-
     function doIfUserLoggedOut() {
 	    localStorage.removeItem("currentUser");
 	    $("#userName").text("Guest");
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
+	    $(".show_if_authorized").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function(){ checkEiBackendServer(); }, 15000);
+    window.setInterval(function(){ checkBackendStatus(); }, 15000);
     
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $('.container').on( 'click', 'button.btnEIConnectionStatus', function (event) {
         event.stopPropagation();
         event.preventDefault();
 
-        checkEiBackendServer();
+        checkBackendStatus();
     });
     // END OF EI Backend Server check #########################################
 
@@ -251,16 +251,33 @@ jQuery(document).ready(function() {
 
 
 
-    };// var SubscriptionViewModel = function(){
+    };
 
-    checkEiBackendServer();
-    doIfUserLoggedIn();
+	// Start to check is backend secured
+	var isSecured = false;
+	$.ajax({
+		url: "/auth",
+		contentType : 'application/json; charset=utf-8',
+		type: 'GET',
+		error: function () {},
+		success: function (data) {
+			isSecured = JSON.parse(ko.toJSON(data)).security;
+			if(isSecured == true) {
+				doIfUserLoggedIn();
+			}
+		},
+		complete: function () {
+	        checkBackendStatus();
+		}
+	});
+	// Finish to check is backend secured
+
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);
     // Apply bindings
 	var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
+    ko.applyBindings(vm,  observableObject);
 
 
     // /Stop ## Knockout #####################################################
@@ -270,17 +287,19 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Datatables ##################################################
+    var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
-
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
         "order": [], //Initial no order.
+        "searching": true,
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": frontendServiceUrl + "/subscriptions",
             "type": "GET",
-            "dataSrc": ""   // Flat structure from EI backend REST API
+            "dataSrc": "",   // Flat structure from EI backend REST API
+            "error": function () {}
         },
         //Set column definition initialisation properties.
         "columnDefs": [
@@ -294,19 +313,26 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 1 ],
+	            "targets": [ 1 ],
+	            "orderable": true,
+	            "title": "UserName",
+	            "data": "userName",
+	            "defaultContent": ""
+            },
+            {
+                "targets": [ 2 ],
                 "orderable": true,
                 "title": "SubscriptionName",
                 "data": "subscriptionName"
             },
             {
-                "targets": [ 2 ],
+                "targets": [ 3 ],
                 "orderable": true,
                 "title": "Type",
                 "data": "aggregationtype"
             },
             {
-                "targets": [ 3 ],
+                "targets": [ 4 ],
                 "orderable": true,
                 "title": "Date",
                 "data": "created",
@@ -315,32 +341,47 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 4 ],
+                "targets": [ 5 ],
                 "orderable": true,
                 "title": "NotificationType",
                 "data": "notificationType"
             },
             {
-                "targets": [ 5 ],
+                "targets": [ 6 ],
                 "orderable": true,
                 "title": "NotificationMeta",
                 "data": "notificationMeta"
             },
             {
-                "targets": [ 6 ],
+                "targets": [ 7 ],
                 "orderable": true,
                 "title": "Repeat",
                 "data": "repeat"
             },
             {
-                "targets": [ 7 ], //last column
+                "targets": [ 8 ], //last column
                 "orderable": false,
                 "title": "Action",
                 "data": null,
                 "width":"150px",
-                "defaultContent": '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button><button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>'
-            },
+                "render": function ( data, type, row, meta ) {
+                    if(isSecured == true && row.userName == currentUser && row.userName != null) {
+	                    return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
+	                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else if(isSecured == false) {
+                        return '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button>     '
+                        + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else {
+                        return '';
+                    }
+                }
+            }
         ],
+        "initComplete": function () {
+            if(isSecured == false) {
+                table.column(1).visible(false);
+            }
+        }
     });
     // /Stop ## Datatables ##################################################
 
@@ -424,15 +465,16 @@ jQuery(document).ready(function() {
     $('.container').on( 'click', 'button.get_subscription_template', function (event) {
     	event.stopPropagation();
         event.preventDefault();
-        function getTemplate(){
+        function getTemplate() {
             var req = new XMLHttpRequest();
-            req.open("GET", '/download/subscriptiontemplate', true);
+            req.open("GET", '/download/subscriptionsTemplate', true);
             req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
             };
-            req.send();}
+            req.send();
+        }
         getTemplate();
     });
     // /END ## get_subscription_template #################################################

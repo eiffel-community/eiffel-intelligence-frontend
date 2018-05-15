@@ -343,4 +343,31 @@ jQuery(document).ready(
         }
 
       });
-    });
+
+      function getTemplate(name) {
+        var request = new XMLHttpRequest();
+        request.open("GET", '/download/' + name, true);
+        request.responseType = "application/json;charset=utf-8";
+        request.onload = function (event) {
+           var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
+           downloadFile(jsonData, "application/json;charset=utf-8", name + ".json");
+        };
+        request.send();
+      }
+
+      // Download the rules template
+      $('.container').on('click', 'button.download_rules_template', function(event) {
+		event.stopPropagation();
+        event.preventDefault();
+        getTemplate("rulesTemplate");
+      });
+
+      // Download the events template
+      $('.container').on('click', 'button.download_events_template', function(event) {
+		event.stopPropagation();
+        event.preventDefault();
+        getTemplate("eventsTemplate");
+      });
+
+    }
+);
