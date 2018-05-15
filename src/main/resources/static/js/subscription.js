@@ -674,24 +674,24 @@ jQuery(document).ready(function() {
             // Force update
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
             $('#modal_form').modal('show');
-						if(save_method_in === "edit") {
-							title_ = 'Edit Subscription';
-							addEditMode();
-						} else if(save_method_in === "add") {
-							title_ = 'Add Subscription';
-							addEditMode();
-						} else {
-							title_ = 'View Subscription';
-							viewMode();
-						}
-						$('.modal-title').text(title_);
+              if(save_method_in === "edit") {
+              title_ = 'Edit Subscription';
+              addEditMode();
+            } else if(save_method_in === "add") {
+              title_ = 'Add Subscription';
+              addEditMode();
+            } else {
+              title_ = 'View Subscription';
+              viewMode();
+            }
+            $('.modal-title').text(title_);
             save_method = save_method_in;
         }
     }
 
     function addEditMode() {
-			$('#modal_form :button').show();
-			$('#modal_form :input').prop("disabled", false);
+      $('#modal_form :button').show();
+      $('#modal_form :input').prop("disabled", false);
     }
     function viewMode() {
       $('#modal_form :button').hide();
