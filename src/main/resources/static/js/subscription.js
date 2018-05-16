@@ -592,11 +592,11 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Reload Datatables ############################################
 
-		function get_subscription_data(mode) {
+		function get_subscription_data(object, mode) {
 				event.stopPropagation();
         event.preventDefault();
         // Fetch datatable row -> subscriptionName
-        var datatable_row_data = table.row( $(this).parents('tr') ).data();
+        var datatable_row_data = table.row( $(object).parents('tr') ).data();
         var id = datatable_row_data.subscriptionName;
         // AJAX Callback handling
         var callback = {
@@ -619,13 +619,13 @@ jQuery(document).ready(function() {
 
     // /Start ## Edit Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-        get_subscription_data("edit");
+        get_subscription_data(this, "edit");
     });
     // /Stop ## Edit Subscription ###########################################
 
 		// /Start ## View Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.view_record', function (event) {
-        get_subscription_data("view");
+        get_subscription_data(this, "view");
     });
     // /Stop ## View Subscription ###########################################
 
