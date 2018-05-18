@@ -33,6 +33,9 @@ public interface BackEndInformationController {
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
     ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request);
 
+    @RequestMapping(value = "/switch-backendByMainPage", method = RequestMethod.POST)
+    ResponseEntity<String> switchBackEndInstanceByMainPage(Model model, HttpServletRequest request);
+
     @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
     ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request);
 

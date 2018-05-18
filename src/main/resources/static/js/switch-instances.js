@@ -1,4 +1,6 @@
 jQuery(document).ready(function() {
+var frontendServiceUrl = $('#frontendServiceUrl').text();
+var sendbtn = document.getElementById('switcher').disabled = true;
 function singleInstanceModel(name, host, port, path, https, active) {
 	this.name = ko.observable(name),
 	this.host = ko.observable(host),
@@ -9,6 +11,7 @@ function singleInstanceModel(name, host, port, path, https, active) {
 }
 function multipleInstancesModel(data) {
 	var self = this;
+	var selected;
 	self.instances = ko.observableArray();
 	var json = JSON.parse(data);
 	for(var i = 0; i < json.length; i++) {
@@ -16,10 +19,15 @@ function multipleInstancesModel(data) {
 		var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
 		self.instances.push(instance);
 	}
+	self.checked = function(){
+	    var sendbtn = document.getElementById('switcher').disabled = false;
+        selected = JSON.parse(ko.toJSON(this));
+	    return true;
+	}
 	self.removeInstance = function() {
 		self.instances.remove(this);
     	$.ajax({
-            url: "/switch-backend",
+            url: frontendServiceUrl + "/switch-backend",
             type: "DELETE",
             data: ko.toJSON(self.instances),
             contentType: 'application/json; charset=utf-8',
@@ -34,36 +42,35 @@ function multipleInstancesModel(data) {
         });
 	}
 	self.submit = function(instances) {
-	    var count = 0;
 	    var json = JSON.parse(ko.toJSON(instances));
+	    self.instances.removeAll();
 	    for(var i = 0; i < json.length; i++){
 	        var obj = json[i];
-	        if(obj.active == true){
-	            count++;
+	        if(obj.active == true &&
+	            !(obj.name == selected.name && obj.host == selected.host && obj.port == selected.port && obj.path == selected.path)){
+	            obj.active = false;
 	        }
+	        var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
+            self.instances.push(instance);
 	    }
-	    if(count == 1){
-		    $.ajax({
-			    url: "/switch-backend",
-			    type: "POST",
-			    data: ko.toJSON(instances),
-			    contentType: 'application/json; charset=utf-8',
-			    cache: false,
-			    error: function (XMLHttpRequest, textStatus, errorThrown) {
-				    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
-			    },
-			    success: function (responseData, textStatus) {
-				    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
-				    $("#mainFrame").load("subscriptionpage.html");
-			    }
-			});
-		 } else {
-		     $.jGrowl("Please choose one backend instance", {sticky: false, theme: 'Error'});
-		 }
+		$.ajax({
+		    url: frontendServiceUrl + "/switch-backend",
+			type: "POST",
+			data: ko.toJSON(self.instances),
+			contentType: 'application/json; charset=utf-8',
+			cache: false,
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+			    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+			},
+			success: function (responseData, textStatus) {
+			    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+			    $(location).attr('href', frontendServiceUrl)
+			}
+	    });
 	}
 }
 $.ajax({
-	url: "/get-instances",
+	url: frontendServiceUrl + "/get-instances",
 	type: "GET",
 	contentType: 'application/json; charset=utf-8',
 	cache: false,

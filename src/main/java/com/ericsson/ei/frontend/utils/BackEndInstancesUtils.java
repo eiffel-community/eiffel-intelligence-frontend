@@ -18,10 +18,8 @@ package com.ericsson.ei.frontend.utils;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -75,19 +73,22 @@ public class BackEndInstancesUtils {
 
     @PostConstruct
     public void init() {
+        if (eiInstancesPath.equals("")) {
+            setEiInstancesPath(PATH_TO_WRITE);
+        }
         parseBackEndInstancesFile();
         if (!checkIfInstanceAlreadyExist(getCurrentInstance())) {
             instances.add(getCurrentInstance());
         }
-        if (eiInstancesPath.equals("")) {
-            setEiInstancesPath(PATH_TO_WRITE);
-        }
         writeIntoFile();
+        information.clear();
+        information = new Gson().fromJson(instances,new TypeToken<List<BackEndInformation>>() {
+        }.getType());
     }
 
     private JsonObject getCurrentInstance() {
         JsonObject instance = new JsonObject();
-        instance.addProperty(NAME, "core");
+        instance.addProperty(NAME, "default");
         instance.addProperty(HOST, host);
         instance.addProperty(PORT, port);
         instance.addProperty(PATH, path);
@@ -107,7 +108,7 @@ public class BackEndInstancesUtils {
     public boolean checkIfInstanceAlreadyExist(JsonObject instance) {
         for (JsonElement element : instances) {
             if (element.getAsJsonObject().get(HOST).equals(instance.get(HOST)) &&
-                    element.getAsJsonObject().get(PORT).equals(instance.get(PORT)) &&
+                    element.getAsJsonObject().get(PORT).getAsInt() == instance.get(PORT).getAsInt() &&
                     element.getAsJsonObject().get(PATH).equals(instance.get(PATH))) {
                 return true;
             }
@@ -116,30 +117,26 @@ public class BackEndInstancesUtils {
     }
 
     public void writeIntoFile() {
-        if (eiInstancesPath != null) {
-            try {
-                FileWriter fileWriter = new FileWriter(eiInstancesPath);
-                fileWriter.append(instances.toString());
-                fileWriter.flush();
-            } catch (IOException e) {
-                LOG.error("Couldn't add instance to file " + e.getMessage());
-            }
+        try {
+            FileWriter fileWriter = new FileWriter(eiInstancesPath);
+            fileWriter.append(instances.toString());
+            fileWriter.flush();
+        } catch (IOException e) {
+            LOG.error("Couldn't add instance to file " + e.getMessage());
         }
     }
 
     public void parseBackEndInstancesFile() {
-        if (eiInstancesPath != null) {
-            try {
-                information.clear();
-                instances = new JsonArray();
-                JsonArray inputBackEndInstances = new JsonParser().parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
-                for (JsonElement element : inputBackEndInstances) {
-                    information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
-                    instances.add(element);
-                }
-            } catch (IOException e) {
-                LOG.error("Failure when try to parse json file" + e.getMessage());
+        try {
+            information.clear();
+            instances = new JsonArray();
+            JsonArray inputBackEndInstances = new JsonParser().parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
+            for (JsonElement element : inputBackEndInstances) {
+                information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
+                instances.add(element);
             }
+        } catch (IOException e) {
+            LOG.error("Failure when try to parse json file" + e.getMessage());
         }
     }
 }

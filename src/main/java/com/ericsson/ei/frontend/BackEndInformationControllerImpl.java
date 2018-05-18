@@ -18,8 +18,11 @@ package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -75,13 +80,37 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(body).getAsJsonObject();
             if (!utils.checkIfInstanceAlreadyExist(instance)) {
-                instance.addProperty("checked", false);
+                instance.addProperty("default", false);
                 utils.getInstances().add(instance);
                 utils.writeIntoFile();
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Instance already exist", HttpStatus.BAD_REQUEST);
             }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<String> switchBackEndInstanceByMainPage(Model model, HttpServletRequest request) {
+        try {
+            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            List<BackEndInformation> info = new ArrayList<>();
+            for (BackEndInformation backEndInformation : utils.getInformation()) {
+                backEndInformation.setActive(false);
+                if (backEndInformation.getName().equals(body)) {
+                    utils.setBackEndProperties(backEndInformation);
+                    backEndInformation.setActive(true);
+                }
+                info.add(backEndInformation);
+            }
+            utils.setInformation(info);
+            JsonArray result = (JsonArray) new Gson().toJsonTree(utils.getInformation(), new TypeToken<List<BackEndInformation>>() {
+            }.getType());
+            utils.setInstances(result);
+            utils.writeIntoFile();
+            utils.parseBackEndInstancesFile();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
         }

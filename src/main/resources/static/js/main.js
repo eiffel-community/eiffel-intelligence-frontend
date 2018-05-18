@@ -83,4 +83,56 @@ jQuery(document).ready(function() {
 
 	initOneTime();
 
+    function singleInstanceModel(name, host, port, path, https, active) {
+    	this.name = ko.observable(name),
+    	this.host = ko.observable(host),
+    	this.port = ko.observable(port),
+    	this.path = ko.observable(path),
+    	this.https = ko.observable(https),
+        this.active = ko.observable(active),
+	    this.information = name.toUpperCase() + " - " + host + " " + port + " " + path;
+    }
+
+    function viewModel(data) {
+        var self = this;
+        var currentName;
+        self.instances = ko.observableArray();
+        var json = JSON.parse(data);
+        for(var i = 0; i < json.length; i++) {
+            var obj = json[i];
+        	var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
+        	self.instances.push(instance);
+        	if(obj.active == true){
+        	    currentName = obj.name;
+        	}
+        }
+        self.selectedActive = ko.observable(currentName);
+        self.onChange = function(){
+            $.ajax({
+                url: frontendServiceUrl + "/switch-backendByMainPage",
+            	type: "POST",
+            	data: self.selectedActive(),
+            	contentType: 'application/json; charset=utf-8',
+            	cache: false,
+            	error: function (XMLHttpRequest, textStatus, errorThrown) {
+            	    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	},
+            	success: function (responseData, textStatus) {
+            	    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+            	}
+            });
+        }
+    }
+    $.ajax({
+        url: frontendServiceUrl + "/get-instances",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+        },
+        success: function (responseData, textStatus) {
+            ko.applyBindings(new viewModel(responseData));
+        }
+    });
 });

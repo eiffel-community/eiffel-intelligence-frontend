@@ -26,8 +26,8 @@
                 </thead>
                 <tbody data-bind="foreach: instances">
                 <tr>
-                    <td align="center"><input align="center" id="activeInstance" type="checkbox"
-                                              data-bind="checked: active"/></td>
+                    <td align="center"><input align="center" name="activate" type="radio"
+                                              data-bind="checked: active, checkedValue: true, click: $parent.checked"/></td>
                     <td data-bind="text: name" align="center"></td>
                     <td data-bind="text: host" align="center"></td>
                     <td data-bind="text: port" align="center"></td>
@@ -37,7 +37,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary btn-block"
+            <button id="switcher" type="button" class="btn btn-primary btn-block"
                     data-bind="click: function(){$root.submit($root.instances);}">Submit
             </button>
         </div>
