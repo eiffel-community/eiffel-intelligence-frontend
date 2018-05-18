@@ -16,6 +16,12 @@ var template_vars = {};
                         "formvalue" : ""
                     }
                 ],
+            "notificationMessageKeyValuesAuth" : [
+                    {
+                        "formkey" : "",
+                        "formvalue" : ""
+                    }
+                ],
             "repeat" : null,
             "requirements" : [
                 {
@@ -41,6 +47,12 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     {
                         "formkey" : "json",
                         "formvalue" : "{parameter: [{ name: 'jsonparams', value : to_string(@) }, { name: 'runpipeline', value : 'mybuildstep' }]}"
+                    }
+                    ],
+                    "notificationMessageKeyValuesAuth" : [
+                    {
+                        "formkey" : "myAuthentication",
+                        "formvalue" : "myToken"
                     }
                 ],
                     "repeat" : false,
