@@ -95,10 +95,7 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/auth/login", method = RequestMethod.GET)
     public ResponseEntity<String> getAuthRequests(Model model, HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        LOG.info("Got HTTP Request with method GET.\nUrlSuffix: " + eiBackendAddressSuffix +
-            "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        String EIRequestUrl = getEIRequestURL(request);
 
         try {
             client.close();
@@ -107,7 +104,7 @@ public class EIRequestsController {
             LOG.error("Failed to close HTTP Client");
         }
 
-        HttpGet eiRequest = new HttpGet(newRequestUrl);
+        HttpGet eiRequest = new HttpGet(EIRequestUrl);
 
         String header = request.getHeader("Authorization");
         if (header != null) {
@@ -123,15 +120,12 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/auth",
-        "/auth/checkStatus", "/auth/logout", "/download/*" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
+        "/auth/checkStatus", "/auth/logout", "/queryAggregatedObject", "/queryMissedNotifications", "/query" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        LOG.info("Got HTTP Request with method GET.\nUrlSuffix: " + eiBackendAddressSuffix
-                + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        String EIRequestUrl = getEIRequestURL(request);
 
-        HttpGet eiRequest = new HttpGet(newRequestUrl);
+        HttpGet eiRequest = new HttpGet(EIRequestUrl);
 
         return getResponse(eiRequest);
     }
@@ -141,12 +135,9 @@ public class EIRequestsController {
      * 
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation"}, method = RequestMethod.POST)
+    @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        LOG.info("Got HTTP Request with method POST.\nUrlSuffix: " + eiBackendAddressSuffix
-                + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        String EIRequestUrl = getEIRequestURL(request);
 
         String inputReqJsonContent = "";
         try {
@@ -162,7 +153,7 @@ public class EIRequestsController {
         LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
 
-        HttpPost eiRequest = new HttpPost(newRequestUrl);
+        HttpPost eiRequest = new HttpPost(EIRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
         eiRequest.setHeader("Content-type", "application/json");
 
@@ -177,10 +168,7 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
     public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        LOG.info("Got HTTP Request with method PUT.\nUrlSuffix: " + eiBackendAddressSuffix
-                + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        String EIRequestUrl = getEIRequestURL(request);
 
         String inputReqJsonContent = "";
         try {
@@ -196,7 +184,7 @@ public class EIRequestsController {
         LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
 
-        HttpPut eiRequest = new HttpPut(newRequestUrl);
+        HttpPut eiRequest = new HttpPut(EIRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
         eiRequest.setHeader("Content-type", "application/json");
 
@@ -211,12 +199,9 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        LOG.info("Got HTTP Request with method DELETE.\nUrlSuffix: " + eiBackendAddressSuffix
-                + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        String EIRequestUrl = getEIRequestURL(request);
 
-        HttpDelete eiRequest = new HttpDelete(newRequestUrl);
+        HttpDelete eiRequest = new HttpDelete(EIRequestUrl);
 
         return getResponse(eiRequest);
     }
@@ -232,6 +217,17 @@ public class EIRequestsController {
                 + backendContextPath;
         }
         return httpMethod + "://" + this.getBackendServerHost() + ":" + this.getBackendServerPort();
+    }
+
+    private String getEIRequestURL(HttpServletRequest request) {
+        String eiBackendAddressSuffix = request.getServletPath();
+        String requestQuery = request.getQueryString();
+        String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
+        String newRequestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
+        LOG.info("Got HTTP Request with method " + request.getMethod()
+            + "\nUrlSuffix: " + eiBackendAddressSuffix
+            + "\nForwarding Request to EI Backend with url: " + newRequestUrl);
+        return newRequestUrl;
     }
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
