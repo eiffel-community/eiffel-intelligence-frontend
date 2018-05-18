@@ -4,8 +4,6 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = {"formkey" : "","formvalue" : ""};
 var defaultFormKeyValuePairAuth = {"formkey" : "Authorization","formvalue" : ""};
-//var USERNAME = ""; var PASSWORD = "";
-
 
 jQuery(document).ready(function() {
 
@@ -19,7 +17,6 @@ jQuery(document).ready(function() {
     var AjaxHttpSender = function () {};
 
     AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
-//    	alert("USERNAME="+USERNAME+"PASSWORD="+PASSWORD);
         $.ajax({
             url : url,
             type : type,
@@ -221,7 +218,6 @@ jQuery(document).ready(function() {
         };
         
         self.addNotificationMsgKeyValuePairAuth = function(data, event) {
-           console.log("=================================================++++"); 
            data.notificationMessageKeyValuesAuth = ko.observableArray();
            data.notificationMessageKeyValuesAuth.push({"formkey" : "Authorization","formvalue" : ko.computed(function() {
                return "Basic " + btoa(data.userName() + ":" + data.token());
@@ -680,9 +676,7 @@ jQuery(document).ready(function() {
                 for (i=0; i < item[0].notificationMessageKeyValues.length; i++) {
                     item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
                 }
-//                for (i=0; i < item[0].notificationMessageKeyValuesAuth.length; i++) {
-//                    item[0].notificationMessageKeyValuesAuth[i] = new formdata_model(item[0].notificationMessageKeyValuesAuth[i])
-//                }
+
                                 
                 return new subscription_model(item[0]);
             });
@@ -727,13 +721,6 @@ jQuery(document).ready(function() {
         if(!vm.formpostkeyvaluepairs()) {
             notificationMessageKeyValuesArray[0].formkey=""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
-               
-//        if(vm.subscription()[0].authenticationType() === "BASIC_AUTH")
-//        {
-//            USERNAME = vm.subscription()[0].userName();
-//            PASSWORD = vm.subscription()[0].token();//
-//        }
-//        
         
 
         //START: Make sure all datatables field has a value
@@ -782,8 +769,6 @@ jQuery(document).ready(function() {
             return;
         }
         //END OF: Make sure all datatables field has a value
-
-
 
 
          //START: Check of other subscription fields values
