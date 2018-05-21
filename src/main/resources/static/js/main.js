@@ -1,6 +1,17 @@
-
 jQuery(document).ready(function() {
-
+    (function($) {
+        $.fn.invisible = function() {
+            return this.each(function() {
+                $(this).css("visibility", "hidden");
+            });
+        };
+        $.fn.visible = function() {
+            return this.each(function() {
+                $(this).css("visibility", "visible");
+            });
+        };
+    }(jQuery));
+    $("#selectInstances").visible();
 	// Fetch injected URL from DOM
 	var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
@@ -22,10 +33,12 @@ jQuery(document).ready(function() {
 	});
 
 	$("#addInstanceBtn").click(function() {
+	    $("#selectInstances").invisible();
       	$("#mainFrame").load("add-instances.html");
     });
 
     $("#switcherBtn").click(function() {
+        $("#selectInstances").invisible();
       	$("#mainFrame").load("switch-backend.html");
     });
 
