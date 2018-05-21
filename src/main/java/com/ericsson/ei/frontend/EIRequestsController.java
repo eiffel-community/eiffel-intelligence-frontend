@@ -185,17 +185,6 @@ public class EIRequestsController {
         return requestUrl;
     }
 
-    private String getEIRequestURL(HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String requestQuery = request.getQueryString();
-        String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
-        String requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
-        LOG.info("Got HTTP Request with method " + request.getMethod()
-            + "\nUrlSuffix: " + eiBackendAddressSuffix
-            + "\nForwarding Request to EI Backend with url: " + requestUrl);
-        return requestUrl;
-    }
-
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String jsonContent = "";
         int statusCode = 102;

@@ -50,7 +50,7 @@ jQuery(document).ready(function() {
     	var red="#ff0000";
     	var green="#00ff00";
 		$.ajax({
-			url: "/auth/checkStatus",
+			url: frontendServiceUrl + "/auth/checkStatus",
 			contentType: 'application/json; charset=utf-8',
 			type: 'GET',
 			error: function (XMLHttpRequest) {
@@ -256,7 +256,7 @@ jQuery(document).ready(function() {
 	// Start to check is backend secured
 	var isSecured = false;
 	$.ajax({
-		url: "/auth",
+		url: frontendServiceUrl + "/auth",
 		contentType : 'application/json; charset=utf-8',
 		type: 'GET',
 		error: function () {},

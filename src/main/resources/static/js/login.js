@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function() {
-
+var frontendServiceUrl = $('#frontendServiceUrl').text();
 	// /Start ## Knockout ####################################################
 	function loginModel() {
 		this.userState = {
@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
 				});
 			} else {
 				var token = window.btoa(JSON.parse(dataJSON).username + ":" + JSON.parse(dataJSON).password);
-				sendLoginRequest("/auth/login", "GET", token);
+				sendLoginRequest(frontendServiceUrl + "/auth/login", "GET", token);
 			}
 		}
 	}

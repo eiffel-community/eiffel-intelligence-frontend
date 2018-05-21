@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,6 +8,7 @@
     <meta name="author" content=""/>
 </head>
 <body class="bg-dark">
+<div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
 <div class="container pull-left">
     <div class="card card-login mx-auto mt-5">
         <div class="card-header">Add backend instance</div>
