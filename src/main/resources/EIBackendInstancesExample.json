@@ -1,0 +1,16 @@
+[
+  {
+    "path": "",
+    "port": "8091",
+    "name": "test",
+    "host": "localhost",
+    "https": false
+  },
+  {
+    "path": "/eiffel",
+    "port": "8091",
+    "name": "source",
+    "host": "localhost",
+    "https": false
+  }
+]

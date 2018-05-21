@@ -36,6 +36,7 @@
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <select id="selectInstances" data-bind="options: instances, optionsText: 'information', optionsValue: 'name', value: selectedActive, event: {change: onChange}" ></select>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li id="subscriptionBtn" class="nav-item" data-toggle="tooltip" data-placement="right" title="Eiffel Subscription">
@@ -71,6 +72,20 @@
 			<!-- Li and A tags and document links content is injected from main.js  -->
           </ul>
         </li>
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administration backend instances">
+              <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseBackEndPages" data-parent="#exampleAccordion">
+                  <i class="fa fa-fw fa-file"></i>
+                  <span class="nav-link-text">Administration backend instances</span>
+              </a>
+              <ul class="sidenav-second-level collapse" id="collapseBackEndPages">
+                  <li>
+                      <a id="addInstanceBtn" href="#">Add backend instance</a>
+                  </li>
+                  <li>
+                      <a id="switcherBtn" href="#">Switch backend instance</a>
+                  </li>
+              </ul>
+          </li>
       </ul>
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
