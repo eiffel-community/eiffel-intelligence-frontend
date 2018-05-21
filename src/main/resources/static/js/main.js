@@ -1,96 +1,151 @@
-
 jQuery(document).ready(function() {
-	
-    // Fetch injected URL from DOM 
-    var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
+    (function($) {
+        $.fn.invisible = function() {
+            return this.each(function() {
+                $(this).css("visibility", "hidden");
+            });
+        };
+        $.fn.visible = function() {
+            return this.each(function() {
+                $(this).css("visibility", "visible");
+            });
+        };
+    }(jQuery));
+    $("#selectInstances").visible();
+	// Fetch injected URL from DOM
+	var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
-	document.getElementById("testRulesBtn").onclick = function() {		  
-
-    	$("#mainFrame").load("testRules.html");
-	}
-	
-	document.getElementById("eiInfoBtn").onclick = function() {		  
-  
-    	$("#mainFrame").load("eiInfo.html");
-	}
-	
-	
-	function loadLoginPage() {
- 
-    	$("#mainFrame").load("login.html");
-	}
-	
-	document.getElementById("loginBtn").onclick = function() {		  
-		
-		loadLoginPage();
-	}
-	
-	document.getElementById("logoutLoginBtn").onclick = function() {		  
-		
-		loadLoginPage();
-	}
-	
-	document.getElementById("registerBtn").onclick = function() {		  
-
-    	$("#mainFrame").load("register.html");
-	}
-	
-	document.getElementById("forgotPasswordBtn").onclick = function() {		  
-
-    	$("#mainFrame").load("forgot-password.html");
-	}
-	
 	function loadMainPage() {
-
-    	$("#mainFrame").load("subscriptionpage.html");
-	}
-	
-	document.getElementById("subscriptionBtn").onclick = function() {
-		
-    	loadMainPage();
+		$("#mainFrame").load("subscriptionpage.html");
 	}
 
-	function loadJmesPathRulesSetUpPage() {
+	$("#testRulesBtn").click(function() {
+		$("#mainFrame").load("testRules.html");
+	});
 
-    	$("#mainFrame").load("jmesPathRulesSetUp.html");
+	$("#eiInfoBtn").click(function() {
+		$("#mainFrame").load("eiInfo.html");
+	});
+
+	$("#loginBtn").click(function() {
+		$("#mainFrame").load("login.html");
+	});
+
+	$("#addInstanceBtn").click(function() {
+	    $("#selectInstances").invisible();
+      	$("#mainFrame").load("add-instances.html");
+    });
+
+    $("#switcherBtn").click(function() {
+        $("#selectInstances").invisible();
+      	$("#mainFrame").load("switch-backend.html");
+    });
+
+	$("#logoutBtn").click(function() {
+		$.ajax({
+			url : "/auth/logout",
+			type : "GET",
+			contentType : 'application/json; charset=utf-8',
+			cache: false,
+			complete : function (XMLHttpRequest, textStatus) {
+				doIfUserLoggedOut();
+				loadMainPage();
+			}
+		});
+	});
+
+	$("#subscriptionBtn").click(function() {
+		loadMainPage();
+	});
+
+	$("#jmesPathRulesSetUpBtn").click(function() {
+		$("#mainFrame").load("jmesPathRulesSetUp.html");
+	});
+
+	function doIfUserLoggedOut() {
+		localStorage.removeItem("currentUser");
+		$("#userName").text("Guest");
+		$("#loginBlock").show();
+		$("#logoutBlock").hide();
 	}
-
-	document.getElementById("jmesPathRulesSetUpBtn").onclick = function() {
-
-    	loadJmesPathRulesSetUpPage();
-    }
 
 	function loadDocumentLinks(){
 		// eiffelDocumentationUrlLinks variable is configure in application.properties
 		var linksList = JSON.parse(eiffelDocumentationUrlLinks);
-
-	    var docLinksDoc = document.getElementById('collapseDocPages');
+		var docLinksDoc = document.getElementById('collapseDocPages');
 		var liTag = null;
 		var aTag = null;
-		
-    	Object.keys(linksList).forEach(function(linkKey) {
-    			liTag = document.createElement('li');
-    			aTag = document.createElement('a');
-    			aTag.innerHTML = linkKey;
-    			aTag.setAttribute('href', linksList[linkKey]);
-    			aTag.setAttribute('target', '_blanc');
-    			liTag.appendChild(aTag);
-    			docLinksDoc.appendChild(liTag);
-    	    	});
-    	    
-		
-		
-		
 
-		
+		Object.keys(linksList).forEach(function(linkKey) {
+			liTag = document.createElement('li');
+			aTag = document.createElement('a');
+			aTag.innerHTML = linkKey;
+			aTag.setAttribute('href', linksList[linkKey]);
+			aTag.setAttribute('target', '_blanc');
+			liTag.appendChild(aTag);
+			docLinksDoc.appendChild(liTag);
+		});
 	}
-	
+
 	var initOneTime = function(){
 		initOneTime = function(){}; // kill it as soon as it was called
-		 loadDocumentLinks();
-	     loadMainPage();
+		loadDocumentLinks();
+		loadMainPage();
 	};
-	
+
 	initOneTime();
+
+    function singleInstanceModel(name, host, port, path, https, active) {
+    	this.name = ko.observable(name),
+    	this.host = ko.observable(host),
+    	this.port = ko.observable(port),
+    	this.path = ko.observable(path),
+    	this.https = ko.observable(https),
+        this.active = ko.observable(active),
+	    this.information = name.toUpperCase() + " - " + host + " " + port + " " + path;
+    }
+
+    function viewModel(data) {
+        var self = this;
+        var currentName;
+        self.instances = ko.observableArray();
+        var json = JSON.parse(data);
+        for(var i = 0; i < json.length; i++) {
+            var obj = json[i];
+        	var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
+        	self.instances.push(instance);
+        	if(obj.active == true){
+        	    currentName = obj.name;
+        	}
+        }
+        self.selectedActive = ko.observable(currentName);
+        self.onChange = function(){
+            $.ajax({
+                url: frontendServiceUrl + "/switch-backendByMainPage",
+            	type: "POST",
+            	data: self.selectedActive(),
+            	contentType: 'application/json; charset=utf-8',
+            	cache: false,
+            	error: function (XMLHttpRequest, textStatus, errorThrown) {
+            	    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	},
+            	success: function (responseData, textStatus) {
+            	    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+            	}
+            });
+        }
+    }
+    $.ajax({
+        url: frontendServiceUrl + "/get-instances",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+        },
+        success: function (responseData, textStatus) {
+            ko.applyBindings(new viewModel(responseData));
+        }
+    });
 });

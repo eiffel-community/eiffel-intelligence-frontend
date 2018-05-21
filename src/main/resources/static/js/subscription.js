@@ -40,48 +40,64 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
-    var checkEiBackend = false;
     // Check EI Backend Server Status ########################################
-    function checkEiBackendServer() {
+	var backendStatus = false;
+    function checkBackendStatus() {
     	var EIConnBtn = document.getElementById("btnEIConnection");
-    	if (EIConnBtn == null ) {
+    	if (EIConnBtn == null) {
     		return;
     	}
-    	   $.ajax({
-    		      url: frontendServiceUrl + "/subscriptions/testDummySubscription",
-    		      contentType : 'application/json; charset=utf-8',
-    		      type: 'GET',
-                  error : function (XMLHttpRequest, textStatus, errorThrown) {
-                  		var red="#ff0000";
-                  		EIConnBtn.style.background = red;
-                  },
-                  success : function (data, textStatus, xhr) {
-                  		var green="#00ff00";
-                  		EIConnBtn.style.background = green;
-                  		checkEiBackend=true;
-                  },
-    		      complete: function (XMLHttpRequest, textStatus) {
-    		      }
-    		   });
+    	var red="#ff0000";
+    	var green="#00ff00";
+		$.ajax({
+			url: "/auth/checkStatus",
+			contentType: 'application/json; charset=utf-8',
+			type: 'GET',
+			error: function (XMLHttpRequest) {
+				if(XMLHttpRequest.status == 401) {
+					doIfUserLoggedOut();
+					EIConnBtn.style.background = green;
+					backendStatus = true;
+				} else {
+					EIConnBtn.style.background = red;
+					backendStatus = false;
+				}
+			},
+			success: function () {
+				EIConnBtn.style.background = green;
+				backendStatus = true;
+			}
+		});
+    }
 
+	function doIfUserLoggedIn() {
+		var currentUser = localStorage.getItem("currentUser");
+		if(currentUser != "") {
+			$("#userName").text(currentUser);
+			$("#logoutBlock").show();
+			$(".show_if_authorized").show();
+		}
+	}
+    function doIfUserLoggedOut() {
+	    localStorage.removeItem("currentUser");
+	    $("#userName").text("Guest");
+	    $("#loginBlock").show();
+	    $("#logoutBlock").hide();
+	    $(".show_if_authorized").hide();
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function(){
-    	checkEiBackendServer();
-    }, 15000);
+    window.setInterval(function(){ checkBackendStatus(); }, 15000);
     
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $('.container').on( 'click', 'button.btnEIConnectionStatus', function (event) {
-
         event.stopPropagation();
         event.preventDefault();
 
-        checkEiBackendServer();
+        checkBackendStatus();
     });
+    // END OF EI Backend Server check #########################################
 
-    // END OF EI Backend Server check ######################################### 
-    
     
     // /Start ## Knockout ####################################################
 
@@ -235,14 +251,33 @@ jQuery(document).ready(function() {
 
 
 
-    };// var SubscriptionViewModel = function(){
+    };
+
+	// Start to check is backend secured
+	var isSecured = false;
+	$.ajax({
+		url: "/auth",
+		contentType : 'application/json; charset=utf-8',
+		type: 'GET',
+		error: function () {},
+		success: function (data) {
+			isSecured = JSON.parse(ko.toJSON(data)).security;
+			if(isSecured == true) {
+				doIfUserLoggedIn();
+			}
+		},
+		complete: function () {
+	        checkBackendStatus();
+		}
+	});
+	// Finish to check is backend secured
 
 	// Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0]; 
     ko.cleanNode(observableObject);
     // Apply bindings
 	var vm = new SubscriptionViewModel();
-    ko.applyBindings(vm,  document.getElementById("ViewModelDOMObject"));
+    ko.applyBindings(vm,  observableObject);
 
 
     // /Stop ## Knockout #####################################################
@@ -252,17 +287,19 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Datatables ##################################################
+    var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
-
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
         "order": [], //Initial no order.
+        "searching": true,
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": frontendServiceUrl + "/subscriptions",
             "type": "GET",
-            "dataSrc": ""   // Flat structure from EI backend REST API
+            "dataSrc": "",   // Flat structure from EI backend REST API
+            "error": function () {}
         },
         //Set column definition initialisation properties.
         "columnDefs": [
@@ -276,19 +313,26 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 1 ],
+	            "targets": [ 1 ],
+	            "orderable": true,
+	            "title": "UserName",
+	            "data": "userName",
+	            "defaultContent": ""
+            },
+            {
+                "targets": [ 2 ],
                 "orderable": true,
                 "title": "SubscriptionName",
                 "data": "subscriptionName"
             },
             {
-                "targets": [ 2 ],
+                "targets": [ 3 ],
                 "orderable": true,
                 "title": "Type",
                 "data": "aggregationtype"
             },
             {
-                "targets": [ 3 ],
+                "targets": [ 4 ],
                 "orderable": true,
                 "title": "Date",
                 "data": "created",
@@ -297,32 +341,48 @@ jQuery(document).ready(function() {
                 }
             },
             {
-                "targets": [ 4 ],
+                "targets": [ 5 ],
                 "orderable": true,
                 "title": "NotificationType",
                 "data": "notificationType"
             },
             {
-                "targets": [ 5 ],
+                "targets": [ 6 ],
                 "orderable": true,
                 "title": "NotificationMeta",
                 "data": "notificationMeta"
             },
             {
-                "targets": [ 6 ],
+                "targets": [ 7 ],
                 "orderable": true,
                 "title": "Repeat",
                 "data": "repeat"
             },
             {
-                "targets": [ 7 ], //last column
+                "targets": [ 8 ], //last column
                 "orderable": false,
                 "title": "Action",
                 "data": null,
-                "width":"150px",
-                "defaultContent": '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button><button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>'
-            },
+                "render": function ( data, type, row, meta ) {
+                    if(isSecured == true && row.userName == currentUser && row.userName != null) {
+                        return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+	                      + '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
+		                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else if(isSecured == false) {
+                        return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+                        + '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                        + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else {
+                        return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
+                    }
+                }
+            }
         ],
+        "initComplete": function () {
+            if(isSecured == false) {
+                table.column(1).visible(false);
+            }
+        }
     });
     // /Stop ## Datatables ##################################################
 
@@ -406,15 +466,16 @@ jQuery(document).ready(function() {
     $('.container').on( 'click', 'button.get_subscription_template', function (event) {
     	event.stopPropagation();
         event.preventDefault();
-        function getTemplate(){
+        function getTemplate() {
             var req = new XMLHttpRequest();
-            req.open("GET", '/download/subscriptiontemplate', true);
+            req.open("GET", '/download/subscriptionsTemplate', true);
             req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
             };
-            req.send();}
+            req.send();
+        }
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
@@ -526,26 +587,22 @@ jQuery(document).ready(function() {
 
 
     // /Start ## Reload Datatables ###########################################
-    function reload_table()
-    {
+    function reload_table() {
         table.ajax.reload(null,false); //reload datatable ajax
     }
     // /Stop ## Reload Datatables ############################################
 
-
-    // /Start ## Edit Subscription ###########################################
-    $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-        event.stopPropagation();
+		function get_subscription_data(object, mode) {
+				event.stopPropagation();
         event.preventDefault();
         // Fetch datatable row -> subscriptionName
-        var datatable_row_data = table.row( $(this).parents('tr') ).data();
+        var datatable_row_data = table.row( $(object).parents('tr') ).data();
         var id = datatable_row_data.subscriptionName;
         // AJAX Callback handling
         var callback = {
-            beforeSend : function () {
-            },
+            beforeSend : function () {},
             success : function (data, textStatus) {
-                populate_json(data, "edit");
+                populate_json(data, mode);
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 $.jGrowl("Error: " + XMLHttpRequest.responseText, {
@@ -553,19 +610,27 @@ jQuery(document).ready(function() {
                     theme : 'Error'
                 });
             },
-            complete : function () {
-            }
+            complete : function () {}
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
+    }
+
+    // /Start ## Edit Subscription ###########################################
+    $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
+        get_subscription_data(this, "edit");
     });
     // /Stop ## Edit Subscription ###########################################
 
+		// /Start ## View Subscription ###########################################
+    $('#table').on( 'click', 'tbody tr td button.view_record', function (event) {
+        get_subscription_data(this, "view");
+    });
+    // /Stop ## View Subscription ###########################################
 
    // /Start ## populate JSON  ###########################################
-    function populate_json(data, save_method_in)
-    {
+    function populate_json(data, save_method_in) {
         var returnData = [data];
         if (returnData.length > 0) {
             vm.subscription([]);
@@ -590,17 +655,30 @@ jQuery(document).ready(function() {
             // Force update
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
             $('#modal_form').modal('show');
-			if(save_method_in === "edit")
-			{
-				title_ = 'Edit Subscription';
-				
-			}else
-			{
-				title_ = 'Add Subscription';
-			}
-			$('.modal-title').text(title_);
+              if(save_method_in === "edit") {
+              title_ = 'Edit Subscription';
+              addEditMode();
+            } else if(save_method_in === "add") {
+              title_ = 'Add Subscription';
+              addEditMode();
+            } else {
+              title_ = 'View Subscription';
+              viewMode();
+            }
+            $('.modal-title').text(title_);
             save_method = save_method_in;
         }
+    }
+
+    function addEditMode() {
+      $('#modal_form :button').show();
+      $('#modal_form :input').prop("disabled", false);
+    }
+    function viewMode() {
+      $('#modal_form :button').hide();
+      $('#modal_form :input').prop("disabled", true);
+      $('#modal_form .close').show();
+      $('#modal_form .close').prop("disabled", false);
     }
    // /Stop ## pupulate JSON  ###########################################
 
@@ -610,8 +688,7 @@ jQuery(document).ready(function() {
         event.stopPropagation();
         event.preventDefault();
         var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
-        if(!vm.formpostkeyvaluepairs())
-        {
+        if(!vm.formpostkeyvaluepairs()) {
             notificationMessageKeyValuesArray[0].formkey=""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
@@ -730,7 +807,7 @@ jQuery(document).ready(function() {
             url = frontendServiceUrl + "/subscriptions";
             type = "POST";
 
-        } else {  // Update existing
+        } else if(save_method === 'edit') {  // Update existing
             url = frontendServiceUrl + "/subscriptions";
             type = "PUT";
         }
