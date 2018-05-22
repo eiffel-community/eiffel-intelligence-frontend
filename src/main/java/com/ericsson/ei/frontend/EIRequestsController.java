@@ -187,7 +187,7 @@ public class EIRequestsController {
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String jsonContent = "";
-        int statusCode = 102;
+        int statusCode;
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
             InputStream inStream = eiResponse.getEntity().getContent();
             BufferedReader bufReader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
@@ -204,6 +204,7 @@ public class EIRequestsController {
             bufReader.close();
             inStream.close();
         } catch (IOException e) {
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
             LOG.error("Forward Request Errors: " + e);
         }
 

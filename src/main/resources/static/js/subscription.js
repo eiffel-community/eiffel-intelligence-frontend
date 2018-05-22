@@ -42,13 +42,13 @@ jQuery(document).ready(function() {
 
     // Check EI Backend Server Status ########################################
 	var backendStatus = false;
-    function checkBackendStatus() {
-    	var EIConnBtn = document.getElementById("btnEIConnection");
-    	if (EIConnBtn == null) {
-    		return;
-    	}
-    	var red="#ff0000";
-    	var green="#00ff00";
+	function checkBackendStatus() {
+    var EIConnBtn = document.getElementById("btnEIConnection");
+    if (EIConnBtn == null) {
+    	return;
+    }
+    var red="#ff0000";
+    var green="#00ff00";
 		$.ajax({
 			url: frontendServiceUrl + "/auth/checkStatus",
 			contentType: 'application/json; charset=utf-8',
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 				backendStatus = true;
 			}
 		});
-    }
+	}
 
 	function doIfUserLoggedIn() {
 		var currentUser = localStorage.getItem("currentUser");
@@ -592,7 +592,7 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Reload Datatables ############################################
 
-		function get_subscription_data(object, mode) {
+		function get_subscription_data(object, mode, event) {
 				event.stopPropagation();
         event.preventDefault();
         // Fetch datatable row -> subscriptionName
@@ -619,13 +619,13 @@ jQuery(document).ready(function() {
 
     // /Start ## Edit Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-        get_subscription_data(this, "edit");
+        get_subscription_data(this, "edit", event);
     });
     // /Stop ## Edit Subscription ###########################################
 
 		// /Start ## View Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.view_record', function (event) {
-        get_subscription_data(this, "view");
+        get_subscription_data(this, "view", event);
     });
     // /Stop ## View Subscription ###########################################
 
