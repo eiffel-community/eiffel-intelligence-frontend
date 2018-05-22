@@ -197,7 +197,7 @@ public class EIRequestsController {
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String jsonContent = "";
-        int statusCode = 102;
+        int statusCode = HttpStatus.PROCESSING.value();
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
             InputStream inStream = eiResponse.getEntity().getContent();
             BufferedReader bufReader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
