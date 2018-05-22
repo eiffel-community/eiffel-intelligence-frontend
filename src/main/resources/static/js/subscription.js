@@ -115,14 +115,12 @@ jQuery(document).ready(function() {
         this.aggregationtype = ko.observable(data.aggregationtype);
 
         this.notificationType.subscribe(function (new_value) {
-            vm.delete_BulkNotificationMsgKeyValuePair();
             vm.subscription()[0].restPostBodyMediaType(null);
             vm.formpostkeyvaluepairs(false);
 
         });
 
         this.restPostBodyMediaType.subscribe(function (new_value) {
-            vm.delete_BulkNotificationMsgKeyValuePair();
             if(new_value=="application/x-www-form-urlencoded"){
                 vm.formpostkeyvaluepairs(true);
             }else{
