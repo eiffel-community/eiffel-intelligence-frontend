@@ -1,4 +1,5 @@
 jQuery(document).ready(function() {
+var frontendServiceUrl = $('#frontendServiceUrl').text();
 function instanceModel() {
     var self = this;
 	self.instance = {
@@ -15,7 +16,7 @@ function instanceModel() {
 			$.jGrowl("Host and port fields cannot be empty", {sticky: false, theme: 'Error'});
 		} else {
 			$.ajax({
-				url: "/add-instances",
+				url: frontendServiceUrl + "/add-instances",
 				type: "POST",
 				data: data,
 				contentType: 'application/json; charset=utf-8',

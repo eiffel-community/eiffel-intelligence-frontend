@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
 	$("#logoutBtn").click(function() {
 	    $("#selectInstances").visible();
 		$.ajax({
-			url : "/auth/logout",
+			url : frontendServiceUrl + "/auth/logout",
 			type : "GET",
 			contentType : 'application/json; charset=utf-8',
 			cache: false,

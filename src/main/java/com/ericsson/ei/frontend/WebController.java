@@ -43,6 +43,7 @@ public class WebController {
 
     @RequestMapping("/")
     public String greeting(Model model) {
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);  // inject in DOM for AJAX etc
         return "index";
@@ -50,29 +51,19 @@ public class WebController {
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
-        String httpMethod = "http";
-        if (backEndInformation.isHttps()) {
-            httpMethod = "https";
-        }
-        String frontendServiceUrl;
-        if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-            frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod, frontendServiceHost, frontendServicePort, frontendContextPath);
-        } else {
-            frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
-        }
-        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         return "subscription";
     }
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
-        String frontendServiceUrl = String.format("http://%s:%d", frontendServiceHost, frontendServicePort);
-        model.addAttribute("frontendServiceUrl", frontendServiceUrl);  // inject in DOM for AJAX etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         String backendServerUrl = String.format("http://%s:%d", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);
         return "eiInfo";
@@ -80,6 +71,7 @@ public class WebController {
 
     @RequestMapping("/login.html")
     public String login(Model model) {
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         return "login";
     }
 
@@ -91,11 +83,28 @@ public class WebController {
 
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         return "add-instances";
     }
 
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
         return "switch-backend";
     }
+
+    private String getFrontendServiceUrl() {
+        String httpMethod = "http";
+        if (backEndInformation.isHttps()) {
+            httpMethod = "https";
+        }
+        String frontendServiceUrl;
+        if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
+            frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod, frontendServiceHost, frontendServicePort, frontendContextPath);
+        } else {
+            frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
+        }
+        return frontendServiceUrl;
+    }
+
 }

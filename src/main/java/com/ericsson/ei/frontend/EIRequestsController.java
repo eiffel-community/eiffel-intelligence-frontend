@@ -37,11 +37,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
+
+    private static final List<String> REQUSETS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
 
     private CloseableHttpClient client = HttpClientBuilder.create().build();
 
@@ -176,9 +181,14 @@ public class EIRequestsController {
 
     private String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
-        String requestQuery = request.getQueryString();
-        String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
-        String requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
+        String requestUrl;
+        if(REQUSETS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
+            String requestQuery = request.getQueryString();
+            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
+            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
+        } else {
+            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
+        }
         LOG.info("Got HTTP Request with method " + request.getMethod()
             + "\nUrlSuffix: " + eiBackendAddressSuffix
             + "\nForwarding Request to EI Backend with url: " + requestUrl);
@@ -187,7 +197,7 @@ public class EIRequestsController {
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String jsonContent = "";
-        int statusCode = 102;
+        int statusCode = HttpStatus.PROCESSING.value();
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
             InputStream inStream = eiResponse.getEntity().getContent();
             BufferedReader bufReader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
@@ -204,6 +214,7 @@ public class EIRequestsController {
             bufReader.close();
             inStream.close();
         } catch (IOException e) {
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
             LOG.error("Forward Request Errors: " + e);
         }
 
