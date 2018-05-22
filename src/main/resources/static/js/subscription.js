@@ -614,7 +614,6 @@ jQuery(document).ready(function() {
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        console.log(id);
         ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+id, "GET", null, callback);
     }
 
