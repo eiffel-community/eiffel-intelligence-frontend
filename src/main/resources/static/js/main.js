@@ -17,18 +17,22 @@ jQuery(document).ready(function() {
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	function loadMainPage() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("subscriptionpage.html");
 	}
 
 	$("#testRulesBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("testRules.html");
 	});
 
 	$("#eiInfoBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("eiInfo.html");
 	});
 
 	$("#loginBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("login.html");
 	});
 
@@ -43,6 +47,7 @@ jQuery(document).ready(function() {
     });
 
 	$("#logoutBtn").click(function() {
+	    $("#selectInstances").visible();
 		$.ajax({
 			url : "/auth/logout",
 			type : "GET",
@@ -60,6 +65,7 @@ jQuery(document).ready(function() {
 	});
 
 	$("#jmesPathRulesSetUpBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("jmesPathRulesSetUp.html");
 	});
 
