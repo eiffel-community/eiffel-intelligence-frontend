@@ -177,7 +177,7 @@ public class EIRequestsController {
     private String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestQuery = request.getQueryString();
-        String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
+        String query = (requestQuery != null && !requestQuery.isEmpty() && !requestQuery.startsWith("_")) ? "?" + requestQuery : "";
         String requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
         LOG.info("Got HTTP Request with method " + request.getMethod()
             + "\nUrlSuffix: " + eiBackendAddressSuffix
