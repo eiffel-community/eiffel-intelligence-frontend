@@ -181,10 +181,10 @@ public class EIRequestsController {
 
     private String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
-        String requestQuery = request.getQueryString();
-        String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
         String requestUrl;
         if(REQUSETS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
+            String requestQuery = request.getQueryString();
+            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
             requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
         } else {
             requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
