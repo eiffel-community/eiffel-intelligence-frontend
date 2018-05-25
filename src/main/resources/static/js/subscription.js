@@ -42,15 +42,15 @@ jQuery(document).ready(function() {
 
     // Check EI Backend Server Status ########################################
 	var backendStatus = false;
-    function checkBackendStatus() {
-    	var EIConnBtn = document.getElementById("btnEIConnection");
-    	if (EIConnBtn == null) {
-    		return;
-    	}
-    	var red="#ff0000";
-    	var green="#00ff00";
+	function checkBackendStatus() {
+    var EIConnBtn = document.getElementById("btnEIConnection");
+    if (EIConnBtn == null) {
+    	return;
+    }
+    var red="#ff0000";
+    var green="#00ff00";
 		$.ajax({
-			url: "/auth/checkStatus",
+			url: frontendServiceUrl + "/auth/checkStatus",
 			contentType: 'application/json; charset=utf-8',
 			type: 'GET',
 			error: function (XMLHttpRequest) {
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 				backendStatus = true;
 			}
 		});
-    }
+	}
 
 	function doIfUserLoggedIn() {
 		var currentUser = localStorage.getItem("currentUser");
@@ -119,14 +119,12 @@ jQuery(document).ready(function() {
         this.token = ko.observable(data.token);
 
         this.notificationType.subscribe(function (new_value) {
-            vm.delete_BulkNotificationMsgKeyValuePair();
             vm.subscription()[0].restPostBodyMediaType(null);
             vm.formpostkeyvaluepairs(false);
 
         });
 
         this.restPostBodyMediaType.subscribe(function (new_value) {
-            vm.delete_BulkNotificationMsgKeyValuePair();
             if(new_value=="application/x-www-form-urlencoded"){
                 vm.formpostkeyvaluepairs(true);
             }else{
@@ -277,7 +275,7 @@ jQuery(document).ready(function() {
 	// Start to check is backend secured
 	var isSecured = false;
 	$.ajax({
-		url: "/auth",
+		url: frontendServiceUrl + "/auth",
 		contentType : 'application/json; charset=utf-8',
 		type: 'GET',
 		error: function () {},
@@ -611,7 +609,7 @@ jQuery(document).ready(function() {
     }
     // /Stop ## Reload Datatables ############################################
 
-		function get_subscription_data(object, mode) {
+		function get_subscription_data(object, mode, event) {
 				event.stopPropagation();
         event.preventDefault();
         // Fetch datatable row -> subscriptionName
@@ -638,13 +636,13 @@ jQuery(document).ready(function() {
 
     // /Start ## Edit Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.edit_record', function (event) {
-        get_subscription_data(this, "edit");
+        get_subscription_data(this, "edit", event);
     });
     // /Stop ## Edit Subscription ###########################################
 
 		// /Start ## View Subscription ###########################################
     $('#table').on( 'click', 'tbody tr td button.view_record', function (event) {
-        get_subscription_data(this, "view");
+        get_subscription_data(this, "view", event);
     });
     // /Stop ## View Subscription ###########################################
 
