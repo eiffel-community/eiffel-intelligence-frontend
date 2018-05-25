@@ -18,6 +18,7 @@ package com.ericsson.ei.frontend;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,18 +28,23 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public interface BackEndInformationController {
 
+    @CrossOrigin
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
     ResponseEntity<String> getInstances(Model model);
 
+    @CrossOrigin
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
     ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request);
 
+    @CrossOrigin
     @RequestMapping(value = "/switch-backendByMainPage", method = RequestMethod.POST)
     ResponseEntity<String> switchBackEndInstanceByMainPage(Model model, HttpServletRequest request);
 
+    @CrossOrigin
     @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
     ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request);
 
+    @CrossOrigin
     @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
     ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request);
 }
