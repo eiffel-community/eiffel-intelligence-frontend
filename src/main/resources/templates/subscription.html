@@ -147,8 +147,9 @@
                                 <tr>
                                     <td data-bind="visible: $root.formpostkeyvaluepairs">
                                         <input data-toggle="tooltip" title="Specify a Key" data-bind="textInput:$data.formkey" name="formkey"
-                                               placeholder="Key" class="form-control" type="text"/>
+                                               placeholder="Key" class="form-control" type="text"/>                                               
                                     </td>
+                                    
                                     <td>
                                         <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.formvalue"
                                                   name="formvalue" placeholder="Value" class="form-control" type="text"></textarea>
@@ -169,8 +170,7 @@
                                         class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
                                 </button>
                             </div>
-                        </div>
-                        
+                        </div>                        
                         
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">Authorization</label>
@@ -182,47 +182,26 @@
                                                optionsCaption: 'Choose...'"></select>
                             </div>
                         </div>
-                        <div class="form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
+                        
+                        <div class="pb-3 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                             <label class="pl-1 control-label font-weight-bold">User Name*</label>
                             <div>
                                 <input data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName" placeholder="userName" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>                            
-                        </div>
-                        <div class="form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
+                        
                             <label class="pl-1 control-label font-weight-bold">Token*</label>
                             <div>
                                 <input data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token" class="form-control" type="password" />
                                 <span class="help-block"></span>
                             </div>
-                        </div>
-                        
-                        
-                         <div class="pb-4 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
-                            <label class="pl-1 control-label font-weight-bold">Generated Credentials</label>
-
-                            <table width="100%">
-                                <thead>
-                                <tr><th width="50%">Key</th>
-                                    <th width="10%" data-bind="visible: $root.formpostkeyvaluepairsAuth"></th>
-                                    <th width="50%">Value</th>
-                                    <th width="10%" data-bind="visible: $root.formpostkeyvaluepairsAuth"></th></tr>
-                                </thead>
-                                <tbody data-bind="foreach: notificationMessageKeyValuesAuth">
-                                <tr>
-                                    <td >
-                                        <textarea data-toggle="tooltip" title="Auto Generated Key" data-bind="textInput:$data.formkey" name="formkey" placeholder="Authentication Key" class="form-control" type="text" />
-                                    </td>
-                                    <td>
-                                        <textarea data-toggle="tooltip" title="Auto Generated Value" data-bind="textInput:$data.formvalue" name="formvalue" placeholder="Value" class="form-control" type="text" />
-                                    </td>
-                                </tr></tbody>
-                            </table>
-
-                            <div >
+                                                    
+                            <div>
                                 <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" data-toggle="tooltip" title="Generate Key/Value Pair" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Generate Key/Value Pair</button>
                             </div>
-                        </div>  
+                        </div>
+                        
+  
                         <div class="pt-3 form-group">
                             <label class="pl-1 control-label font-weight-bold">Repeat</label>
                             <div>

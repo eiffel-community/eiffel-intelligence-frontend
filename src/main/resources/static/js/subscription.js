@@ -218,22 +218,16 @@ jQuery(document).ready(function() {
         };
         
         self.addNotificationMsgKeyValuePairAuth = function(data, event) {
-           data.notificationMessageKeyValuesAuth = ko.observableArray();
-           data.notificationMessageKeyValuesAuth.push({"formkey" : "Authorization","formvalue" : ko.computed(function() {
+           data.notificationMessageKeyValues.push({"formkey" : "Authorization","formvalue" : ko.computed(function() {
                return "Basic " + btoa(data.userName() + ":" + data.token());
                
-           })});
-           
-
-
-        	   
+           })});           
 //        	   ko.observable(value);
            // Force update
            var data = self.subscription().slice(0);
            self.subscription([]);
            self.subscription(data);
-           self.subscription.valueHasMutated();
-           
+           self.subscription.valueHasMutated();           
         };
 
 
@@ -277,11 +271,8 @@ jQuery(document).ready(function() {
                 }
             });
         };
-
-
-
-
     };
+    
 
 	// Start to check is backend secured
 	var isSecured = false;
