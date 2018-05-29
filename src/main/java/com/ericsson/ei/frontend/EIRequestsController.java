@@ -46,7 +46,7 @@ public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
 
-    private static final List<String> REQUSETS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
+    private static final List<String> REQUESTS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
 
     private CloseableHttpClient client = HttpClientBuilder.create().build();
 
@@ -182,7 +182,7 @@ public class EIRequestsController {
     private String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestUrl;
-        if(REQUSETS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
+        if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
             String requestQuery = request.getQueryString();
             String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
             requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;

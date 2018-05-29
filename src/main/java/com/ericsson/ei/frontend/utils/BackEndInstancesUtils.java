@@ -32,6 +32,7 @@ import javax.annotation.PostConstruct;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +119,11 @@ public class BackEndInstancesUtils {
 
     public void writeIntoFile() {
         try {
-            FileWriter fileWriter = new FileWriter(eiInstancesPath);
-            fileWriter.append(instances.toString());
-            fileWriter.flush();
+            Path path = Paths.get(eiInstancesPath);
+            if (Files.notExists(path)) {
+                Files.createFile(path);
+            }
+            Files.write(path, instances.toString().getBytes());
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }
