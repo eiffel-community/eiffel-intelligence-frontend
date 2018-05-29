@@ -14,11 +14,13 @@
 package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +35,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class EIRequestsController {
@@ -101,19 +101,16 @@ public class EIRequestsController {
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
 
-        String inputReqJsonContent = "";
+        String requestBody = "";
         try {
-            BufferedReader inputBufReader = new BufferedReader(request.getReader());
-            for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-                inputReqJsonContent += line;
-            }
-            inputBufReader.close();
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
-        HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+        LOG.debug("Input Request JSON Content to be forwarded:\n" + requestBody);
+
+        HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
         HttpPost eiRequest = new HttpPost(eiRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
@@ -131,19 +128,16 @@ public class EIRequestsController {
     public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
 
-        String inputReqJsonContent = "";
+        String requestBody = "";
         try {
-            BufferedReader inputBufReader = new BufferedReader(request.getReader());
-            for (String line = inputBufReader.readLine(); line != null; line = inputBufReader.readLine()) {
-                inputReqJsonContent += line;
-            }
-            inputBufReader.close();
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input Request JSON Content to be forwarded:\n" + inputReqJsonContent);
-        HttpEntity inputReqJsonEntity = new ByteArrayEntity(inputReqJsonContent.getBytes());
+        LOG.debug("Input Request JSON Content to be forwarded:\n" + requestBody);
+
+        HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
         HttpPut eiRequest = new HttpPut(eiRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
@@ -196,23 +190,14 @@ public class EIRequestsController {
     }
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
-        String jsonContent = "";
+        String responseBody = "";
         int statusCode = HttpStatus.PROCESSING.value();
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
-            InputStream inStream = eiResponse.getEntity().getContent();
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-            for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-                jsonContent += line;
-            }
-            if (jsonContent.isEmpty()) {
-                jsonContent = "[]";
-            }
+            responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             statusCode = eiResponse.getStatusLine().getStatusCode();
-            LOG.info("EI Http Reponse Status Code: " + eiResponse.getStatusLine().getStatusCode()
-                    + "\nEI Recevied jsonContent:\n" + jsonContent
+            LOG.info("EI Http response status code: " + eiResponse.getStatusLine().getStatusCode()
+                    + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
-            bufReader.close();
-            inStream.close();
         } catch (IOException e) {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
             LOG.error("Forward Request Errors: " + e);
@@ -221,7 +206,7 @@ public class EIRequestsController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return new ResponseEntity<>(jsonContent, headers, HttpStatus.valueOf(statusCode));
+        return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
     }
 
 }

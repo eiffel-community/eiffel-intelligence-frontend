@@ -13,8 +13,8 @@
 */
 package com.ericsson.ei.frontend;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import com.ericsson.ei.frontend.model.BackEndInformation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -38,12 +39,18 @@ public class WebControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeClass
-    public static void beforeClass() {
-        System.setProperty("ei.frontendServiceHost", "localhost");
-        System.setProperty("ei.frontendServicePort", "9090");
-        System.setProperty("ei.frontendContextPath", "somePath");
-        System.setProperty("ei.useSecureHttp", "false");
+    @Autowired
+    private WebController controller;
+
+    @Autowired
+    private BackEndInformation information;
+
+    @Before
+    public void beforeClass() {
+        ReflectionTestUtils.setField(controller,"frontendServiceHost", "localhost");
+        ReflectionTestUtils.setField(controller,"frontendServicePort", 9090);
+        ReflectionTestUtils.setField(controller,"frontendContextPath", "somePath");
+        ReflectionTestUtils.setField(information,"https", false);
     }
 
     @Test
@@ -89,14 +96,6 @@ public class WebControllerTest {
             .andExpect(model().attribute("frontendServiceUrl", "http://localhost:9090/somePath"))
             .andDo(print())
             .andReturn();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        System.clearProperty("ei.frontendServiceHost");
-        System.clearProperty("ei.frontendServicePort");
-        System.clearProperty("ei.frontendContextPath");
-        System.clearProperty("ei.useSecureHttp");
     }
 
 }
