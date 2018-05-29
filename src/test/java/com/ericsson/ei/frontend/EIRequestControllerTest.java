@@ -139,6 +139,20 @@ public class EIRequestControllerTest {
     }
 
     @Test
+    public void testPostSubscription() throws Exception {
+        String requestBody = "[" + new JsonParser().parse(new FileReader(SUBSCRIPTIONS_ONE_RESPONSE_PATH)).toString() + "]";
+        String responseBody = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}").toString();
+        testPost(SUBSCRIPTIONS_ENDPOINT, requestBody, responseBody);
+    }
+
+    @Test
+    public void testPutSubscription() throws Exception {
+        String requestBody = "[" + new JsonParser().parse(new FileReader(SUBSCRIPTIONS_ONE_RESPONSE_PATH)).toString() + "]";
+        String responseBody = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}").toString();
+        testPut(SUBSCRIPTIONS_ENDPOINT, requestBody, responseBody);
+    }
+
+    @Test
     public void testDeleteSubscription() throws Exception {
         String responseBody = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}").toString();
         testDelete(SUBSCRIPTIONS_ONE_ENDPOINT, responseBody);
@@ -157,6 +171,48 @@ public class EIRequestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(path)
             .servletPath(path)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(content().string(responseBody))
+            .andReturn();
+    }
+
+    private void testPost(String path, String requestBody, String responseBody) throws Exception {
+        mockServerClient
+            .when(HttpRequest.request()
+                .withMethod("POST")
+                .withPath(path)
+                .withBody(requestBody)
+            )
+            .respond(HttpResponse.response()
+                .withBody(responseBody)
+                .withStatusCode(200)
+            );
+
+        mockMvc.perform(MockMvcRequestBuilders.post(path)
+            .servletPath(path)
+            .content(requestBody)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(content().string(responseBody))
+            .andReturn();
+    }
+
+    private void testPut(String path, String requestBody, String responseBody) throws Exception {
+        mockServerClient
+            .when(HttpRequest.request()
+                .withMethod("PUT")
+                .withPath(path)
+                .withBody(requestBody)
+            )
+            .respond(HttpResponse.response()
+                .withBody(responseBody)
+                .withStatusCode(200)
+            );
+
+        mockMvc.perform(MockMvcRequestBuilders.put(path)
+            .servletPath(path)
+            .content(requestBody)
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().string(responseBody))
