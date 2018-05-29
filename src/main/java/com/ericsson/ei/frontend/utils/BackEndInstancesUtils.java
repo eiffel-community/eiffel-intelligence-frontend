@@ -124,11 +124,7 @@ public class BackEndInstancesUtils {
 
     public void writeIntoFile() {
         try {
-            Path path = Paths.get(eiInstancesPath);
-            if (Files.notExists(path)) {
-                Files.createFile(path);
-            }
-            Files.write(path, instances.toString().getBytes());
+            Files.write(Paths.get(eiInstancesPath), instances.toString().getBytes());
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }
