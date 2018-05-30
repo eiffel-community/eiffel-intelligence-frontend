@@ -82,8 +82,13 @@ public class BackEndInstancesUtils {
         }
         writeIntoFile();
         information.clear();
-        information = new Gson().fromJson(instances,new TypeToken<List<BackEndInformation>>() {
+        information = new Gson().fromJson(instances, new TypeToken<List<BackEndInformation>>() {
         }.getType());
+        for (BackEndInformation backEndInformation : information) {
+            if (backEndInformation.isActive()) {
+                setBackEndProperties(backEndInformation);
+            }
+        }
     }
 
     private JsonObject getCurrentInstance() {

@@ -80,7 +80,6 @@ public class BackEndInformationControllerImpl implements BackEndInformationContr
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(body).getAsJsonObject();
             if (!utils.checkIfInstanceAlreadyExist(instance)) {
-                instance.addProperty("default", false);
                 utils.getInstances().add(instance);
                 utils.writeIntoFile();
                 return new ResponseEntity<>(HttpStatus.OK);
