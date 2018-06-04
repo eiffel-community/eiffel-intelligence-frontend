@@ -54,19 +54,14 @@ public class EIRequestsController {
     private BackEndInformation backEndInformation;
 
     /**
-     * Bridge authorized EI Http Requests with GET method. Used for login and logout
+     * Bridge all EI Http Requests with GET method. Used for fetching
+     * Subscription by id or all subscriptions and EI Env Info.
      */
     @CrossOrigin
-    @RequestMapping(value = "/auth/login", method = RequestMethod.GET)
-    public ResponseEntity<String> getAuthRequests(Model model, HttpServletRequest request) {
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
+        "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query" }, method = RequestMethod.GET)
+    public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
-
-        try {
-            client.close();
-            client = HttpClientBuilder.create().build();
-        } catch (IOException e) {
-            LOG.error("Failed to close HTTP Client");
-        }
 
         HttpGet eiRequest = new HttpGet(eiRequestUrl);
 
@@ -74,21 +69,6 @@ public class EIRequestsController {
         if (header != null) {
             eiRequest.addHeader("Authorization", header);
         }
-
-        return getResponse(eiRequest);
-    }
-
-    /**
-     * Bridge all EI Http Requests with GET method. Used for fetching
-     * Subscription by id or all subscriptions and EI Env Info.
-     */
-    @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
-        "/auth/checkStatus", "/auth/logout", "/queryAggregatedObject", "/queryMissedNotifications", "/query" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = getEIRequestURL(request);
-
-        HttpGet eiRequest = new HttpGet(eiRequestUrl);
 
         return getResponse(eiRequest);
     }
@@ -115,6 +95,11 @@ public class EIRequestsController {
         HttpPost eiRequest = new HttpPost(eiRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
         eiRequest.setHeader("Content-type", "application/json");
+
+        String header = request.getHeader("Authorization");
+        if (header != null) {
+            eiRequest.addHeader("Authorization", header);
+        }
 
         return getResponse(eiRequest);
     }
@@ -143,6 +128,11 @@ public class EIRequestsController {
         eiRequest.setEntity(inputReqJsonEntity);
         eiRequest.setHeader("Content-type", "application/json");
 
+        String header = request.getHeader("Authorization");
+        if (header != null) {
+            eiRequest.addHeader("Authorization", header);
+        }
+
         return getResponse(eiRequest);
     }
 
@@ -156,6 +146,11 @@ public class EIRequestsController {
         String eiRequestUrl = getEIRequestURL(request);
 
         HttpDelete eiRequest = new HttpDelete(eiRequestUrl);
+
+        String header = request.getHeader("Authorization");
+        if (header != null) {
+            eiRequest.addHeader("Authorization", header);
+        }
 
         return getResponse(eiRequest);
     }
