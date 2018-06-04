@@ -1,0 +1,18 @@
+[
+    {
+        "name": "firstName",
+        "host": "firstHost",
+        "port": 7676,
+        "path": "firstPath",
+        "https": false,
+        "active": false
+    },
+    {
+        "name": "secondName",
+        "host": "secondHost",
+        "port": 6767,
+        "path": "secondPath",
+        "https": false,
+        "active": true
+    }
+]
