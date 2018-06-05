@@ -485,7 +485,7 @@ jQuery(document).ready(function() {
         event.preventDefault();
         function getTemplate() {
             var req = new XMLHttpRequest();
-            req.open("GET", '/download/subscriptionsTemplate', true);
+            req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
             req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);

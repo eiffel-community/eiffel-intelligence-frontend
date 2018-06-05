@@ -1,0 +1,55 @@
+{
+    "applicationName" : "someApplication",
+    "version" : "x.x.x",
+    "rabbitmq" : [ {
+        "queueDurable" : true,
+        "host" : "someHost",
+        "exchangeName" : "someExchange",
+        "port" : 5672,
+        "tlsVersion" : "",
+        "domainId" : "someDomain",
+        "componentName" : "someComponent",
+        "waitlistSufix" : "someWaitListSuffix",
+        "bindingKey" : "#",
+        "consumerName" : "someConsumer",
+        "queueName" : "someQueue",
+        "waitlistQueueName" : "someWaitListQueue"
+    } ],
+    "mongodb" : [ {
+        "host" : "someHost",
+        "port" : 27017
+    } ],
+    "threads" : [ {
+        "corePoolSize" : 100,
+        "queueCapacity" : 5000,
+        "maxPoolSize" : 150
+    } ],
+    "email" : [ {
+        "sender" : "noreply@domain.com",
+        "subject" : "Email Subscription Notification"
+    } ],
+    "waitList" : [ {
+        "collectionName" : "someWaitListCollection",
+        "databaseName" : "someWaitListDB",
+        "ttlValue" : 600,
+        "waitList" : [ ]
+    } ],
+    "objectHandler" : {
+        "collectionName" : "someAggregatedCollection",
+        "databaseName" : "someAggregatedDB",
+        "ttlValue" : 600
+    },
+    "subscriptionHandler" : {
+        "subscriptionCollectionName" : "someSubscriptionCollection",
+        "subscriptionDataBaseName" : "someSubscriptionDB"
+    },
+    "informSubscription" : {
+        "failAttempt" : 3,
+        "missedNotificationCollectionName" : "someNotificationCollection",
+        "missedNotificationDataBaseName" : "someNotificationDB",
+        "ttlValue" : 600
+    },
+    "erUrl" : {
+        "url" : "http://localhost:8080/search/"
+    }
+}
