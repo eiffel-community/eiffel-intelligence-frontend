@@ -9,9 +9,6 @@ jdk:
   
 before_install:
   - chmod +x pom.xml
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz
-  - tar -xvzf geckodriver-v0.20.1-linux64.tar.gz
-  - sudo mv geckodriver /usr/bin/
   
 script:
   - mvn test

@@ -3,6 +3,10 @@ package com.ericsson.ei.frontend.pageobjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.ericsson.ei.frontend.EIRequestsController;
 
 public class IndexPage extends PageBaseClass {
@@ -21,6 +25,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() {
+        waitForJQueryToLoad();
         WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
 
