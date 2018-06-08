@@ -1,0 +1,7 @@
+{
+    "name": "someName",
+    "host": "someHost",
+    "port": 9888,
+    "path": "somePath",
+    "https": false
+}

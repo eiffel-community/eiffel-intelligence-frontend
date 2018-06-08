@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -123,9 +122,7 @@ public class BackEndInstancesUtils {
 
     public void writeIntoFile() {
         try {
-            FileWriter fileWriter = new FileWriter(eiInstancesPath);
-            fileWriter.append(instances.toString());
-            fileWriter.flush();
+            Files.write(Paths.get(eiInstancesPath), instances.toString().getBytes());
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }

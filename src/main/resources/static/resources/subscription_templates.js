@@ -41,8 +41,8 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     {
                         "formkey" : "json",
                         "formvalue" : "{parameter: [{ name: 'jsonparams', value : to_string(@) }, { name: 'runpipeline', value : 'mybuildstep' }]}"
-                    }
-                ],
+                    }                    
+                    ],                    
                     "repeat" : false,
                     "requirements" : [
                     {

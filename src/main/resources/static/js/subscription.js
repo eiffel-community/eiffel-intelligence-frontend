@@ -3,7 +3,7 @@ var save_method;
 var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = {"formkey" : "","formvalue" : ""};
-
+var defaultFormKeyValuePairAuth = {"formkey" : "Authorization","formvalue" : ""};
 
 jQuery(document).ready(function() {
 
@@ -109,10 +109,14 @@ jQuery(document).ready(function() {
         this.notificationType = ko.observable(data.notificationType);
         this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
         this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
+        this.notificationMessageKeyValuesAuth = ko.observableArray(data.notificationMessageKeyValuesAuth);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
         this.subscriptionName = ko.observable(data.subscriptionName);
         this.aggregationtype = ko.observable(data.aggregationtype);
+        this.authenticationType = ko.observable(data.authenticationType);        
+        this.userName = ko.observable(data.userName);
+        this.token = ko.observable(data.token);
 
         this.notificationType.subscribe(function (new_value) {
             vm.subscription()[0].restPostBodyMediaType(null);
@@ -127,7 +131,6 @@ jQuery(document).ready(function() {
                 vm.formpostkeyvaluepairs(false);
             }
         });
-
     }
 
     function formdata_model(formdata){
@@ -155,12 +158,20 @@ jQuery(document).ready(function() {
                 {"text": "Mail Trigger", value:"templateEmailTrigger"}
             ]);
         self.choosen_subscription_template = ko.observable();
+        self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
+        self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in  = ko.observableArray(
         		[
         			{"text": "REST_POST", value:"REST_POST"},
         			{"text": "MAIL", value:"MAIL"}
         		]);
+        self.authenticationType_in  = ko.observableArray(
+        		[
+        			{"text": "NO_AUTH", value:"NO_AUTH"},
+        			{"text": "BASIC_AUTH", value:"BASIC_AUTH"}
+        		]);
+
 
         self.restPostBodyType_in  = ko.observableArray(
             [
@@ -202,6 +213,19 @@ jQuery(document).ready(function() {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+        };
+        
+        self.addNotificationMsgKeyValuePairAuth = function(data, event) {
+           data.notificationMessageKeyValues.push({"formkey" : "Authorization","formvalue" : ko.computed(function() {
+               return "Basic " + btoa(data.userName() + ":" + data.token());
+               
+           })});           
+//        	   ko.observable(value);
+           // Force update
+           var data = self.subscription().slice(0);
+           self.subscription([]);
+           self.subscription(data);
+           self.subscription.valueHasMutated();           
         };
 
 
@@ -245,11 +269,8 @@ jQuery(document).ready(function() {
                 }
             });
         };
-
-
-
-
     };
+    
 
 	// Start to check is backend secured
 	var isSecured = false;
@@ -277,9 +298,7 @@ jQuery(document).ready(function() {
 	var vm = new SubscriptionViewModel();
     ko.applyBindings(vm,  observableObject);
 
-
     // /Stop ## Knockout #####################################################
-
 
 
 
@@ -466,7 +485,7 @@ jQuery(document).ready(function() {
         event.preventDefault();
         function getTemplate() {
             var req = new XMLHttpRequest();
-            req.open("GET", '/download/subscriptionsTemplate', true);
+            req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
             req.responseType = "application/json;charset=utf-8";
             req.onload = function (event) {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
@@ -646,6 +665,8 @@ jQuery(document).ready(function() {
                 for (i=0; i < item[0].notificationMessageKeyValues.length; i++) {
                     item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
                 }
+
+                                
                 return new subscription_model(item[0]);
             });
             // Load data into observable array
@@ -689,6 +710,7 @@ jQuery(document).ready(function() {
         if(!vm.formpostkeyvaluepairs()) {
             notificationMessageKeyValuesArray[0].formkey=""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
+        
 
         //START: Make sure all datatables field has a value
         if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
@@ -736,8 +758,6 @@ jQuery(document).ready(function() {
             return;
         }
         //END OF: Make sure all datatables field has a value
-
-
 
 
          //START: Check of other subscription fields values
