@@ -15,13 +15,15 @@ public class TemplateTestCase extends SeleniumBaseClass{
 
     @Test
     public void testTemplateTestCase() throws Exception {
+
+        //Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(mockEIRequestsController, driver, baseUrl);
         indexPageObject.loadPage();
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
 
+        //Click on test rules page button and verify that it is opened
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
         assertEquals("Test Rules", testRulesPage.getMainHeader());
-
     }
 
 }
