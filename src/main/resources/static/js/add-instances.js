@@ -12,8 +12,11 @@ function instanceModel() {
 	self.add = function(instance) {
 		var data = ko.toJSON(instance);
 		var dataJSON = JSON.parse(data);
-		if(dataJSON.host == "" || dataJSON.port == "") {
-			$.jGrowl("Host and port fields cannot be empty", {sticky: false, theme: 'Error'});
+		var port = parseInt(dataJSON.port);
+		if(dataJSON.host == "" || dataJSON.name == "" || dataJSON.port == "") {
+			$.jGrowl("Host, name and port fields cannot be empty", {sticky: false, theme: 'Error'});
+		} else if (port < 1 || port > 65535){
+		    $.jGrowl("Port value should be from 1 to 65535", {sticky: false, theme: 'Error'});
 		} else {
 			$.ajax({
 				url: frontendServiceUrl + "/add-instances",

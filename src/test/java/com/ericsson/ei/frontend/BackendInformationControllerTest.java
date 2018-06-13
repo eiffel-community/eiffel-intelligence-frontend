@@ -123,7 +123,7 @@ public class BackendInformationControllerTest {
     @Test
     public void testSwitchBackEndInstanceByMainPage() throws Exception {
         when(utils.getInformation()).thenReturn(information);
-        mockMvc.perform(MockMvcRequestBuilders.post("/switch-backendByMainPage")
+        mockMvc.perform(MockMvcRequestBuilders.post("/switchBackend")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content("otherName"))
             .andExpect(status().isOk())

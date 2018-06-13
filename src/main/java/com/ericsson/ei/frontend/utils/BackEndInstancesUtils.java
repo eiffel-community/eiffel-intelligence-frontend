@@ -53,7 +53,7 @@ public class BackEndInstancesUtils {
     private String host;
 
     @Value("${ei.backendServerPort}")
-    private int port;
+    private String port;
 
     @Value("${ei.backendContextPath}")
     private String path;
@@ -76,7 +76,7 @@ public class BackEndInstancesUtils {
             setEiInstancesPath(PATH_TO_WRITE);
         }
         parseBackEndInstancesFile();
-        if (!checkIfInstanceAlreadyExist(getCurrentInstance())) {
+        if (getCurrentInstance() != null && !checkIfInstanceAlreadyExist(getCurrentInstance())) {
             instances.add(getCurrentInstance());
         }
         writeIntoFile();
@@ -91,14 +91,17 @@ public class BackEndInstancesUtils {
     }
 
     private JsonObject getCurrentInstance() {
-        JsonObject instance = new JsonObject();
-        instance.addProperty(NAME, "default");
-        instance.addProperty(HOST, host);
-        instance.addProperty(PORT, port);
-        instance.addProperty(PATH, path);
-        instance.addProperty(HTTPS, https);
-        instance.addProperty(ACTIVE, true);
-        return instance;
+        if (!host.isEmpty() && !port.isEmpty()) {
+            JsonObject instance = new JsonObject();
+            instance.addProperty(NAME, "default");
+            instance.addProperty(HOST, host);
+            instance.addProperty(PORT, Integer.valueOf(port));
+            instance.addProperty(PATH, path);
+            instance.addProperty(HTTPS, https);
+            instance.addProperty(ACTIVE, true);
+            return instance;
+        } else
+            return null;
     }
 
     public void setBackEndProperties(BackEndInformation properties) {
@@ -123,12 +126,13 @@ public class BackEndInstancesUtils {
     public void writeIntoFile() {
         try {
             Files.write(Paths.get(eiInstancesPath), instances.toString().getBytes());
+            parseBackEndInstancesFile();
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }
     }
 
-    public void parseBackEndInstancesFile() {
+    private void parseBackEndInstancesFile() {
         try {
             information.clear();
             instances = new JsonArray();

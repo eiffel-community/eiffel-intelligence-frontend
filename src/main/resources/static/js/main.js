@@ -113,6 +113,7 @@ jQuery(document).ready(function() {
     }
 
     function viewModel(data) {
+    console.log(data);
         var self = this;
         var currentName;
         self.instances = ko.observableArray();
@@ -127,19 +128,23 @@ jQuery(document).ready(function() {
         }
         self.selectedActive = ko.observable(currentName);
         self.onChange = function(){
-            $.ajax({
-                url: frontendServiceUrl + "/switch-backendByMainPage",
-            	type: "POST",
-            	data: self.selectedActive(),
-            	contentType: 'application/json; charset=utf-8',
-            	cache: false,
-            	error: function (XMLHttpRequest, textStatus, errorThrown) {
-            	    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
-            	},
-            	success: function (responseData, textStatus) {
-            	    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
-            	}
-            });
+            if(typeof self.selectedActive() !== "undefined"){
+                $.ajax({
+                    url: frontendServiceUrl + "/switchBackend",
+            	    type: "POST",
+            	    data: self.selectedActive(),
+            	    contentType: 'application/json; charset=utf-8',
+            	    cache: false,
+            	    error: function (XMLHttpRequest, textStatus, errorThrown) {
+            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	    },
+            	    success: function (responseData, textStatus) {
+            	        $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+            	    }
+                });
+            } else {
+                $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
+              }
         }
     }
     $.ajax({

@@ -64,7 +64,7 @@ public class WebController {
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());  // inject in DOM for AJAX etc
-        String backendServerUrl = String.format("http://%s:%d", backEndInformation.getHost(), backEndInformation.getPort());
+        String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);
         return "eiInfo";
     }
