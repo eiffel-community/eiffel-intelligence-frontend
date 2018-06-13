@@ -1,5 +1,7 @@
 package com.ericsson.ei.frontend.pageobjects;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,9 +10,9 @@ import com.ericsson.ei.frontend.EIRequestsController;
 
 public class TestRulesPage extends PageBaseClass{
 
-    public TestRulesPage(EIRequestsController mockEIRequestsController,
+    public TestRulesPage(CloseableHttpClient mockedHttpClient, CloseableHttpResponse mockedHttpResponse,
             WebDriver driver, String baseUrl) {
-        super(mockEIRequestsController, driver, baseUrl);
+        super(mockedHttpClient, mockedHttpResponse, driver, baseUrl);
     }
 
     public String getMainHeader() {

@@ -2,14 +2,13 @@ package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.fail;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
+import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -23,8 +22,11 @@ import com.ericsson.ei.config.SeleniumConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class SeleniumBaseClass {
-    @MockBean
-    protected EIRequestsController mockEIRequestsController;
+
+	@MockBean
+    protected CloseableHttpClient mockedHttpClient;
+
+    protected CloseableHttpResponse mockedHttpResponse;
 
     @LocalServerPort
     private int randomServerPort;
@@ -38,6 +40,7 @@ public class SeleniumBaseClass {
     public void setUp() throws Exception {
         driver = SeleniumConfig.getFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
+        mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
     }
 
     @After
