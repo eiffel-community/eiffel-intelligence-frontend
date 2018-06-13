@@ -32,4 +32,23 @@ public class IndexPage extends PageBaseClass {
         TestRulesPage testRulesPage = new TestRulesPage(mockEIRequestsController, driver, baseUrl);
         return testRulesPage;
     }
+    
+    
+    public SubscriptionPage clickSubscriptionPage() {
+//        waitForJQueryToLoad();
+        WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
+        subscriptionBtn.click();
+
+        SubscriptionPage subscriptionPage = new SubscriptionPage(mockEIRequestsController, driver, baseUrl);
+        return subscriptionPage;
+    }
+        
+    public SubscriptionPage clickAddSubscription(){
+//      waitForJQueryToLoad();
+      WebElement addSubscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
+      addSubscriptionBtn.click();
+
+      SubscriptionPage addSubscriptionPage = new SubscriptionPage(mockEIRequestsController, driver, baseUrl);
+      return addSubscriptionPage;
+  }
 }
