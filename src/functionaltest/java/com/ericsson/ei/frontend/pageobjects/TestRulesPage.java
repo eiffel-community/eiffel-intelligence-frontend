@@ -6,9 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import com.ericsson.ei.frontend.EIRequestsController;
-
-public class TestRulesPage extends PageBaseClass{
+public class TestRulesPage extends PageBaseClass {
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient, CloseableHttpResponse mockedHttpResponse,
             WebDriver driver, String baseUrl) {
