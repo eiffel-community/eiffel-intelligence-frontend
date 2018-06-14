@@ -43,12 +43,5 @@ public class IndexPage extends PageBaseClass {
         return subscriptionPage;
     }
         
-    public SubscriptionPage clickAddSubscription(){
-//      waitForJQueryToLoad();
-      WebElement addSubscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
-      addSubscriptionBtn.click();
 
-      SubscriptionPage addSubscriptionPage = new SubscriptionPage(mockEIRequestsController, driver, baseUrl);
-      return addSubscriptionPage;
-  }
 }
