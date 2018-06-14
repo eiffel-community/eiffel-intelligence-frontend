@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +40,7 @@ public class PageBaseClass {
 
         //Dummy response for all requests that happens before the actuall ones we want to test
         CloseableHttpResponse response = this.createMockedHTTPResponse("{\"response\": dummy}", 200);
-        when(this.mockedHttpClient.execute(any())).thenReturn(response);
+        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request -> ((HttpRequestBase)request).getURI().toString().contains("checkStatus")));
 
     }
 
@@ -47,9 +48,6 @@ public class PageBaseClass {
         WebDriverWait webDriverWait = new WebDriverWait(driver, 30);
         webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                 .executeScript("return document.readyState").equals("complete"));
-
-        webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
-                .executeScript("return jQuery.active==0").equals(true));
     }
 
     protected CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {
@@ -59,8 +57,7 @@ public class PageBaseClass {
 
         mockedHttpResponse.setEntity(entity);
 
-        when(mockedHttpResponse.getStatusLine())
-                .thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
+        when(mockedHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
         when(mockedHttpResponse.getEntity()).thenReturn(entity);
 
         return mockedHttpResponse;

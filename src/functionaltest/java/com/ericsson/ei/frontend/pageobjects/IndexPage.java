@@ -4,6 +4,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +15,7 @@ import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasProperty;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.any;
 
 import java.io.IOException;
@@ -42,11 +44,11 @@ public class IndexPage extends PageBaseClass {
         return testRulesPage;
     }
 
-
     public void clickReloadButton(String responseData) throws ClientProtocolException, IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-        //If request contains "subscriptions" in the URI it will return a specific response
-        when(this.mockedHttpClient.execute(Mockito.argThat(request -> ((HttpRequestBase)request).getURI().toString().contains("subscriptions")))).thenReturn(response);
+
+        //Checks that argument in the request contains "subscriptions" endpoint
+        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request -> ((HttpRequestBase)request).getURI().toString().contains("subscriptions")));
 
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();

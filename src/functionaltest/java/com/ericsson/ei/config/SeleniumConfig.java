@@ -24,7 +24,7 @@ public class SeleniumConfig {
             log.error("OS currently not supported.");
             throw new OSNotSupportedException();
         }
-        FirefoxOptions firefoxOptions = new FirefoxOptions().setHeadless(false);
+        FirefoxOptions firefoxOptions = new FirefoxOptions().setHeadless(true);
 
         driver = new FirefoxDriver(firefoxOptions);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
