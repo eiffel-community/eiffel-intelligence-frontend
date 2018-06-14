@@ -58,7 +58,7 @@ public class BackEndInstancesUtils {
     @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttp:#{false}}")
+    @Value("${ei.useSecureHttpForBackend:#{false}}")
     private boolean https;
 
     @Value("${ei.backendInstancesPath:#{null}}")

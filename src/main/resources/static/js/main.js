@@ -109,7 +109,7 @@ jQuery(document).ready(function() {
     	this.path = ko.observable(path),
     	this.https = ko.observable(https),
         this.active = ko.observable(active),
-	    this.information = name.toUpperCase() + " - " + host + " " + port + " " + path;
+	    this.information = name.toUpperCase() + " - " + host + " " + port + "/" + path;
     }
 
     function viewModel(data) {
