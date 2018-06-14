@@ -20,7 +20,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     public void testTemplateTestCase() throws Exception {
 
         //Open indexpage and verify that it is opened
-        IndexPage indexPageObject = new IndexPage(mockEIRequestsController, driver, baseUrl);
+        IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
         

@@ -5,8 +5,11 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,8 +19,8 @@ import com.ericsson.ei.frontend.EIRequestsController;
 
 public class SubscriptionPage extends PageBaseClass {
 
-    public SubscriptionPage(EIRequestsController mockEIRequestsController, WebDriver driver, String baseUrl) {
-        super(mockEIRequestsController, driver, baseUrl);
+    public SubscriptionPage(CloseableHttpClient mockedHttpClient, WebDriver driver, String baseUrl) throws ClientProtocolException, IOException {
+        super(mockedHttpClient, driver, baseUrl);
     }
 
     public String getMainHeader() {
@@ -106,7 +109,7 @@ public class SubscriptionPage extends PageBaseClass {
     public void addSubscriptionName(String subscriptionName) {
         WebElement txt = driver.findElement(By.xpath("//input[contains(@title,'Specify a SubsciptionName')]"));
         txt.clear();
-        txt.sendKeys(subscriptionName);        
+        txt.sendKeys(subscriptionName);   
 
     }
     
