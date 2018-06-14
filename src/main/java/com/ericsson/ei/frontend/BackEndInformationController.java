@@ -24,7 +24,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +46,7 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model) {
-        return new ResponseEntity<>(backEndInstancesUtils.getInstances().toString(), HttpStatus.OK);
+        return new ResponseEntity<>(backEndInstancesUtils.getInstances().toString(), getHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
@@ -58,9 +60,9 @@ public class BackEndInformationController {
                     backEndInstancesUtils.setBackEndProperties(backEndInformation);
                 }
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,9 +72,9 @@ public class BackEndInformationController {
             String nameOfDeletedInstance = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             backEndInstancesUtils.setInstances(new JsonParser().parse(nameOfDeletedInstance).getAsJsonArray());
             backEndInstancesUtils.writeIntoFile();
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -84,12 +86,12 @@ public class BackEndInformationController {
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.getInstances().add(instance);
                 backEndInstancesUtils.writeIntoFile();
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Instance already exist", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -113,7 +115,13 @@ public class BackEndInformationController {
             backEndInstancesUtils.writeIntoFile();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private HttpHeaders getHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return httpHeaders;
     }
 }
