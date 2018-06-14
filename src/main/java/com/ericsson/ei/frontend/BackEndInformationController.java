@@ -50,8 +50,8 @@ public class BackEndInformationController {
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            backEndInstancesUtils.setInstances(new JsonParser().parse(body).getAsJsonArray());
+            String listOfInstances = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            backEndInstancesUtils.setInstances(new JsonParser().parse(listOfInstances).getAsJsonArray());
             backEndInstancesUtils.writeIntoFile();
             for (BackEndInformation backEndInformation : backEndInstancesUtils.getInformation()) {
                 if (backEndInformation.isActive()) {
@@ -67,8 +67,8 @@ public class BackEndInformationController {
     @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            backEndInstancesUtils.setInstances(new JsonParser().parse(body).getAsJsonArray());
+            String nameOfDeletedInstance = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            backEndInstancesUtils.setInstances(new JsonParser().parse(nameOfDeletedInstance).getAsJsonArray());
             backEndInstancesUtils.writeIntoFile();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -79,8 +79,8 @@ public class BackEndInformationController {
     @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JsonObject instance = new JsonParser().parse(body).getAsJsonObject();
+            String nameOfNewInstance = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            JsonObject instance = new JsonParser().parse(nameOfNewInstance).getAsJsonObject();
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.getInstances().add(instance);
                 backEndInstancesUtils.writeIntoFile();
@@ -96,11 +96,11 @@ public class BackEndInformationController {
     @RequestMapping(value = "/switchBackend", method = RequestMethod.POST)
     public ResponseEntity<String> switchBackEndInstanceByMainPage(Model model, HttpServletRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            String backEndName = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             List<BackEndInformation> info = new ArrayList<>();
             for (BackEndInformation backEndInformation : backEndInstancesUtils.getInformation()) {
                 backEndInformation.setActive(false);
-                if (backEndInformation.getName().equals(body)) {
+                if (backEndInformation.getName().equals(backEndName)) {
                     backEndInstancesUtils.setBackEndProperties(backEndInformation);
                     backEndInformation.setActive(true);
                 }

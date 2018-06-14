@@ -113,7 +113,6 @@ jQuery(document).ready(function() {
     }
 
     function viewModel(data) {
-    console.log(data);
         var self = this;
         var currentName;
         self.instances = ko.observableArray();
