@@ -1,14 +1,20 @@
 package com.ericsson.ei.frontend.pageobjects;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
+import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -23,14 +29,18 @@ public class PageBaseClass {
     protected WebDriver driver;
     protected String baseUrl;
 
-    public PageBaseClass(CloseableHttpClient mockedHttpClient, CloseableHttpResponse mockedHttpResponse,
-            WebDriver driver, String baseUrl) {
+    public PageBaseClass(CloseableHttpClient mockedHttpClient,
+            WebDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super();
         this.mockedHttpClient = mockedHttpClient;
-        this.mockedHttpResponse = mockedHttpResponse;
         this.driver = driver;
         this.baseUrl = baseUrl;
         PageFactory.initElements(driver, this);
+
+        //Dummy response for all requests that happens before the actuall ones we want to test
+        CloseableHttpResponse response = this.createMockedHTTPResponse("{\"response\": dummy}", 200);
+        when(this.mockedHttpClient.execute(any())).thenReturn(response);
+
     }
 
     public void waitForJQueryToLoad() {
@@ -45,6 +55,7 @@ public class PageBaseClass {
     protected CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {
         HttpEntity entity = EntityBuilder.create().setText(message).setContentType(ContentType.APPLICATION_JSON)
                 .build();
+        CloseableHttpResponse mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
 
         mockedHttpResponse.setEntity(entity);
 

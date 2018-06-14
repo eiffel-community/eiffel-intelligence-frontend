@@ -29,8 +29,6 @@ public class SeleniumBaseClass {
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
 
-    protected CloseableHttpResponse mockedHttpResponse;
-
     @LocalServerPort
     private int randomServerPort;
 
@@ -52,7 +50,6 @@ public class SeleniumBaseClass {
         webController.setFrontendServicePort(randomServerPort);
         driver = SeleniumConfig.getFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
-        mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
     }
 
     @After
