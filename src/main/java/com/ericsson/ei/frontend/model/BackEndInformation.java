@@ -29,16 +29,16 @@ import org.springframework.stereotype.Component;
 public class BackEndInformation {
     private String name;
 
-    @Value("${ei.backendServerHost}")
+    @Value("${ei.backendServerHost:#{null}}")
     private String host;
 
-    @Value("${ei.backendServerPort}")
+    @Value("${ei.backendServerPort:#{null}}")
     private String port;
 
-    @Value("${ei.backendContextPath}")
+    @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttp}")
+    @Value("${ei.useSecureHttp:#{false}}")
     private boolean https;
 
     private boolean active;

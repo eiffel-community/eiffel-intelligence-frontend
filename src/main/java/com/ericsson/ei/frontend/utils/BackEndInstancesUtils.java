@@ -49,19 +49,19 @@ public class BackEndInstancesUtils {
     private static final String HTTPS = "https";
     private static final String ACTIVE = "active";
 
-    @Value("${ei.backendServerHost}")
+    @Value("${ei.backendServerHost:#{null}}")
     private String host;
 
-    @Value("${ei.backendServerPort}")
+    @Value("${ei.backendServerPort:#{null}}")
     private String port;
 
-    @Value("${ei.backendContextPath}")
+    @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttp}")
+    @Value("${ei.useSecureHttp:#{false}}")
     private boolean https;
 
-    @Value("${ei.backendInstancesPath}")
+    @Value("${ei.backendInstancesPath:#{null}}")
     private String eiInstancesPath;
 
     @Autowired
@@ -72,7 +72,7 @@ public class BackEndInstancesUtils {
 
     @PostConstruct
     public void init() {
-        if (eiInstancesPath.equals("")) {
+        if (eiInstancesPath == null || eiInstancesPath.isEmpty()) {
             setEiInstancesPath(PATH_TO_WRITE);
         }
         parseBackEndInstancesFile();
@@ -91,7 +91,7 @@ public class BackEndInstancesUtils {
     }
 
     private JsonObject getCurrentInstance() {
-        if (!host.isEmpty() && !port.isEmpty()) {
+        if (host != null && port != null && !host.isEmpty() && !port.isEmpty()) {
             JsonObject instance = new JsonObject();
             instance.addProperty(NAME, "default");
             instance.addProperty(HOST, host);

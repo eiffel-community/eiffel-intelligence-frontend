@@ -40,9 +40,6 @@ import java.util.stream.Collectors;
 public class BackEndInformationController {
 
     @Autowired
-    private BackEndInformation backEndInformation;
-
-    @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
