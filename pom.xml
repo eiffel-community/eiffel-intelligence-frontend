@@ -23,7 +23,6 @@
     <output-relative-path>src/main/java</output-relative-path>
   </properties>
 
-
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
