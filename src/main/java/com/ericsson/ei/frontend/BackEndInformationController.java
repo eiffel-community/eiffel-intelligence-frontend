@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model) {
-        return new ResponseEntity<>(backEndInstancesUtils.getInstances().toString(), HttpStatus.OK);
+        return new ResponseEntity<>(backEndInstancesUtils.getInstances().toString(), getHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
@@ -60,9 +61,9 @@ public class BackEndInformationController {
                     backEndInstancesUtils.setBackEndProperties(backEndInformation);
                 }
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -72,9 +73,9 @@ public class BackEndInformationController {
             String nameOfDeletedInstance = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             backEndInstancesUtils.setInstances(new JsonParser().parse(nameOfDeletedInstance).getAsJsonArray());
             backEndInstancesUtils.writeIntoFile();
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("Backend instance was deleted", getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,12 +87,12 @@ public class BackEndInformationController {
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.getInstances().add(instance);
                 backEndInstancesUtils.writeIntoFile();
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
             } else {
                 return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -113,15 +114,16 @@ public class BackEndInformationController {
             }.getType());
             backEndInstancesUtils.setInstances(result);
             backEndInstancesUtils.writeIntoFile();
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("Backend instance was switched", getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setLocation(URI.create("/"));
         return httpHeaders;
     }
 }

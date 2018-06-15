@@ -116,7 +116,7 @@ jQuery(document).ready(function() {
         var self = this;
         var currentName;
         self.instances = ko.observableArray();
-        var json = JSON.parse(data);
+        var json = JSON.parse(ko.toJSON(data));
         for(var i = 0; i < json.length; i++) {
             var obj = json[i];
         	var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
@@ -137,8 +137,8 @@ jQuery(document).ready(function() {
             	    error: function (XMLHttpRequest, textStatus, errorThrown) {
             	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
             	    },
-            	    success: function (responseData, textStatus) {
-            	        $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+            	    success: function (responseData, XMLHttpRequest, textStatus) {
+            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
             	    }
                 });
             } else {
@@ -152,9 +152,9 @@ jQuery(document).ready(function() {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            $.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
         },
-        success: function (responseData, textStatus) {
+        success: function (responseData, XMLHttpRequest, textStatus) {
             ko.applyBindings(new viewModel(responseData));
         }
     });
