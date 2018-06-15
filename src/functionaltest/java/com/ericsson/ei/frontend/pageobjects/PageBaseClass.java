@@ -1,6 +1,5 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -14,7 +13,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -23,7 +21,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PageBaseClass {
-    // EIRequestsController mockEIRequestsController;
     CloseableHttpClient mockedHttpClient;
     CloseableHttpResponse mockedHttpResponse;
 
