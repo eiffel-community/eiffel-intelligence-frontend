@@ -58,7 +58,7 @@ public class SeleniumBaseClass {
     public void tearDown() throws Exception {
         driver.quit();
         String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
+        if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
     }
