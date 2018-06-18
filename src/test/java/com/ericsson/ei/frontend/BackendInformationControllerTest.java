@@ -86,7 +86,7 @@ public class BackendInformationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
-            .andExpect(status().isOk())
+            .andExpect(status().isMovedPermanently())
             .andReturn();
     }
 
@@ -107,7 +107,7 @@ public class BackendInformationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instances.toString()))
-            .andExpect(status().isOk())
+            .andExpect(status().isMovedPermanently())
             .andReturn();
     }
 
