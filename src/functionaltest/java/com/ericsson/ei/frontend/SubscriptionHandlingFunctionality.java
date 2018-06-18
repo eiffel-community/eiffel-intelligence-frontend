@@ -9,64 +9,158 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
 public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
-    
+
     @Test
     public void testTemplateTestCase() throws Exception {
 
-        //Open indexpage and verify that it is opened
+        // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
-        
 
-        //Click on test subscription handling page button and verify that it is opened
+        // Click on Subscription Handling page button and verify that it is opened
+        String headerPath = "//div[@class='container pull-left']//h1";
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
-        assert(subscriptionPage.getMainHeader().contains("Eiffel Intelligence Subscription Handling"));
+        assert (subscriptionPage.getMainHeader(headerPath).contains("Eiffel Intelligence Subscription Handling"));
+
+        String response = "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895385,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895415,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription2\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751e\"}}]";
+        // Press "Relaod" button adn vrify that two subscriptions with names
+        // "Subscription1" and "Subscription2" are present
+        // String response =
+        // "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895415,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:
+        // [{ name: 'jsonparams', value : to_string(@)
+        // }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription2\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751e\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524223397628,\"notificationMeta\":\"http://<MyHost:port>/api/doit\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/json\",\"notificationMessageKeyValues\":[{\"formkey\":\"\",\"formvalue\":\"{mydata:
+        // [{ fullaggregation : to_string(@)
+        // }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"submission.sourceChanges[?submitter.group
+        // == 'Team Gophers' &&
+        // svnIdentifier==null]\"}]}],\"subscriptionName\":\"Subscription_Template_Rest_Post_Raw_Body_Json_Trigger\",\"_id\":{\"$oid\":\"5ad9cda5b715d336247e4980\"}}]";
+        subscriptionPage.clickReload(response);
+        TimeUnit.SECONDS.sleep(4);
+        assert (driver.getPageSource().contains("Subscription1"));
+        assert (driver.getPageSource().contains("Subscription2"));
+
+        // // Click "Add Subscription" button and verify that "Subscription Form" it is
+        // // opened
+        // subscriptionPage.clickAddSubscription();
+        // // String xPath ="//div[@class='container
+        // pull-left']//h3";//*[@id="element_id"]
+        // // String xPath = "//*[@id='formHeader']";
+        // // assertEquals("Add Subscription",subscriptionPage.getMainHeader2(xPath));
+        // TimeUnit.SECONDS.sleep(2);
+        //
+        // // Click "cancel" button in subscription form and verify that it is closed
+        // subscriptionPage.clickFormsCancelBtn();
+        // TimeUnit.SECONDS.sleep(5);
+        //
+         subscriptionPage.clickAddSubscription();
+         TimeUnit.SECONDS.sleep(2); //
         
-        subscriptionPage.clickReload();
-        TimeUnit.SECONDS.sleep(2);
-//        subscriptionPage.clickBulkDelete();
-//        TimeUnit.SECONDS.sleep(2);
-        subscriptionPage.clickGetTemplate();
-        TimeUnit.SECONDS.sleep(2);       
-        subscriptionPage.clickUploadSubscription();
-        TimeUnit.SECONDS.sleep(2);
+         // On subscription form, selecting the template as "Mail Trigger" and verification
+         String tempPath = "//select[contains(@title,'Choose a Subscription Template')]";
+         String tempMail = "Mail Trigger";
+         
+         subscriptionPage.selectDropdown(tempPath,tempMail);
+         TimeUnit.SECONDS.sleep(2);
+         assertEquals("MAIL", subscriptionPage.getValueFromSelect());
+         assertEquals("mymail@company.com", subscriptionPage.getValueFromElement());
         
-        subscriptionPage.clickAddSubscription();  
-        TimeUnit.SECONDS.sleep(2); 
+         // On subscription form, selecting the template as "REST POST (Raw Body :JSON)"
+         // and verification
+         String tempPost = "REST POST (Raw Body : JSON)";
+         subscriptionPage.selectDropdown(tempPath, tempPost);
+         TimeUnit.SECONDS.sleep(2);
+         assertEquals("REST_POST", subscriptionPage.getValueFromSelect());
+         assertEquals("http://<MyHost:port>/api/doit",
+         subscriptionPage.getValueFromElement());
         
-        subscriptionPage.clickFormsCancelBtn();  
-        TimeUnit.SECONDS.sleep(2);   
+         // On subscription form, selecting the template as "Jenkins Pipeline
+         // Parameterized Job Trigger" and verification
+         String tempJenkins = "Jenkins Pipeline Parameterized Job Trigger";         
+         subscriptionPage.selectDropdown(tempPath, tempJenkins);
+         TimeUnit.SECONDS.sleep(2);
+         assertEquals("REST_POST", subscriptionPage.getValueFromSelect());
+         assertEquals("http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
+         subscriptionPage.getValueFromElement());
+         
+         //Choose Authorization as "Basic_AUTH" ===> input User Name as "ABCD" and Token as "EFGH" ===> click "Generate Key/Value Pair"
+         // verify the basic authentication is generated
+         String authPath = "//select[contains(@title,'Choose an authentication type')]";
+         String authValue = "BASIC_AUTH";
+         subscriptionPage.selectDropdown(authPath, authValue);
+         TimeUnit.SECONDS.sleep(2);
+         
+         String userName = "ABCD";
+         String userNamePath = "//input[contains(@title,'Enter user name')]";
+         String token = "EFGH";
+         String tokenPath = "//input[contains(@title,'Enter token')]";
+         String subName = "Selenium_test_subscription";
+         String subNamePath = "//input[contains(@title,'Specify a SubsciptionName')]";
+         
+         subscriptionPage.addFieldValue(userNamePath, userName);
+         TimeUnit.SECONDS.sleep(2);
+         
+         subscriptionPage.addFieldValue(tokenPath,token);
+         TimeUnit.SECONDS.sleep(2);
+         
+         String kvPath = "//button[contains(@title,'Generate Key/Value Pair')]";
+         subscriptionPage.clickKVbtn(kvPath);
+         TimeUnit.SECONDS.sleep(4);
+       
+         System.out.println("===================================================================="+driver.getPageSource().contains("Authoriza"));
+         
+         
         
-        subscriptionPage.clickAddSubscription();  
-        TimeUnit.SECONDS.sleep(2);   
-        
-        subscriptionPage.clickFormsSaveBtn();
-        TimeUnit.SECONDS.sleep(2);
-        
-        subscriptionPage.selectTemplate("Mail Trigger");
-        TimeUnit.SECONDS.sleep(2);        
-        assertEquals("MAIL",subscriptionPage.getValueFromSelect());
-        assertEquals("mymail@company.com",subscriptionPage.getValueFromElement());
-        
-        
-        
-        subscriptionPage.selectTemplate("REST POST (Raw Body : JSON)");
-        TimeUnit.SECONDS.sleep(2);
-      
-        subscriptionPage.selectTemplate("Jenkins Pipeline Parameterized Job Trigger");
-        TimeUnit.SECONDS.sleep(2);
-        
-        subscriptionPage.addSubscriptionName("selenium_test_subscription");
-        TimeUnit.SECONDS.sleep(2);
-        
-        System.out.println("Just for debugging");
+         // Test save subscription form: add subscription name as
+         // "selenium_test_subscription" and then click "save" button
+         // verification that subscription is added in the datatable (and is displayed on
+         // the main page)
+         String responseSave = "[{\"aggregationtype\":\"eiffel-intelligence\",\"userName\" : \"ABCD\",\"created\":1524037895385,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895415,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription2\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751e\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524223397628,\"notificationMeta\":\"http://<MyHost:port>/api/doit\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/json\",\"notificationMessageKeyValues\":[{\"formkey\":\"\",\"formvalue\":\"{mydata:[{ fullaggregation : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]\"}]}],\"subscriptionName\":\"Selenium_test_subscription\",\"_id\":{\"$oid\":\"5ad9cda5b715d336247e4980\"}}]";
+         subscriptionPage.addFieldValue(subNamePath, subName);
+         TimeUnit.SECONDS.sleep(2);
+         subscriptionPage.clickFormsSaveBtn(responseSave);
+         TimeUnit.SECONDS.sleep(8);//
+         assert (driver.getPageSource().contains("Selenium_test_subscription"));
+         TimeUnit.SECONDS.sleep(2);
+        //
+        // // Upload a subscription, name as "Subscription_uploaded" with "Upload
+        // // SUbscriptions" button and verify
+        // String filePath = new
+        // File("src/test/resources/Subscription_upload.txt").getAbsolutePath();
+        // System.out.println("=================================================================="
+        // + filePath);
+        // String subUploadResponse =
+        // "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:
+        // [{ name: 'jsonparams', value : to_string(@)
+        // }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895415,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:
+        // [{ name: 'jsonparams', value : to_string(@)
+        // }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription2\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751e\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524223397628,\"notificationMeta\":\"http://<MyHost:port>/api/doit\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/json\",\"notificationMessageKeyValues\":[{\"formkey\":\"\",\"formvalue\":\"{mydata:
+        // [{ fullaggregation : to_string(@)
+        // }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"submission.sourceChanges[?submitter.group
+        // == 'Team Gophers' &&
+        // svnIdentifier==null]\"}]}],\"subscriptionName\":\"Subscription_uploded\",\"_id\":{\"$oid\":\"5ad9cda5b715d336247e4980\"}}]";
+
+        // subscriptionPage.clickUploadSubscriptions(filePath, subUploadResponse);
+        // TimeUnit.SECONDS.sleep(4);
+        // assert (driver.getPageSource().contains("Subscription_uploaded"));
+        // TimeUnit.SECONDS.sleep(5);
+
+        // Delete all subscriptions with "Bulk Delete" button and verify that all subscriptions are deleted
+//        String deleteResponse = "";
+//        subscriptionPage.clickBulkDelete(deleteResponse);
+//        TimeUnit.SECONDS.sleep(10);
+//        assertFalse(driver.getPageSource().contains("Subscription1"));
+//        assertFalse(driver.getPageSource().contains("Subscription2"));
+
+        // subscriptionPage.clickGetTemplate();
+        // TimeUnit.SECONDS.sleep(2);
+
     }
 
 }
