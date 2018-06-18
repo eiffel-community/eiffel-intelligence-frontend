@@ -131,7 +131,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assertFalse(driver.getPageSource().contains("Subscription1"));
         assertFalse(driver.getPageSource().contains("Subscription2"));
 //        String response = "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}}]";
-//
 //         subscriptionPage.clickGetTemplate(response);
 //         TimeUnit.SECONDS.sleep(5);
 //         driver.findElement(By.xpath("//button[contains(text(),'Avbryt')]")).click();
