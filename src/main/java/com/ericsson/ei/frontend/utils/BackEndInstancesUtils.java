@@ -116,7 +116,7 @@ public class BackEndInstancesUtils {
         for (JsonElement element : instances) {
             if (element.getAsJsonObject().get(HOST).equals(instance.get(HOST)) &&
                     element.getAsJsonObject().get(PORT).getAsInt() == instance.get(PORT).getAsInt() &&
-                    element.getAsJsonObject().get(PATH).equals(instance.get(PATH))&&
+                    element.getAsJsonObject().get(PATH).equals(instance.get(PATH)) &&
                     element.getAsJsonObject().get(NAME).equals(instance.get(NAME))) {
                 return true;
             }
