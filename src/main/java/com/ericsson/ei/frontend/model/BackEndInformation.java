@@ -16,6 +16,7 @@
 */
 package com.ericsson.ei.frontend.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,8 +39,9 @@ public class BackEndInformation {
     @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttpForBackend:#{false}}")
-    private boolean https;
+    @Value("${ei.useSecureHttpBackend:#{false}}")
+    @JsonProperty("https")
+    private boolean useSecureHttpBackend;
 
     private boolean active;
 }

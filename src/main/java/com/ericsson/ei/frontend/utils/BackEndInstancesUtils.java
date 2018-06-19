@@ -58,8 +58,8 @@ public class BackEndInstancesUtils {
     @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttpForBackend:#{false}}")
-    private boolean https;
+    @Value("${ei.useSecureHttpBackend:#{false}}")
+    private boolean useSecureHttpBackend;
 
     @Value("${ei.backendInstancesPath:#{null}}")
     private String eiInstancesPath;
@@ -97,7 +97,7 @@ public class BackEndInstancesUtils {
             instance.addProperty(HOST, host);
             instance.addProperty(PORT, Integer.valueOf(port));
             instance.addProperty(PATH, path);
-            instance.addProperty(HTTPS, https);
+            instance.addProperty(HTTPS, useSecureHttpBackend);
             instance.addProperty(ACTIVE, true);
             return instance;
         } else
@@ -109,7 +109,7 @@ public class BackEndInstancesUtils {
         backEndInformation.setHost(properties.getHost());
         backEndInformation.setPort(properties.getPort());
         backEndInformation.setPath(properties.getPath());
-        backEndInformation.setHttps(properties.isHttps());
+        backEndInformation.setUseSecureHttpBackend(properties.isUseSecureHttpBackend());
     }
 
     public boolean checkIfInstanceAlreadyExist(JsonObject instance) {

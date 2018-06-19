@@ -78,7 +78,7 @@ public class EIRequestControllerTest {
         backEndInformation.setHost("localhost");
         backEndInformation.setPort(String.valueOf(mockServerRule.getPort()));
         backEndInformation.setPath("");
-        backEndInformation.setHttps(false);
+        backEndInformation.setUseSecureHttpBackend(false);
         backEndInformation.setActive(true);
     }
 

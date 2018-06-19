@@ -71,7 +71,7 @@ public class BackendInstancesUtilsTest {
         assertEquals(HOST_VAL, info.getHost());
         assertEquals(PORT_VAL, Integer.parseInt(info.getPort()));
         assertEquals(PATH_VAL, info.getPath());
-        assertEquals(HTTPS_VAL, info.isHttps());
+        assertEquals(HTTPS_VAL, info.isUseSecureHttpBackend());
         assertEquals(ACTIVE_VAL, info.isActive());
     }
 

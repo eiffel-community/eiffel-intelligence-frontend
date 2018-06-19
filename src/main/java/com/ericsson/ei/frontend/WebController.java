@@ -38,8 +38,8 @@ public class WebController {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
-    @Value("${ei.useSecureHttpForFrontend}")
-    private boolean httpsForFrontend;
+    @Value("${ei.useSecureHttpFrontend}")
+    private boolean useSecureHttpFrontend;
 
     @Autowired
     private BackEndInformation backEndInformation;
@@ -98,7 +98,7 @@ public class WebController {
 
     private String getFrontendServiceUrl() {
         String httpMethod = "http";
-        if (httpsForFrontend) {
+        if (useSecureHttpFrontend) {
             httpMethod = "https";
         }
         String frontendServiceUrl;
