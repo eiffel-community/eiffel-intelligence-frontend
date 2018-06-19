@@ -65,13 +65,13 @@ public class BackendInstancesUtilsTest {
 
     @Test
     public void testSetBackendProperties() {
-        BackEndInformation information = new BackEndInformation(NAME_VAL, HOST_VAL, PORT_VAL, PATH_VAL, HTTPS_VAL, ACTIVE_VAL);
+        BackEndInformation information = new BackEndInformation(NAME_VAL, HOST_VAL, String.valueOf(PORT_VAL), PATH_VAL, HTTPS_VAL, ACTIVE_VAL);
         utils.setBackEndProperties(information);
         assertEquals(NAME_VAL, info.getName());
         assertEquals(HOST_VAL, info.getHost());
-        assertEquals(PORT_VAL, info.getPort());
+        assertEquals(PORT_VAL, Integer.parseInt(info.getPort()));
         assertEquals(PATH_VAL, info.getPath());
-        assertEquals(HTTPS_VAL, info.isHttps());
+        assertEquals(HTTPS_VAL, info.isUseSecureHttpBackend());
         assertEquals(ACTIVE_VAL, info.isActive());
     }
 
@@ -100,13 +100,4 @@ public class BackendInstancesUtilsTest {
         assertEquals(infoFromFile, utils.getInstances());
         Files.deleteIfExists(Paths.get(FILE_TO_WRITE));
     }
-
-    @Test
-    public void testParseBackendInstancesFile() throws IOException {
-        utils.setEiInstancesPath(FILE_TO_PARSE);
-        utils.parseBackEndInstancesFile();
-        JsonArray infoFromFile = new JsonParser().parse(new String(Files.readAllBytes(Paths.get(FILE_TO_PARSE)))).getAsJsonArray();
-        assertEquals(infoFromFile, utils.getInstances());
-    }
-
 }
