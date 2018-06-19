@@ -42,15 +42,12 @@ public class WebControllerTest {
     @Autowired
     private WebController controller;
 
-    @Autowired
-    private BackEndInformation information;
-
     @Before
     public void beforeClass() {
         ReflectionTestUtils.setField(controller,"frontendServiceHost", "localhost");
         ReflectionTestUtils.setField(controller,"frontendServicePort", 9090);
         ReflectionTestUtils.setField(controller,"frontendContextPath", "somePath");
-        ReflectionTestUtils.setField(information,"https", false);
+        ReflectionTestUtils.setField(controller,"useSecureHttpFrontend", false);
     }
 
     @Test

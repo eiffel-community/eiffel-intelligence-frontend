@@ -42,6 +42,9 @@ public class WebController {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
+    @Value("${ei.useSecureHttpFrontend}")
+    private boolean useSecureHttpFrontend;
+
     @Autowired
     private BackEndInformation backEndInformation;
 
@@ -68,8 +71,7 @@ public class WebController {
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-        String backendServerUrl = String.format("http://%s:%d", backEndInformation.getHost(),
-                backEndInformation.getPort());
+        String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);
         return "eiInfo";
     }
@@ -100,7 +102,7 @@ public class WebController {
 
     private String getFrontendServiceUrl() {
         String httpMethod = "http";
-        if (backEndInformation.isHttps()) {
+        if (useSecureHttpFrontend) {
             httpMethod = "https";
         }
         String frontendServiceUrl;
