@@ -6,13 +6,13 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
-    public IndexPage(CloseableHttpClient mockedHttpClient, WebDriver driver,
+    public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver,
             String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
