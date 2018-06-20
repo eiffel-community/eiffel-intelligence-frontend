@@ -157,7 +157,7 @@ public class EIRequestsController {
 
     private String getEIBackendSubscriptionAddress() {
         String httpMethod = "http";
-        if (backEndInformation.isHttps()) {
+        if (backEndInformation.isUseSecureHttpBackend()) {
             httpMethod = "https";
         }
 
