@@ -470,7 +470,6 @@ jQuery(document).ready(function() {
                     	 var ajaxHttpSender = new AjaxHttpSender();
                     	 // replace all /n with comma
                     	 subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-                    	 console.log(subscriptionsToDeleteString);
                     	 ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+subscriptionsToDeleteString, "DELETE", null, callback);
                      },
                      cancel: function () {
