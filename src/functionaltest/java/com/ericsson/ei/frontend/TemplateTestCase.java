@@ -21,6 +21,7 @@ public class TemplateTestCase extends SeleniumBaseClass{
         //The lines below contains selenium interaction with mocking
         String response = this.getJSONStringFromFile(
                 "src/functionaltest/resources/responses/SubscriptionObjects.json");
+        new WebDriverWait(driver, 10).until((webdriver) -> indexPageObject.presenceOfReloadButton());
         indexPageObject.clickReloadButton(response);
 
         //Click on test rules page button and verify that it is opened
