@@ -15,6 +15,20 @@ import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestRulesFunctionality extends SeleniumBaseClass {
 
+    private static final String DOWNLOADEDRULESTEMPLATEFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
+            + "/rulesTemplate.json";
+
+    private static final String RULESTEMPLATEFILEPATH = "src/functionaltest/resources/responses/RulesTemplateObject.json";
+    private static final String DOWNLOADEDRULESFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
+            + "/rules.json";
+
+    private static final String DOWNLOADEDEVENTSTEMPLATEFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
+            + "/eventsTemplate.json";
+    private static final String EVENTSTEMPLATEFILEPATH =
+            "src/functionaltest/resources/responses/EventsTemplateObject.json";
+
+    private static final String AGGREGATEDOBJECTFILEPATH =
+            "src/functionaltest/resources/responses/AggregatedObjectResponse.json";
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
         // Load index page and wait for it to load
@@ -27,26 +41,23 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader());
 
         // Verify that "download rules template" button works
-        String mockedResponse = this.getJSONStringFromFile(
-                "src/functionaltest/resources/responses/RulesTemplateObject.json");
-        TimeUnit.SECONDS.sleep(1);
+        String mockedResponse = this.getJSONStringFromFile(RULESTEMPLATEFILEPATH);
+        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfClickDownloadRulesTemplateButton());
         testRulesPage.clickDownloadRulesTemplate(mockedResponse);
-        String rulesTemplateFilePath = SeleniumConfig.getTempDownloadDirectory().getPath() + "/rulesTemplate.json";
-        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(rulesTemplateFilePath)));
-        String downloadedRulesTemplate = this.getJSONStringFromFile(rulesTemplateFilePath);
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADEDRULESTEMPLATEFILEPATH)));
+        String downloadedRulesTemplate = this.getJSONStringFromFile(DOWNLOADEDRULESTEMPLATEFILEPATH);
         assertEquals(mockedResponse, downloadedRulesTemplate);
 
         // Verify that uploading the downloaded template file works.
-        testRulesPage.uploadRulesTemplate(rulesTemplateFilePath);
+        testRulesPage.uploadRulesTemplate(DOWNLOADEDRULESTEMPLATEFILEPATH);
         new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfRuleNumber(2));
         String firstRule = testRulesPage.getFirstRuleText();
         assertEquals(true, downloadedRulesTemplate.contains(firstRule));
 
         // Verify that it is possible to download rules
         testRulesPage.clickDownloadRulesButton();
-        String rulesFilePath = SeleniumConfig.getTempDownloadDirectory().getPath() + "/rules.json";
-        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(rulesFilePath)));
-        String downloadedRules = this.getJSONStringFromFile(rulesFilePath);
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADEDRULESFILEPATH)));
+        String downloadedRules = this.getJSONStringFromFile(DOWNLOADEDRULESFILEPATH);
         assertEquals(downloadedRulesTemplate, downloadedRules);
 
         // Verify that add rule button works
@@ -58,16 +69,14 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfRuleNumber(3) == false);
 
         // Verify that "download events template" button works
-        String downloadEventsTemplateMockedResponse = this.getJSONStringFromFile(
-                "src/functionaltest/resources/responses/EventsTemplateObject.json");
+        String downloadEventsTemplateMockedResponse = this.getJSONStringFromFile(EVENTSTEMPLATEFILEPATH);
         testRulesPage.clickDownloadEventsTemplate(downloadEventsTemplateMockedResponse);
-        String eventsTemplateFilePath = SeleniumConfig.getTempDownloadDirectory().getPath() + "/eventsTemplate.json";
-        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(eventsTemplateFilePath)));
-        String downloadedEventsTemplate = this.getJSONStringFromFile(eventsTemplateFilePath);
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADEDEVENTSTEMPLATEFILEPATH)));
+        String downloadedEventsTemplate = this.getJSONStringFromFile(DOWNLOADEDEVENTSTEMPLATEFILEPATH);
         assertEquals(downloadEventsTemplateMockedResponse, downloadedEventsTemplate);
 
         // Verify that uploading the downloaded template file works.
-        testRulesPage.uploadEventsTemplate(eventsTemplateFilePath);
+        testRulesPage.uploadEventsTemplate(DOWNLOADEDEVENTSTEMPLATEFILEPATH);
         new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfEventNumber(2));
         String firstEvent = testRulesPage.getFirstEventText();
         assertEquals(true, downloadedEventsTemplate.contains(firstEvent));
@@ -81,8 +90,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfEventNumber(3) == false);
 
         // Verify that find aggregated object button works
-        String findAggregatedObjectResponse = this.getJSONStringFromFile(
-                "src/functionaltest/resources/responses/AggregatedObjectResponse.json");
+        String findAggregatedObjectResponse = this.getJSONStringFromFile(AGGREGATEDOBJECTFILEPATH);
         testRulesPage.clickFindAggregatedObject(findAggregatedObjectResponse);
         assertEquals(findAggregatedObjectResponse, testRulesPage.getAggregatedResultData());
     }

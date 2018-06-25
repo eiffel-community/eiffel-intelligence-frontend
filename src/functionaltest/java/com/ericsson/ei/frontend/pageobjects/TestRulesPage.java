@@ -47,6 +47,15 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
+    public Boolean presenceOfClickDownloadRulesTemplateButton() {
+        try {
+            driver.findElement(By.className("download_rules_template"));
+            return true;
+        } catch (NoSuchElementException e){
+            return false;
+        }
+    }
+
     public void clickDownloadRulesTemplate(String responseData) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
