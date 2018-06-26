@@ -108,9 +108,7 @@ jQuery(document).ready(function() {
         		tbdy = document.createElement('tbody');
         		tbl = createTable();
 
-        	    console.log(dataSubList);
         	    Object.keys(dataSubList).forEach(function(dataKey) {
-        	    	console.log(dataKey + " : " +  dataSubList[dataKey]);
         	        var tr = document.createElement('tr');
         	        var tdKey = document.createElement('td');
         	        tdKey.setAttribute('width', tableTdKeyWidth);
@@ -146,8 +144,7 @@ jQuery(document).ready(function() {
               },
         	  complete: function (XMLHttpRequest, textStatus) {
         	            var data = JSON.parse(XMLHttpRequest.responseText);
-        	            console.log(data);
-        	            
+
         	            generateGeneralEiInfo(data);
         	            
         	            generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");

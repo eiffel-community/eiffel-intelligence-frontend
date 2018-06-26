@@ -91,7 +91,6 @@ public class WebControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html;charset=UTF-8"))
             .andExpect(model().attribute("frontendServiceUrl", "http://localhost:9090/somePath"))
-            .andDo(print())
             .andReturn();
     }
 

@@ -161,7 +161,6 @@ jQuery(document).ready(
           };
           
             var ajaxHttpSender = new AjaxHttpSender();
-            //console.log(JSON.stringify(JSON.parse('{"listRulesJson":' + JSON.stringify(formRules) + ',"listEventsJson":' + events.toString() + '}')));
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", JSON.stringify(JSON.parse('{"listRulesJson":'
                 + JSON.stringify(formRules) + ',"listEventsJson":' + JSON.stringify(formEvents) + '}')), callback);
         };
