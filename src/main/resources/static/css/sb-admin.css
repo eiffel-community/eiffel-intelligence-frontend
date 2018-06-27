@@ -22,6 +22,8 @@ body.sticky-footer .content-wrapper {
 
 body.fixed-nav {
     padding-top: 56px;
+    min-width: 1000px !important;
+    overflow: scroll !important;
 }
 
 .content-wrapper {
