@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -116,6 +117,11 @@ public class TestRulesPage extends PageBaseClass {
 
     public void clickRemoveEventNumber(int number) {
         WebElement removeEventButton = driver.findElement(By.id("Events" + number)).findElement(By.className("fa-trash"));
+
+        // We need the following two lines in order to be sure that the remove event button is not obscured...
+        JavascriptExecutor jse2 = (JavascriptExecutor)driver;
+        jse2.executeScript("arguments[0].scrollIntoView()", removeEventButton);
+
         removeEventButton.click();
     }
 

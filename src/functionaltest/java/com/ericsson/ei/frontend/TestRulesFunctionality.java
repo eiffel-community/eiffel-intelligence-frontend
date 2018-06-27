@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
@@ -15,20 +16,20 @@ import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestRulesFunctionality extends SeleniumBaseClass {
 
-    private static final String DOWNLOADEDRULESTEMPLATEFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
-            + "/rulesTemplate.json";
+    private static final String DOWNLOADEDRULESTEMPLATEFILEPATH = String.join(
+            File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rulesTemplate.json");
 
-    private static final String RULESTEMPLATEFILEPATH = "src/functionaltest/resources/responses/RulesTemplateObject.json";
-    private static final String DOWNLOADEDRULESFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
-            + "/rules.json";
+    private static final String RULESTEMPLATEFILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "RulesTemplateObject.json");
+    private static final String DOWNLOADEDRULESFILEPATH = String.join(File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rules.json");
 
-    private static final String DOWNLOADEDEVENTSTEMPLATEFILEPATH = SeleniumConfig.getTempDownloadDirectory().getPath()
-            + "/eventsTemplate.json";
-    private static final String EVENTSTEMPLATEFILEPATH =
-            "src/functionaltest/resources/responses/EventsTemplateObject.json";
+    private static final String DOWNLOADEDEVENTSTEMPLATEFILEPATH = String.join(
+            File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "eventsTemplate.json");
+    private static final String EVENTSTEMPLATEFILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "EventsTemplateObject.json");
 
-    private static final String AGGREGATEDOBJECTFILEPATH =
-            "src/functionaltest/resources/responses/AggregatedObjectResponse.json";
+    private static final String AGGREGATEDOBJECTFILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "AggregatedObjectResponse.json");
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
         // Load index page and wait for it to load
