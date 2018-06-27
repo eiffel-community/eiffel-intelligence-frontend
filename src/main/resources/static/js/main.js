@@ -17,18 +17,22 @@ jQuery(document).ready(function() {
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	function loadMainPage() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("subscriptionpage.html");
 	}
 
 	$("#testRulesBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("testRules.html");
 	});
 
 	$("#eiInfoBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("eiInfo.html");
 	});
 
 	$("#loginBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("login.html");
 	});
 
@@ -43,8 +47,9 @@ jQuery(document).ready(function() {
     });
 
 	$("#logoutBtn").click(function() {
+	    $("#selectInstances").visible();
 		$.ajax({
-			url : "/auth/logout",
+			url : frontendServiceUrl + "/auth/logout",
 			type : "GET",
 			contentType : 'application/json; charset=utf-8',
 			cache: false,
@@ -60,6 +65,7 @@ jQuery(document).ready(function() {
 	});
 
 	$("#jmesPathRulesSetUpBtn").click(function() {
+	    $("#selectInstances").visible();
 		$("#mainFrame").load("jmesPathRulesSetUp.html");
 	});
 
@@ -103,14 +109,14 @@ jQuery(document).ready(function() {
     	this.path = ko.observable(path),
     	this.https = ko.observable(https),
         this.active = ko.observable(active),
-	    this.information = name.toUpperCase() + " - " + host + " " + port + " " + path;
+	    this.information = name.toUpperCase() + " - " + host + " " + port + "/" + path;
     }
 
     function viewModel(data) {
         var self = this;
         var currentName;
         self.instances = ko.observableArray();
-        var json = JSON.parse(data);
+        var json = JSON.parse(ko.toJSON(data));
         for(var i = 0; i < json.length; i++) {
             var obj = json[i];
         	var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
@@ -121,19 +127,23 @@ jQuery(document).ready(function() {
         }
         self.selectedActive = ko.observable(currentName);
         self.onChange = function(){
-            $.ajax({
-                url: frontendServiceUrl + "/switch-backendByMainPage",
-            	type: "POST",
-            	data: self.selectedActive(),
-            	contentType: 'application/json; charset=utf-8',
-            	cache: false,
-            	error: function (XMLHttpRequest, textStatus, errorThrown) {
-            	    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
-            	},
-            	success: function (responseData, textStatus) {
-            	    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
-            	}
-            });
+            if(typeof self.selectedActive() !== "undefined"){
+                $.ajax({
+                    url: frontendServiceUrl + "/switchBackend",
+            	    type: "POST",
+            	    data: self.selectedActive(),
+            	    contentType: 'application/json; charset=utf-8',
+            	    cache: false,
+            	    error: function (XMLHttpRequest, textStatus, errorThrown) {
+            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	    },
+            	    success: function (responseData, XMLHttpRequest, textStatus) {
+            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
+            	    }
+                });
+            } else {
+                $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
+              }
         }
     }
     $.ajax({
@@ -142,9 +152,9 @@ jQuery(document).ready(function() {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            $.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
         },
-        success: function (responseData, textStatus) {
+        success: function (responseData, XMLHttpRequest, textStatus) {
             ko.applyBindings(new viewModel(responseData));
         }
     });

@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,19 +49,19 @@ public class BackEndInstancesUtils {
     private static final String HTTPS = "https";
     private static final String ACTIVE = "active";
 
-    @Value("${ei.backendServerHost}")
+    @Value("${ei.backendServerHost:#{null}}")
     private String host;
 
-    @Value("${ei.backendServerPort}")
-    private int port;
+    @Value("${ei.backendServerPort:#{null}}")
+    private String port;
 
-    @Value("${ei.backendContextPath}")
+    @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
-    @Value("${ei.useSecureHttp}")
-    private boolean https;
+    @Value("${ei.useSecureHttpBackend:#{false}}")
+    private boolean useSecureHttpBackend;
 
-    @Value("${ei.backendInstancesPath}")
+    @Value("${ei.backendInstancesPath:#{null}}")
     private String eiInstancesPath;
 
     @Autowired
@@ -73,28 +72,36 @@ public class BackEndInstancesUtils {
 
     @PostConstruct
     public void init() {
-        if (eiInstancesPath.equals("")) {
+        if (eiInstancesPath == null || eiInstancesPath.isEmpty()) {
             setEiInstancesPath(PATH_TO_WRITE);
         }
         parseBackEndInstancesFile();
-        if (!checkIfInstanceAlreadyExist(getCurrentInstance())) {
+        if (getCurrentInstance() != null && !checkIfInstanceAlreadyExist(getCurrentInstance())) {
             instances.add(getCurrentInstance());
         }
         writeIntoFile();
         information.clear();
-        information = new Gson().fromJson(instances,new TypeToken<List<BackEndInformation>>() {
+        information = new Gson().fromJson(instances, new TypeToken<List<BackEndInformation>>() {
         }.getType());
+        for (BackEndInformation backEndInformation : information) {
+            if (backEndInformation.isActive()) {
+                setBackEndProperties(backEndInformation);
+            }
+        }
     }
 
     private JsonObject getCurrentInstance() {
-        JsonObject instance = new JsonObject();
-        instance.addProperty(NAME, "default");
-        instance.addProperty(HOST, host);
-        instance.addProperty(PORT, port);
-        instance.addProperty(PATH, path);
-        instance.addProperty(HTTPS, https);
-        instance.addProperty(ACTIVE, true);
-        return instance;
+        if (host != null && port != null && !host.isEmpty() && !port.isEmpty()) {
+            JsonObject instance = new JsonObject();
+            instance.addProperty(NAME, "default");
+            instance.addProperty(HOST, host);
+            instance.addProperty(PORT, Integer.valueOf(port));
+            instance.addProperty(PATH, path);
+            instance.addProperty(HTTPS, useSecureHttpBackend);
+            instance.addProperty(ACTIVE, true);
+            return instance;
+        } else
+            return null;
     }
 
     public void setBackEndProperties(BackEndInformation properties) {
@@ -102,14 +109,15 @@ public class BackEndInstancesUtils {
         backEndInformation.setHost(properties.getHost());
         backEndInformation.setPort(properties.getPort());
         backEndInformation.setPath(properties.getPath());
-        backEndInformation.setHttps(properties.isHttps());
+        backEndInformation.setUseSecureHttpBackend(properties.isUseSecureHttpBackend());
     }
 
     public boolean checkIfInstanceAlreadyExist(JsonObject instance) {
         for (JsonElement element : instances) {
             if (element.getAsJsonObject().get(HOST).equals(instance.get(HOST)) &&
                     element.getAsJsonObject().get(PORT).getAsInt() == instance.get(PORT).getAsInt() &&
-                    element.getAsJsonObject().get(PATH).equals(instance.get(PATH))) {
+                    element.getAsJsonObject().get(PATH).equals(instance.get(PATH)) &&
+                    element.getAsJsonObject().get(NAME).equals(instance.get(NAME))) {
                 return true;
             }
         }
@@ -118,15 +126,14 @@ public class BackEndInstancesUtils {
 
     public void writeIntoFile() {
         try {
-            FileWriter fileWriter = new FileWriter(eiInstancesPath);
-            fileWriter.append(instances.toString());
-            fileWriter.flush();
+            Files.write(Paths.get(eiInstancesPath), instances.toString().getBytes());
+            parseBackEndInstancesFile();
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }
     }
 
-    public void parseBackEndInstancesFile() {
+    private void parseBackEndInstancesFile() {
         try {
             information.clear();
             instances = new JsonArray();

@@ -77,6 +77,16 @@ jQuery(document).ready(function() {
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
         
+        tr = document.createElement('tr');
+        tdKey = document.createElement('td');
+        tdKey.setAttribute('width', tableTdKeyWidth);
+        tdKey.appendChild(document.createTextNode('EI Test Rules functionality enabled'));
+        tr.appendChild(tdKey);
+        tdValue = document.createElement('td');
+        tdValue.appendChild(document.createTextNode(data.testRulesEnabled));
+        tr.appendChild(tdValue);
+        tbdy.appendChild(tr);
+        
         
         tbl.appendChild(tbdy);
         body.appendChild(tbl);
@@ -98,9 +108,7 @@ jQuery(document).ready(function() {
         		tbdy = document.createElement('tbody');
         		tbl = createTable();
 
-        	    console.log(dataSubList);
         	    Object.keys(dataSubList).forEach(function(dataKey) {
-        	    	console.log(dataKey + " : " +  dataSubList[dataKey]);
         	        var tr = document.createElement('tr');
         	        var tdKey = document.createElement('td');
         	        tdKey.setAttribute('width', tableTdKeyWidth);
@@ -136,19 +144,20 @@ jQuery(document).ready(function() {
               },
         	  complete: function (XMLHttpRequest, textStatus) {
         	            var data = JSON.parse(XMLHttpRequest.responseText);
-        	            console.log(data);
-        	            
+
         	            generateGeneralEiInfo(data);
         	            
         	            generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
         	            generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
         	            generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
         	            generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
+        	            generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
         	            generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
         	            generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
         	            generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
         	            generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
         	            generateEIInformationBasedOnList([data.erUrl], "Eiffel Intelligence Backend EventRepository Url");
+        	            generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
         	  		}
         	  });
 

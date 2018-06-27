@@ -7,7 +7,7 @@
     "https": false
   },
   {
-    "path": "/eiffel",
+    "path": "eiffel",
     "port": "8091",
     "name": "source",
     "host": "localhost",

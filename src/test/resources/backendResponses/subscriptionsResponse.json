@@ -1,0 +1,85 @@
+[
+    {
+        "aggregationtype": "eiffel-intelligence",
+        "created": 1526496762825,
+        "notificationMeta": "mymail@company.com",
+        "notificationType": "MAIL",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "",
+                "formvalue": "{mydata: [{ fullaggregation : to_string(@) }]}"
+            }
+        ],
+        "repeat": false,
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                    }
+                ]
+            }
+        ],
+        "subscriptionName": "Subscription2",
+        "userName": "",
+        "_id": {
+            "$oid": "5afc7dfa94d0714d08258584"
+        }
+    },
+    {
+        "aggregationtype": "eiffel-intelligence",
+        "created": 1526986969103,
+        "notificationMeta": "http://<MyHost:port>/api/doit",
+        "notificationType": "REST_POST",
+        "restPostBodyMediaType": "application/json",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "",
+                "formvalue": "{mydata: [{ fullaggregation : to_string(@) }]}"
+            }
+        ],
+        "repeat": false,
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                    }
+                ]
+            }
+        ],
+        "subscriptionName": "Subscription_1",
+        "userName": "",
+        "_id": {
+            "$oid": "5b03f8d9495ca532fc1f6bb4"
+        }
+    },
+    {
+        "aggregationtype": "eiffel-intelligence",
+        "created": 1526994222446,
+        "notificationMeta": "http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
+        "notificationType": "REST_POST",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "kkk",
+                "formvalue": "{}"
+            }
+        ],
+        "repeat": false,
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                    }
+                ]
+            }
+        ],
+        "subscriptionName": "Subscription_3",
+        "userName": "",
+        "_id": {
+            "$oid": "5b040aa8495ca51f18fbc6af"
+        }
+    }
+]
