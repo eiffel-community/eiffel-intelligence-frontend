@@ -13,7 +13,7 @@ function multipleInstancesModel(data) {
 	var self = this;
 	var selected;
 	self.instances = ko.observableArray();
-	var json = JSON.parse(data);
+	var json = JSON.parse(ko.toJSON(data));
 	for(var i = 0; i < json.length; i++) {
 		var obj = json[i];
 		var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
@@ -35,9 +35,8 @@ function multipleInstancesModel(data) {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
             },
-            success: function (responseData, textStatus) {
+            success: function (responseData, XMLHttpRequest, textStatus) {
                 $.jGrowl("Backend instance was deleted", {sticky: false, theme: 'Notify'});
-            	$("#mainFrame").load("switch-backend.html");
             }
         });
 	}
@@ -62,8 +61,7 @@ function multipleInstancesModel(data) {
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 			    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
 			},
-			success: function (responseData, textStatus) {
-			    $.jGrowl("Backend instance was switched", {sticky: false, theme: 'Notify'});
+			success: function (responseData, XMLHttpRequest, textStatus) {
 			    $(location).attr('href', frontendServiceUrl)
 			}
 	    });
@@ -75,9 +73,9 @@ $.ajax({
 	contentType: 'application/json; charset=utf-8',
 	cache: false,
 	error: function (XMLHttpRequest, textStatus, errorThrown) {
-		$.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+		$.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
 	},
-	success: function (responseData, textStatus) {
+	success: function (responseData, XMLHttpRequest, textStatus) {
 		var observableObject = $("#instancesModel")[0];
         ko.cleanNode(observableObject);
         ko.applyBindings(new multipleInstancesModel(responseData), observableObject);

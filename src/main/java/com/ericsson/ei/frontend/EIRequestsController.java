@@ -157,7 +157,7 @@ public class EIRequestsController {
 
     private String getEIBackendSubscriptionAddress() {
         String httpMethod = "http";
-        if (backEndInformation.isHttps()) {
+        if (backEndInformation.isUseSecureHttpBackend()) {
             httpMethod = "https";
         }
 
@@ -190,7 +190,7 @@ public class EIRequestsController {
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
             responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             statusCode = eiResponse.getStatusLine().getStatusCode();
-            LOG.info("EI Http response status code: " + eiResponse.getStatusLine().getStatusCode()
+            LOG.info("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
         } catch (IOException e) {
