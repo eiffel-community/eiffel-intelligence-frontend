@@ -20,7 +20,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     @Test
     public void testSubscription() throws Exception {
 
-        // Open indexpage and verify that it is opened
+        // Open index page and verify that it is opened
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
@@ -30,14 +30,14 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
         assert (subscriptionPage.getMainHeader(headerPath).contains("Eiffel Intelligence Subscription Handling"));
 
-        // Press "Relaod" button adn vrify that two subscriptions with names "Subscription1" and "Subscription2" are present
+        // Press "Relaod" button and verify that two subscriptions with names "Subscription1" and "Subscription2" are present
         String response = "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895385,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}},{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1524037895415,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription2\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751e\"}}]";
         subscriptionPage.clickReload(response);
         TimeUnit.SECONDS.sleep(4);
         assert (driver.getPageSource().contains("Subscription1"));
         assert (driver.getPageSource().contains("Subscription2"));
 
-         // Click "Add Subscription" button and verify that "Subscription Form" it is open
+         // Click "Add Subscription" button and verify that "Subscription Form" is open
          subscriptionPage.clickAddSubscription();
          TimeUnit.SECONDS.sleep(2);
          // String xPath ="//div[@class='container pull-left']//h3";//*[@id="element_id"]
@@ -45,24 +45,24 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
          assertEquals("Add Subscription",subscriptionPage.getMainHeader(xPath));
          TimeUnit.SECONDS.sleep(2);
         
-         // Click "cancel" button in subscription form and verify that it is closed
+         // Click "cancel" button in subscription form and verify that it is close
          subscriptionPage.clickFormsCancelBtn();
          TimeUnit.SECONDS.sleep(5);
         
+         // Now, again open "Subscription Form"
          subscriptionPage.clickAddSubscription();
          TimeUnit.SECONDS.sleep(2); //
         
-         // On subscription form, selecting the template as "Mail Trigger" and verification
+         // On subscription form, select the template as "Mail Trigger" and verify
          String tempPath = "//select[contains(@title,'Choose a Subscription Template')]";
-         String tempMail = "Mail Trigger";
-         
+         String tempMail = "Mail Trigger";         
          subscriptionPage.selectDropdown(tempPath,tempMail);
          TimeUnit.SECONDS.sleep(2);
          assertEquals("MAIL", subscriptionPage.getValueFromSelect());
          assertEquals("mymail@company.com", subscriptionPage.getValueFromElement());
         
-         // On subscription form, selecting the template as "REST POST (Raw Body :JSON)"
-         // and verification
+         // On subscription form, select the template as "REST POST (Raw Body :JSON)"
+         // and verify
          String tempPost = "REST POST (Raw Body : JSON)";
          subscriptionPage.selectDropdown(tempPath, tempPost);
          TimeUnit.SECONDS.sleep(2);
@@ -70,8 +70,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
          assertEquals("http://<MyHost:port>/api/doit",
          subscriptionPage.getValueFromElement());
         
-         // On subscription form, selecting the template as "Jenkins Pipeline
-         // Parameterized Job Trigger" and verification
+         // On subscription form, select the template as "Jenkins Pipeline
+         // Parameterized Job Trigger" and verify
          String tempJenkins = "Jenkins Pipeline Parameterized Job Trigger";         
          subscriptionPage.selectDropdown(tempPath, tempJenkins);
          TimeUnit.SECONDS.sleep(2);
@@ -118,9 +118,9 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // Upload a subscription, name as "Subscription_uploaded" with "Upload SUbscriptions" button and verify
          String filePath = new File("src/test/resources/Subscription_upload.txt").getAbsolutePath();
          String subUploadResponse =
-         "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}}]";
+         "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription_uploaded\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}}]";
          subscriptionPage.clickUploadSubscriptions(filePath, subUploadResponse);
-         TimeUnit.SECONDS.sleep(4);
+         TimeUnit.SECONDS.sleep(10);
          assert (driver.getPageSource().contains("Subscription_uploaded"));
          TimeUnit.SECONDS.sleep(5);
 
@@ -130,7 +130,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         TimeUnit.SECONDS.sleep(10);
         assertFalse(driver.getPageSource().contains("Subscription1"));
         assertFalse(driver.getPageSource().contains("Subscription2"));
-//        String response = "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}}]";
+        
+//        String responseTemp = "[{\"aggregationtype\":\"eiffel-intelligence\",\"created\":1224037895323,\"notificationMeta\":\"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build\",\"notificationType\":\"REST_POST\",\"restPostBodyMediaType\":\"application/x-www-form-urlencoded\",\"notificationMessageKeyValues\":[{\"formkey\":\"json\",\"formvalue\":\"{parameter:[{ name: 'jsonparams', value : to_string(@)}]}\"}],\"repeat\":false,\"requirements\":[{\"conditions\":[{\"jmespath\":\"gav.groupId=='com.othercompany.library'\"}]}],\"subscriptionName\":\"Subscription1\",\"_id\":{\"$oid\":\"5ad6f907c242af3f1469751d\"}}]";
 //         subscriptionPage.clickGetTemplate(response);
 //         TimeUnit.SECONDS.sleep(5);
 //         driver.findElement(By.xpath("//button[contains(text(),'Avbryt')]")).click();

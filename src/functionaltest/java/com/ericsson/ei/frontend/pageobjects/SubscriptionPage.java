@@ -94,9 +94,9 @@ public class SubscriptionPage extends PageBaseClass {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        WebElement addSubscriptionBtn = driver
+        WebElement getTemplateBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Download Subscription JSON template')]"));
-        addSubscriptionBtn.click();
+        getTemplateBtn.click();
         
     }
 
