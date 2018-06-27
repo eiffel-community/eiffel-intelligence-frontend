@@ -131,36 +131,35 @@ jQuery(document).ready(function() {
 	}
 
     function getInstanceInfo() {
-        var eiInfoContainer = document.getElementById('eiInfoContainer');
         $.ajax({
               url: frontendServiceUrl + "/information",
               contentType : 'application/json;charset=UTF-8',
               type: 'GET',
               error : function (XMLHttpRequest, textStatus, errorThrown) {
-                      document.getElementById('info_text').innerHTML = errorThrown;
+                  if (XMLHttpRequest.responseText == "") {
+                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">There is no response from backend</h3>";
+                  } else {
+                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">" + XMLHttpRequest.responseText + "</h3>";
+                  }
               },
               success : function (data, textStatus, xhr) {
-
+                  var eiInfoContainer = document.getElementById('eiInfoContainer');
+	                var data = JSON.parse(xhr.responseText);
+	                generateGeneralEiInfo(data);
+	                generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+	                generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
+	                generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
+	                generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
+	                generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
+	                generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
+	                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
+	                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
+	                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
+	                generateEIInformationBasedOnList([data.erUrl], "Eiffel Intelligence Backend EventRepository Url");
+	                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
               },
-        	  complete: function (XMLHttpRequest, textStatus) {
-        	            var data = JSON.parse(XMLHttpRequest.responseText);
-
-        	            generateGeneralEiInfo(data);
-        	            
-        	            generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
-        	            generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
-        	            generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
-        	            generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
-        	            generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
-        	            generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
-        	            generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
-        	            generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-        	            generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
-        	            generateEIInformationBasedOnList([data.erUrl], "Eiffel Intelligence Backend EventRepository Url");
-        	            generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
-        	  		}
+              complete: function (XMLHttpRequest, textStatus) {}
         	  });
-
     }
 	
     getInstanceInfo();

@@ -51,10 +51,12 @@ jQuery(document).ready(function() {
     var green="#00ff00";
 		$.ajax({
 			url: frontendServiceUrl + "/auth/checkStatus",
-			contentType: 'application/json; charset=utf-8',
-			type: 'GET',
-			error: function (XMLHttpRequest) {
-				if(XMLHttpRequest.status == 401) {
+			type: "GET",
+			contentType: "application/string; charset=utf-8",
+			dataType: "text",
+			cache: false,
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				if (XMLHttpRequest.status == 401) {
 					doIfUserLoggedOut();
 					EIConnBtn.style.background = green;
 					backendStatus = true;
@@ -63,7 +65,7 @@ jQuery(document).ready(function() {
 					backendStatus = false;
 				}
 			},
-			success: function () {
+			success: function (data, textStatus) {
 				EIConnBtn.style.background = green;
 				backendStatus = true;
 			}
