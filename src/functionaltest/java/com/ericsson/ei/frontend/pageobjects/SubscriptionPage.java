@@ -16,11 +16,12 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class SubscriptionPage extends PageBaseClass {
 
-    public SubscriptionPage(CloseableHttpClient mockedHttpClient, WebDriver driver, String baseUrl)
+    public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
