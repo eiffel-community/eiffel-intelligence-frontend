@@ -17,13 +17,10 @@
 package com.ericsson.ei.frontend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -32,29 +29,21 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BackEndInformation {
-    @JsonProperty("name")
-    @NotNull
     private String name;
 
-    @JsonProperty("host")
-    @Value("${ei.backendServerHost}")
-    @NotNull
+    @Value("${ei.backendServerHost:#{null}}")
     private String host;
 
-    @JsonProperty("port")
-    @Value("${ei.backendServerPort}")
-    @NotNull
-    @Min(1)
-    @Max(65535)
-    private int port;
+    @Value("${ei.backendServerPort:#{null}}")
+    private String port;
 
-    @JsonProperty("path")
-    @Value("${ei.backendContextPath}")
+    @Value("${ei.backendContextPath:#{null}}")
     private String path;
 
+    @Value("${ei.useSecureHttpBackend:#{false}}")
     @JsonProperty("https")
-    @Value("${ei.useSecureHttp}")
-    private boolean https;
+    @SerializedName("https")
+    private boolean useSecureHttpBackend;
 
     private boolean active;
 }

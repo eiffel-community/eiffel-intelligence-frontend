@@ -42,72 +42,47 @@ public class WebController {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
+    @Value("${ei.useSecureHttpFrontend}")
+    private boolean useSecureHttpFrontend;
+
     @Autowired
     private BackEndInformation backEndInformation;
 
     @RequestMapping("/")
     public String greeting(Model model) {
-        // inject
-        // in
-        // DOM
-        // for
-        // AJAX
-        // etc
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
-        model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks); // inject
-                                                                                        // in
-                                                                                        // DOM
-                                                                                        // for
-                                                                                        // AJAX
-                                                                                        // etc
+        model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
         return "index";
     }
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
+
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         return "subscription";
     }
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-        String backendServerUrl = String.format("http://%s:%d", backEndInformation.getHost(),
-                backEndInformation.getPort());
+
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+        String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);
         return "eiInfo";
     }
 
     @RequestMapping("/login.html")
     public String login(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         return "login";
     }
 
@@ -119,29 +94,19 @@ public class WebController {
 
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         return "add-instances";
     }
 
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
+        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         return "switch-backend";
     }
 
     private String getFrontendServiceUrl() {
         String httpMethod = "http";
-        if (backEndInformation.isHttps()) {
+        if (useSecureHttpFrontend) {
             httpMethod = "https";
         }
         String frontendServiceUrl;

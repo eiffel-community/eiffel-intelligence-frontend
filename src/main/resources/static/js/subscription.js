@@ -51,10 +51,12 @@ jQuery(document).ready(function() {
     var green="#00ff00";
 		$.ajax({
 			url: frontendServiceUrl + "/auth/checkStatus",
-			contentType: 'application/json; charset=utf-8',
-			type: 'GET',
-			error: function (XMLHttpRequest) {
-				if(XMLHttpRequest.status == 401) {
+			type: "GET",
+			contentType: "application/string; charset=utf-8",
+			dataType: "text",
+			cache: false,
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				if (XMLHttpRequest.status == 401) {
 					doIfUserLoggedOut();
 					EIConnBtn.style.background = green;
 					backendStatus = true;
@@ -63,7 +65,7 @@ jQuery(document).ready(function() {
 					backendStatus = false;
 				}
 			},
-			success: function () {
+			success: function (data, textStatus) {
 				EIConnBtn.style.background = green;
 				backendStatus = true;
 			}
@@ -420,23 +422,23 @@ jQuery(document).ready(function() {
     
     // /Start ## Bulk delete#################################################
     $('.container').on( 'click', 'button.bulk_delete', function (event) {
-    	var subScriptionsToDelete = [];
+    	var subscriptionsToDelete = [];
     	var data = table.rows().nodes();
     	$.each(data, function (index, value) {
     		if ($(this).find('input').prop('checked') == true){
-    			subScriptionsToDelete.push(table.row(index).data().subscriptionName)
+    			subscriptionsToDelete.push(table.row(index).data().subscriptionName)
     	    }
     	});
     	
     	// Check if no Subscription has been marked to be deleted.
-    	if ( subScriptionsToDelete.length < 1 ){
+    	if ( subscriptionsToDelete.length < 1 ){
     		$.alert("No subscriptions has been marked to be deleted.");
     		return;
     	}
     	
-    	var subScriptionsToDeleteString = "";
-    	for (i=0; i < subScriptionsToDelete.length; i++) {
-    		subScriptionsToDeleteString += subScriptionsToDelete[i] + "\n";
+    	var subscriptionsToDeleteString = "";
+    	for (i=0; i < subscriptionsToDelete.length; i++) {
+    		subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
     	}
 
     	var callback = {
@@ -452,10 +454,11 @@ jQuery(document).ready(function() {
                     reload_table();
                 },
                 error : function (XMLHttpRequest, textStatus, errorThrown) {
-                    $.jGrowl("Error: " + XMLHttpRequest.responseText, {
-                        sticky : true,
-                        theme : 'Error'
-                    });
+                    reload_table();
+                    var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                    for (var i = 0; i < responseJSON.length; i++) {
+                        $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
+                    }
                 },
                 complete : function () {
                 }
@@ -463,13 +466,13 @@ jQuery(document).ready(function() {
 
              $.confirm({
                  title: 'Confirm!',
-                 content: 'Are you sure you want to delete these subscriptions?<pre>' + subScriptionsToDeleteString,
+                 content: 'Are you sure you want to delete these subscriptions?<pre>' + subscriptionsToDeleteString,
                  buttons: {
                      confirm: function () {
                     	 var ajaxHttpSender = new AjaxHttpSender();
-                    	 for (i=0; i < subScriptionsToDelete.length; i++){
-                    		 ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+subScriptionsToDelete[i], "DELETE", null, callback);
-                    	 }
+                    	 // replace all /n with comma
+                    	 subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+                    	 ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/"+subscriptionsToDeleteString, "DELETE", null, callback);
                      },
                      cancel: function () {
                      }
@@ -511,7 +514,7 @@ jQuery(document).ready(function() {
                 success : function (data, textStatus) {
                     var returnData = [data];
                     if (returnData.length > 0) {
-                        $.jGrowl("Successful created subscription " + subscriptionJson.subscriptionName, {
+                        $.jGrowl("Subscriptions are successfully created", {
                             sticky : false,
                             theme : 'Error'
                         });
@@ -519,10 +522,12 @@ jQuery(document).ready(function() {
                     }
                 },
                 error : function (XMLHttpRequest, textStatus, errorThrown) {
-                    $.jGrowl("Failed to create Subscription: " + subscriptionJson.subscriptionName + " Error: " + XMLHttpRequest.responseText, {
-                        sticky : false,
-                        theme : 'Error'
-                    });
+                  reload_table();
+                  $.jGrowl("Failed to create next Subscriptions", {sticky: false, theme: 'Error'});
+                  var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                  for (var i = 0; i < responseJSON.length; i++) {
+                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
+                  }
                 },
                 complete : function () {
                 }
@@ -548,7 +553,7 @@ jQuery(document).ready(function() {
                 theme : 'Notify'
             });
             var subscriptionJsonList = JSON.parse(fileContent);
-                tryToCreateSubscription(subscriptionJsonList);
+            tryToCreateSubscription(subscriptionJsonList);
             };
             reader.readAsText(subscriptionFile);
         }
@@ -653,6 +658,9 @@ jQuery(document).ready(function() {
             vm.subscription([]);
             // Map JSON to Model and observableArray
             var mappedPackageInfo = $.map(returnData, function (item) {
+                if (item.foundSubscriptions != null) {
+                    item = item.foundSubscriptions;
+                }
                 // Defining Observable on all parameters in Requirements array(which is defined as ObservableArray)
                 for (i=0; i < item[0].requirements.length; i++) {
                     var conditions_array = [];
@@ -847,10 +855,10 @@ jQuery(document).ready(function() {
                 }
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
-                $.jGrowl("Error: " + XMLHttpRequest.responseText, {
-                    sticky : true,
-                    theme : 'Error'
-                });
+                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                for (var i = 0; i < responseJSON.length; i++) {
+                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
+                }
             },
             complete : function () {
                 $('#btnSave').text('save'); //change button text
