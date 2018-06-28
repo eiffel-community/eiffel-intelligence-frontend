@@ -33,6 +33,8 @@ public class IndexPage extends PageBaseClass {
         testRulesBtn.click();
 
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
+        waitForJQueryToLoad();
+
         return testRulesPage;
     }
 
