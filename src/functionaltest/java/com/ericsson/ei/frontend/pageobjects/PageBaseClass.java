@@ -50,6 +50,8 @@ public class PageBaseClass {
         WebDriverWait webDriverWait = new WebDriverWait(driver, 30);
         webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                 .executeScript("return document.readyState").equals("complete"));
+        webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
+                .executeScript("return !!window.jQuery && window.jQuery.active == 0").equals(true));
     }
 
     protected CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {
