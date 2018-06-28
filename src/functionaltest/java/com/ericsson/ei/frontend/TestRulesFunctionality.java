@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -35,7 +34,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         // Load index page and wait for it to load
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
-        TimeUnit.SECONDS.sleep(3);
 
         // Verify that we can navigate to test rules page
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
