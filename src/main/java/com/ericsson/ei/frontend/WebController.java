@@ -50,90 +50,38 @@ public class WebController {
 
     @RequestMapping("/")
     public String greeting(Model model) {
-<<<<<<< HEAD
-        // inject
-        // in
-        // DOM
-        // for
-        // AJAX
-        // etc
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-        String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
-        model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks); // inject
-                                                                                        // in
-                                                                                        // DOM
-                                                                                        // for
-                                                                                        // AJAX
-                                                                                        // etc
-=======
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "index";
     }
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-=======
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "subscription";
     }
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-=======
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-        String backendServerUrl = String.format("http://%s:%d", backEndInformation.getHost(),
-                backEndInformation.getPort());
-=======
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         model.addAttribute("backendServerUrl", backendServerUrl);
         return "eiInfo";
     }
 
     @RequestMapping("/login.html")
     public String login(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-=======
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "login";
     }
 
@@ -145,31 +93,13 @@ public class WebController {
 
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-=======
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "add-instances";
     }
 
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
-<<<<<<< HEAD
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl()); // inject
-                                                                           // in
-                                                                           // DOM
-                                                                           // for
-                                                                           // AJAX
-                                                                           // etc
-=======
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
->>>>>>> 5d51a4ee9b4ebcf602603f7e8fdf6839e4d537af
         return "switch-backend";
     }
 
