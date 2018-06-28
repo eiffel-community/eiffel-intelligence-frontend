@@ -28,13 +28,13 @@
                 <tbody data-bind="foreach: instances">
                 <tr>
                     <td align="center"><input align="center" name="activate" type="radio"
-                                              data-bind="checked: active, checkedValue: true, click: $parent.checked"/></td>
-                    <td data-bind="text: name" align="center"></td>
+                                              data-bind="checked: active, checkedValue: true, click: $parent.checked, attr: { id: 'SelectBackendInstance' + $index()}"/></td>
+                    <td data-bind="text: name, attr: { id: 'BackendInstance' + $index() + 'Name'}" align="center"></td>
                     <td data-bind="text: host" align="center"></td>
                     <td data-bind="text: port" align="center"></td>
                     <td data-bind="text: path" align="center"></td>
                     <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
-                    <td align="center"><a href="#" data-bind="click: $parent.removeInstance">Remove</a></td>
+                    <td align="center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()}">Remove</a></td>
                 </tr>
                 </tbody>
             </table>

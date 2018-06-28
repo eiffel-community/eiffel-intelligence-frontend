@@ -21,7 +21,7 @@ public class SubscriptionPage extends PageBaseClass {
             throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
-    
+
     public boolean presenceOfHeader(String loc) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
@@ -135,15 +135,19 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
         getTemplateButton.click();
     }
-    
+
     public void clickViewBtn() {
         WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View')]")));
         viewBtn.click();
     }
-    
+
     public void clickFormCloseBtn() {
         WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.className("close")));
         viewBtn.click();
     }
 
+    public String getSubscriptionNameFromSubscription() {
+        WebElement subscriptionNameElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[@class='odd']/td[2]")));
+        return subscriptionNameElement.getText();
+    }
 }

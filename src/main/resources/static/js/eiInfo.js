@@ -73,6 +73,7 @@ jQuery(document).ready(function() {
         tdKey.appendChild(document.createTextNode('EI Backend Connected Server'));
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
+	tdValue.id = "connectedBackend"
         tdValue.appendChild(document.createTextNode(backendServerUrl));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);

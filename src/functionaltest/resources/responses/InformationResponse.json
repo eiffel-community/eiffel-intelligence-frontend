@@ -1,0 +1,84 @@
+{
+  "applicationName": "eiffel-intelligence",
+  "version": "0.0.10",
+  "testRulesEnabled": "false",
+  "rabbitmq": [
+    {
+      "queueDurable": true,
+      "host": "localhost",
+      "exchangeName": "ei-poc-4",
+      "port": 5672,
+      "tlsVersion": "",
+      "domainId": "er001-eiffelxxx",
+      "componentName": "eiffelintelligence",
+      "waitlistSufix": "waitlist",
+      "bindingKey": "#",
+      "consumerName": "messageConsumer",
+      "waitlistQueueName": "er001-eiffelxxx.eiffelintelligence.messageConsumer.durable.waitlist",
+      "queueName": "er001-eiffelxxx.eiffelintelligence.messageConsumer.durable"
+    }
+  ],
+  "mongodb": [
+    {
+      "host": "localhost",
+      "port": "27017",
+      "database": "eiffel_intelligence"
+    }
+  ],
+  "threads": [
+    {
+      "corePoolSize": 100,
+      "queueCapacity": 5000,
+      "maxPoolSize": 150
+    }
+  ],
+  "email": [
+    {
+      "sender": "noreply@ericsson.com",
+      "subject": "Email Subscription Notification"
+    }
+  ],
+  "mailServerValues": [
+    {
+      "host": "",
+      "port": "",
+      "username": "",
+      "smtpAuth": "false",
+      "startTls": "false"
+    }
+  ],
+  "ldap": {
+    "enabled": "false",
+    "url": "",
+    "baseDn": "",
+    "filter": "",
+    "username": ""
+  },
+  "waitList": [
+    {
+      "collectionName": "wait_list",
+      "databaseName": "eiffel_intelligence",
+      "ttlValue": 600,
+      "waitList": []
+    }
+  ],
+  "objectHandler": {
+    "collectionName": "aggregated_objects",
+    "databaseName": "eiffel_intelligence",
+    "ttlValue": "",
+    "ttl": 0
+  },
+  "subscriptionHandler": {
+    "subscriptionCollectionName": "subscription",
+    "subscriptionDataBaseName": "eiffel_intelligence"
+  },
+  "informSubscription": {
+    "failAttempt": 3,
+    "missedNotificationCollectionName": "Notification",
+    "missedNotificationDataBaseName": "MissedNotification",
+    "ttlValue": 600
+  },
+  "erUrl": {
+    "url": ""
+  }
+}

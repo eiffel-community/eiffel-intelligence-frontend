@@ -10,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
@@ -18,6 +20,15 @@ public class IndexPage extends PageBaseClass {
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver,
             String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
+    }
+
+    public Boolean presenceOfReloadButton() {
+        try {
+            driver.findElement(By.className("table_reload"));
+            return true;
+        } catch (NoSuchElementException e){
+            return false;
+        }
     }
 
     public IndexPage loadPage() {
@@ -31,7 +42,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws ClientProtocolException, IOException {
-    	WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
+        WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
 
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
@@ -39,8 +50,9 @@ public class IndexPage extends PageBaseClass {
 
         return testRulesPage;
     }
-    
+
     public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
+      new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
       WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
       subscriptionBtn.click();
       SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
@@ -57,14 +69,40 @@ public class IndexPage extends PageBaseClass {
         reloadButton.click();
     }
 
+    public void clickAdminBackendInstancesBtn() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("adminBackendInstancesBtn")));
+        WebElement adminBackendInstancesBtn = driver.findElement(By.id("adminBackendInstancesBtn"));
+        adminBackendInstancesBtn.click();
+    }
 
-    public Object presenceOfReloadButton() {
-        try {
-            driver.findElement(By.className("table_reload"));
-            return true;
-        } catch (NoSuchElementException e){
-            return false;
-        }
+    public AddBackendPage clickAddBackendInstanceBtn() throws ClientProtocolException, IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addInstanceBtn")));
+        WebElement addInstanceBtn = driver.findElement(By.id("addInstanceBtn"));
+        addInstanceBtn.click();
+
+        AddBackendPage addBackendPage = new AddBackendPage(mockedHttpClient, driver, baseUrl);
+        waitForJQueryToLoad();
+
+        return addBackendPage;
+    }
+
+    public InfoPage clickEiInfoBtn() throws ClientProtocolException, IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("eiInfoBtn")));
+        WebElement eiInfoBtn = driver.findElement(By.id("eiInfoBtn"));
+        eiInfoBtn.click();
+
+        InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);
+        waitForJQueryToLoad();
+
+        return infoPage;
+    }
+
+    public void clickSwitchBackendButton() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcherBtn")));
+        WebElement switcherBtn = driver.findElement(By.id("switcherBtn"));
+        switcherBtn.click();
+
+        waitForJQueryToLoad();
     }
 
 }
