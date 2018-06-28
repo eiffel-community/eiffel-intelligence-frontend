@@ -1,6 +1,6 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -14,26 +14,24 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
-
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.firefox.FirefoxDriver;
-
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PageBaseClass {
-
+    // EIRequestsController mockEIRequestsController;
     CloseableHttpClient mockedHttpClient;
     CloseableHttpResponse mockedHttpResponse;
 
-    protected FirefoxDriver driver;
+    protected WebDriver driver;
     protected String baseUrl;
 
     public PageBaseClass(CloseableHttpClient mockedHttpClient,
-            FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
-
+            WebDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super();
         this.mockedHttpClient = mockedHttpClient;
         this.driver = driver;
@@ -50,8 +48,6 @@ public class PageBaseClass {
         WebDriverWait webDriverWait = new WebDriverWait(driver, 30);
         webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                 .executeScript("return document.readyState").equals("complete"));
-        webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
-                .executeScript("return !!window.jQuery && window.jQuery.active == 0").equals(true));
     }
 
     protected CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {
