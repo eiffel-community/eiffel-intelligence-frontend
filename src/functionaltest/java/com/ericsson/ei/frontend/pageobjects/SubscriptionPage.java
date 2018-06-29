@@ -32,7 +32,6 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickAddSubscription() {
-        // waitForJQueryToLoad();
         WebElement addSubscriptionBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Add a new subscription to EI')]"));
         addSubscriptionBtn.click();
@@ -45,11 +44,7 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickBulkDelete(String response) throws InterruptedException {
-        // waitForJQueryToLoad();
-
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-
-        // Checks that argument in the request contains "subscriptions" endpoint
         try {
             Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
                     .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
@@ -61,18 +56,13 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement bulkDeleteBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Delete all marked subscriptions from EI')]"));
         bulkDeleteBtn.click();
-
-        TimeUnit.SECONDS.sleep(6);
-
+        TimeUnit.SECONDS.sleep(2);
         driver.findElement(By.xpath("//button[contains(text(),'confirm')]")).click();
 
     }
 
     public void clickReload(String response) {
-        // waitForJQueryToLoad();
-
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-
         // Checks that argument in the request contains "subscriptions" endpoint
         try {
             Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
@@ -80,14 +70,12 @@ public class SubscriptionPage extends PageBaseClass {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         WebElement reloadBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Reload all subscriptions data from EI')]"));
         reloadBtn.click();
     }
 
     public void clickGetTemplate(String response) {
-        // waitForJQueryToLoad();
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         try {
             Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
@@ -130,15 +118,12 @@ public class SubscriptionPage extends PageBaseClass {
 
     public void clickFormsSaveBtn(String response) {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-
-        // Checks that argument in the request contains "subscriptions" endpoint
         try {
             Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
                     .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         WebElement saveBtn = driver.findElement(By.xpath("//button[contains(@title,'Save the changes to EI.')]"));
         saveBtn.click();
     }
@@ -173,8 +158,7 @@ public class SubscriptionPage extends PageBaseClass {
    public void addFieldValue(String path , String value){
         WebElement ele = driver.findElement(By.xpath(path));
         ele.clear();
-        ele.sendKeys(value);
-        
+        ele.sendKeys(value);        
     }
 
 }

@@ -20,17 +20,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class TestRulesPage extends PageBaseClass {
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient,
-//<<<<<<< HEAD
-//            WebDriver driver, String baseUrl) throws ClientProtocolException, IOException {
-//        super(mockedHttpClient, driver, baseUrl);
-//    }
-//
-//    public String getMainHeader() {
-//        WebElement mainHeader = driver.findElement(By.xpath("/html/body/div[3]/div[1]/div[2]/div[1]/h1"));
-//        return mainHeader.getText();
-//    }
-//
-//=======
+
             FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
@@ -152,5 +142,5 @@ public class TestRulesPage extends PageBaseClass {
         WebElement aggregatedResultDataElement = driver.findElement(By.id("aggregatedresultData"));
         return aggregatedResultDataElement.getAttribute("textContent").replaceAll("[\\n ]", "");
     }
-//>>>>>>> 887adf6db820cb9c6204514026d7522023e5dfcf
+
 }

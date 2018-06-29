@@ -41,10 +41,8 @@ public class IndexPage extends PageBaseClass {
     }
     
     public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
-//      waitForJQueryToLoad();
       WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
       subscriptionBtn.click();
-
       SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
       return subscriptionPage;
   }
