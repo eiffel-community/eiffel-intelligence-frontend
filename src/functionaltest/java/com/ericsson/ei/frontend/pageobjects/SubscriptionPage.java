@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -160,5 +161,37 @@ public class SubscriptionPage extends PageBaseClass {
         ele.clear();
         ele.sendKeys(value);        
     }
+    
+  public void clickUploadSubscriptionFunctionality(String filePath,String subUploadResponse) {
+      CloseableHttpResponse responseData = this.createMockedHTTPResponse(subUploadResponse, 200);
+      try {
+          Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
+                  .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+      
+      WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
+      
+      uploadInputField.sendKeys(filePath);      
+  }
+  
+  public Boolean presenceOfClickGetTemplateButton() {
+      try {
+          driver.findElement(By.className("get_subscription_template"));
+          return true;
+      } catch (NoSuchElementException e){
+          return false;
+      }
+  }
+  
+  public void clickDownloadGetTemplate(String responseData) throws ClientProtocolException, IOException, InterruptedException {
+      CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
+      Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
+          ((HttpRequestBase)request).getURI().toString().contains("/subscriptionsTemplate")));
+
+      WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
+      getTemplateButton.click();
+  }
 
 }

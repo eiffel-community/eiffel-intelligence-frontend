@@ -38,7 +38,7 @@ public class SeleniumConfig {
         }
 
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                .setHeadless(true)
+                .setHeadless(false)
                 .setProfile(firefoxProfile);
 
         driver = new FirefoxDriver(firefoxOptions);

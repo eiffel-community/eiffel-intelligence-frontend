@@ -52,5 +52,59 @@
     "_id":{  
       "$oid":"5ad6f907c242af3f1469751e"
     }
+  },
+  {  
+    "aggregationtype":"eiffel-intelligence",
+    "created":1524223397628,
+    "notificationMeta":"http://<MyHost:port>/api/doit",
+    "notificationType":"REST_POST",
+    "restPostBodyMediaType":"application/json",
+    "notificationMessageKeyValues":[  
+      {  
+        "formkey":"",
+        "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
+      }
+    ],
+    "repeat":false,
+    "requirements":[  
+      {  
+        "conditions":[  
+          {  
+            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+          }
+        ]
+      }
+    ],
+    "subscriptionName":"Selenium_test_subscription",
+    "_id":{  
+      "$oid":"5ad9cda5b715d336247e4980"
+    }
+  },
+  {  
+    "aggregationtype":"eiffel-intelligence",
+    "created":1524223397628,
+    "notificationMeta":"http://<MyHost:port>/api/doit",
+    "notificationType":"REST_POST",
+    "restPostBodyMediaType":"application/json",
+    "notificationMessageKeyValues":[  
+      {  
+        "formkey":"",
+        "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
+      }
+    ],
+    "repeat":false,
+    "requirements":[  
+      {  
+        "conditions":[  
+          {  
+            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+          }
+        ]
+      }
+    ],
+    "subscriptionName":"Subscription_uploaded",
+    "_id":{  
+      "$oid":"5ad9cda5b715d336247e4980"
+    }
   }
 ]
