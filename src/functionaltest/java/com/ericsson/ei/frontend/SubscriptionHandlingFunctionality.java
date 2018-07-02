@@ -132,7 +132,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // Upload a subscription, name as "Subscription_uploaded" with "Upload SUbscriptions" button and verify
         String uploadFilePath = new File("src/test/resources/Subscription_upload.txt").getAbsolutePath();
         String mockedUploadResponse = this.getJSONStringFromFile(UPLOADFILEPATH);
-        subscriptionPage.clickUploadSubscriptionFunctionality(uploadFilePath, mockedUploadResponse);
+        subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADEDTEMPLATEFILEPATH, mockedUploadResponse);
         new WebDriverWait(driver, 10).until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded")));        
     }
 }
