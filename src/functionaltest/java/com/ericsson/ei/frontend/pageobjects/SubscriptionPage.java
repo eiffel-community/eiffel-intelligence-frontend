@@ -1,10 +1,5 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -15,7 +10,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -27,9 +21,22 @@ public class SubscriptionPage extends PageBaseClass {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public String getMainHeader(String path) {
-        WebElement mainHeader = driver.findElement(By.xpath(path));
-        return mainHeader.getText();
+    public boolean presenceOfHeader(String path) {
+        try {
+            driver.findElement(By.xpath(path));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public Boolean presenceOfSubscriptionButton() {
+        try {
+            driver.findElement(By.xpath("//button[contains(@title,'Add a new subscription to EI')]"));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public void clickAddSubscription() {
@@ -44,14 +51,11 @@ public class SubscriptionPage extends PageBaseClass {
         cancelBtn.click();
     }
 
-    public void clickBulkDelete(String response) throws InterruptedException {
+    public void clickBulkDelete(String response) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        try {
-            Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                    .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+
         WebElement checkbox = driver.findElement(By.id("check-all"));
         checkbox.click();
         WebElement bulkDeleteBtn = driver
@@ -62,87 +66,48 @@ public class SubscriptionPage extends PageBaseClass {
 
     }
 
-    public void clickReload(String response) {
+    public void clickReload(String response) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         // Checks that argument in the request contains "subscriptions" endpoint
-        try {
-            Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                    .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
         WebElement reloadBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Reload all subscriptions data from EI')]"));
         reloadBtn.click();
     }
 
-    public void clickGetTemplate(String response) {
+    public void clickGetTemplate(String response) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        try {
-            Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                    .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+
         WebElement getTemplateBtn = driver
                 .findElement(By.xpath("//button[contains(@title,'Download Subscription JSON template')]"));
         getTemplateBtn.click();
-        
+
     }
 
-    public void clickUploadSubscriptions(String filePath, String response) throws AWTException {
+    public void clickFormsSaveBtn(String response) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        try {
-            Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                    .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        WebElement uploadSubscriptionBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Upload Subscription JSON')]"));
-        uploadSubscriptionBtn.click();
-        System.setProperty("java.awt.headless", "false");
-        StringSelection ss = new StringSelection(filePath);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-
-        Robot r = new Robot();
-        r.keyPress(KeyEvent.VK_ENTER);
-        r.keyRelease(KeyEvent.VK_ENTER);
-        r.keyPress(KeyEvent.VK_CONTROL);
-        r.keyPress(KeyEvent.VK_V);
-        r.keyRelease(KeyEvent.VK_V);
-        r.keyRelease(KeyEvent.VK_CONTROL);
-        r.keyPress(KeyEvent.VK_ENTER);
-        r.keyRelease(KeyEvent.VK_ENTER);
-    }
-
-    public void clickFormsSaveBtn(String response) {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        try {
-            Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                    .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
         WebElement saveBtn = driver.findElement(By.xpath("//button[contains(@title,'Save the changes to EI.')]"));
         saveBtn.click();
     }
-    
+
     public void clickKVbtn(String path) {
         WebElement kvBtn = driver.findElement(By.xpath(path));
         kvBtn.click();
     }
 
- 
     public void selectDropdown(String path, String value) {
-        WebElement selectEle = driver
-                .findElement(By.xpath(path));
+        WebElement selectEle = driver.findElement(By.xpath(path));
         Select dropdown = new Select(selectEle);
         // dropdown.getFirstSelectedOption().getText();
-        dropdown.selectByVisibleText(value);        
-    }    
-    
+        dropdown.selectByVisibleText(value);
+    }
 
     public String getValueFromSelect() {
         WebElement selectNotificationType = driver
@@ -156,42 +121,38 @@ public class SubscriptionPage extends PageBaseClass {
                 .getAttribute("value");
     }
 
-   public void addFieldValue(String path , String value){
+    public void addFieldValue(String path, String value) {
         WebElement ele = driver.findElement(By.xpath(path));
         ele.clear();
-        ele.sendKeys(value);        
+        ele.sendKeys(value);
     }
-    
-  public void clickUploadSubscriptionFunctionality(String filePath,String subUploadResponse) {
-      CloseableHttpResponse responseData = this.createMockedHTTPResponse(subUploadResponse, 200);
-      try {
-          Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                  .argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-      
-      WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
-      
-      uploadInputField.sendKeys(filePath);      
-  }
-  
-  public Boolean presenceOfClickGetTemplateButton() {
-      try {
-          driver.findElement(By.className("get_subscription_template"));
-          return true;
-      } catch (NoSuchElementException e){
-          return false;
-      }
-  }
-  
-  public void clickDownloadGetTemplate(String responseData) throws ClientProtocolException, IOException, InterruptedException {
-      CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-      Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-          ((HttpRequestBase)request).getURI().toString().contains("/subscriptionsTemplate")));
 
-      WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
-      getTemplateButton.click();
-  }
+    public void clickUploadSubscriptionFunctionality(String filePath, String subUploadResponse)
+            throws ClientProtocolException, IOException, InterruptedException {
+        CloseableHttpResponse responseData = this.createMockedHTTPResponse(subUploadResponse, 200);
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+
+        WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
+        uploadInputField.sendKeys(filePath);
+    }
+
+    public Boolean presenceOfClickGetTemplateButton() {
+        try {
+            driver.findElement(By.className("get_subscription_template"));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public void clickDownloadGetTemplate(String responseData)
+            throws ClientProtocolException, IOException, InterruptedException {
+        CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
+        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(
+                request -> ((HttpRequestBase) request).getURI().toString().contains("/subscriptionsTemplate")));
+        WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
+        getTemplateButton.click();
+    }
 
 }

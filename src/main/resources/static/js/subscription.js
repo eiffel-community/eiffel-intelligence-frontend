@@ -567,59 +567,6 @@ jQuery(document).ready(function() {
     $('.container').on( 'click', 'button.upload_subscriptions', function (event) {
     	event.stopPropagation();
         event.preventDefault();
-//        function tryToCreateSubscription(subscriptionJson) {
-//        	// Send Subscription JSON file to Spring MVC
-//            // AJAX Callback handling
-//            var callback = {
-//                beforeSend : function () {
-//                },
-//                success : function (data, textStatus) {
-//                    var returnData = [data];
-//                    if (returnData.length > 0) {
-//                        $.jGrowl("Subscriptions are successfully created", {
-//                            sticky : false,
-//                            theme : 'Error'
-//                        });
-//                        reload_table();
-//                    }
-//                },
-//                error : function (XMLHttpRequest, textStatus, errorThrown) {
-//                  reload_table();
-//                  $.jGrowl("Failed to create next Subscriptions", {sticky: false, theme: 'Error'});
-//                  var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-//                  for (var i = 0; i < responseJSON.length; i++) {
-//                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
-//                  }
-//                },
-//                complete : function () {
-//                }
-//            };
-//            // Perform AJAX
-//            var ajaxHttpSender = new AjaxHttpSender();
-//            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
-//        }
-        
-//        function validateJsonAndCreateSubscriptions(subscriptionFile){
-//            var reader = new FileReader();
-//            reader.onload = function() {
-//            var fileContent = reader.result;
-//            var jsonLintResult="";
-//            try {
-//            	jsonLintResult = jsonlint.parse(fileContent);
-//            } catch (e) {
-//            	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-//            	return false;
-//            }
-//            $.jGrowl('JSON Format Check Succeeded', {
-//                sticky : false,
-//                theme : 'Notify'
-//            });
-//            var subscriptionJsonList = JSON.parse(fileContent);
-//            tryToCreateSubscription(subscriptionJsonList);
-//            };
-//            reader.readAsText(subscriptionFile);
-//        }
-
 
         function createUploadWindow() {
 //            var pom = document.createElement('input');
@@ -639,7 +586,6 @@ jQuery(document).ready(function() {
                 pom.click();
             }
         }
-
 
         function createUploadWindowMSExplorer() {
             $('#upload_subscription_file').click();
