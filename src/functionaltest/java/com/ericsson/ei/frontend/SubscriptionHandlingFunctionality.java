@@ -120,12 +120,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
          subscriptionPage.clickBulkDelete(mockedDeleteResponse);
          assertFalse(driver.getPageSource().contains("Subscription1"));
          assertFalse(driver.getPageSource().contains("Subscription2"));
-         System.out.println("1==============================================================================="+driver.getPageSource().contains("Subscription1"));
-         TimeUnit.SECONDS.sleep(5);
-         System.out.println("1==============================================================================="+driver.getPageSource().contains("Subscription1"));
-         System.out.println("2==============================================================================="+driver.getPageSource().contains("Subscription2"));
-         TimeUnit.SECONDS.sleep(5);
-         System.out.println("1==============================================================================="+driver.getPageSource().contains("Subscription1"));
 
         // Verify that "get template" button works
         String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTIONTEMPLATEFILEPATH);
