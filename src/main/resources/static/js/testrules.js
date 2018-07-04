@@ -161,7 +161,6 @@ jQuery(document).ready(
           };
           
             var ajaxHttpSender = new AjaxHttpSender();
-            //console.log(JSON.stringify(JSON.parse('{"listRulesJson":' + JSON.stringify(formRules) + ',"listEventsJson":' + events.toString() + '}')));
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", JSON.stringify(JSON.parse('{"listRulesJson":'
                 + JSON.stringify(formRules) + ',"listEventsJson":' + JSON.stringify(formEvents) + '}')), callback);
         };
@@ -185,81 +184,36 @@ jQuery(document).ready(
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
 
-      //Upload events list json data
-      $(".container").on("click", "button.upload_rules", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
+      function validateRulesJsonAndCreateSubscriptions(subscriptionFile) {
+	      var reader = new FileReader();
+	      reader.onload = function() {
+	        var fileContent = reader.result;
+	        var jsonLintResult = "";
+	        try {
+	          jsonLintResult = jsonlint.parse(fileContent);
+	        } catch (e) {
+	          $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+	          return false;
+	        }
+	        $.jGrowl('JSON Format Check Succeeded', {
+	          sticky : false,
+	          theme : 'Notify'
+	        });
 
-        function validateJsonAndCreateSubscriptions(subscriptionFile) {
-          var reader = new FileReader();
-          reader.onload = function() {
-            var fileContent = reader.result;
-            var jsonLintResult = "";
-            try {
-              jsonLintResult = jsonlint.parse(fileContent);
-            } catch (e) {
-              $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-              return false;
-            }
-            $.jGrowl('JSON Format Check Succeeded', {
-              sticky : false,
-              theme : 'Notify'
-            });
+	        var rulesList = JSON.parse(fileContent);
+	        ko.cleanNode($("#testRulesDOMObject")[0]);
+	        ko.cleanNode($("#submitButton")[0]);
+	        $("#testRulesDOMObject").css('min-height', $(".navbar-sidenav").height() - 180);
+	        vm.rulesBindingList.removeAll();
+	        $('.rulesListDisplay > div:gt(0)').remove();
+	        vm.rulesBindingList = ko.observableArray(rulesList);
+	        ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
+	        ko.applyBindings(vm, $("#submitButton")[0]);
+	      };
+	    reader.readAsText(subscriptionFile);
+      }
 
-            var rulesList = JSON.parse(fileContent);
-            ko.cleanNode($("#testRulesDOMObject")[0]);
-            ko.cleanNode($("#submitButton")[0]);
-            $("#testRulesDOMObject").css('min-height', $(".navbar-sidenav").height() - 180);
-            vm.rulesBindingList.removeAll();
-            $('.rulesListDisplay > div:gt(0)').remove();
-            vm.rulesBindingList = ko.observableArray(rulesList);
-            ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
-            ko.applyBindings(vm, $("#submitButton")[0]);
-          };
-          reader.readAsText(subscriptionFile);
-        }
-
-        function createUploadWindow() {
-          var pom = document.createElement('input');
-          pom.setAttribute('id', 'uploadFile');
-          pom.setAttribute('type', 'file');
-          pom.setAttribute('name', 'upFile');
-          pom.onchange = function uploadFinished() {
-            var subscriptionFile = pom.files[0];
-            validateJsonAndCreateSubscriptions(subscriptionFile);
-          };
-          if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pom.dispatchEvent(event);
-          } else {
-            pom.click();
-          }
-        }
-
-        function createUploadWindowMSExplorer() {
-          $('#upload_rules').click();
-          var file = $('#upload_rules').prop('files')[0];
-          validateJsonAndCreateSubscriptions(file);
-        }
-
-        // If MS Internet Explorer -> special handling for creating
-        // download
-        // file window.
-        if (window.navigator.msSaveOrOpenBlob) {
-          createUploadWindowMSExplorer();
-        } else {
-          // HTML5 Download File window handling
-          createUploadWindow();
-        }
-      });
-
-      //Upload list of events json data
-      $(".container").on("click", "button.upload_events", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-
-        function validateJsonAndCreateSubscriptions(subscriptionFile) {
+      function validateEventsJsonAndCreateSubscriptions(subscriptionFile) {
           var reader = new FileReader();
           reader.onload = function() {
             var fileContent = reader.result;
@@ -282,30 +236,72 @@ jQuery(document).ready(
             ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
           };
           reader.readAsText(subscriptionFile);
-        }
+       }
 
-        function createUploadWindow() {
-          var pom = document.createElement('input');
-          pom.setAttribute('id', 'uploadFile');
-          pom.setAttribute('type', 'file');
-          pom.setAttribute('name', 'upFile');
-          pom.onchange = function uploadFinished() {
-            var subscriptionFile = pom.files[0];
-            validateJsonAndCreateSubscriptions(subscriptionFile);
+        //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
+        var pomRules = document.getElementById('uploadRulesFile');
+        pomRules.onchange = function uploadFinished() {
+            var subscriptionFile = pomRules.files[0];
+            validateRulesJsonAndCreateSubscriptions(subscriptionFile);
+        };
+        
+        var pomEvents = document.getElementById('uploadEventsFile');
+          pomEvents.onchange = function uploadFinished() {
+            var subscriptionFile = pomEvents.files[0];
+            validateEventsJsonAndCreateSubscriptions(subscriptionFile);
           };
+          
+      //Upload events list json data
+      $(".container").on("click", "button.upload_rules", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        function createRulesUploadWindow() {
           if (document.createEvent) {
             var event = document.createEvent('MouseEvents');
             event.initEvent('click', true, true);
-            pom.dispatchEvent(event);
+            pomRules.dispatchEvent(event);
           } else {
-            pom.click();
+            pomRules.click();
+          }
+        }
+        
+        function createUploadWindowMSExplorer() {
+          $('#upload_rules').click();
+          var file = $('#upload_rules').prop('files')[0];
+          validateRulesJsonAndCreateSubscriptions(file);
+        }
+
+        // If MS Internet Explorer -> special handling for creating
+        // download
+        // file window.
+        if (window.navigator.msSaveOrOpenBlob) {
+          createUploadWindowMSExplorer();
+        } else {
+          // HTML5 Download File window handling
+          createRulesUploadWindow();
+        }
+      });
+
+      //Upload list of events json data
+      $(".container").on("click", "button.upload_events", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        function createUploadWindow() {
+          if (document.createEvent) {
+            var event = document.createEvent('MouseEvents');
+            event.initEvent('click', true, true);
+            pomEvents.dispatchEvent(event);
+          } else {
+            pomEvents.click();
           }
         }
 
         function createUploadWindowMSExplorer() {
           $('#upload_events').click();
           var file = $('#upload_events').prop('files')[0];
-          validateJsonAndCreateSubscriptions(file);
+          validateEventsJsonAndCreateSubscriptions(file);
         }
 
         // If MS Internet Explorer -> special handling for creating download

@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend;
 
 import org.junit.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
 
@@ -18,13 +19,14 @@ public class TemplateTestCase extends SeleniumBaseClass{
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
 
         //The lines below contains selenium interaction with mocking
-        String response = this.getResponseObjectFromFile(
+        String response = this.getJSONStringFromFile(
                 "src/functionaltest/resources/responses/SubscriptionObjects.json");
+        new WebDriverWait(driver, 10).until((webdriver) -> indexPageObject.presenceOfReloadButton());
         indexPageObject.clickReloadButton(response);
 
         //Click on test rules page button and verify that it is opened
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
-        assertEquals("Test Rules", testRulesPage.getTestRulesHeader());
+        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader());
     }
 
 }

@@ -25,7 +25,7 @@
                         <button data-toggle="tooltip" title="Upload List of Rules" class="btn btn-primary upload_rules">
                             Upload Rules <i class="fa fa-fw  fa-upload"></i>
                         </button>
-                        <input class="hidden" type='file' id='upload_rules_file' name='file' style="display: none" />
+                        <input class="hidden" type='file' id='uploadRulesFile' name='file' style="position: absolute; left: -999em;" />
                     </div>
                     <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Download rules template"
@@ -34,7 +34,7 @@
                         </button>
                     </div>
                     <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary"
+                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_rule"
                             data-bind="click : $root.addRule.bind()">
                             Add Rule<i class="fa fa-fw  fa-plus"></i>
                         </button>
@@ -66,7 +66,7 @@
                             class="btn btn-primary upload_events">
                             Upload Events <i class="fa fa-fw  fa-upload"></i>
                         </button>
-                        <input class="hidden" type='file' id='upload_events_file' name='file' style="display: none" />
+                        <input class="hidden" type='file' id='uploadEventsFile' name='file' style="position: absolute; left: -999em;" />
                     </div>
                     <div style="padding: 10px">
                         <button data-toggle="tooltip" title="Download events template"
@@ -75,7 +75,7 @@
                         </button>
                     </div>
                     <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary"
+                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_event"
                             data-bind="click : $root.addEvent.bind()">
                             Add Event<i class="fa fa-fw  fa-plus"></i>
                         </button>
@@ -109,7 +109,7 @@
                     </button>
                 </div>
                 <div class="col-2">
-                    <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-success"
+                    <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-success find_aggregated_object"
                         data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
                 </div>
             </div>
