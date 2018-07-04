@@ -1,8 +1,6 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -23,19 +21,10 @@ public class SubscriptionPage extends PageBaseClass {
             throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
-
-    public boolean presenceOfHeader(String path) {
+    
+    public boolean presenceOfHeader(String loc) {
         try {
-            driver.findElement(By.xpath(path));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    public Boolean presenceOfSubscriptionButton() {
-        try {
-            driver.findElement(By.xpath("//button[contains(@title,'Add a new subscription to EI')]"));
+            wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
             return true;
         } catch (NoSuchElementException e) {
             return false;
@@ -43,14 +32,12 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickAddSubscription() {
-        WebElement addSubscriptionBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Add a new subscription to EI')]"));
+        WebElement addSubscriptionBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
         addSubscriptionBtn.click();
     }
 
     public void clickFormsCancelBtn() {
-        WebElement cancelBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Cancel and abort all changes')]"));
+        WebElement cancelBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("cancelButton")));
         cancelBtn.click();
     }
 
@@ -88,7 +75,7 @@ public class SubscriptionPage extends PageBaseClass {
 
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        WebElement saveBtn = driver.findElement(By.xpath("//button[contains(@title,'Save the changes to EI.')]"));
+        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("btnSave")));
         saveBtn.click();
     }
 
@@ -104,15 +91,15 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public String getValueFromSelect() {
-        WebElement selectNotificationType = driver
-                .findElement(By.xpath("//select[contains(@title,'Choose a notification type')]"));
+        WebElement selectNotificationType = wait
+                .until(ExpectedConditions.elementToBeClickable(By.id("notificationType")));
         Select dropdown = new Select(selectNotificationType);
         return dropdown.getFirstSelectedOption().getText();
     }
 
     public String getValueFromElement() {
-        return driver.findElement(By.xpath("//textarea[contains(@title,'Specify notification meta data')]"))
-                .getAttribute("value");
+        WebElement metaTxt = wait.until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
+        return metaTxt.getAttribute("value");
     }
 
     public void addFieldValue(String loc, String value) {

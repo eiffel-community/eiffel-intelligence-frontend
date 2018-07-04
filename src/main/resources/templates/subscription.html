@@ -25,7 +25,7 @@
         </button>
     </h1>
 
-    <h3>Subscription Data</h3>
+    <h3 id="subData">Subscription Data</h3>
     <br/>
     <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
         <i class="glyphicon glyphicon-plus"></i> Add Subscription
@@ -113,7 +113,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                             <div>
-                                <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
+                                <select id="notificationType" data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: $data.notificationType,
@@ -216,7 +216,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                             <div>
-                                <textarea data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
+                                <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
                                           name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                 <span class="help-block"></span>
                             </div>

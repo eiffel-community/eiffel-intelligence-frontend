@@ -8,23 +8,21 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
-
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
 public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
 
-    private static final String DOWNLOADEDTEMPLATEFILEPATH = String.join(File.separator,
+    private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
             SeleniumConfig.getTempDownloadDirectory().getPath(), "subscriptionsTemplate.json");
-    private static final String SUBSCRIPTIONTEMPLATEFILEPATH = String.join(File.separator, "src", "functionaltest",
+    private static final String SUBSCRIPTION_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionTemplate.json");
-    private static final String RELOADTESTFILEPATH = String.join(File.separator, "src", "functionaltest", "resources",
-            "responses", "SubscriptionForUploadCase.json");
-    private static final String SAVETESTFILEPATH = String.join(File.separator, "src", "functionaltest", "resources",
+    private static final String RELOAD_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest",
+            "resources", "responses", "SubscriptionForUploadCase.json");
+    private static final String SAVE_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForSaveCase.json");
-    private static final String UPLOADFILEPATH = String.join(File.separator, "src", "functionaltest", "resources",
+    private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
     @Test
@@ -35,59 +33,58 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         indexPageObject.loadPage();
 
         // Click on Subscription Handling page button and verify that it is open
-        String headerPath = "//div[@class='container pull-left']//h1";
+        String subscriptionHeaderID = "subData";
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
-        new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(headerPath));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
         // // Press "Reload" button and verify that two subscriptions with names
         // "Subscription1" and "Subscription2" are present
-        String response = this.getJSONStringFromFile(RELOADTESTFILEPATH);
+        String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
         subscriptionPage.clickReload(response);
-        assert (driver.getPageSource().contains("Subscription1"));
-        assert (driver.getPageSource().contains("Subscription2"));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
 
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
-        assertFalse(driver.getPageSource().contains("Subscription1"));
-        assertFalse(driver.getPageSource().contains("Subscription2"));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1"))==false)));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2"))==false)));
 
         // Verify that "get template" button works
-        String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTIONTEMPLATEFILEPATH);
+        String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
         new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfClickGetTemplateButton());
         subscriptionPage.clickDownloadGetTemplate(mockedTemplateResponse);
-        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADEDTEMPLATEFILEPATH)));
-        String getSubscriptionsTemplate = this.getJSONStringFromFile(DOWNLOADEDTEMPLATEFILEPATH);
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_TEMPLATE_FILE_PATH)));
+        String getSubscriptionsTemplate = this.getJSONStringFromFile(DOWNLOADED_TEMPLATE_FILE_PATH);
         assertEquals(mockedTemplateResponse, getSubscriptionsTemplate);
 
         // Upload a subscription, name as "Subscription_uploaded" with "Upload
         // SUbscriptions" button and verify
-        String mockedUploadResponse = this.getJSONStringFromFile(UPLOADFILEPATH);
-        subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADEDTEMPLATEFILEPATH, mockedUploadResponse);
-        new WebDriverWait(driver, 10).until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded")));
+        String mockedUploadResponse = this.getJSONStringFromFile(UPLOAD_FILE_PATH);
+        subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADED_TEMPLATE_FILE_PATH, mockedUploadResponse);
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded"))));
 
         // Click "Add Subscription" button and verify that "Subscription Form" is open
         subscriptionPage.clickAddSubscription();
-        String xPath = "//*[@id='formHeader']";
-        new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.presenceOfHeader(xPath)));
+        String formHeaderID = "formHeader";
+        assert((subscriptionPage.presenceOfHeader(formHeaderID)));
 
-        // On subscription form, select the template as "Mail Trigger" and verify
         // On subscription form, select the template as "Mail Trigger" and verify
         String selectID = "selectTemplate";
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
-        new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("MAIL")));
-        new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com")));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("MAIL"))));
+        assert(new WebDriverWait(driver, 10)
+                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com"))));
 
         // On subscription form, select the template as "REST POST (Raw Body :JSON)"
         // and verify
         String tempPost = "REST POST (Raw Body : JSON)";
         subscriptionPage.selectDropdown(selectID, tempPost);
-        new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("REST_POST")));
-        new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit")));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("REST_POST"))));
+        assert(new WebDriverWait(driver, 10)
+                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
 
         // On subscription form, select the template as "Jenkins Pipeline Parameterized
         // Job Trigger" and verify
@@ -120,7 +117,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // "selenium_test_subscription" and then click "save" button verification
         // that subscription is added in the datatable (and is displayed on the main
         // page)
-        String responseSave = this.getJSONStringFromFile(SAVETESTFILEPATH);
+        String responseSave = this.getJSONStringFromFile(SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
         assert (driver.getPageSource().contains("Selenium_test_subscription"));
