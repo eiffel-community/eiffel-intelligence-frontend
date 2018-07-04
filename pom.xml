@@ -5,11 +5,8 @@
 
   <groupId>com.github.ericsson</groupId>
   <artifactId>eiffel-intelligence-frontend</artifactId>
-
   <version>0.0.11</version>
   <packaging>war</packaging>
-
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -23,7 +20,6 @@
     <java.version>1.8</java.version>
     <output-relative-path>src/main/java</output-relative-path>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>

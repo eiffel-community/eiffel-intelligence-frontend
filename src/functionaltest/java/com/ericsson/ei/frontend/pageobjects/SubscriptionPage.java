@@ -12,9 +12,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SubscriptionPage extends PageBaseClass {
+    WebDriverWait wait = new WebDriverWait(driver, 15);
 
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws ClientProtocolException, IOException {
@@ -55,25 +58,20 @@ public class SubscriptionPage extends PageBaseClass {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-
-        WebElement checkbox = driver.findElement(By.id("check-all"));
+        WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(By.id("check-all")));
         checkbox.click();
-        WebElement bulkDeleteBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Delete all marked subscriptions from EI')]"));
+        WebElement bulkDeleteBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("bulkDelete")));
         bulkDeleteBtn.click();
-        TimeUnit.SECONDS.sleep(2);
-        driver.findElement(By.xpath("//button[contains(text(),'confirm')]")).click();
+        // Click confirm button to confirm delete
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'confirm')]"))).click();
 
     }
 
     public void clickReload(String response) throws ClientProtocolException, IOException, InterruptedException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        // Checks that argument in the request contains "subscriptions" endpoint
-
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-        WebElement reloadBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Reload all subscriptions data from EI')]"));
+        WebElement reloadBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
     }
 
@@ -81,11 +79,8 @@ public class SubscriptionPage extends PageBaseClass {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
-
-        WebElement getTemplateBtn = driver
-                .findElement(By.xpath("//button[contains(@title,'Download Subscription JSON template')]"));
+        WebElement getTemplateBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
         getTemplateBtn.click();
-
     }
 
     public void clickFormsSaveBtn(String response) throws ClientProtocolException, IOException, InterruptedException {
@@ -97,15 +92,14 @@ public class SubscriptionPage extends PageBaseClass {
         saveBtn.click();
     }
 
-    public void clickKVbtn(String path) {
-        WebElement kvBtn = driver.findElement(By.xpath(path));
+    public void clickKVbtn(String loc) {
+        WebElement kvBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
         kvBtn.click();
     }
 
-    public void selectDropdown(String path, String value) {
-        WebElement selectEle = driver.findElement(By.xpath(path));
+    public void selectDropdown(String loc, String value) {
+        WebElement selectEle = wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
         Select dropdown = new Select(selectEle);
-        // dropdown.getFirstSelectedOption().getText();
         dropdown.selectByVisibleText(value);
     }
 
@@ -121,8 +115,8 @@ public class SubscriptionPage extends PageBaseClass {
                 .getAttribute("value");
     }
 
-    public void addFieldValue(String path, String value) {
-        WebElement ele = driver.findElement(By.xpath(path));
+    public void addFieldValue(String loc, String value) {
+        WebElement ele = wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
         ele.clear();
         ele.sendKeys(value);
     }
