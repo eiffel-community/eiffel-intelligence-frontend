@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
@@ -40,10 +42,15 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // // Press "Reload" button and verify that two subscriptions with names
         // "Subscription1" and "Subscription2" are present
         String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
-        subscriptionPage.clickReload(response);
+        subscriptionPage.clickReload(response);        
         assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
         assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
-
+        
+     // Test view button 
+        subscriptionPage.clickViewBtn();        
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("View Subscription")));
+        subscriptionPage.clickFormCloseBtn();
+        
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";
