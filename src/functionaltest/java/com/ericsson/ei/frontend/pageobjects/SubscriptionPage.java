@@ -135,14 +135,4 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
         getTemplateButton.click();
     }
-    
-    public void clickViewBtn() {
-        WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View')]")));
-        viewBtn.click();
-    }
-    
-    public void clickFormCloseBtn() {
-        WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.className("close")));
-        viewBtn.click();
-    }
 }

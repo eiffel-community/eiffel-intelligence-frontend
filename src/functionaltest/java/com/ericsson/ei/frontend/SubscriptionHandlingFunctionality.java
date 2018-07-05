@@ -46,11 +46,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
         assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
         
-     // Test view button 
-        subscriptionPage.clickViewBtn();        
-        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("View Subscription")));
-        subscriptionPage.clickFormCloseBtn();
-        
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";
