@@ -75,7 +75,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // Click "Add Subscription" button and verify that "Subscription Form" is open
         subscriptionPage.clickAddSubscription();
         String formHeaderID = "formHeader";
-        assert((subscriptionPage.presenceOfHeader(formHeaderID)));
+        assert((new WebDriverWait(driver, 10)
+                .until((webdriver) ->subscriptionPage.presenceOfHeader(formHeaderID))));
 
         // On subscription form, select the template as "Mail Trigger" and verify
         String selectID = "selectTemplate";
@@ -118,7 +119,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
         subscriptionPage.clickKVbtn(kvID);
-        assert (driver.getPageSource().contains("Authorization"));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) ->driver.getPageSource().contains("Authorization")));
 
         // Test save subscription form: add subscription name as
         // "selenium_test_subscription" and then click "save" button verification
@@ -127,6 +129,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String responseSave = this.getJSONStringFromFile(SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
-        assert (driver.getPageSource().contains("Selenium_test_subscription"));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) ->driver.getPageSource().contains("Selenium_test_subscription")));
     }
 }
