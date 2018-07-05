@@ -53,7 +53,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.clickViewBtn();
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
-        subscriptionPage.clickFormCloseBtn();
+//        subscriptionPage.clickFormCloseBtn();
         
         // Again setting up the page status
         indexPageObject.loadPage();
