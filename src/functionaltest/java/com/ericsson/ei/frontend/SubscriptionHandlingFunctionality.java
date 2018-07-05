@@ -37,21 +37,36 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // Click on Subscription Handling page button and verify that it is open
         String subscriptionHeaderID = "subData";
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
         // // Press "Reload" button and verify that two subscriptions with names
         // "Subscription1" and "Subscription2" are present
         String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
-        subscriptionPage.clickReload(response);        
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
+        subscriptionPage.clickReload(response);
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
+
+        // Test view button
+        subscriptionPage.clickViewBtn();
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
+        subscriptionPage.clickFormCloseBtn();
+        
+        // Again setting up the page status
+        indexPageObject.loadPage();
+        indexPageObject.clickSubscriptionPage().clickReload(response);
         
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription1"))==false)));
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> ((driver.getPageSource().contains("Subscription2"))==false)));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")) == false)));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")) == false)));
 
         // Verify that "get template" button works
         String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
@@ -65,29 +80,31 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // SUbscriptions" button and verify
         String mockedUploadResponse = this.getJSONStringFromFile(UPLOAD_FILE_PATH);
         subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADED_TEMPLATE_FILE_PATH, mockedUploadResponse);
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded"))));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded"))));
 
         // Click "Add Subscription" button and verify that "Subscription Form" is open
         subscriptionPage.clickAddSubscription();
         String formHeaderID = "formHeader";
-        assert((new WebDriverWait(driver, 10)
-                .until((webdriver) ->subscriptionPage.presenceOfHeader(formHeaderID))));
+        assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
 
         // On subscription form, select the template as "Mail Trigger" and verify
         String selectID = "selectTemplate";
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("MAIL"))));
-        assert(new WebDriverWait(driver, 10)
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("MAIL"))));
+        assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com"))));
 
         // On subscription form, select the template as "REST POST (Raw Body :JSON)"
         // and verify
         String tempPost = "REST POST (Raw Body : JSON)";
         subscriptionPage.selectDropdown(selectID, tempPost);
-        assert(new WebDriverWait(driver, 10).until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("REST_POST"))));
-        assert(new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("REST_POST"))));
+        assert (new WebDriverWait(driver, 10).until(
+                (webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
 
         // On subscription form, select the template as "Jenkins Pipeline Parameterized
         // Job Trigger" and verify
@@ -114,8 +131,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
         subscriptionPage.clickKVbtn(kvID);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) ->driver.getPageSource().contains("Authorization")));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
 
         // Test save subscription form: add subscription name as
         // "selenium_test_subscription" and then click "save" button verification
@@ -125,6 +141,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
         assert (new WebDriverWait(driver, 10)
-                .until((webdriver) ->driver.getPageSource().contains("Selenium_test_subscription")));
+                .until((webdriver) -> driver.getPageSource().contains("Selenium_test_subscription")));
     }
 }
