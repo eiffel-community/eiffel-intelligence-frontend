@@ -1,10 +1,12 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.awt.AWTException;
+
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
@@ -14,9 +16,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+
 public class TestRulesPage extends PageBaseClass {
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient,
+
             FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
@@ -138,4 +142,5 @@ public class TestRulesPage extends PageBaseClass {
         WebElement aggregatedResultDataElement = driver.findElement(By.id("aggregatedresultData"));
         return aggregatedResultDataElement.getAttribute("textContent").replaceAll("[\\n ]", "");
     }
+
 }
