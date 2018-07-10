@@ -22,6 +22,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
             "resources", "responses", "SubscriptionTemplate.json");
     private static final String RELOAD_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionForUploadCase.json");
+    private static final String RELOAD_TEST_FILE_PATH_LDAP = String.join(File.separator, "src", "functionaltest",
+            "resources", "responses", "SubscriptionForUploadLDAP.json");
     private static final String SAVE_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForSaveCase.json");
     private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
@@ -39,26 +41,49 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
+        TimeUnit.SECONDS.sleep(5);
 
-        // // Press "Reload" button and verify that two subscriptions with names
-        // "Subscription1" and "Subscription2" are present
+        // Press "Reload" button without enabling LDAP and verify that two subscriptions
+        // with names
+        // "Subscription1" and "Subscription2" are present AND there exists "edit" and
+        // "delete buttons"
         String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
+        String deletePath = "//button[contains(text(),'Delete')]";
+        String editPath = "//button[contains(text(),'Edit')]";
+        String viewPath = "//button[contains(text(),'View')]";
         subscriptionPage.clickReload(response);
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
+        assert (subscriptionPage.buttonExist(deletePath) == true);
+        assert (subscriptionPage.buttonExist(editPath) == true);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Given LDAP is enabled, "Reload" subscriptions and then click subscription
+        // page with LDAP enabled and unauthorized user names
+        // Verify that subscriptions exists but only with "View" button
+        // "Subscription1"
+        String responseSub = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH_LDAP);
+        String responseAuth = "{\"security\":true}";
+        subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
+        indexPageObject.clickSubscriptionPage();
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert (subscriptionPage.buttonExist(deletePath) == false);
+        assert (subscriptionPage.buttonExist(editPath) == false);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
 
         // Test view button
         subscriptionPage.clickViewBtn();
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
-//        subscriptionPage.clickFormCloseBtn();
-        
+        subscriptionPage.clickFormCloseBtn();
+
         // Again setting up the page status
         indexPageObject.loadPage();
         indexPageObject.clickSubscriptionPage().clickReload(response);
-        
+
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";

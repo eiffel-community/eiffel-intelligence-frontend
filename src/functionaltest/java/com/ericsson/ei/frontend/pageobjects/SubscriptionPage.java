@@ -21,12 +21,12 @@ public class SubscriptionPage extends PageBaseClass {
             throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
-    
+
     public boolean presenceOfHeader(String loc) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.id(loc)));
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -52,6 +52,18 @@ public class SubscriptionPage extends PageBaseClass {
         // Click confirm button to confirm delete
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'confirm')]"))).click();
 
+    }
+
+    public void clickReloadLDAP(String response, String responseAuth)
+            throws ClientProtocolException, IOException, InterruptedException {
+        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
+        CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+        Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("auth")));
+        WebElement reloadBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
+        reloadBtn.click();
     }
 
     public void clickReload(String response) throws ClientProtocolException, IOException, InterruptedException {
@@ -135,15 +147,25 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
         getTemplateButton.click();
     }
-    
+
     public void clickViewBtn() {
-        WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View')]")));
+        WebElement viewBtn = wait
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View')]")));
         viewBtn.click();
     }
-    
+
     public void clickFormCloseBtn() {
         WebElement viewBtn = wait.until(ExpectedConditions.elementToBeClickable(By.className("close")));
         viewBtn.click();
+    }
+
+    public Boolean buttonExist(String loc) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
 }
