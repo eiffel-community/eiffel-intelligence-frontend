@@ -65,7 +65,7 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         indexPageObject.clickSwitchBackendButton();
         switchBackendPage.switchToBackendInstance(0);
         indexPageObject.clickSubscriptionPage();
-        assertEquals("default_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
+        assertEquals("deault_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
 
         // Test that backend instance can be removed
         indexPageObject.clickAdminBackendInstancesBtn();
@@ -85,29 +85,36 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         mockClient2.when(request()
                 .withMethod("GET")
                 .withPath("/information"))
-        .respond(response()
+        .respond(
+            response()
                 .withStatusCode(200)
                 .withBody(informationResponse));
 
-        mockClient2.when(request()
+        mockClient2.when(
+            request()
                 .withMethod("GET")
                 .withPath("/auth/checkStatus"))
-        .respond(response()
+        .respond(
+            response()
                 .withStatusCode(200)
                 .withBody(""));
 
         String newInstanceSubscriptionResponse = this.getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
-        mockClient2.when(request()
+        mockClient2.when(
+            request()
                 .withMethod("GET")
                 .withPath("/subscriptions"))
         .respond(response().withStatusCode(200)
                 .withBody(newInstanceSubscriptionResponse));
 
         String defaultInstanceSubscriptionResponse = this.getJSONStringFromFile(DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
-        mockClient1.when(request()
+        mockClient1.when(
+            request()
                 .withMethod("GET")
                 .withPath("/subscriptions"))
-        .respond(response().withStatusCode(200)
+        .respond(
+            response()
+                .withStatusCode(200)
                 .withBody(defaultInstanceSubscriptionResponse));
     }
 }

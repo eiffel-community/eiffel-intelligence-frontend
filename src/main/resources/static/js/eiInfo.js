@@ -2,15 +2,15 @@
 
 
 jQuery(document).ready(function() {
-	
+
     // Fetch injected URL from DOM
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var backendServerUrl = $('#backendServerUrl').text();
-    
+
     var tableTdKeyWidth = '250';
 
     var body = document.getElementById('eiPageFrame');
-    
+
     function createTable() {
         var tbl = document.createElement('table');
         tbl.style.width = '40%';
@@ -19,12 +19,12 @@ jQuery(document).ready(function() {
         tbl.setAttribute('class', 'table table-bordered table-striped dataTable');
         return tbl;
     }
-	
+
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	function generateGeneralEiInfo(data) {
-		    
+
         body.appendChild(document.createElement('br'));
         var tbdy = document.createElement('tbody');
 
@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
         label.innerHTML = 'General Eiffel Intelligence Information';
         label.setAttribute('align', 'center');
         body.appendChild(label);
-		
+
         var tbl = createTable();
 
         var tr = document.createElement('tr');
@@ -46,7 +46,7 @@ jQuery(document).ready(function() {
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
 
-        
+
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
         tdKey.setAttribute('width', tableTdKeyWidth);
@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
         tdValue.appendChild(document.createTextNode(data.version));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
-        
+
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
         tdKey.setAttribute('width', tableTdKeyWidth);
@@ -66,18 +66,18 @@ jQuery(document).ready(function() {
         tdValue.appendChild(document.createTextNode(frontendServiceUrl));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
-        
+
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
         tdKey.setAttribute('width', tableTdKeyWidth);
         tdKey.appendChild(document.createTextNode('EI Backend Connected Server'));
         tr.appendChild(tdKey);
         tdValue = document.createElement('td');
-	tdValue.id = "connectedBackend"
+		tdValue.id = "connectedBackend"
         tdValue.appendChild(document.createTextNode(backendServerUrl));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
-        
+
         tr = document.createElement('tr');
         tdKey = document.createElement('td');
         tdKey.setAttribute('width', tableTdKeyWidth);
@@ -87,24 +87,24 @@ jQuery(document).ready(function() {
         tdValue.appendChild(document.createTextNode(data.testRulesEnabled));
         tr.appendChild(tdValue);
         tbdy.appendChild(tr);
-        
-        
+
+
         tbl.appendChild(tbdy);
         body.appendChild(tbl);
-        
+
         body.appendChild(document.createElement('br'));
 	}
-	
+
 	function generateEIInformationBasedOnList(dataList, tableLabel) {
-		        
+
         var label = document.createElement('p');
         label.innerHTML = tableLabel;
         label.setAttribute('align', 'center');
         body.appendChild(label);
-        
+
         var tbdy = null;
         var tbl = null;
-        
+
         dataList.forEach(function(dataSubList) {
         		tbdy = document.createElement('tbody');
         		tbl = createTable();
@@ -119,16 +119,16 @@ jQuery(document).ready(function() {
         	        tdValue.appendChild(document.createTextNode(dataSubList[dataKey]));
         	        tr.appendChild(tdValue);
         	        tbdy.appendChild(tr);
-        	    	
+
         	    });
-        	    
+
         });
-		
+
         tbl.appendChild(tbdy);
         body.appendChild(tbl);
-        
+
         body.appendChild(document.createElement('br'));
-        
+
 	}
 
     function getInstanceInfo() {
@@ -162,7 +162,7 @@ jQuery(document).ready(function() {
               complete: function (XMLHttpRequest, textStatus) {}
         	  });
     }
-	
+
     getInstanceInfo();
 
 });
