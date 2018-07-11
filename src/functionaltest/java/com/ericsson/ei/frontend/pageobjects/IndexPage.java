@@ -55,7 +55,10 @@ public class IndexPage extends PageBaseClass {
       new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
       WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
       subscriptionBtn.click();
+
       SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
+      waitForJQueryToLoad();
+
       return subscriptionPage;
   }
 
