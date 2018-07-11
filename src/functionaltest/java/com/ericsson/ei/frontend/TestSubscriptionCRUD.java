@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.File;
 
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,7 +50,7 @@ public class TestSubscriptionCRUD {
     private BackEndInformation backEndInformation;
 
     @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);
+    private MockServerRule mockServerRule = new MockServerRule(this);
 
     private MockServerClient mockServerClient;
 
