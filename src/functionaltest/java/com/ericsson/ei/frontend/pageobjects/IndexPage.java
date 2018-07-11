@@ -4,6 +4,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
+
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -13,6 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
+
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver,
             String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
@@ -37,6 +39,13 @@ public class IndexPage extends PageBaseClass {
 
         return testRulesPage;
     }
+    
+    public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
+      WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
+      subscriptionBtn.click();
+      SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
+      return subscriptionPage;
+  }
 
     public void clickReloadButton(String responseData) throws ClientProtocolException, IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
@@ -48,6 +57,7 @@ public class IndexPage extends PageBaseClass {
         reloadButton.click();
     }
 
+
     public Object presenceOfReloadButton() {
         try {
             driver.findElement(By.className("table_reload"));
@@ -56,4 +66,5 @@ public class IndexPage extends PageBaseClass {
             return false;
         }
     }
+
 }

@@ -13,14 +13,17 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
+
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PageBaseClass {
+
     CloseableHttpClient mockedHttpClient;
     CloseableHttpResponse mockedHttpResponse;
 
@@ -42,11 +45,15 @@ public class PageBaseClass {
     }
 
     public void waitForJQueryToLoad() {
-        WebDriverWait webDriverWait = new WebDriverWait(driver, 30);
-        webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
-                .executeScript("return document.readyState").equals("complete"));
-        webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
-                .executeScript("return !!window.jQuery && window.jQuery.active == 0").equals(true));
+        try {
+            WebDriverWait webDriverWait = new WebDriverWait(driver, 10);
+            webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
+                    .executeScript("return document.readyState").equals("complete"));
+            webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
+                    .executeScript("return !!window.jQuery && window.jQuery.active==0").equals(true));
+        } catch(Exception e) {
+            // Sometimes jQuery.active hangs, will work after a hardcoded timer in worst case.
+        }
     }
 
     protected CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {

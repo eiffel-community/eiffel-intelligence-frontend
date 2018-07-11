@@ -25,24 +25,25 @@
         </button>
     </h1>
 
-    <h3>Subscription Data</h3>
+    <h3 id="subData">Subscription Data</h3>
     <br/>
-    <button data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
+    <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
         <i class="glyphicon glyphicon-plus"></i> Add Subscription
     </button>
-    <button data-toggle="tooltip" title="Reload all subscriptions data from EI" class="btn btn-default table_reload">
+    <button id="reloadButton" data-toggle="tooltip" title="Reload all subscriptions data from EI" class="btn btn-default table_reload">
         <i class="glyphicon glyphicon-refresh"></i> Reload
     </button>
-    <button data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete show_if_authorized">
+    <button id="bulkDelete" data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete show_if_authorized">
         <i class="glyphicon glyphicon-trash"></i> Bulk Delete
     </button>
-    <button data-toggle="tooltip" title="Download Subscription JSON template" class="btn btn-primary get_subscription_template">
+    <button id="getTemplateButton" data-toggle="tooltip" title="Download Subscription JSON template" class="btn btn-primary get_subscription_template">
         <i class="glyphicon glyphicon-download"></i> Get Template
     </button>
+        
     <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_subscriptions show_if_authorized">
         <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
     </button>
-    <input class="hidden" type='file' id='upload_subscription_file' name='file' style="display: none"/>
+    <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
     <br/>
     <br/>
 
@@ -63,7 +64,7 @@
                 <div class="container pull-left">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <img class="float-left" data-dismiss="modal" src="assets/images/11656-200.png" height="15" width="15"/>
-                    <h3 class="modal-title text-center">Subscription Form</h3>
+                    <h3 class="modal-title text-center" id="formHeader">Subscription Form</h3>
                 </div>
             </div>
             <div class="modal-body form" align="left">
@@ -75,7 +76,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
                             <div>
-                                <select data-toggle="tooltip" data-placement="right" title="Choose a Subscription Template" data-bind="options: subscription_templates_in,
+                                <select id="selectTemplate" data-toggle="tooltip" data-placement="right" title="Choose a Subscription Template" data-bind="options: subscription_templates_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: choosen_subscription_template,
@@ -88,7 +89,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                             <div>
-                                <input data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
+                                <input id="subscriptionNameInput"  data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
                                        name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text"/>
                                 <span class="help-block"></span>
                             </div>
@@ -112,7 +113,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                             <div>
-                                <select data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
+                                <select id="notificationType" data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: $data.notificationType,
@@ -165,7 +166,7 @@
                             </table>
 
                             <div data-bind="visible: $root.formpostkeyvaluepairs" class="container p-1">
-                                <button data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" data-toggle="tooltip"
+                                <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" data-toggle="tooltip"
                                         title="Add a new Form Key/Value Pair" class="btn btn-success float-left"><i
                                         class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
                                 </button>
@@ -175,7 +176,7 @@
                         <div class="pt-3 form-group">
                             <label class="pl-1 control-label font-weight-bold">Authorization</label>
                             <div>
-                            <select data-toggle="tooltip" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
+                            <select id="selectAuth" data-toggle="tooltip" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: authenticationType,
@@ -186,13 +187,13 @@
                         <div class="pb-3 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                             <label class="pl-1 control-label font-weight-bold">User Name*</label>
                             <div>
-                                <input data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName" placeholder="userName" class="form-control" type="text" />
+                                <input id="userNameInput" data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName" placeholder="userName" class="form-control" type="text" />
                                 <span class="help-block"></span>
                             </div>                            
                         
                             <label class="pl-1 control-label font-weight-bold">Token*</label>
                             <div>
-                                <input data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token" class="form-control" type="password" />
+                                <input id="tokenInput" data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token" class="form-control" type="password" />
                                 <span class="help-block"></span>
                             </div>
                                                     
@@ -215,7 +216,7 @@
                         <div class="form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                             <div>
-                                <textarea data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
+                                <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
                                           name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                 <span class="help-block"></span>
                             </div>
