@@ -6,8 +6,10 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
@@ -15,9 +17,12 @@ import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestRulesFunctionality extends SeleniumBaseClass {
 
+    @MockBean
+    protected CloseableHttpClient mockedHttpClient;
+  
     private static final String DOWNLOADED_RULES_TEMPLATE_FILE_PATH = String.join(
             File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rulesTemplate.json");
-
+  
     private static final String RULES_TEMPLATE_FILE_PATH = String.join(
             File.separator, "src", "functionaltest", "resources", "responses", "RulesTemplateObject.json");
     private static final String DOWNLOADED_RULES_FILE_PATH = String.join(File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rules.json");

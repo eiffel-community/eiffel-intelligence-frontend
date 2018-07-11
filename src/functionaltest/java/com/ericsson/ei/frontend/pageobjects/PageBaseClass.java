@@ -27,6 +27,7 @@ public class PageBaseClass {
 
     protected FirefoxDriver driver;
     protected String baseUrl;
+    protected final int TIMEOUT_TIMER = 10;
 
     public PageBaseClass(CloseableHttpClient mockedHttpClient,
                          FirefoxDriver driver, String baseUrl) throws IOException {
@@ -35,11 +36,6 @@ public class PageBaseClass {
         this.driver = driver;
         this.baseUrl = baseUrl;
         PageFactory.initElements(driver, this);
-
-        //Dummy response for all requests that happens before the actuall ones we want to test
-        CloseableHttpResponse response = this.createMockedHTTPResponse("{\"response\": dummy}", 200);
-        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request -> (request).getURI().toString().contains("checkStatus")));
-
     }
 
     public void waitForJQueryToLoad() {
