@@ -40,10 +40,8 @@ public class IndexPage extends PageBaseClass {
     public TestRulesPage clickTestRulesPage() throws IOException {
         WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
-
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
-
         return testRulesPage;
     }
 
@@ -51,10 +49,8 @@ public class IndexPage extends PageBaseClass {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
         WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
         subscriptionBtn.click();
-
         SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
-
         return subscriptionPage;
     }
 
