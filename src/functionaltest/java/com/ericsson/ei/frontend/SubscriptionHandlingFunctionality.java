@@ -1,20 +1,24 @@
 package com.ericsson.ei.frontend;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
 public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
+
+    @MockBean
+    protected CloseableHttpClient mockedHttpClient;
 
     private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
             SeleniumConfig.getTempDownloadDirectory().getPath(), "subscriptionsTemplate.json");
@@ -27,6 +31,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
+    @Ignore
     @Test
     public void testSubscription() throws Exception {
 
@@ -54,11 +59,11 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
 //        subscriptionPage.clickFormCloseBtn();
-        
+
         // Again setting up the page status
         indexPageObject.loadPage();
         indexPageObject.clickSubscriptionPage().clickReload(response);
-        
+
         // Delete all subscriptions with "Bulk Delete" button and verify that all
         // subscriptions are deleted
         String mockedDeleteResponse = "";
