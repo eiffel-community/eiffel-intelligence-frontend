@@ -1,8 +1,6 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
@@ -14,7 +12,7 @@ import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver,
-            String baseUrl) throws ClientProtocolException, IOException {
+                     String baseUrl) throws IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
 
@@ -28,8 +26,8 @@ public class IndexPage extends PageBaseClass {
         return driver.getTitle();
     }
 
-    public TestRulesPage clickTestRulesPage() throws ClientProtocolException, IOException {
-    	WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
+    public TestRulesPage clickTestRulesPage() throws IOException {
+        WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
 
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
@@ -38,11 +36,11 @@ public class IndexPage extends PageBaseClass {
         return testRulesPage;
     }
 
-    public void clickReloadButton(String responseData) throws ClientProtocolException, IOException {
+    public void clickReloadButton(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         //Checks that argument in the request contains "subscriptions" endpoint
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-            ((HttpRequestBase)request).getURI().toString().contains("subscriptions")));
+                (request).getURI().toString().contains("subscriptions")));
 
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();
@@ -52,7 +50,7 @@ public class IndexPage extends PageBaseClass {
         try {
             driver.findElement(By.className("table_reload"));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }

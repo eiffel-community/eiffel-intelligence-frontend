@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class SeleniumConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SeleniumConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
     private static File tempDownloadDirectory = Files.createTempDir();
 
     public static FirefoxDriver getFirefoxDriver() throws OSNotSupportedException {
@@ -30,7 +30,7 @@ public class SeleniumConfig {
         } else if (SystemUtils.IS_OS_WINDOWS) {
             System.setProperty("webdriver.gecko.driver", "src/functionaltest/resources/geckodriver.exe");
         } else {
-            log.error("OS currently not supported.");
+            LOGGER.error("OS currently not supported.");
             throw new OSNotSupportedException();
         }
         FirefoxOptions firefoxOptions = new FirefoxOptions()

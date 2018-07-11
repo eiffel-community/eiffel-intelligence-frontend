@@ -1,9 +1,5 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import java.awt.AWTException;
-import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -14,10 +10,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.io.IOException;
+
 public class TestRulesPage extends PageBaseClass {
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient,
-            FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
+                         FirefoxDriver driver, String baseUrl) throws IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
 
@@ -25,7 +23,7 @@ public class TestRulesPage extends PageBaseClass {
         try {
             driver.findElement(By.id("test_rules_header"));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
@@ -34,7 +32,7 @@ public class TestRulesPage extends PageBaseClass {
         try {
             driver.findElement(By.id("Rule" + number));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
@@ -43,7 +41,7 @@ public class TestRulesPage extends PageBaseClass {
         try {
             driver.findElement(By.id("Events" + number));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
@@ -52,35 +50,35 @@ public class TestRulesPage extends PageBaseClass {
         try {
             driver.findElement(By.className("download_rules_template"));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
 
-    public void clickDownloadRulesTemplate(String responseData) throws ClientProtocolException, IOException, InterruptedException {
+    public void clickDownloadRulesTemplate(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-            ((HttpRequestBase)request).getURI().toString().contains("/rulesTemplate")));
+                ((HttpRequestBase) request).getURI().toString().contains("/rulesTemplate")));
 
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
     }
 
-    public void clickDownloadEventsTemplate(String responseData) throws ClientProtocolException, IOException, InterruptedException {
+    public void clickDownloadEventsTemplate(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-            ((HttpRequestBase)request).getURI().toString().contains("/eventsTemplate")));
+                ((HttpRequestBase) request).getURI().toString().contains("/eventsTemplate")));
 
         WebElement downloadEventsTemplateButton = driver.findElement(By.className("download_events_template"));
         downloadEventsTemplateButton.click();
     }
 
-    public void uploadRulesTemplate(String filePath) throws ClientProtocolException, IOException, InterruptedException, AWTException {
+    public void uploadRulesTemplate(String filePath) {
         WebElement uploadRulesInputField = driver.findElement(By.id("uploadRulesFile"));
         uploadRulesInputField.sendKeys(filePath);
     }
 
-    public void uploadEventsTemplate(String filePath) throws ClientProtocolException, IOException, InterruptedException, AWTException {
+    public void uploadEventsTemplate(String filePath) {
         WebElement uploadEventsInputField = driver.findElement(By.id("uploadEventsFile"));
         uploadEventsInputField.sendKeys(filePath);
     }
@@ -119,16 +117,16 @@ public class TestRulesPage extends PageBaseClass {
         WebElement removeEventButton = driver.findElement(By.id("Events" + number)).findElement(By.className("fa-trash"));
 
         // We need the following two lines in order to be sure that the remove event button is not obscured...
-        JavascriptExecutor jse2 = (JavascriptExecutor)driver;
+        JavascriptExecutor jse2 = driver;
         jse2.executeScript("arguments[0].scrollIntoView()", removeEventButton);
 
         removeEventButton.click();
     }
 
-    public void clickFindAggregatedObject(String findAggregatedObjectResponse) throws ClientProtocolException, IOException {
+    public void clickFindAggregatedObject(String findAggregatedObjectResponse) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(findAggregatedObjectResponse, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-            ((HttpRequestBase)request).getURI().toString().contains("/aggregation")));
+                (request).getURI().toString().contains("/aggregation")));
 
         WebElement findAggregatedObjectButton = driver.findElement(By.className("find_aggregated_object"));
         findAggregatedObjectButton.click();
