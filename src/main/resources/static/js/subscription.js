@@ -482,92 +482,101 @@ jQuery(document).ready(function() {
     // /Stop ## Bulk delete##################################################
 
     
+    
+    function getTemplate() {
+        var req = new XMLHttpRequest();
+        req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
+        req.responseType = "application/json;charset=utf-8";
+        req.onload = function (event) {
+            var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
+            downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
+        };
+        req.send();
+    }
+    
     // /Start ## get_subscription_template #################################################
     $('.container').on( 'click', 'button.get_subscription_template', function (event) {
     	event.stopPropagation();
-        event.preventDefault();
-        function getTemplate() {
-            var req = new XMLHttpRequest();
-            req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
-            req.responseType = "application/json;charset=utf-8";
-            req.onload = function (event) {
-                var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
-                downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
-            };
-            req.send();
-        }
+        event.preventDefault();        
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
+    
+    
+
+    function validateJsonAndCreateSubscriptions(subscriptionFile){
+        var reader = new FileReader();
+        reader.onload = function() {
+        var fileContent = reader.result;
+        var jsonLintResult="";
+        try {
+        	jsonLintResult = jsonlint.parse(fileContent);
+        } catch (e) {
+        	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+        	return false;
+        }
+        $.jGrowl('JSON Format Check Succeeded', {
+            sticky : false,
+            theme : 'Notify'
+        });
+        var subscriptionJsonList = JSON.parse(fileContent);
+        tryToCreateSubscription(subscriptionJsonList);
+        };
+        reader.readAsText(subscriptionFile);
+    }
+    
+    var pom = document.getElementById('upload_sub');
+    pom.onchange = function uploadFinished() {
+    	var subscriptionFile = pom.files[0];
+    	validateJsonAndCreateSubscriptions(subscriptionFile);
+	};
+	   function tryToCreateSubscription(subscriptionJson) {
+       	// Send Subscription JSON file to Spring MVC
+           // AJAX Callback handling
+           var callback = {
+               beforeSend : function () {
+               },
+               success : function (data, textStatus) {
+                   var returnData = [data];
+                   if (returnData.length > 0) {
+                       $.jGrowl("Subscriptions are successfully created", {
+                           sticky : false,
+                           theme : 'Error'
+                       });
+                       reload_table();
+                   }
+               },
+               error : function (XMLHttpRequest, textStatus, errorThrown) {
+                 reload_table();
+                 $.jGrowl("Failed to create next Subscriptions", {sticky: false, theme: 'Error'});
+                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                 for (var i = 0; i < responseJSON.length; i++) {
+                   $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
+                 }
+               },
+               complete : function () {
+               }
+           };
+           // Perform AJAX
+           var ajaxHttpSender = new AjaxHttpSender();
+           ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
+       }
 
 
     // /Start ## upload_subscriptions #################################################
     $('.container').on( 'click', 'button.upload_subscriptions', function (event) {
     	event.stopPropagation();
         event.preventDefault();
-        function tryToCreateSubscription(subscriptionJson) {
-        	// Send Subscription JSON file to Spring MVC
-            // AJAX Callback handling
-            var callback = {
-                beforeSend : function () {
-                },
-                success : function (data, textStatus) {
-                    var returnData = [data];
-                    if (returnData.length > 0) {
-                        $.jGrowl("Subscriptions are successfully created", {
-                            sticky : false,
-                            theme : 'Error'
-                        });
-                        reload_table();
-                    }
-                },
-                error : function (XMLHttpRequest, textStatus, errorThrown) {
-                  reload_table();
-                  $.jGrowl("Failed to create next Subscriptions", {sticky: false, theme: 'Error'});
-                  var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                  for (var i = 0; i < responseJSON.length; i++) {
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
-                  }
-                },
-                complete : function () {
-                }
-            };
-            // Perform AJAX
-            var ajaxHttpSender = new AjaxHttpSender();
-            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
-        }
-        
-        function validateJsonAndCreateSubscriptions(subscriptionFile){
-            var reader = new FileReader();
-            reader.onload = function() {
-            var fileContent = reader.result;
-            var jsonLintResult="";
-            try {
-            	jsonLintResult = jsonlint.parse(fileContent);
-            } catch (e) {
-            	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-            	return false;
-            }
-            $.jGrowl('JSON Format Check Succeeded', {
-                sticky : false,
-                theme : 'Notify'
-            });
-            var subscriptionJsonList = JSON.parse(fileContent);
-            tryToCreateSubscription(subscriptionJsonList);
-            };
-            reader.readAsText(subscriptionFile);
-        }
-
 
         function createUploadWindow() {
-            var pom = document.createElement('input');
-            pom.setAttribute('id', 'uploadFile');
-            pom.setAttribute('type', 'file');
-            pom.setAttribute('name', 'upFile');
-            pom.onchange = function uploadFinished() {
-            	var subscriptionFile = pom.files[0];
-            	validateJsonAndCreateSubscriptions(subscriptionFile);
-        	};
+//            var pom = document.createElement('input');
+//            pom.setAttribute('id', 'uploadFile');
+//            pom.setAttribute('type', 'file');
+//            pom.setAttribute('name', 'upFile');
+//            pom.onchange = function uploadFinished() {
+//            	var subscriptionFile = pom.files[0];
+//            	validateJsonAndCreateSubscriptions(subscriptionFile);
+//        	};
             if (document.createEvent) {
                 var event = document.createEvent('MouseEvents');
                 event.initEvent('click', true, true);
@@ -577,7 +586,6 @@ jQuery(document).ready(function() {
                 pom.click();
             }
         }
-
 
         function createUploadWindowMSExplorer() {
             $('#upload_subscription_file').click();

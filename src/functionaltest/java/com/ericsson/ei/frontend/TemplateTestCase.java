@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend;
 
 import org.junit.*;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
@@ -16,6 +17,7 @@ public class TemplateTestCase extends SeleniumBaseClass{
         //Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
+
         assertEquals("Eiffel Intelligence", indexPageObject.getTitle());
 
         //The lines below contains selenium interaction with mocking

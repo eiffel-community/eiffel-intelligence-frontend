@@ -1,7 +1,6 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
@@ -12,14 +11,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.IOException;
 
+
 public class TestRulesPage extends PageBaseClass {
 
-    public TestRulesPage(CloseableHttpClient mockedHttpClient,
-                         FirefoxDriver driver, String baseUrl) throws IOException {
+    public TestRulesPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) throws IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public Boolean presenceOfTestRulesHeader() {
+    public boolean presenceOfTestRulesHeader() {
         try {
             driver.findElement(By.id("test_rules_header"));
             return true;
@@ -28,7 +27,7 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
-    public Boolean presenceOfRuleNumber(int number) {
+    public boolean presenceOfRuleNumber(int number) {
         try {
             driver.findElement(By.id("Rule" + number));
             return true;
@@ -37,7 +36,7 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
-    public Boolean presenceOfEventNumber(int number) {
+    public boolean presenceOfEventNumber(int number) {
         try {
             driver.findElement(By.id("Events" + number));
             return true;
@@ -46,7 +45,7 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
-    public Boolean presenceOfClickDownloadRulesTemplateButton() {
+    public boolean presenceOfClickDownloadRulesTemplateButton() {
         try {
             driver.findElement(By.className("download_rules_template"));
             return true;
@@ -58,7 +57,7 @@ public class TestRulesPage extends PageBaseClass {
     public void clickDownloadRulesTemplate(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                ((HttpRequestBase) request).getURI().toString().contains("/rulesTemplate")));
+                (request).getURI().toString().contains("/rulesTemplate")));
 
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
@@ -67,7 +66,7 @@ public class TestRulesPage extends PageBaseClass {
     public void clickDownloadEventsTemplate(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                ((HttpRequestBase) request).getURI().toString().contains("/eventsTemplate")));
+                (request).getURI().toString().contains("/eventsTemplate")));
 
         WebElement downloadEventsTemplateButton = driver.findElement(By.className("download_events_template"));
         downloadEventsTemplateButton.click();
