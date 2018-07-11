@@ -51,11 +51,11 @@ public class SeleniumBaseClass {
 
     private static final String BACKEND_INSTANCES_INFORMATION_FILEPATH = String.join(
             File.separator, "src", "main", "resources", "EIBackendInstancesInformation.json");
-    private static final String DEFAULT_INSTANCES_INFORMATION_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "defaultInstancesInformation.json");
+    private String default_instances_information;
 
     @Before
     public void setUp() throws Exception {
+        default_instances_information  = getJSONStringFromFile(BACKEND_INSTANCES_INFORMATION_FILEPATH);
         MockitoAnnotations.initMocks(this);
         webController.setFrontendServicePort(randomServerPort);
 
@@ -65,14 +65,12 @@ public class SeleniumBaseClass {
 
     @After
     public void tearDown() throws Exception {
-
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 
         // Reset whats inside EIBackendInstancesInformation since test will fail if run multiple times otherwise
-        String eiBackendInstanceDefaultInformation = getJSONStringFromFile(DEFAULT_INSTANCES_INFORMATION_FILEPATH);
         FileWriter backendInstancesInformationWriter = new FileWriter(BACKEND_INSTANCES_INFORMATION_FILEPATH, false);
-        backendInstancesInformationWriter.write(eiBackendInstanceDefaultInformation);
+        backendInstancesInformationWriter.write(default_instances_information);
         backendInstancesInformationWriter.close();
 
         driver.quit();

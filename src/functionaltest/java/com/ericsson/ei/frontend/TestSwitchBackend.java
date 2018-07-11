@@ -28,15 +28,15 @@ public class TestSwitchBackend extends SeleniumBaseClass{
 
 
     private static final String BASE_URL = "localhost";
-    private static final int portServer1 = 8090;
-    private static final int portServer2 = 8091;
+    private static final int PORTSERVER1 = 8090;
+    private static final int PORTSERVER2 = 8091;
 
     private static final String NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
+        File.separator, "src", "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
     private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
+        File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
     private static final String INFORMATION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
+        File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
     @Test
     public void testSwitchBackend() throws Exception {
         setUpMocks();
@@ -49,13 +49,13 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         // Test add backend instance
         indexPageObject.clickAdminBackendInstancesBtn();
         AddBackendPage addBackendPage = indexPageObject.clickAddBackendInstanceBtn();
-        SwitchBackendPage switchBackendPage = addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
+        SwitchBackendPage switchBackendPage = addBackendPage.addBackendInstance("new_instance", BASE_URL, PORTSERVER2, "");
         assertEquals("new_instance", switchBackendPage.getNewInstanceName());
 
         // Test switch to the newly added instance
         switchBackendPage.switchToBackendInstance(1);
         InfoPage infoPage = indexPageObject.clickEiInfoBtn();
-        assertEquals("http://localhost:" + portServer2, infoPage.getConnectedBackend());
+        assertEquals("http://localhost:" + PORTSERVER2, infoPage.getConnectedBackend());
 
         // Test that different set of subscriptions are available for each instance
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
@@ -71,52 +71,57 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         indexPageObject.clickAdminBackendInstancesBtn();
         indexPageObject.clickSwitchBackendButton();
         switchBackendPage.removeInstanceNumber(1);
-        assertEquals(false, switchBackendPage.presenceOfInstance(1));
+        assertEquals("switchBackendPage.presenceOfInstance returned true when it should have been false",
+            false, switchBackendPage.presenceOfInstance(1));
     }
 
     private void setUpMocks() throws IOException {
-        mockServer1 = startClientAndServer(portServer1);
-        mockServer2 = startClientAndServer(portServer2);
+        mockServer1 = startClientAndServer(PORTSERVER1);
+        mockServer2 = startClientAndServer(PORTSERVER2);
 
-        mockClient1 = new MockServerClient(BASE_URL, portServer1);
-        mockClient2 = new MockServerClient(BASE_URL, portServer2);
+        mockClient1 = new MockServerClient(BASE_URL, PORTSERVER1);
+        mockClient2 = new MockServerClient(BASE_URL, PORTSERVER2);
 
         String informationResponse = this.getJSONStringFromFile(INFORMATION_RESPONSE_FILEPATH);
-        mockClient2.when(
-            request()
-                .withMethod("GET")
-                .withPath("/information"))
-        .respond(
-            response()
-                .withStatusCode(200)
-                .withBody(informationResponse));
+        mockClient2
+            .when(
+                request()
+                    .withMethod("GET")
+                    .withPath("/information"))
+            .respond(
+                response()
+                    .withStatusCode(200)
+                    .withBody(informationResponse));
 
-        mockClient2.when(
-            request()
-                .withMethod("GET")
-                .withPath("/auth/checkStatus"))
-        .respond(
-            response()
-                .withStatusCode(200)
-                .withBody(""));
+        mockClient2
+            .when(
+                request()
+                    .withMethod("GET")
+                    .withPath("/auth/checkStatus"))
+            .respond(
+                response()
+                    .withStatusCode(200)
+                    .withBody(""));
 
         String newInstanceSubscriptionResponse = this.getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
-        mockClient2.when(
-            request()
-                .withMethod("GET")
-                .withPath("/subscriptions"))
-        .respond(
-            response().withStatusCode(200)
-                .withBody(newInstanceSubscriptionResponse));
+        mockClient2
+            .when(
+                request()
+                    .withMethod("GET")
+                    .withPath("/subscriptions"))
+            .respond(
+                response().withStatusCode(200)
+                    .withBody(newInstanceSubscriptionResponse));
 
         String defaultInstanceSubscriptionResponse = this.getJSONStringFromFile(DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
-        mockClient1.when(
-            request()
-                .withMethod("GET")
-                .withPath("/subscriptions"))
-        .respond(
-            response()
-                .withStatusCode(200)
-                .withBody(defaultInstanceSubscriptionResponse));
+        mockClient1
+            .when(
+                request()
+                    .withMethod("GET")
+                    .withPath("/subscriptions"))
+            .respond(
+                response()
+                    .withStatusCode(200)
+                    .withBody(defaultInstanceSubscriptionResponse));
     }
 }

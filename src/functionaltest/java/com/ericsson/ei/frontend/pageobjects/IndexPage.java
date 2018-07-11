@@ -22,7 +22,7 @@ public class IndexPage extends PageBaseClass {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public Boolean presenceOfReloadButton() {
+    public boolean presenceOfReloadButton() {
         try {
             driver.findElement(By.className("table_reload"));
             return true;

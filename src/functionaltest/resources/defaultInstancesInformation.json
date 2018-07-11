@@ -1,9 +1,0 @@
-[
-  {
-    "path": "",
-    "port": "8090",
-    "name": "default",
-    "host": "localhost",
-    "https": false
-  }
-]
