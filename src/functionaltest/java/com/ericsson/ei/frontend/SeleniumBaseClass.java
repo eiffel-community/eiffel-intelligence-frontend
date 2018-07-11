@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.fail;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,19 +13,23 @@ import com.ericsson.ei.config.SeleniumConfig;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -43,6 +48,7 @@ public class SeleniumBaseClass {
     @Autowired
     WebController webController;
 
+
     protected FirefoxDriver driver;
     protected String baseUrl;
 
@@ -59,6 +65,7 @@ public class SeleniumBaseClass {
 
     @After
     public void tearDown() throws Exception {
+
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 
@@ -72,4 +79,5 @@ public class SeleniumBaseClass {
     protected String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
+
 }

@@ -50,6 +50,7 @@ public class WebController {
 
     @RequestMapping("/")
     public String greeting(Model model) {
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
@@ -58,6 +59,7 @@ public class WebController {
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         return "subscription";
     }
@@ -65,11 +67,13 @@ public class WebController {
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);
