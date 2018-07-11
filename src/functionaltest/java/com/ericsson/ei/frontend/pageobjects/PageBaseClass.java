@@ -1,25 +1,20 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
-
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.mockito.Mockito.when;
 
 public class PageBaseClass {
 
@@ -30,8 +25,7 @@ public class PageBaseClass {
     protected String baseUrl;
     protected final int TIMEOUT_TIMER = 10;
 
-    public PageBaseClass(CloseableHttpClient mockedHttpClient,
-            FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
+    public PageBaseClass(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
         super();
         this.mockedHttpClient = mockedHttpClient;
         this.driver = driver;
@@ -46,7 +40,7 @@ public class PageBaseClass {
                     .executeScript("return document.readyState").equals("complete"));
             webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                     .executeScript("return !!window.jQuery && window.jQuery.active==0").equals(true));
-        } catch(Exception e) {
+        } catch (Exception e) {
             // Sometimes jQuery.active hangs, will work after a hardcoded timer in worst case.
         }
     }

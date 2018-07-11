@@ -17,7 +17,7 @@ import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.google.gson.JsonParser;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockserver.client.server.MockServerClient;
+import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;

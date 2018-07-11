@@ -1,7 +1,7 @@
 package com.ericsson.ei.frontend;
 
 import org.junit.*;
-import org.mockserver.client.server.MockServerClient;
+import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;

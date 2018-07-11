@@ -18,3 +18,4 @@ target/
 # Others
 derby.log
 EIBackendInstancesInformation.json
+fileToWriteInstances.json
