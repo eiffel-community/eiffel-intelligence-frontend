@@ -50,7 +50,7 @@ public class TestSubscriptionCRUD {
     private BackEndInformation backEndInformation;
 
     @Rule
-    private MockServerRule mockServerRule = new MockServerRule(this);
+    public MockServerRule mockServerRule = new MockServerRule(this);
 
     private MockServerClient mockServerClient;
 
