@@ -65,7 +65,7 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         indexPageObject.clickSwitchBackendButton();
         switchBackendPage.switchToBackendInstance(0);
         indexPageObject.clickSubscriptionPage();
-        assertEquals("deault_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
+        assertEquals("default_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
 
         // Test that backend instance can be removed
         indexPageObject.clickAdminBackendInstancesBtn();
@@ -82,7 +82,8 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         mockClient2 = new MockServerClient(BASE_URL, portServer2);
 
         String informationResponse = this.getJSONStringFromFile(INFORMATION_RESPONSE_FILEPATH);
-        mockClient2.when(request()
+        mockClient2.when(
+            request()
                 .withMethod("GET")
                 .withPath("/information"))
         .respond(
@@ -104,7 +105,8 @@ public class TestSwitchBackend extends SeleniumBaseClass{
             request()
                 .withMethod("GET")
                 .withPath("/subscriptions"))
-        .respond(response().withStatusCode(200)
+        .respond(
+            response().withStatusCode(200)
                 .withBody(newInstanceSubscriptionResponse));
 
         String defaultInstanceSubscriptionResponse = this.getJSONStringFromFile(DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
