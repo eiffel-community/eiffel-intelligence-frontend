@@ -31,6 +31,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
+    @Ignore
     @Test
     public void testSubscription() throws Exception {
 
