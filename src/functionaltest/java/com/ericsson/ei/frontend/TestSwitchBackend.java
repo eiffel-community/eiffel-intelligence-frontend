@@ -37,6 +37,7 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
     private static final String INFORMATION_RESPONSE_FILEPATH = String.join(
         File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
+
     @Test
     public void testSwitchBackend() throws Exception {
         setUpMocks();
@@ -73,6 +74,16 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         switchBackendPage.removeInstanceNumber(1);
         assertEquals("switchBackendPage.presenceOfInstance returned true when it should have been false",
             false, switchBackendPage.presenceOfInstance(1));
+
+        tearDownMocks();
+    }
+
+    private void tearDownMocks() {
+        mockServer1.stop();
+        mockServer2.stop();
+
+        mockClient1.stop();
+        mockClient2.stop();
     }
 
     private void setUpMocks() throws IOException {
