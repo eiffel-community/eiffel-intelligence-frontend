@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend.pageobjects;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
+
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -44,6 +45,13 @@ public class IndexPage extends PageBaseClass {
         waitForJQueryToLoad();
         return testRulesPage;
     }
+    
+//    public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
+//      WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
+//      subscriptionBtn.click();
+//      SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
+//      return subscriptionPage;
+//  }
 
     public SubscriptionPage clickSubscriptionPage() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
@@ -63,6 +71,7 @@ public class IndexPage extends PageBaseClass {
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();
     }
+
 
     public void clickAdminBackendInstancesBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("adminBackendInstancesBtn")));
@@ -95,3 +104,4 @@ public class IndexPage extends PageBaseClass {
         waitForJQueryToLoad();
     }
 }
+

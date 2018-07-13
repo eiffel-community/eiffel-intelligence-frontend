@@ -2,13 +2,16 @@ package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -60,6 +63,7 @@ public class SeleniumBaseClass {
 
     @After
     public void tearDown() throws Exception {
+
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 

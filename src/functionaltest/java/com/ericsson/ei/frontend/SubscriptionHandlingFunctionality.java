@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -26,12 +27,16 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
             "resources", "responses", "SubscriptionTemplate.json");
     private static final String RELOAD_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionForUploadCase.json");
+    private static final String RELOAD_TEST_FILE_PATH_LDAP = String.join(File.separator, "src", "functionaltest",
+            "resources", "responses", "SubscriptionForUploadLDAP.json");
     private static final String SAVE_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForSaveCase.json");
     private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
-    @Ignore
+    private JavascriptExecutor js;
+
+//    @Ignore
     @Test
     public void testSubscription() throws Exception {
 
@@ -45,20 +50,68 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
-        // // Press "Reload" button and verify that two subscriptions with names
-        // "Subscription1" and "Subscription2" are present
+        // Press "Reload" button without enabling LDAP and verify that two subscriptions
+        // with names
+        // "Subscription1" and "Subscription2" are present AND there exists "edit" and
+        // "delete buttons" for unauthorized user "ABCD"
         String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
+        String deletePath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Delete')]";
+        String editPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Edit')]";
+        String viewPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'View')]";
         subscriptionPage.clickReload(response);
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
 
+        assert (subscriptionPage.buttonExist(deletePath) == true);
+        assert (subscriptionPage.buttonExist(editPath) == true);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Given LDAP is enabled, "Reload" subscriptions and then click subscription
+        // page with LDAP enabled with unauthorized user names
+        // Verify that subscriptions exists but only with "View" button
+        String responseSub = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH_LDAP);
+        String responseAuth = "{\"security\":true}";
+        subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
+        indexPageObject.clickSubscriptionPage();
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert (subscriptionPage.buttonExist(deletePath) == false);
+        assert (subscriptionPage.buttonExist(editPath) == false);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Given LDAP is enabled, "Reload" subscriptions and then click subscription
+        // page with LDAP enabled with both unauthorized and unauthorized user names (in
+        // this case authorized user is "ABCD" with subscriptions, "subscription1" and
+        // "subscription2")
+        // Verify that current user can see only their own subscriptions' edit and
+        // delete buttons.
+        String key = "currentUser";
+        String value = "ABCD";
+        js = ((JavascriptExecutor) driver);
+        js.executeScript(String.format("window.localStorage.setItem('%s','%s');", key, value));
+        indexPageObject.clickSubscriptionPage();
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert (subscriptionPage.buttonExist(deletePath) == true);
+        assert (subscriptionPage.buttonExist(editPath) == true);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Now, path for "subscriptions2" with user name "DEF", so user "ABCD" is
+        // unauthorized for this subscription
+        String deletePath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Delete')]";
+        String editPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Edit')]";
+        String viewPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'View')]";
+        assert (subscriptionPage.buttonExist(deletePath2) == false);
+        assert (subscriptionPage.buttonExist(editPath2) == false);
+        assert (subscriptionPage.buttonExist(viewPath2) == true);
+
         // Test view button
         subscriptionPage.clickViewBtn();
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
-//        subscriptionPage.clickFormCloseBtn();
+        subscriptionPage.clickFormCloseBtn();
 
         // Again setting up the page status
         indexPageObject.loadPage();

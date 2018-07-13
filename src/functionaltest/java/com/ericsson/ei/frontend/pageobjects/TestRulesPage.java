@@ -11,7 +11,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.IOException;
 
-
 public class TestRulesPage extends PageBaseClass {
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) throws IOException {
@@ -136,3 +135,4 @@ public class TestRulesPage extends PageBaseClass {
         return aggregatedResultDataElement.getAttribute("textContent").replaceAll("[\\n ]", "");
     }
 }
+
