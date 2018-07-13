@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SubscriptionPage extends PageBaseClass {
-    WebDriverWait wait = new WebDriverWait(driver, 15);
+    WebDriverWait wait = new WebDriverWait(driver, 10);
 
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws ClientProtocolException, IOException {

@@ -384,7 +384,6 @@ jQuery(document).ready(function() {
                 "data": null,
                 "render": function ( data, type, row, meta ) {
                     if(isSecured == true && row.userName == currentUser && row.userName != null) {
-                    	consol.log("=========================================================================="+isSecured);
                         return '<button data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
 	                      + '<button data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
 		                    + '<button data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';

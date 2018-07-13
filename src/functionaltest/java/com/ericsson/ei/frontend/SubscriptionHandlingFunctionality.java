@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend;
 
 import org.junit.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
@@ -8,8 +9,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
-
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
@@ -29,6 +28,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
+    private JavascriptExecutor js;
+
     @Test
     public void testSubscription() throws Exception {
 
@@ -41,16 +42,15 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
-        TimeUnit.SECONDS.sleep(5);
 
         // Press "Reload" button without enabling LDAP and verify that two subscriptions
         // with names
         // "Subscription1" and "Subscription2" are present AND there exists "edit" and
-        // "delete buttons"
+        // "delete buttons" for unauthorized user "ABCD"
         String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
-        String deletePath = "//button[contains(text(),'Delete')]";
-        String editPath = "//button[contains(text(),'Edit')]";
-        String viewPath = "//button[contains(text(),'View')]";
+        String deletePath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Delete')]";
+        String editPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Edit')]";
+        String viewPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'View')]";
         subscriptionPage.clickReload(response);
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
@@ -61,9 +61,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExist(viewPath) == true);
 
         // Given LDAP is enabled, "Reload" subscriptions and then click subscription
-        // page with LDAP enabled and unauthorized user names
+        // page with LDAP enabled with unauthorized user names
         // Verify that subscriptions exists but only with "View" button
-        // "Subscription1"
         String responseSub = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH_LDAP);
         String responseAuth = "{\"security\":true}";
         subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
@@ -73,6 +72,32 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExist(deletePath) == false);
         assert (subscriptionPage.buttonExist(editPath) == false);
         assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Given LDAP is enabled, "Reload" subscriptions and then click subscription
+        // page with LDAP enabled with both unauthorized and unauthorized user names (in
+        // this case authorized user is "ABCD" with subscriptions, "subscription1" and
+        // "subscription2")
+        // Verify that current user can see only their own subscriptions' edit and
+        // delete buttons.
+        String key = "currentUser";
+        String value = "ABCD";
+        js = ((JavascriptExecutor) driver);
+        js.executeScript(String.format("window.localStorage.setItem('%s','%s');", key, value));
+        indexPageObject.clickSubscriptionPage();
+        assert (new WebDriverWait(driver, 10)
+                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
+        assert (subscriptionPage.buttonExist(deletePath) == true);
+        assert (subscriptionPage.buttonExist(editPath) == true);
+        assert (subscriptionPage.buttonExist(viewPath) == true);
+
+        // Now, path for "subscriptions2" with user name "DEF", so user "ABCD" is
+        // unauthorized for this subscription
+        String deletePath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Delete')]";
+        String editPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Edit')]";
+        String viewPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'View')]";
+        assert (subscriptionPage.buttonExist(deletePath2) == false);
+        assert (subscriptionPage.buttonExist(editPath2) == false);
+        assert (subscriptionPage.buttonExist(viewPath2) == true);
 
         // Test view button
         subscriptionPage.clickViewBtn();
