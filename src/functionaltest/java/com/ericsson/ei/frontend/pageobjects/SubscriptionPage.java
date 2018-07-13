@@ -133,7 +133,6 @@ public class SubscriptionPage extends PageBaseClass {
 
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("upload_sub")));
-        // >>>>>>> fe413762aead0916f28b6d8e890a22455b9f999d
         WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
         uploadInputField.sendKeys(filePath);
     }
@@ -187,8 +186,7 @@ public class SubscriptionPage extends PageBaseClass {
         return true;
     }
 
-    public void clickReloadLDAP(String response, String responseAuth)
-            throws IOException{
+    public void clickReloadLDAP(String response, String responseAuth) throws IOException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
