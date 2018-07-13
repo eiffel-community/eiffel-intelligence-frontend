@@ -68,11 +68,13 @@ public class WebController {
     public String testRules(Model model) {
 
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model) {
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
         String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
         model.addAttribute("backendServerUrl", backendServerUrl);

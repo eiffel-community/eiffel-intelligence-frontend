@@ -7,8 +7,6 @@
   <artifactId>eiffel-intelligence-frontend</artifactId>
   <version>0.0.8</version>
   <packaging>war</packaging>
-
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -22,7 +20,6 @@
     <java.version>1.8</java.version>
     <output-relative-path>src/main/java</output-relative-path>
   </properties>
-
 
   <dependencies>
     <dependency>
@@ -101,13 +98,13 @@
     <dependency>
       <groupId>org.mock-server</groupId>
       <artifactId>mockserver-client-java</artifactId>
-      <version>5.3.0</version>
+      <version>5.4.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-netty -->
     <dependency>
       <groupId>org.mock-server</groupId>
       <artifactId>mockserver-netty</artifactId>
-      <version>5.3.0</version>
+      <version>5.4.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
