@@ -78,7 +78,7 @@ public class SeleniumBaseClass {
         }
     }
 
-    protected String getJSONStringFromFile(String filepath) throws IOException {
+    protected static String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
 

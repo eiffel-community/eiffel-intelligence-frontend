@@ -64,7 +64,7 @@ public class SeleniumConfig {
         } else if (SystemUtils.IS_OS_WINDOWS) {
             System.setProperty("webdriver.gecko.driver", "src/functionaltest/resources/geckodriver.exe");
         } else {
-            LOGGER.error("OS currently not supported.");
+            LOGGER.error(SystemUtils.OS_NAME + " currently not supported.");
             throw new OSNotSupportedException();
         }
 

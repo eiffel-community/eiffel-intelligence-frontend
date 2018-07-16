@@ -52,24 +52,19 @@ public class Utils {
         try (TarArchiveInputStream fileInput = new TarArchiveInputStream(
                 new BZip2CompressorInputStream(new FileInputStream(firefoxBZip2FilePath)))) {
             TarArchiveEntry entry;
-            try {
-                while ((entry = fileInput.getNextTarEntry()) != null) {
-                    if (entry.isDirectory()) {
-                        continue;
-                    }
-                    final File curfile = new File(destinationPath, entry.getName());
-                    final File parent = curfile.getParentFile();
-                    if (!parent.exists()) {
-                        parent.mkdirs();
-                    }
-                    final FileOutputStream fileOutput = new FileOutputStream(curfile);
-                    IOUtils.copy(fileInput, fileOutput);
-                    fileOutput.close();
+            while ((entry = fileInput.getNextTarEntry()) != null) {
+                if (entry.isDirectory()) {
+                    continue;
                 }
-            } catch (IOException e) {
-                LOGGER.error("IOException.\nError: {}", e.getMessage());
+                final File curfile = new File(destinationPath, entry.getName());
+                final File parent = curfile.getParentFile();
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+                final FileOutputStream fileOutput = new FileOutputStream(curfile);
+                IOUtils.copy(fileInput, fileOutput);
+                fileOutput.close();
             }
-            fileInput.close();
         } catch (FileNotFoundException e) {
             LOGGER.error("FileNotFoundException.\nError: {}", e.getMessage());
         } catch (IOException e) {
