@@ -15,8 +15,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SubscriptionPage extends PageBaseClass {
-    WebDriverWait wait = new WebDriverWait(driver, 10);
-
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws IOException {
         super(mockedHttpClient, driver, baseUrl);
@@ -32,7 +30,8 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickAddSubscription() {
-        WebElement addSubscriptionBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
+        WebElement addSubscriptionBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
         addSubscriptionBtn.click();
     }
 
@@ -175,7 +174,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public Boolean buttonExist(String loc) {
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
         } catch (Exception e) {
             return false;
         }
