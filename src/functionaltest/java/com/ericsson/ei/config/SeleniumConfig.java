@@ -95,7 +95,7 @@ public class SeleniumConfig {
                 LOGGER.error("Failed to load properties");
                 return false;
             } else {
-                LOGGER.info("Properties have been loaded.");
+                LOGGER.debug("Properties have been loaded.");
                 return true;
             }
         } catch (NumberFormatException e) {
