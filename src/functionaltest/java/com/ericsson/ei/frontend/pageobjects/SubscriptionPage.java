@@ -19,7 +19,6 @@ public class SubscriptionPage extends PageBaseClass {
 
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws IOException {
-
         super(mockedHttpClient, driver, baseUrl);
     }
 
@@ -83,7 +82,6 @@ public class SubscriptionPage extends PageBaseClass {
 
     public void clickFormsSaveBtn(String response) throws IOException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("btnSave")));
@@ -115,7 +113,6 @@ public class SubscriptionPage extends PageBaseClass {
     public String getValueFromElement() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
         WebElement metaTxt = driver.findElement(By.id("metaData"));
-        // >>>>>>> fe413762aead0916f28b6d8e890a22455b9f999d
         return metaTxt.getAttribute("value");
     }
 
@@ -164,7 +161,6 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickFormCloseBtn() {
-
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("close")));
         WebElement viewBtn = driver.findElement(By.className("close"));
         viewBtn.click();
@@ -193,8 +189,8 @@ public class SubscriptionPage extends PageBaseClass {
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
         Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("auth")));
-        WebElement reloadBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
+        WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
     }
-
 }
