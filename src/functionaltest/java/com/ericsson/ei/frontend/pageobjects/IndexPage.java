@@ -38,6 +38,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("testRulesBtn")));
         WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
