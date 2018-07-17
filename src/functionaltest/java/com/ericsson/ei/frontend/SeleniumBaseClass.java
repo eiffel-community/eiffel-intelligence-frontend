@@ -57,7 +57,7 @@ public class SeleniumBaseClass {
         MockitoAnnotations.initMocks(this);
         webController.setFrontendServicePort(randomServerPort);
 
-        driver = SeleniumConfig.getFirefoxDriver();
+        driver = SeleniumConfig.initFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
     }
 
@@ -72,14 +72,13 @@ public class SeleniumBaseClass {
         backendInstancesInformationWriter.write(default_instances_information);
         backendInstancesInformationWriter.close();
 
-        driver.quit();
         String verificationErrorString = verificationErrors.toString();
         if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
     }
 
-    protected String getJSONStringFromFile(String filepath) throws IOException {
+    protected static String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
 
