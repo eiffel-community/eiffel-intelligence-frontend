@@ -25,18 +25,17 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
             SeleniumConfig.getTempDownloadDirectory().getPath(), "subscriptionsTemplate.json");
     private static final String SUBSCRIPTION_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionTemplate.json");
-    private static final String RELOAD_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest",
+    private static final String SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionForUploadCase.json");
-    private static final String RELOAD_TEST_FILE_PATH_LDAP = String.join(File.separator, "src", "functionaltest",
+    private static final String SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionForUploadLDAP.json");
-    private static final String SAVE_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
+    private static final String SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForSaveCase.json");
-    private static final String UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
+    private static final String SUBSCRIPTION_FOR_UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "SubscriptionForUploadCase.json");
 
     private JavascriptExecutor js;
 
-//    @Ignore
     @Test
     public void testSubscription() throws Exception {
 
@@ -54,32 +53,27 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // with names
         // "Subscription1" and "Subscription2" are present AND there exists "edit" and
         // "delete buttons" for unauthorized user "ABCD"
-        String response = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH);
-        String deletePath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Delete')]";
-        String editPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Edit')]";
-        String viewPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'View')]";
-        subscriptionPage.clickReload(response);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")))));
-
-        assert (subscriptionPage.buttonExist(deletePath) == true);
-        assert (subscriptionPage.buttonExist(editPath) == true);
-        assert (subscriptionPage.buttonExist(viewPath) == true);
+        String response = this.getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
+        String deleteButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Delete')]";
+        String editButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Edit')]";
+        String viewButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'View')]";
+        subscriptionPage.clickReload(response);    
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription1')]]"));
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]"));
+        assert (subscriptionPage.buttonExist(deleteButtonXPath) == true);
+        assert (subscriptionPage.buttonExist(editButtonXPath) == true);
+        assert (subscriptionPage.buttonExist(viewButtonXPath) == true);
 
         // Given LDAP is enabled, "Reload" subscriptions and then click subscription
         // page with LDAP enabled with unauthorized user names
         // Verify that subscriptions exists but only with "View" button
-        String responseSub = this.getJSONStringFromFile(RELOAD_TEST_FILE_PATH_LDAP);
+        String responseSub = this.getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
         String responseAuth = "{\"security\":true}";
         subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
         indexPageObject.clickSubscriptionPage();
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
-        assert (subscriptionPage.buttonExist(deletePath) == false);
-        assert (subscriptionPage.buttonExist(editPath) == false);
-        assert (subscriptionPage.buttonExist(viewPath) == true);
+        assert (subscriptionPage.buttonExist(deleteButtonXPath) == false);
+        assert (subscriptionPage.buttonExist(editButtonXPath) == false);
+        assert (subscriptionPage.buttonExist(viewButtonXPath) == true);
 
         // Given LDAP is enabled, "Reload" subscriptions and then click subscription
         // page with LDAP enabled with both unauthorized and unauthorized user names (in
@@ -87,25 +81,24 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // "subscription2")
         // Verify that current user can see only their own subscriptions' edit and
         // delete buttons.
-        String key = "currentUser";
-        String value = "ABCD";
+        String keyForUser = "currentUser";
+        String valueForUser = "ABCD";
         js = ((JavascriptExecutor) driver);
-        js.executeScript(String.format("window.localStorage.setItem('%s','%s');", key, value));
+        js.executeScript(String.format("window.localStorage.setItem('%s','%s');", keyForUser, valueForUser));
         indexPageObject.clickSubscriptionPage();
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")))));
-        assert (subscriptionPage.buttonExist(deletePath) == true);
-        assert (subscriptionPage.buttonExist(editPath) == true);
-        assert (subscriptionPage.buttonExist(viewPath) == true);
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription1')]]"));       
+        assert (subscriptionPage.buttonExist(deleteButtonXPath) == true);
+        assert (subscriptionPage.buttonExist(editButtonXPath) == true);
+        assert (subscriptionPage.buttonExist(viewButtonXPath) == true);
 
         // Now, path for "subscriptions2" with user name "DEF", so user "ABCD" is
         // unauthorized for this subscription
-        String deletePath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Delete')]";
-        String editPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Edit')]";
-        String viewPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'View')]";
-        assert (subscriptionPage.buttonExist(deletePath2) == false);
-        assert (subscriptionPage.buttonExist(editPath2) == false);
-        assert (subscriptionPage.buttonExist(viewPath2) == true);
+        String deleteButtonXPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Delete')]";
+        String editButtonXPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'Edit')]";
+        String viewButtonXPath2 = "//tr[td[contains(.,'Subscription2')]]/td/button[contains(text(),'View')]";
+        assert (subscriptionPage.buttonExist(deleteButtonXPath2) == false);
+        assert (subscriptionPage.buttonExist(editButtonXPath2) == false);
+        assert (subscriptionPage.buttonExist(viewButtonXPath2) == true);
 
         // Test view button
         subscriptionPage.clickViewBtn();
@@ -121,10 +114,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription1")) == false)));
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> ((driver.getPageSource().contains("Subscription2")) == false)));
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]") == false);
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]") == false);
 
         // Verify that "get template" button works
         String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
@@ -136,10 +127,9 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
 
         // Upload a subscription, name as "Subscription_uploaded" with "Upload
         // SUbscriptions" button and verify
-        String mockedUploadResponse = this.getJSONStringFromFile(UPLOAD_FILE_PATH);
+        String mockedUploadResponse = this.getJSONStringFromFile(SUBSCRIPTION_FOR_UPLOAD_FILE_PATH);
         subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADED_TEMPLATE_FILE_PATH, mockedUploadResponse);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (driver.getPageSource().contains("Subscription_uploaded"))));
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription_uploaded')]]"));
 
         // Click "Add Subscription" button and verify that "Subscription Form" is open
         subscriptionPage.clickAddSubscription();
@@ -189,16 +179,15 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
         subscriptionPage.clickKVbtn(kvID);
-        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));     
 
         // Test save subscription form: add subscription name as
         // "selenium_test_subscription" and then click "save" button verification
         // that subscription is added in the datatable (and is displayed on the main
         // page)
-        String responseSave = this.getJSONStringFromFile(SAVE_TEST_FILE_PATH);
+        String responseSave = this.getJSONStringFromFile(SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> driver.getPageSource().contains("Selenium_test_subscription")));
+        assert(subscriptionPage.textExistsInTable("//tr[td[contains(.,'Selenium_test_subscription')]]"));
     }
 }

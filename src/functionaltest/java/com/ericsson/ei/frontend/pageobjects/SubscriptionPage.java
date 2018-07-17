@@ -15,11 +15,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SubscriptionPage extends PageBaseClass {
-    WebDriverWait wait = new WebDriverWait(driver, 10);
-
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws IOException {
-
         super(mockedHttpClient, driver, baseUrl);
     }
 
@@ -33,7 +30,8 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickAddSubscription() {
-        WebElement addSubscriptionBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
+        WebElement addSubscriptionBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
         addSubscriptionBtn.click();
     }
 
@@ -59,7 +57,6 @@ public class SubscriptionPage extends PageBaseClass {
                 .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'confirm')]")));
         WebElement confirmBtn = driver.findElement(By.xpath("//button[contains(text(),'confirm')]"));
         confirmBtn.click();
-
     }
 
     public void clickReload(String response) throws IOException {
@@ -83,7 +80,6 @@ public class SubscriptionPage extends PageBaseClass {
 
     public void clickFormsSaveBtn(String response) throws IOException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("btnSave")));
@@ -115,7 +111,6 @@ public class SubscriptionPage extends PageBaseClass {
     public String getValueFromElement() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
         WebElement metaTxt = driver.findElement(By.id("metaData"));
-        // >>>>>>> fe413762aead0916f28b6d8e890a22455b9f999d
         return metaTxt.getAttribute("value");
     }
 
@@ -164,7 +159,6 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickFormCloseBtn() {
-
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("close")));
         WebElement viewBtn = driver.findElement(By.className("close"));
         viewBtn.click();
@@ -179,7 +173,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public Boolean buttonExist(String loc) {
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
         } catch (Exception e) {
             return false;
         }
@@ -193,8 +187,22 @@ public class SubscriptionPage extends PageBaseClass {
                 Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
         Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("auth")));
-        WebElement reloadBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
+        WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
     }
 
+    public Boolean textExistsInTable(String loc) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public String gett(String xx) {
+        WebElement aa = new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//table/tbody/tr[2]/td[2]/textarea")));
+        return aa.getAttribute("value");
+    }
 }

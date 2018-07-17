@@ -7,7 +7,6 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
 
-
     <title>Eiffel Intelligence Subscription Handling</title>
 
 </head>
@@ -132,7 +131,6 @@
                             </div>
                         </div>
 
-
                         <div class="pb-3 border border-primary form-group">
                             <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
 
@@ -149,8 +147,7 @@
                                     <td data-bind="visible: $root.formpostkeyvaluepairs">
                                         <input data-toggle="tooltip" title="Specify a Key" data-bind="textInput:$data.formkey" name="formkey"
                                                placeholder="Key" class="form-control" type="text"/>                                               
-                                    </td>
-                                    
+                                    </td>                                    
                                     <td>
                                         <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.formvalue"
                                                   name="formvalue" placeholder="Value" class="form-control" type="text"></textarea>
@@ -187,13 +184,16 @@
                         <div class="pb-3 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                             <label class="pl-1 control-label font-weight-bold">User Name*</label>
                             <div>
+
                                 <input id="userNameInput" data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName" placeholder="userName" class="form-control" type="text" />
+
                                 <span class="help-block"></span>
                             </div>                            
                         
                             <label class="pl-1 control-label font-weight-bold">Token*</label>
                             <div>
                                 <input id="tokenInput" data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token" class="form-control" type="password" />
+
                                 <span class="help-block"></span>
                             </div>
                                                     
@@ -272,7 +272,6 @@
                                     class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Requirement
                             </button>
                         </div>
-
 
                         <!-- /ko -->
 
