@@ -193,16 +193,6 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public Boolean textExistsInTable(String loc) {
-        try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-    
-    public String gett(String xx) {
-        WebElement aa = new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//table/tbody/tr[2]/td[2]/textarea")));
-        return aa.getAttribute("value");
+        return buttonExist(loc);
     }
 }
