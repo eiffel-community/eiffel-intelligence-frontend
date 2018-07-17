@@ -11,6 +11,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Properties;
@@ -76,8 +77,7 @@ public class SeleniumConfig {
     }
 
     private static FirefoxBinary installFirefoxBinary() {
-        String[] firefoxBZip2FileUrlLinuxBits = firefoxBZip2FileUrlLinux.split("/");
-        String firefoxBZip2FileNameLinux = firefoxBZip2FileUrlLinuxBits[firefoxBZip2FileUrlLinuxBits.length-1];
+        String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxBZip2FileUrlLinux);
 
         String firefoxBZip2FilePath = String.join(
                 File.separator, tempDownloadDirectory.getPath(), firefoxBZip2FileNameLinux);
