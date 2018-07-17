@@ -24,7 +24,6 @@ public class SeleniumConfig {
     private static String propertiesFile = "functional-test.properties";
 
     private static String firefoxBZip2FileUrlLinux = "";
-    private static String firefoxBZip2FileNameLinux = "";
 
     private static File tempDownloadDirectory = Files.createTempDir();
     private static FirefoxDriver driver;
@@ -50,14 +49,7 @@ public class SeleniumConfig {
         };
 
         if (SystemUtils.IS_OS_LINUX) {
-            String firefoxBZip2FilePath = String.join(
-                    File.separator, tempDownloadDirectory.getPath(), firefoxBZip2FileNameLinux);
-            Utils.downloadFileFromUrlToDestination(firefoxBZip2FileUrlLinux, firefoxBZip2FilePath);
-            Utils.extractBZip2InDir(firefoxBZip2FilePath, tempDownloadDirectory.getPath());
-            File firefoxBinaryFilePath = new File(
-                    String.join(File.separator, tempDownloadDirectory.getPath(), "firefox", "firefox"));
-            Utils.makeBinFileExecutable(firefoxBinaryFilePath);
-            FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxBinaryFilePath);
+            FirefoxBinary firefoxBinary = installFirefoxBinary();
             firefoxOptions.setBinary(firefoxBinary);
 
             System.setProperty("webdriver.gecko.driver", "src/functionaltest/resources/geckodriver");
@@ -83,24 +75,32 @@ public class SeleniumConfig {
         return "http://localhost:" + randomServerPort;
     }
 
+    private static FirefoxBinary installFirefoxBinary() {
+        String[] firefoxBZip2FileUrlLinuxBits = firefoxBZip2FileUrlLinux.split("/");
+        String firefoxBZip2FileNameLinux = firefoxBZip2FileUrlLinuxBits[firefoxBZip2FileUrlLinuxBits.length-1];
+
+        String firefoxBZip2FilePath = String.join(
+                File.separator, tempDownloadDirectory.getPath(), firefoxBZip2FileNameLinux);
+        Utils.downloadFileFromUrlToDestination(firefoxBZip2FileUrlLinux, firefoxBZip2FilePath);
+        Utils.extractBZip2InDir(firefoxBZip2FilePath, tempDownloadDirectory.getPath());
+        File firefoxBinaryFilePath = new File(
+                String.join(File.separator, tempDownloadDirectory.getPath(), "firefox", "firefox"));
+        Utils.makeBinFileExecutable(firefoxBinaryFilePath);
+        FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxBinaryFilePath);
+        return firefoxBinary;
+    }
     private static boolean loadProperties() {
         final String propertiesFilePath = String.join(File.separator, propertiesPath, propertiesFile);
         final Properties properties = Utils.getProperties(propertiesFilePath);
 
-        try {
-            firefoxBZip2FileUrlLinux = properties.getProperty("test.selenium.firefox.BZip2File.linux");
-            firefoxBZip2FileNameLinux = properties.getProperty("test.selenium.firefox.BZip2File.linux.name");
+        firefoxBZip2FileUrlLinux = properties.getProperty("test.selenium.firefox.BZip2File.url.linux");
 
-            if (StringUtils.isEmpty(firefoxBZip2FileUrlLinux) || StringUtils.isEmpty(firefoxBZip2FileNameLinux)) {
-                LOGGER.error("Failed to load properties");
-                return false;
-            } else {
-                LOGGER.debug("Properties have been loaded.");
-                return true;
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.error("Failed to parse integer.\nError: {}", e.getMessage());
+        if (StringUtils.isEmpty(firefoxBZip2FileUrlLinux)) {
+            LOGGER.error("Failed to load properties, firefoxBZip2FileUrlLinux is not set.");
+            return false;
+        } else {
+            LOGGER.debug("Properties have been loaded.");
+            return true;
         }
-        return false;
     }
 }
