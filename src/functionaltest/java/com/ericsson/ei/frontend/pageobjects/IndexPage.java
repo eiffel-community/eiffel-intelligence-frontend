@@ -45,13 +45,6 @@ public class IndexPage extends PageBaseClass {
         return testRulesPage;
     }
     
-//    public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
-//      WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
-//      subscriptionBtn.click();
-//      SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
-//      return subscriptionPage;
-//  }
-
     public SubscriptionPage clickSubscriptionPage() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
         WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));

@@ -38,7 +38,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
 
     @Test
     public void testSubscription() throws Exception {
-
         // Open index page
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
