@@ -1,11 +1,13 @@
 package com.ericsson.ei.config;
 
 import com.ericsson.ei.frontend.exception.OSNotSupportedException;
+
 import com.google.common.io.Files;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
