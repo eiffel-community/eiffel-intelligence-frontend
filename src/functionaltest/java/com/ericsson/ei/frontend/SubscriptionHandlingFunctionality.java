@@ -38,7 +38,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
 
     @Test
     public void testSubscription() throws Exception {
-
         // Open index page
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
@@ -50,8 +49,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
                 .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
         // Press "Reload" button without enabling LDAP and verify that two subscriptions
-        // with names
-        // "Subscription1" and "Subscription2" are present AND there exists "edit" and
+        // with names "Subscription1" and "Subscription2" are present AND there exists "edit" and
         // "delete buttons" for unauthorized user "ABCD"
         String response = this.getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
         String deleteButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Delete')]";

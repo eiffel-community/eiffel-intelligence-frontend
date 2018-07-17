@@ -19,10 +19,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.mockito.Mockito.when;
 
 public class PageBaseClass {
-
     CloseableHttpClient mockedHttpClient;
     CloseableHttpResponse mockedHttpResponse;
-
     protected FirefoxDriver driver;
     protected String baseUrl;
     protected final int TIMEOUT_TIMER = 10;
@@ -43,7 +41,6 @@ public class PageBaseClass {
             webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                     .executeScript("return !!window.jQuery && window.jQuery.active==0").equals(true));
         } catch(Exception e) {
-
             // Sometimes jQuery.active hangs, will work after a hardcoded timer in worst case.
         }
     }
@@ -52,12 +49,9 @@ public class PageBaseClass {
         HttpEntity entity = EntityBuilder.create().setText(message).setContentType(ContentType.APPLICATION_JSON)
                 .build();
         CloseableHttpResponse mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
-
         mockedHttpResponse.setEntity(entity);
-
         when(mockedHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
         when(mockedHttpResponse.getEntity()).thenReturn(entity);
-
         return mockedHttpResponse;
     }
 }
