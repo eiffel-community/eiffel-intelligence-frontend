@@ -26,6 +26,7 @@ function instanceModel() {
 				cache: false,
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					$.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+					errorsStore.add(XMLHttpRequest.responseText);
 				},
 				success: function (responseData, XMLHttpRequest, textStatus) {
 					$.jGrowl("Added new backend instance", {sticky: false, theme: 'Notify'});

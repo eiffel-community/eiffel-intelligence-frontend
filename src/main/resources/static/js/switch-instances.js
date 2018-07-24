@@ -33,6 +33,7 @@ function multipleInstancesModel(data) {
             contentType: 'application/json; charset=utf-8',
             cache: false,
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorsStore.add(XMLHttpRequest.responseText);
                 $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
             },
             success: function (responseData, XMLHttpRequest, textStatus) {
@@ -59,6 +60,7 @@ function multipleInstancesModel(data) {
 			contentType: 'application/json; charset=utf-8',
 			cache: false,
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
+			    errorsStore.add(XMLHttpRequest.responseText);
 			    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
 			},
 			success: function (responseData, XMLHttpRequest, textStatus) {
@@ -73,6 +75,7 @@ $.ajax({
 	contentType: 'application/json; charset=utf-8',
 	cache: false,
 	error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    errorsStore.add("Failure when trying to load backend instances");
 		$.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
 	},
 	success: function (responseData, XMLHttpRequest, textStatus) {

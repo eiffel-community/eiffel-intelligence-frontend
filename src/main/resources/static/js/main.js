@@ -155,7 +155,9 @@ jQuery(document).ready(function() {
             $.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
-            ko.applyBindings(new viewModel(responseData));
+            var observableObject = $("#selectInstances")[0];
+            ko.cleanNode(observableObject);
+            ko.applyBindings(new viewModel(responseData),observableObject);
         }
     });
 });

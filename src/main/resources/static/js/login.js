@@ -34,6 +34,7 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 			},
 			error : function (request, textStatus, errorThrown) {
 				$.jGrowl("Bad credentials", { sticky : false, theme : 'Error' });
+				errorsStore.add("Bad credentials");
 			},
 			success : function (responseData, textStatus) {
 				var currentUser = JSON.parse(ko.toJSON(responseData)).user;
