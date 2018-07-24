@@ -39,59 +39,54 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
         // Verify that we can navigate to test rules page
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader());
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader()));
 
         // Verify that "download rules template" button works
-        String mockedResponse = this.getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfClickDownloadRulesTemplateButton());
+        String mockedResponse = getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
         testRulesPage.clickDownloadRulesTemplate(mockedResponse);
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
-        String downloadedRulesTemplate = this.getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
+        String downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
         assertEquals(mockedResponse, downloadedRulesTemplate);
 
         // Verify that uploading the downloaded template file works.
         testRulesPage.uploadRulesTemplate(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfRuleNumber(2));
         String firstRule = testRulesPage.getFirstRuleText();
         assertEquals(true, downloadedRulesTemplate.contains(firstRule));
 
         // Verify that it is possible to download rules
         testRulesPage.clickDownloadRulesButton();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_FILE_PATH)));
-        String downloadedRules = this.getJSONStringFromFile(DOWNLOADED_RULES_FILE_PATH);
+        String downloadedRules = getJSONStringFromFile(DOWNLOADED_RULES_FILE_PATH);
         assertEquals(downloadedRulesTemplate, downloadedRules);
 
         // Verify that add rule button works
         testRulesPage.clickAddRuleButton();
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfRuleNumber(3));
 
         // Verify that removing a rule works
         testRulesPage.clickRemoveRuleNumber(3);
-        new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfRuleNumber(3));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfRuleNumber(3)));
 
         // Verify that "download events template" button works
-        String downloadEventsTemplateMockedResponse = this.getJSONStringFromFile(EVENTS_TEMPLATE_FILE_PATH);
+        String downloadEventsTemplateMockedResponse = getJSONStringFromFile(EVENTS_TEMPLATE_FILE_PATH);
         testRulesPage.clickDownloadEventsTemplate(downloadEventsTemplateMockedResponse);
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH)));
-        String downloadedEventsTemplate = this.getJSONStringFromFile(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH);
+        String downloadedEventsTemplate = getJSONStringFromFile(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH);
         assertEquals(downloadEventsTemplateMockedResponse, downloadedEventsTemplate);
 
         // Verify that uploading the downloaded template file works.
         testRulesPage.uploadEventsTemplate(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH);
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfEventNumber(2));
         String firstEvent = testRulesPage.getFirstEventText();
         assertEquals(true, downloadedEventsTemplate.contains(firstEvent));
 
         // Verify that add rule button works
         testRulesPage.clickAddEventButton();
-        new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfEventNumber(3));
 
         // Verify that removing a rule works
         testRulesPage.clickRemoveEventNumber(3);
-        new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfEventNumber(3));
+        assert(new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfEventNumber(3)));
 
         // Verify that find aggregated object button works
-        String findAggregatedObjectResponse = this.getJSONStringFromFile(AGGREGATED_OBJECT_FILE_PATH);
+        String findAggregatedObjectResponse = getJSONStringFromFile(AGGREGATED_OBJECT_FILE_PATH);
         testRulesPage.clickFindAggregatedObject(findAggregatedObjectResponse);
         assertEquals(findAggregatedObjectResponse, testRulesPage.getAggregatedResultData());
     }

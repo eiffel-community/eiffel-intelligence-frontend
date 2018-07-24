@@ -2,13 +2,16 @@ package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -54,12 +57,13 @@ public class SeleniumBaseClass {
         MockitoAnnotations.initMocks(this);
         webController.setFrontendServicePort(randomServerPort);
 
-        driver = SeleniumConfig.getFirefoxDriver();
+        driver = SeleniumConfig.initFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
     }
 
     @After
     public void tearDown() throws Exception {
+
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 
@@ -68,14 +72,13 @@ public class SeleniumBaseClass {
         backendInstancesInformationWriter.write(default_instances_information);
         backendInstancesInformationWriter.close();
 
-        driver.quit();
         String verificationErrorString = verificationErrors.toString();
         if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
     }
 
-    protected String getJSONStringFromFile(String filepath) throws IOException {
+    protected static String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
 
