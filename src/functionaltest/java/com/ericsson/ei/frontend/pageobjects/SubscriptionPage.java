@@ -171,7 +171,7 @@ public class SubscriptionPage extends PageBaseClass {
         return subscriptionNameElement.getText();
     }
 
-    public Boolean buttonExist(String loc) {
+    public boolean buttonExist(String loc) {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class SubscriptionPage extends PageBaseClass {
         reloadBtn.click();
     }
 
-    public Boolean textExistsInTable(String loc) {
+    public boolean textExistsInTable(String loc) {
         return buttonExist(loc);
     }
 }
