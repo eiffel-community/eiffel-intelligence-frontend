@@ -41,10 +41,6 @@ public class PageBaseClass {
             webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                     .executeScript("return !!window.jQuery && window.jQuery.active==0").equals(true));
         } catch(Exception e) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 0e89adf4b5a783ced84288409197965f5515665f
             // Sometimes jQuery.active hangs, will work after a hardcoded timer in worst case.
         }
     }
