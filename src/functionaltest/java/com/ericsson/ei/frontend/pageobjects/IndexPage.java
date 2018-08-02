@@ -14,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
-
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
         super(mockedHttpClient, driver, baseUrl);
     }
@@ -39,6 +38,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("testRulesBtn")));
         WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
@@ -46,6 +46,7 @@ public class IndexPage extends PageBaseClass {
         return testRulesPage;
     }
     
+<<<<<<< HEAD
 //    public SubscriptionPage clickSubscriptionPage() throws ClientProtocolException, IOException {
 //      WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
 //      subscriptionBtn.click();
@@ -53,6 +54,8 @@ public class IndexPage extends PageBaseClass {
 //      return subscriptionPage;
 //  }
 
+=======
+>>>>>>> 0e89adf4b5a783ced84288409197965f5515665f
     public SubscriptionPage clickSubscriptionPage() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
         WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
