@@ -56,8 +56,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String editButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'Edit')]";
         String viewButtonXPath = "//tr[td[contains(.,'Subscription1')]]/td/button[contains(text(),'View')]";
         subscriptionPage.clickReload(response);
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription1')]]"));
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]"));
+        assert (subscriptionPage.textExistsInTable("Subscription1"));
+        assert (subscriptionPage.textExistsInTable("Subscription2"));
         assert (subscriptionPage.buttonExist(deleteButtonXPath) == true);
         assert (subscriptionPage.buttonExist(editButtonXPath) == true);
         assert (subscriptionPage.buttonExist(viewButtonXPath) == true);
@@ -84,7 +84,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         js = ((JavascriptExecutor) driver);
         js.executeScript(String.format("window.localStorage.setItem('%s','%s');", keyForUser, valueForUser));
         indexPageObject.clickSubscriptionPage();
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription1')]]"));
+        assert (subscriptionPage.textExistsInTable("Subscription1"));
         assert (subscriptionPage.buttonExist(deleteButtonXPath) == true);
         assert (subscriptionPage.buttonExist(editButtonXPath) == true);
         assert (subscriptionPage.buttonExist(viewButtonXPath) == true);
@@ -112,8 +112,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]") == false);
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription2')]]") == false);
+        assert (subscriptionPage.textExistsInTable("Subscription1") == false);
+        assert (subscriptionPage.textExistsInTable("Subscription2") == false);
 
         // Verify that "get template" button works
         String mockedTemplateResponse = this.getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
@@ -127,7 +127,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // SUbscriptions" button and verify
         String mockedUploadResponse = this.getJSONStringFromFile(SUBSCRIPTION_FOR_UPLOAD_FILE_PATH);
         subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADED_TEMPLATE_FILE_PATH, mockedUploadResponse);
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Subscription_uploaded')]]"));
+        assert (subscriptionPage.textExistsInTable("Subscription_uploaded"));
 
         // Click "Add Subscription" button and verify that "Subscription Form" is open
         subscriptionPage.clickAddSubscription();
@@ -186,6 +186,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String responseSave = this.getJSONStringFromFile(SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
-        assert (subscriptionPage.textExistsInTable("//tr[td[contains(.,'Selenium_test_subscription')]]"));
+        assert (subscriptionPage.textExistsInTable("Selenium_test_subscription"));
     }
 }

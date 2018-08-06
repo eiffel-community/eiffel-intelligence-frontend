@@ -192,7 +192,12 @@ public class SubscriptionPage extends PageBaseClass {
         reloadBtn.click();
     }
 
-    public boolean textExistsInTable(String loc) {
-        return buttonExist(loc);
+    public boolean textExistsInTable(String txt) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }
