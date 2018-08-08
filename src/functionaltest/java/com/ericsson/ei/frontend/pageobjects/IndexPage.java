@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend.pageobjects;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
+
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -13,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
-
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
         super(mockedHttpClient, driver, baseUrl);
     }
@@ -38,13 +38,14 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("testRulesBtn")));
         WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
         testRulesBtn.click();
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
         return testRulesPage;
     }
-
+    
     public SubscriptionPage clickSubscriptionPage() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
         WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
@@ -63,6 +64,7 @@ public class IndexPage extends PageBaseClass {
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();
     }
+
 
     public void clickAdminBackendInstancesBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("adminBackendInstancesBtn")));
@@ -95,3 +97,4 @@ public class IndexPage extends PageBaseClass {
         waitForJQueryToLoad();
     }
 }
+

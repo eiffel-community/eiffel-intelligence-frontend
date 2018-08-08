@@ -25,18 +25,18 @@ public class SwitchBackendPage extends PageBaseClass {
     }
 
     public void switchToBackendInstance(int backendNumber) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("SelectBackendInstance" + backendNumber)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("SelectBackendInstance" + backendNumber)));
         WebElement selectBox = driver.findElement(By.id("SelectBackendInstance" + backendNumber));
         selectBox.click();
 
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("switcher")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcher")));
         WebElement switcher = driver.findElement(By.id("switcher"));
         switcher.click();
         waitForJQueryToLoad();
     }
 
     public void removeInstanceNumber(int number) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("removeBtn" + number)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("removeBtn" + number)));
         WebElement removeBtn = driver.findElement(By.id("removeBtn1"));
         removeBtn.click();
     }

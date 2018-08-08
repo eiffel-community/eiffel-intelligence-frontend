@@ -21,10 +21,10 @@ import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 import com.ericsson.ei.frontend.pageobjects.SwitchBackendPage;
 
 public class TestSwitchBackend extends SeleniumBaseClass{
-    private MockServerClient mockClient1;
-    private MockServerClient mockClient2;
-    private ClientAndServer mockServer1;
-    private ClientAndServer mockServer2;
+    private static MockServerClient mockClient1;
+    private static MockServerClient mockClient2;
+    private static ClientAndServer mockServer1;
+    private static ClientAndServer mockServer2;
 
 
     private static final String BASE_URL = "localhost";
@@ -37,10 +37,9 @@ public class TestSwitchBackend extends SeleniumBaseClass{
         File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
     private static final String INFORMATION_RESPONSE_FILEPATH = String.join(
         File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
+
     @Test
     public void testSwitchBackend() throws Exception {
-        setUpMocks();
-
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
         indexPageObject.loadPage();
@@ -75,14 +74,15 @@ public class TestSwitchBackend extends SeleniumBaseClass{
             false, switchBackendPage.presenceOfInstance(1));
     }
 
-    private void setUpMocks() throws IOException {
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
         mockServer1 = startClientAndServer(PORTSERVER1);
         mockServer2 = startClientAndServer(PORTSERVER2);
 
         mockClient1 = new MockServerClient(BASE_URL, PORTSERVER1);
         mockClient2 = new MockServerClient(BASE_URL, PORTSERVER2);
 
-        String informationResponse = this.getJSONStringFromFile(INFORMATION_RESPONSE_FILEPATH);
+        String informationResponse = getJSONStringFromFile(INFORMATION_RESPONSE_FILEPATH);
         mockClient2
             .when(
                 request()
@@ -103,7 +103,7 @@ public class TestSwitchBackend extends SeleniumBaseClass{
                     .withStatusCode(200)
                     .withBody(""));
 
-        String newInstanceSubscriptionResponse = this.getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
+        String newInstanceSubscriptionResponse = getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
         mockClient2
             .when(
                 request()
@@ -113,7 +113,7 @@ public class TestSwitchBackend extends SeleniumBaseClass{
                 response().withStatusCode(200)
                     .withBody(newInstanceSubscriptionResponse));
 
-        String defaultInstanceSubscriptionResponse = this.getJSONStringFromFile(DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
+        String defaultInstanceSubscriptionResponse = getJSONStringFromFile(DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
         mockClient1
             .when(
                 request()
@@ -123,5 +123,14 @@ public class TestSwitchBackend extends SeleniumBaseClass{
                 response()
                     .withStatusCode(200)
                     .withBody(defaultInstanceSubscriptionResponse));
+    }
+
+    @AfterClass
+    public static void tearDownMocks() {
+        mockServer1.stop();
+        mockServer2.stop();
+
+        mockClient1.stop();
+        mockClient2.stop();
     }
 }

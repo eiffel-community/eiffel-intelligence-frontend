@@ -2,7 +2,7 @@
   {  
     "aggregationtype":"eiffel-intelligence",
     "created":1524037895385,
-    "userName" : "DEF",
+    "userName" : "ABCD",
     "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/x-www-form-urlencoded",
@@ -27,10 +27,11 @@
       "$oid":"5ad6f907c242af3f1469751d"
     }
   },
+  
   {  
     "aggregationtype":"eiffel-intelligence",
     "created":1524037895415,
-    "userName" : "ABCD",
+    "userName" : "EFGH",
     "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/x-www-form-urlencoded",
@@ -58,7 +59,7 @@
   {  
     "aggregationtype":"eiffel-intelligence",
     "created":1524223397628,
-    "userName" : "XYZ",
+    "userName" : "ABCD",
     "notificationMeta":"http://<MyHost:port>/api/doit",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/json",
@@ -78,37 +79,10 @@
         ]
       }
     ],
-    "subscriptionName":"Selenium_test_subscription",
-    "_id":{  
-      "$oid":"5ad9cda5b715d336247e4980"
-    }
-  },
-  {  
-    "aggregationtype":"eiffel-intelligence",
-    "created":1524223397628,
-    "userName" : "LMNO",
-    "notificationMeta":"http://<MyHost:port>/api/doit",
-    "notificationType":"REST_POST",
-    "restPostBodyMediaType":"application/json",
-    "notificationMessageKeyValues":[  
-      {  
-        "formkey":"",
-        "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
-      }
-    ],
-    "repeat":false,
-    "requirements":[  
-      {  
-        "conditions":[  
-          {  
-            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
-          }
-        ]
-      }
-    ],
-    "subscriptionName":"Subscription_uploaded",
+    "subscriptionName":"Subscription3",
     "_id":{  
       "$oid":"5ad9cda5b715d336247e4980"
     }
   }
+  
 ]
