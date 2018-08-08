@@ -33,8 +33,7 @@ function multipleInstancesModel(data) {
             contentType: 'application/json; charset=utf-8',
             cache: false,
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                errorsStore.add(XMLHttpRequest.responseText);
-                $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+                window.logMessages(XMLHttpRequest.responseText);
             },
             success: function (responseData, XMLHttpRequest, textStatus) {
                 $.jGrowl("Backend instance was deleted", {sticky: false, theme: 'Notify'});
@@ -60,8 +59,7 @@ function multipleInstancesModel(data) {
 			contentType: 'application/json; charset=utf-8',
 			cache: false,
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
-			    errorsStore.add(XMLHttpRequest.responseText);
-			    $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+			    window.logMessages(XMLHttpRequest.responseText);
 			},
 			success: function (responseData, XMLHttpRequest, textStatus) {
 			    $(location).attr('href', frontendServiceUrl)
@@ -75,8 +73,7 @@ $.ajax({
 	contentType: 'application/json; charset=utf-8',
 	cache: false,
 	error: function (XMLHttpRequest, textStatus, errorThrown) {
-	    errorsStore.add("Failure when trying to load backend instances");
-		$.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
+	    window.logMessages("Failure when trying to load backend instances");
 	},
 	success: function (responseData, XMLHttpRequest, textStatus) {
 		var observableObject = $("#instancesModel")[0];

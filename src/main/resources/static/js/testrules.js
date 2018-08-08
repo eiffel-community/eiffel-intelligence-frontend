@@ -41,7 +41,7 @@ jQuery(document).ready(
             callback.beforeSend();
           },
           error : function(XMLHttpRequest, textStatus, errorThrown) {
-            errorsStore.add(XMLHttpRequest.responseText);
+            window.logMessages(XMLHttpRequest.responseText);
             callback.error(XMLHttpRequest, textStatus, errorThrown);
           },
           success : function(data, textStatus) {
@@ -63,7 +63,7 @@ jQuery(document).ready(
           JSON.parse(str);
           return true;
         } catch (e) {
-          errorsStore.add(e.message);
+          window.logMessages(e.message);
           return false;
         }
       }
@@ -81,11 +81,7 @@ jQuery(document).ready(
           var context = ko.contextFor(event.target);
           self.rulesBindingList.splice(context.$index(), 1);
           if (self.rulesBindingList().length == 0) {
-            errorsStore.add("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
-            $.jGrowl("Deleted all rule types, but we need atleast one Rule type, Here add default rule type", {
-              sticky : false,
-              theme : 'Error'
-            });
+            window.logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
             self.rulesBindingList.push(ruleTemplate);
           }
         };
@@ -96,12 +92,7 @@ jQuery(document).ready(
           self.eventsBindingList.splice(context.$index(), 1);
           if (self.eventsBindingList().length == 0) {
             self.eventsBindingList.push({});
-            errorsStore.add("Deleted all events, but we need atleast one event.");
-            $.jGrowl("Deleted all events, but we need atleast one event.", {
-              sticky : false,
-              theme : 'Error'
-            });
-            
+            window.logMessages("Deleted all events, but we need atleast one event.");
           }
         };
 
@@ -113,11 +104,7 @@ jQuery(document).ready(
             try {
               formRules.push(JSON.parse($(this).val()));
             } catch (e) {
-              errorsStore.add("Invalid json rule format :\n" + $(this).val());
-              $.jGrowl("Invalid json rule format :\n" + $(this).val(), {
-                sticky : false,
-                theme : 'Error'
-              });
+              window.logMessages("Invalid json rule format :\n" + $(this).val());
               return false;
             }
           });
@@ -127,11 +114,7 @@ jQuery(document).ready(
             try {
               formEvents.push(JSON.parse($(this).val()));
             } catch (e) {
-              errorsStore.add("Invalid json event format :\n" + $(this).val());
-              $.jGrowl("Invalid json event format :\n" + $(this).val(), {
-                sticky : false,
-                theme : 'Error'
-              });
+              window.logMessages("Invalid json event format :\n" + $(this).val());
               return false;
             }
           });
@@ -157,11 +140,7 @@ jQuery(document).ready(
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
-              errorsStore.add("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText);
-              $.jGrowl("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText, {
-                sticky : false,
-                theme : 'Error'
-              });
+                window.logMessages("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText);
             },
             complete : function() {
             }
@@ -199,9 +178,9 @@ jQuery(document).ready(
 	        try {
 	          jsonLintResult = jsonlint.parse(fileContent);
 	        } catch (e) {
-	          errorsStore.add("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	          $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	          return false;
+	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+	            $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+	            return false;
 	        }
 	        $.jGrowl('JSON Format Check Succeeded', {
 	          sticky : false,
@@ -229,7 +208,7 @@ jQuery(document).ready(
             try {
               jsonLintResult = jsonlint.parse(fileContent);
             } catch (e) {
-              errorsStore.add("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
+              window.logMessages("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
               $.alert("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
               return false;
             }
@@ -330,11 +309,7 @@ jQuery(document).ready(
           try {
             formRules.push(JSON.parse($(this).val()));
           } catch (e) {
-            errorsStore.add("Invalid json format :\n" + $(this).val());
-            $.jGrowl("Invalid json format :\n" + $(this).val(), {
-              sticky : false,
-              theme : 'Error'
-            });
+            window.logMessages("Invalid json format :\n" + $(this).val());
             return false;
           }
         });
@@ -342,11 +317,7 @@ jQuery(document).ready(
           var jsonData = JSON.stringify(formRules, null, 2);
           downloadFile(jsonData, "application/json;charset=utf-8", "rules.json");
         } else {
-          errorsStore.add("Data not available for download!");
-          $.jGrowl("Data not available for download!", {
-            sticky : false,
-            theme : 'Error'
-          });
+            window.logMessages("Data not available for download!");
         }
 
       });

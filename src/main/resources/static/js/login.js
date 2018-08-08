@@ -12,10 +12,7 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 		this.login = function(userState, remember) {
 			var dataJSON = ko.toJSON(userState);
 			if(JSON.parse(dataJSON).username == "" || JSON.parse(dataJSON).password == "") {
-				$.jGrowl("Username and password fields cannot be empty", {
-					sticky : false,
-					theme : 'Error'
-				});
+				$.jGrowl("Username and password fields cannot be empty", { sticky : false, theme : 'Error'});
 			} else {
 				var token = window.btoa(JSON.parse(dataJSON).username + ":" + JSON.parse(dataJSON).password);
 				sendLoginRequest(frontendServiceUrl + "/auth/login", "GET", token);
@@ -33,8 +30,7 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 				request.setRequestHeader("Authorization", "Basic " + token);
 			},
 			error : function (request, textStatus, errorThrown) {
-				$.jGrowl("Bad credentials", { sticky : false, theme : 'Error' });
-				errorsStore.add("Bad credentials");
+				window.logMessages("Bad credentials");
 			},
 			success : function (responseData, textStatus) {
 				var currentUser = JSON.parse(ko.toJSON(responseData)).user;

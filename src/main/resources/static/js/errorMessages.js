@@ -16,3 +16,7 @@ $.get(frontendServiceUrl + "/getErrors", function(responseData){
     ko.cleanNode(observableObject);
     ko.applyBindings(new viewModel(responseData), observableObject);
 });}
+function logMessages(message){
+    $.jGrowl(message, {sticky: false, theme: 'Error'});
+    errorsStore.add(message);
+}
