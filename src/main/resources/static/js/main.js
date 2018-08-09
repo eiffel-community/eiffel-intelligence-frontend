@@ -135,7 +135,7 @@ jQuery(document).ready(function() {
             	    contentType: 'application/json; charset=utf-8',
             	    cache: false,
             	    error: function (XMLHttpRequest, textStatus, errorThrown) {
-            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	        window.logMessages(XMLHttpRequest.responseText);
             	    },
             	    success: function (responseData, XMLHttpRequest, textStatus) {
             	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
@@ -152,7 +152,7 @@ jQuery(document).ready(function() {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
+            window.logMessages("Failure when trying to load backend instances");
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
             var observableObject = $("#selectInstances")[0];

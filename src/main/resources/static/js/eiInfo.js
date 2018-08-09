@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
               contentType : 'application/json;charset=UTF-8',
               type: 'GET',
               error : function (XMLHttpRequest, textStatus, errorThrown) {
-                  errorsStore.add(XMLHttpRequest.responseText);
+                  window.logMessages(XMLHttpRequest.responseText);
                   if (XMLHttpRequest.responseText == "") {
                       document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">There is no response from backend</h3>";
                   } else {
