@@ -74,6 +74,7 @@ jQuery(document).ready(function() {
 		$("#userName").text("Guest");
 		$("#loginBlock").show();
 		$("#logoutBlock").hide();
+		localStorage.setItem('errorsStore', []);
 	}
 
 	function loadDocumentLinks(){

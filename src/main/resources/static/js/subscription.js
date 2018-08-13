@@ -87,6 +87,7 @@ jQuery(document).ready(function() {
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
 	    $(".show_if_authorized").hide();
+	    localStorage.setItem('errorsStore', []);
     }
 
     // Check if EI Backend Server is online every X seconds

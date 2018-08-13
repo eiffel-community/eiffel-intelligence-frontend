@@ -1,22 +1,16 @@
 var frontendServiceUrl = $('#frontendServiceUrl').text();
-var errorsStore = (function(){
-    return {
-        add : function(errorMessage){
-            $.post(frontendServiceUrl + "/addErrors", { message : errorMessage });
-        },
-    }
-}());
+const errorsStore = [];
 function viewModel(data){
     this.errorMessages = ko.observableArray(data);
 }
 function getErrors(){
-    $.get(frontendServiceUrl + "/getErrors", function(responseData){
-        var observableObject = $("#alerts")[0];
-        ko.cleanNode(observableObject);
-        ko.applyBindings(new viewModel(responseData), observableObject);
-    });
+    const messageErr = JSON.parse(localStorage.getItem('errorsStore'));
+    var observableObject = $("#alerts")[0];
+    ko.cleanNode(observableObject);
+    ko.applyBindings(new viewModel(messageErr), observableObject);
 }
-function logMessages(message){
-    $.jGrowl(message, {sticky: false, theme: 'Error'});
-    errorsStore.add(message);
+function logMessages(messageErr){
+    $.jGrowl(messageErr, {sticky: false, theme: 'Error'});
+    errorsStore.push({message:messageErr});
+    localStorage.setItem('errorsStore', JSON.stringify(errorsStore));
 }
