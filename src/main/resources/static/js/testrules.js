@@ -375,7 +375,7 @@ jQuery(document).ready(
     		error: function () {},
     		success: function (data) {
     			isEnabled = JSON.parse(ko.toJSON(data)).status;
-    			if(isEnabled == false) {
+    			if(isEnabled != true) {
     				displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")}
     			},
     		complete: function () { }
