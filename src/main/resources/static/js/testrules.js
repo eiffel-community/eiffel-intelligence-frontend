@@ -383,20 +383,7 @@ jQuery(document).ready(
     	// Finish to check backend Test Rule Service status
     	
     	function displayOverlay(text) {
-    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").css({
-    	        "position": "fixed",
-    	        "top": 60,
-    	        "left": 250,
-    	        "width": "100%",
-    	        "height": "100%",
-    	        "background-color": "rgba(0,0,0,.5)",
-    	        "z-index": 10000,
-    	        "vertical-align": "middle",
-    	        "text-align": "center",
-    	        "color":  "rgba(128,0,0,1)",
-    	        "font-size": "25px",
-    	        "font-weight": "bold"
-    	    }).appendTo("#testRule");
+    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").addClass("testRulePage").appendTo("#testRule");
     	}
 
     }
