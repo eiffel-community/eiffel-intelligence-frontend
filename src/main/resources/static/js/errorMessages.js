@@ -1,11 +1,16 @@
-var frontendServiceUrl = $('#frontendServiceUrl').text();
-const errorsStore = [];
+var errorsStore = new Array();
+if(sessionStorage.getItem('errorsStore')){
+    let messageErr = JSON.parse(sessionStorage.getItem('errorsStore'));
+    for(var i=0; i<messageErr.length; i++){
+        errorsStore.push(messageErr[i]);
+    }
+}
 function viewModel(data){
     this.errorMessages = ko.observableArray(data);
 }
 function getErrors(){
-    const messageErr = JSON.parse(localStorage.getItem('errorsStore'));
-    var observableObject = $("#alerts")[0];
+    let messageErr = JSON.parse(sessionStorage.getItem('errorsStore'));
+    let observableObject = $("#qwerty")[0];
     ko.cleanNode(observableObject);
     ko.applyBindings(new viewModel(messageErr), observableObject);
 }
