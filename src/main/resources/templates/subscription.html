@@ -240,21 +240,19 @@
                                                   data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control"
                                                   type="text"></textarea>
                                         <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
-                                                data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right"><i
+                                                data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" style="margin-top: 5px"><i
                                                 class="glyphicon glyphicon-trash"></i>Delete
-                                        </button>
-                                        <span class="help-block"></span>
+                                        </button>     
                                     </div>
                                 </div>
 
 
                                 <!-- /ko -->
 
-                                <div>
-                                    <label class="p-3"></label>
-                                    <div>
+                                <div class="form-group">
+                                    <div class="p-3">
                                         <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false"
-                                                data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right"><i
+                                                data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right" style="margin-top: 5px"><i
                                                 class="glyphicon glyphicon-plus"></i> Add Condition
                                         </button>
                                     </div>
