@@ -737,6 +737,8 @@ jQuery(document).ready(function() {
             return;
         }
 
+	//Currently a free-form field
+	/*
         if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
             $.jGrowl("Only numbers and letters is valid to type in notificationMeta field.", {
                 sticky : false,
@@ -744,6 +746,7 @@ jQuery(document).ready(function() {
             });
             return;
         }
+	*/
 
         if (vm.subscription()[0].subscriptionName() == "") {
             $.jGrowl("Error: SubscriptionName field must have a value", {
