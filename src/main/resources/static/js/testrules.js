@@ -342,7 +342,7 @@ jQuery(document).ready(
 
       function getTemplate(name) {
         var request = new XMLHttpRequest();
-        request.open("GET", '/download/' + name, true);
+        request.open("GET", frontendServiceUrl + '/download/' + name, true);
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
            var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
@@ -366,37 +366,25 @@ jQuery(document).ready(
       });
       
    // Start to check is backend Test Rule service status
-  	var isEnabled = true;
-  	console.log('Here are my modifications');
-  	$.ajax({
-  		url: frontendServiceUrl + "/rules/rule-check/TestRulePageEnabled",
-  		contentType : 'application/json; charset=utf-8',
-  		type: 'GET',
-  		error: function () {},
-  		success: function (data) {
-  			isEnabled = JSON.parse(ko.toJSON(data)).status;
-  			if(isEnabled == false) {
-  				displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")}
-  			},
-  		complete: function () { }
-  	});
-  	// Finish to check backend Test Rule Service status
-  	
-  	function displayOverlay(text) {
-  	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").css({
-  	        "position": "fixed",
-  	        "top": 60,
-  	        "left": 250,
-  	        "width": "100%",
-  	        "height": "100%",
-  	        "background-color": "rgba(0,0,0,.5)",
-  	        "z-index": 10000,
-  	        "vertical-align": "middle",
-  	        "text-align": "center",
-  	        "color":  "rgba(128,0,0,1)",
-  	        "font-size": "25px",
-  	        "font-weight": "bold"
-  	    }).appendTo("#testRule");
-  	}
-  }
+    	var isEnabled = true;
+    	console.log('Here are my modifications');
+    	$.ajax({
+    		url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
+    		contentType : 'application/json; charset=utf-8',
+    		type: 'GET',
+    		error: function () {},
+    		success: function (data) {
+    			isEnabled = JSON.parse(ko.toJSON(data)).status;
+    			if(isEnabled != true) {
+    				displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")}
+    			},
+    		complete: function () { }
+    	});
+    	// Finish to check backend Test Rule Service status
+    	
+    	function displayOverlay(text) {
+    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").addClass("testRulePage").appendTo("#testRule");
+    	}
+
+    }
 );
