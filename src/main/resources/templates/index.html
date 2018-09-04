@@ -128,8 +128,8 @@
             <a class="dropdown-item small" href="#">View all messages</a>
           </div>
         </li>
-        <li class="nav-item dropdown" onclick="getErrors()">
-          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" onclick="getErrors()">
             <i class="fa fa-fw fa-bell"></i>
             <span class="d-lg-none">Alerts
               <span class="badge badge-pill badge-warning">6 New</span>
@@ -138,10 +138,10 @@
               <i class="fa fa-fw fa-circle"></i>
             </span>
           </a>
-          <div id="alerts" class="dropdown-menu" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages">
+          <div id="alerts" style="display: none;" class="dropdown-menu" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages">
             <div class="dropdown-divider"> </div>
               <a class="dropdown-item">
-                <div class="dropdown-message small" data-bind="text: message"></div>
+                <div class="dropdown-message small" data-bind="text: message, attr: {title: message}"></div>
               </a>
           </div>
         </li>
