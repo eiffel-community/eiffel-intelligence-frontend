@@ -57,7 +57,6 @@ public class SubscriptionPage extends PageBaseClass {
                 .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'confirm')]")));
         WebElement confirmBtn = driver.findElement(By.xpath("//button[contains(text(),'confirm')]"));
         confirmBtn.click();
-
     }
 
     public void clickReload(String response) throws IOException {
@@ -172,7 +171,7 @@ public class SubscriptionPage extends PageBaseClass {
         return subscriptionNameElement.getText();
     }
 
-    public Boolean buttonExist(String loc) {
+    public boolean buttonExist(String loc) {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
         } catch (Exception e) {
@@ -191,5 +190,14 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
+    }
+
+    public boolean textExistsInTable(String txt) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

@@ -323,7 +323,7 @@ jQuery(document).ready(
 
       function getTemplate(name) {
         var request = new XMLHttpRequest();
-        request.open("GET", '/download/' + name, true);
+        request.open("GET", frontendServiceUrl + '/download/' + name, true);
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
            var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
@@ -345,6 +345,27 @@ jQuery(document).ready(
         event.preventDefault();
         getTemplate("eventsTemplate");
       });
+      
+   // Start to check is backend Test Rule service status
+    	var isEnabled = true;
+    	console.log('Here are my modifications');
+    	$.ajax({
+    		url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
+    		contentType : 'application/json; charset=utf-8',
+    		type: 'GET',
+    		error: function () {},
+    		success: function (data) {
+    			isEnabled = JSON.parse(ko.toJSON(data)).status;
+    			if(isEnabled != true) {
+    				displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")}
+    			},
+    		complete: function () { }
+    	});
+    	// Finish to check backend Test Rule Service status
+    	
+    	function displayOverlay(text) {
+    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").addClass("testRulePage").appendTo("#testRule");
+    	}
 
     }
 );

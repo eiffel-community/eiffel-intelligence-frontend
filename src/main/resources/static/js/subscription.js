@@ -735,10 +735,13 @@ jQuery(document).ready(function() {
             return;
         }
 
+	//Currently a free-form field
+	/*
         if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
             window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
             return;
         }
+	*/
 
         if (vm.subscription()[0].subscriptionName() == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
