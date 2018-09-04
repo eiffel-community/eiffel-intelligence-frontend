@@ -1,0 +1,14 @@
+.modal-subscription {
+    max-width: 650px;
+}
+.sub-action-column {
+    min-width: 160px;
+}
+.rule-button {
+    width: 150px;
+}
+@media (max-width: 576px) {
+    .container {
+        max-width: 480px;
+    }
+}

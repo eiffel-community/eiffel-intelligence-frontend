@@ -1,309 +1,321 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
     <title>Eiffel Intelligence Subscription Handling</title>
-
 </head>
+
 <body>
 
-<div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
-<div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
+    <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
+    <div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
 
-<script type="text/javascript" src="resources/subscription_templates.js"></script>
+    <script type="text/javascript" src="resources/subscription_templates.js"></script>
 
-<div style="max-width: 100%;" class="container pull-left">
-    <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${frontendServiceUrl}"></span>)
-        <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status." type="button"
-                id="btnEIConnection" class="btn btnEIConnectionStatus"><i class="glyphicon"></i>EI Backend Status
-        </button>
-    </h1>
+    <div style="max-width: 100%;" class="container pull-left">
+        <div class="d-flex">
+            <div class="col-10">
+                <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (
+                    <span th:text="${frontendServiceUrl}"></span> )
+                </h1>
+            </div>
+            <div class="col-2">
+                <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status."
+                    type="button" id="btnEIConnection" class="btn btnEIConnectionStatus">
+                    <i class="glyphicon"></i>EI Backend Status
+                </button>
+            </div>
+        </div>
 
-    <h3 id="subData">Subscription Data</h3>
-    <br/>
-    <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
-        <i class="glyphicon glyphicon-plus"></i> Add Subscription
-    </button>
-    <button id="reloadButton" data-toggle="tooltip" title="Reload all subscriptions data from EI" class="btn btn-default table_reload">
-        <i class="glyphicon glyphicon-refresh"></i> Reload
-    </button>
-    <button id="bulkDelete" data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete show_if_authorized">
-        <i class="glyphicon glyphicon-trash"></i> Bulk Delete
-    </button>
-    <button id="getTemplateButton" data-toggle="tooltip" title="Download Subscription JSON template" class="btn btn-primary get_subscription_template">
-        <i class="glyphicon glyphicon-download"></i> Get Template
-    </button>
-        
-    <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_subscriptions show_if_authorized">
-        <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
-    </button>
-    <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
-    <br/>
-    <br/>
+        <div class="pb-1 col-12">
+            <h3 id="subData">Subscription Data</h3>
+            <br/>
+            <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="btn btn-success add_subscription show_if_authorized">
+                <i class="glyphicon glyphicon-plus"></i> Add Subscription
+            </button>
+            <button id="reloadButton" data-toggle="tooltip" title="Reload all subscriptions data from EI" class="btn btn-default table_reload">
+                <i class="glyphicon glyphicon-refresh"></i> Reload
+            </button>
+            <button id="bulkDelete" data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="btn btn-danger bulk_delete show_if_authorized">
+                <i class="glyphicon glyphicon-trash"></i> Bulk Delete
+            </button>
+            <button id="getTemplateButton" data-toggle="tooltip" title="Download Subscription JSON template" class="btn btn-primary get_subscription_template">
+                <i class="glyphicon glyphicon-download"></i> Get Template
+            </button>
 
-    <!-- Datatable -->
+            <button data-toggle="tooltip" title="Upload Subscription JSON" class="btn btn-info upload_subscriptions show_if_authorized">
+                <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
+            </button>
+            <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
+        </div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
+        <!-- Datatable -->
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
-    <div style="max-width: 50%;" class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="container pull-left">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <img class="float-left" data-dismiss="modal" src="assets/images/11656-200.png" height="15" width="15"/>
-                    <h3 class="modal-title text-center" id="formHeader">Subscription Form</h3>
+    <!-- Bootstrap modal -->
+    <div class="modal fade" id="modal_form" role="dialog">
+        <div class="modal-dialog modal-subscription">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container pull-left">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <img class="float-left" data-dismiss="modal" src="assets/images/11656-200.png" height="15" width="15" />
+                        <h3 class="modal-title text-center" id="formHeader">Subscription Form</h3>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body form" align="left">
-                <form action="#" id="form" class="form-horizontal">
-                    <input type="hidden" value="" name="id"/>
-                    <div id="ViewModelDOMObject" class="form-body">
+                <div class="modal-body form" align="left">
+                    <form action="#" id="form" class="form-horizontal">
+                        <input type="hidden" value="" name="id" />
+                        <div id="ViewModelDOMObject" class="form-body">
 
 
-                        <div class="form-group">
-                            <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
-                            <div>
-                                <select id="selectTemplate" data-toggle="tooltip" data-placement="right" title="Choose a Subscription Template" data-bind="options: subscription_templates_in,
+                            <div class="form-group">
+                                <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
+                                <div>
+                                    <select style="width: 100%" id="selectTemplate" data-toggle="tooltip" data-placement="right" title="Choose a Subscription Template"
+                                        data-bind="options: subscription_templates_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: choosen_subscription_template,
                                                optionsCaption: 'Choose...'"></select>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- ko foreach:  subscription -->
-                        <div class="form-group">
-                            <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
-                            <div>
-                                <input id="subscriptionNameInput"  data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
-                                       name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text"/>
-                                <span class="help-block"></span>
+                            <!-- ko foreach:  subscription -->
+                            <div class="form-group">
+                                <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
+                                <div>
+                                    <input id="subscriptionNameInput" data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
+                                        name="subscriptionName" placeholder="subscriptionName" class="form-control" type="text"
+                                    />
+                                    <span class="help-block"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group" data-bind="visible: created()">
-                            <label class="pl-1 control-label font-weight-bold">Date</label>
-                            <div>
-                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text: $root.getUTCDate($data.created())"
-                                      name="created" placeholder="created" class="form-control" type="text"></span>
-                                <span class="help-block"></span>
+                            <div class="form-group" data-bind="visible: created()">
+                                <label class="pl-1 control-label font-weight-bold">Date</label>
+                                <div>
+                                    <span data-toggle="tooltip" title="Specify the creation date" data-bind="text: $root.getUTCDate($data.created())" name="created"
+                                        placeholder="created" class="form-control" type="text"></span>
+                                    <span class="help-block"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group" data-bind="visible: $data.aggregationtype()">
-                            <label class="pl-1 control-label font-weight-bold">Type</label>
-                            <div>
-                                <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype"
-                                      name="aggregationtype" placeholder="aggregation_type" class="form-control" type="text"></span>
-                                <span class="help-block"></span>
+                            <div class="form-group" data-bind="visible: $data.aggregationtype()">
+                                <label class="pl-1 control-label font-weight-bold">Type</label>
+                                <div>
+                                    <span data-toggle="tooltip" title="Specify the creation date" data-bind="text:$data.aggregationtype" name="aggregationtype"
+                                        placeholder="aggregation_type" class="form-control" type="text"></span>
+                                    <span class="help-block"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="pl-1 control-label font-weight-bold">NotificationType</label>
-                            <div>
-                                <select id="notificationType" data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
+                            <div class="form-group">
+                                <label class="pl-1 control-label font-weight-bold">NotificationType</label>
+                                <div>
+                                    <select id="notificationType" data-toggle="tooltip" title="Choose a notification type" data-bind="options: $root.notificationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: $data.notificationType,
                                                optionsCaption: 'Choose...'"></select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group" data-bind="visible: notificationType() == 'REST_POST'">
-                            <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
-                            <div>
-                                <select data-toggle="tooltip" title="Choose a REST POST Media Type" data-bind="options: $root.restPostBodyType_in,
+                            <div class="form-group" data-bind="visible: notificationType() == 'REST_POST'">
+                                <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
+                                <div>
+                                    <select style="width: 100%" data-toggle="tooltip" title="Choose a REST POST Media Type" data-bind="options: $root.restPostBodyType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: $data.restPostBodyMediaType,
                                                optionsCaption: 'Choose...'"></select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="pb-3 border border-primary form-group">
-                            <label class="pl-1 control-label font-weight-bold">NotificationMessage</label>
+                            <div class="p-1 border border-primary form-group">
+                                <label class="control-label font-weight-bold">NotificationMessage</label>
 
-                            <table width="100%">
-                                <thead>
-                                <tr>
-                                    <th width="20%" data-bind="visible: $root.formpostkeyvaluepairs">Key</th>
-                                    <th width="70%">Value</th>
-                                    <th width="10%" data-bind="visible: $root.formpostkeyvaluepairs"></th>
-                                </tr>
-                                </thead>
-                                <tbody data-bind="foreach: notificationMessageKeyValues">
-                                <tr>
-                                    <td data-bind="visible: $root.formpostkeyvaluepairs">
-                                        <input data-toggle="tooltip" title="Specify a Key" data-bind="textInput:$data.formkey" name="formkey"
-                                               placeholder="Key" class="form-control" type="text"/>                                               
-                                    </td>                                    
-                                    <td>
-                                        <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.formvalue"
-                                                  name="formvalue" placeholder="Value" class="form-control" type="text"></textarea>
-                                    </td>
-                                    <td data-bind="visible: $root.formpostkeyvaluepairs">
-                                        <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); }, clickBubble: false"
-                                                data-toggle="tooltip" title="Delete Key/Value Pair" class="btn btn-danger float-right"><i
-                                                class="glyphicon glyphicon-trash"></i>Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th width="20%" data-bind="visible: $root.formpostkeyvaluepairs">Key</th>
+                                            <th width="70%">Value</th>
+                                            <th width="10%" data-bind="visible: $root.formpostkeyvaluepairs"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: notificationMessageKeyValues">
+                                        <tr>
+                                            <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
+                                                <input data-toggle="tooltip" title="Specify a Key" data-bind="textInput:$data.formkey" name="formkey" placeholder="Key" class="form-control"
+                                                    type="text" />
+                                            </td>
+                                            <td>
+                                                <textarea data-toggle="tooltip" title="Choose a notification message" data-bind="textInput:$data.formvalue" name="formvalue"
+                                                    placeholder="Value" class="form-control" type="text"></textarea>
+                                            </td>
+                                            <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
+                                                <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); }, clickBubble: false"
+                                                    data-toggle="tooltip" title="Delete Key/Value Pair" class="btn btn-danger float-right">
+                                                    <i class="glyphicon glyphicon-trash"></i>Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                            <div data-bind="visible: $root.formpostkeyvaluepairs" class="container p-1">
-                                <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" data-toggle="tooltip"
-                                        title="Add a new Form Key/Value Pair" class="btn btn-success float-left"><i
-                                        class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
-                                </button>
+                                <div data-bind="visible: $root.formpostkeyvaluepairs" class="pt-1 d-flex justify-content-end">
+                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" data-toggle="tooltip" title="Add a new Form Key/Value Pair"
+                                        class="btn btn-success">
+                                        <i class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
+                                    </button>
+                                </div>
                             </div>
-                        </div>                        
-                        
-                        <div class="pt-3 form-group">
-                            <label class="pl-1 control-label font-weight-bold">Authorization</label>
-                            <div>
-                            <select id="selectAuth" data-toggle="tooltip" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
+
+                            <div class="pt-3 form-group">
+                                <label class="pl-1 control-label font-weight-bold">Authorization</label>
+                                <div>
+                                    <select id="selectAuth" data-toggle="tooltip" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: authenticationType,
                                                optionsCaption: 'Choose...'"></select>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="pb-3 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
-                            <label class="pl-1 control-label font-weight-bold">User Name*</label>
-                            <div>
 
-                                <input id="userNameInput" data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName" placeholder="userName" class="form-control" type="text" />
+                            <div class="p-1 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
+                                <label class="pl-1 control-label font-weight-bold">User Name*</label>
+                                <div>
 
-                                <span class="help-block"></span>
-                            </div>                            
-                        
-                            <label class="pl-1 control-label font-weight-bold">Token*</label>
-                            <div>
-                                <input id="tokenInput" data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token" class="form-control" type="password" />
+                                    <input id="userNameInput" data-toggle="tooltip" title="Enter user name" data-bind="textInput:$data.userName" name="userName"
+                                        placeholder="userName" class="form-control" type="text" />
 
-                                <span class="help-block"></span>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <label class="pl-1 control-label font-weight-bold">Token*</label>
+                                <div>
+                                    <input id="tokenInput" data-toggle="tooltip" title="Enter token" data-bind="textInput:$data.token" name="token" placeholder="token"
+                                        class="form-control" type="password" />
+
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="pt-1 d-flex justify-content-end">
+                                    <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" data-toggle="tooltip" title="Generate Key/Value Pair"
+                                        class="btn btn-success">
+                                        <i class="glyphicon glyphicon-plus float-right"></i> Generate Key/Value Pair</button>
+                                </div>
                             </div>
-                                                    
-                            <div>
-                                <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" data-toggle="tooltip" title="Generate Key/Value Pair" class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Generate Key/Value Pair</button>
-                            </div>
-                        </div>
-                        
-  
-                        <div class="pt-3 form-group">
-                            <label class="pl-1 control-label font-weight-bold">Repeat</label>
-                            <div>
-                                <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
+
+
+                            <div class="pt-3 form-group">
+                                <label class="pl-1 control-label font-weight-bold">Repeat</label>
+                                <div>
+                                    <select data-toggle="tooltip" title="Choose if to repeat or not to repeat" data-bind="options: $root.repeat_in,
                                                optionsText: $data.repeat(),
                                                value: $data.repeat,
                                                optionsCaption: 'Choose...'"></select>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
-                            <div>
-                                <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
-                                          name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-
-                        <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
-                        <div class="pl-0 ml-0"><img data-toggle="tooltip" data-placement="top" width="16" alt="Information"
-                                                    src="assets/images/information.png"
-                                                    title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"/>
-                        </div>
-                        <div class="pb-3 border border-primary form-group">
-                            <label class="pl-1 control-label font-weight-bold">Requirement</label>
-                            <div>
-
-                                <!-- ko foreach: requirements_item.conditions -->
-                                <div class="form-group">
-                                    <label class="pl-3 control-label font-weight-bold">Condition</label>
-                                    <div class="p-3">
-                                        <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)"
-                                                  data-bind="textInput:$data.jmespath()" name="jmespath" placeholder="jmespath" class="form-control"
-                                                  type="text"></textarea>
-                                        <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
-                                                data-toggle="tooltip" title="Delete condition" class="btn btn-danger float-right" style="margin-top: 5px"><i
-                                                class="glyphicon glyphicon-trash"></i>Delete
-                                        </button>     
-                                    </div>
+                                    <span class="help-block"></span>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
+                                <div>
+                                    <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
+                                        name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
 
 
-                                <!-- /ko -->
+                            <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
+                            <div class="pl-0 ml-0">
+                                <img data-toggle="tooltip" data-placement="top" width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"
+                                />
+                            </div>
+                            <div class="p-1 border border-primary form-group">
+                                <label class="control-label font-weight-bold">Requirement</label>
+                                <div>
 
-                                <div class="form-group">
-                                    <div class="p-3">
-                                        <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false"
-                                                data-toggle="tooltip" title="Add a new condition" class="btn btn-success float-right" style="margin-top: 5px"><i
-                                                class="glyphicon glyphicon-plus"></i> Add Condition
+                                    <!-- ko foreach: requirements_item.conditions -->
+                                    <div>
+                                        <label class="control-label font-weight-bold">Condition</label>
+                                        <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath"
+                                            placeholder="jmespath" class="form-control" type="text"></textarea>
+                                        <div class="pt-1 d-flex justify-content-end">
+
+                                            <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
+                                                data-toggle="tooltip" title="Delete condition" class="btn btn-danger">
+                                                <i class="glyphicon glyphicon-trash"></i>Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+
+                                    <div class="pt-1 d-flex justify-content-end">
+                                        <button data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" data-toggle="tooltip"
+                                            title="Add a new condition" class="btn btn-success">
+                                            <i class="glyphicon glyphicon-plus"></i> Add Condition
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
+                            <!-- /ko -->
 
-
-                        </div>
-                        <label class="control-label pt-15 col-md-3"></label>
-                        <!-- /ko -->
-
-                        <div class="container">
                             <button data-bind="click: $root.add_requirement, clickBubble: false" data-toggle="tooltip" title="Add a new requirement"
-                                    class="btn btn-success float-left"><i class="glyphicon glyphicon-plus float-right"></i> Add Requirement
+                                class="btn btn-success float-left">
+                                <i class="glyphicon glyphicon-plus float-right"></i> Add Requirement
                             </button>
+
+                            <!-- /ko -->
+
                         </div>
-
-                        <!-- /ko -->
-
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button data-toggle="tooltip" title="Save the changes to EI." type="button" id="btnSave" class="btn btn-primary save_record">
+                        Save
+                    </button>
+                    <button data-toggle="tooltip" title="Cancel and abort all changes" type="button" class="btn btn-danger" data-dismiss="modal">Cancel
+                    </button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button data-toggle="tooltip" title="Save the changes to EI." type="button" id="btnSave" class="btn btn-sm btn-primary save_record">
-                    Save
-                </button>
-                <button data-toggle="tooltip" title="Cancel and abort all changes" type="button" class="btn btn-danger" data-dismiss="modal">Cancel
-                </button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div id="modal_info" class="modal_instance">
-    <div class="modal_info-content">
-        <span class="close_instance">&times;</span>
-        <pre id="info_text"></pre>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
-</div>
-<!-- End Bootstrap modal -->
+    <!-- /.modal -->
+    <div id="modal_info" class="modal_instance">
+        <div class="modal_info-content">
+            <span class="close_instance">&times;</span>
+            <pre id="info_text"></pre>
+        </div>
+    </div>
+    <!-- End Bootstrap modal -->
 
 
-<!--
+    <!--
   <code class="hint mt15">DEBUG INFO</code>
 <div data-bind = "visible: subscription().length > 0" >
     <p data-bind="text: ko.toJSON(subscription())"></p>
 </div>
 -->
 
-<script type="text/javascript" src="js/subscription.js"></script>
-<script type="text/javascript" src="js/downloadFile.js"></script>
+    <script type="text/javascript" src="js/subscription.js"></script>
+    <script type="text/javascript" src="js/downloadFile.js"></script>
 
 </body>
+
 </html>

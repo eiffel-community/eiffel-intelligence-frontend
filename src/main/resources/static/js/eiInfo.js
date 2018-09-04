@@ -24,7 +24,6 @@ jQuery(document).ready(function() {
     frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	function generateGeneralEiInfo(data) {
-
         body.appendChild(document.createElement('br'));
         var tbdy = document.createElement('tbody');
 

@@ -308,6 +308,7 @@ jQuery(document).ready(function() {
     // /Start ## Datatables ##################################################
     var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
+        "responsive": true,
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
@@ -379,6 +380,7 @@ jQuery(document).ready(function() {
             },
             {
                 "targets": [ 8 ], //last column
+                "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
                 "data": null,
