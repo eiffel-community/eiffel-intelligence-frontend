@@ -32,6 +32,9 @@ jQuery(document).ready(function() {
         label.setAttribute('align', 'center');
         body.appendChild(label);
 
+        var div = document.createElement('div');
+        div.setAttribute('class','table-responsive');
+
         var tbl = createTable();
 
         var tr = document.createElement('tr');
@@ -89,7 +92,8 @@ jQuery(document).ready(function() {
 
 
         tbl.appendChild(tbdy);
-        body.appendChild(tbl);
+        div.appendChild(tbl);
+        body.appendChild(div);
 
         body.appendChild(document.createElement('br'));
 	}
