@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var backendServerUrl = $('#backendServerUrl').text();
 
-    var tableTdKeyWidth = '250';
+    var tableTdKeyWidth = '25%';
 
     var body = document.getElementById('eiPageFrame');
 
@@ -95,6 +95,8 @@ jQuery(document).ready(function() {
 	}
 
 	function generateEIInformationBasedOnList(dataList, tableLabel) {
+        var div = document.createElement('div');
+        div.setAttribute('class','table-responsive');
 
         var label = document.createElement('p');
         label.innerHTML = tableLabel;
@@ -124,7 +126,8 @@ jQuery(document).ready(function() {
         });
 
         tbl.appendChild(tbdy);
-        body.appendChild(tbl);
+        div.appendChild(tbl);
+        body.appendChild(div);
 
         body.appendChild(document.createElement('br'));
 

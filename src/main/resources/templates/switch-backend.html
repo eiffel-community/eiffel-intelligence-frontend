@@ -10,10 +10,11 @@
 <body class="bg-dark">
 <div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
 <div class="container pull-left">
-    <div class="card card-login mx-auto mt-5">
+    <div class="card card-switch-backend mx-auto mt-5">
         <div class="card-header">Switch backend</div>
         <div class="card-body" id="instancesModel">
-            <table>
+            <div class="table-responsive">
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Active</th>
@@ -38,6 +39,7 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
             <button id="switcher" type="button" class="btn btn-primary btn-block"
                     data-bind="click: function(){$root.submit($root.instances);}">Submit
             </button>

@@ -7,8 +7,29 @@
 .rule-button {
     width: 150px;
 }
+.display-inline-table {
+    display: inline-table;
+}
+.white-space-normal {
+    white-space: normal;
+}
+.card-switch-backend {
+    max-width: 40rem; 
+}
+.table-responsive>.table-bordered {
+    border: 1px solid #dee2e6;
+}
 @media (max-width: 576px) {
     .container {
         max-width: 480px;
+    }
+}
+body {
+    padding-top: 60px;
+    overflow: scroll !important;
+}
+@media (max-width: 576px) {
+    body {
+        padding-top: 80px;
     }
 }
