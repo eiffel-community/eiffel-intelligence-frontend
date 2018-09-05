@@ -25,7 +25,7 @@ function logMessages(messageErr){
     $('div.dropdown-menu').replaceWith("<div id=\"alerts\" style=\"display: none;\" class=\"dropdown-menu\" aria-labelledby=\"alertsDropdown\" data-bind=\"foreach: errorMessages\">" +
                                             "<div class=\"dropdown-divider\"> </div>" +
                                                 "<a class=\"dropdown-item\">" +
-                                                    "<div class=\"dropdown-message small\" data-bind=\"text: message\"></div>" +
+                                                    "<div class=\"dropdown-message small\" data-bind=\"text: message, attr: {title: message}\"></div>" +
                                                 "</a>" +
                                         "</div>");
     ko.cleanNode($("#alerts")[0]);
