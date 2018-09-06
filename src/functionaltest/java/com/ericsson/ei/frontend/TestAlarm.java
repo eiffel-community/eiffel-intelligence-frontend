@@ -29,7 +29,7 @@ public class TestAlarm extends SeleniumBaseClass {
         assertEquals(alarmResult, driver.findElement(By.id("alerts")).getText());
 
         //Click alarm button five times
-        IntStream.range(0, 6).forEachOrdered(i -> indexPageObject.clickAlarmButton());
+        IntStream.range(0, 2).forEachOrdered(i -> indexPageObject.clickAlarmButton());
         assertEquals(alarmResult, driver.findElement(By.id("alerts")).getText());
     }
 }
