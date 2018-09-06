@@ -12,6 +12,7 @@ function model(data){
     var self = this;
     self.errorMessages = ko.observableArray([]);
     var json = JSON.parse(ko.toJSON(data));
+    json.reverse();
     for(var i = 0; i < json.length; i++) {
         var obj = json[i];
     	let msgErr = new viewModel(obj.message);
@@ -31,16 +32,17 @@ function logMessages(messageErr){
     ko.cleanNode($("#alerts")[0]);
     ko.applyBindings(new model(errorsStore),$("#alerts")[0]);
 }
-function getErrors(){
+$(document).mouseup(function(e){
+    var container = $("#alerts");
+    var bell = $("i.fa.fa-fw.fa-bell");
+    var click = $("#alertsDropdown");
     var x = document.getElementById("alerts");
     let msg = JSON.parse(sessionStorage.getItem('errorsStore'));
-    if (x.style.display === "none" && msg) {
-        x.style.display = "block";
-        return;
-    } else {
-        x.style.display = "none";
-        return;
+    if (!container.is(e.target) && container.has(e.target).length === 0 && x.style.display === "block"){
+        container.hide();
+    } else if(msg && x.style.display === "none" && (click.is(e.target) || bell.is(e.target))){
+        container.show();
     }
-}
+});
 ko.cleanNode($("#alerts")[0]);
 ko.applyBindings(new model(errorsStore),$("#alerts")[0]);
