@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 
 public class TestAlarm extends SeleniumBaseClass {
+
     private static final String alarmResult = "Deleted all events, but we need atleast one event.\nDeleted all rule types, but we need atleast one Rule type, Here add default rule type";
 
     @Test
@@ -24,12 +25,8 @@ public class TestAlarm extends SeleniumBaseClass {
         testRulesPage.clickRemoveRuleNumber(0);
         testRulesPage.clickRemoveEventNumber(0);
 
-        //Click alarm button
-        indexPageObject.clickAlarmButton();
-        assertEquals(alarmResult, driver.findElement(By.id("alerts")).getText());
-
-        //Click alarm button five times
-        IntStream.range(0, 2).forEachOrdered(i -> indexPageObject.clickAlarmButton());
+        //Click alarm button few times
+        IntStream.range(0, 5).forEachOrdered(i -> indexPageObject.clickAlarmButton());
         assertEquals(alarmResult, driver.findElement(By.id("alerts")).getText());
     }
 }
