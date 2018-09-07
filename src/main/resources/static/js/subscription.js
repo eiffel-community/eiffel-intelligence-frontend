@@ -393,15 +393,15 @@ jQuery(document).ready(function () {
                 "data": null,
                 "render": function (data, type, row, meta) {
                     if (isSecured == true && row.userName == currentUser && row.userName != null) {
-                        return '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else if (isSecured == false) {
-                        return '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
-                        return '<button tag="' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
+                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
                     }
                 }
             }
@@ -635,7 +635,7 @@ jQuery(document).ready(function () {
         event.stopPropagation();
         event.preventDefault();
         // Get tag that contains subscriptionName
-        var id = $(object).attr("tag");
+        var id = $(object).attr("id").split("-")[1];
         // AJAX Callback handling
         var callback = {
             beforeSend: function () { },
@@ -902,7 +902,7 @@ jQuery(document).ready(function () {
         event.stopPropagation();
         event.preventDefault();
         // Get tag that contains subscriptionName
-        var id = $(this).attr("tag");
+        var id = $(this).attr("id").split("-")[1];
         var callback = {
             beforeSend: function () {
             },
