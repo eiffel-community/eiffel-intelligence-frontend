@@ -29,6 +29,7 @@ jQuery(document).ready(function() {
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, textStatus, errorThrown);
+                window.logMessages(XMLHttpRequest.responseText);
             },
             success : function (data, textStatus) {
                 callback.success(data, textStatus);
@@ -86,6 +87,7 @@ jQuery(document).ready(function() {
 	    $("#loginBlock").show();
 	    $("#logoutBlock").hide();
 	    $(".show_if_authorized").hide();
+	    localStorage.setItem('errorsStore', []);
     }
 
     // Check if EI Backend Server is online every X seconds
@@ -454,6 +456,7 @@ jQuery(document).ready(function() {
                     reload_table();
                 },
                 error : function (XMLHttpRequest, textStatus, errorThrown) {
+                    window.logMessages(XMLHttpRequest.responseText);
                     reload_table();
                     var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                     for (var i = 0; i < responseJSON.length; i++) {
@@ -512,6 +515,7 @@ jQuery(document).ready(function() {
         try {
         	jsonLintResult = jsonlint.parse(fileContent);
         } catch (e) {
+            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
         	$.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
         	return false;
         }
@@ -547,8 +551,8 @@ jQuery(document).ready(function() {
                    }
                },
                error : function (XMLHttpRequest, textStatus, errorThrown) {
+                 window.logMessages("Failed to create next Subscriptions");
                  reload_table();
-                 $.jGrowl("Failed to create next Subscriptions", {sticky: false, theme: 'Error'});
                  var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                  for (var i = 0; i < responseJSON.length; i++) {
                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
@@ -635,10 +639,7 @@ jQuery(document).ready(function() {
                 populate_json(data, mode);
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
-                $.jGrowl("Error: " + XMLHttpRequest.responseText, {
-                    sticky : true,
-                    theme : 'Error'
-                });
+                window.logMessages("Error: " + XMLHttpRequest.responseText);
             },
             complete : function () {}
         };
@@ -730,50 +731,32 @@ jQuery(document).ready(function() {
 
         //START: Make sure all datatables field has a value
         if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
-            $.jGrowl("Only numbers,letters and underscore is valid to type in subscriptionName field.", {
-                sticky : false,
-                theme : 'Error'
-            });
+            window.logMessages("Only numbers,letters and underscore is valid to type in subscriptionName field.");
             return;
         }
 
 	//Currently a free-form field
 	/*
         if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
-            $.jGrowl("Only numbers and letters is valid to type in notificationMeta field.", {
-                sticky : false,
-                theme : 'Error'
-            });
+            window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
             return;
         }
 	*/
 
         if (vm.subscription()[0].subscriptionName() == "") {
-            $.jGrowl("Error: SubscriptionName field must have a value", {
-                sticky : true,
-                theme : 'Error'
-            });
+            window.logMessages("Error: SubscriptionName field must have a value");
             return;
         }
         if (vm.subscription()[0].notificationType() == null) {
-            $.jGrowl("Error: notificationType field must boolean a value", {
-                sticky : true,
-                theme : 'Error'
-            });
+            window.logMessages("Error: notificationType field must boolean a value");
             return;
         }
         if (vm.subscription()[0].notificationMeta() == "") {
-            $.jGrowl("Error: notificationMeta field must have a value", {
-                sticky : true,
-                theme : 'Error'
-            });
+            window.logMessages("Error: notificationMeta field must have a value");
             return;
         }
         if (vm.subscription()[0].repeat() == null) {
-            $.jGrowl("Error: repeat field must have a boolean value", {
-                sticky : true,
-                theme : 'Error'
-            });
+            window.logMessages("Error: repeat field must have a boolean value");
             return;
         }
         //END OF: Make sure all datatables field has a value
@@ -785,35 +768,21 @@ jQuery(document).ready(function() {
             var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
             if(vm.formpostkeyvaluepairs()){
                if(test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""'){
-                    $.jGrowl("Error: Value & Key  in notificationMessage must have a values!", {
-                        sticky: true,
-                        theme: 'Error'
-                    });
+                    window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
                     return;
                 }
             }
-            else
-            {
-                if(notificationMessageKeyValuesArray.length !== 1)
-                {
-                    $.jGrowl("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!", {
-                        sticky: true,
-                        theme: 'Error'
-                    });
+            else{
+                if(notificationMessageKeyValuesArray.length !== 1){
+                    window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
                     return;
                 }
                 else if(test_key !== '""'){
-                    $.jGrowl("Error: Key in notificationMessage must be empty when NOT using key/value pairs!", {
-                        sticky: true,
-                        theme: 'Error'
-                    });
+                    window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
                     return;
                 }
                 else if(test_value.replace(/\s/g, "") === '""'){
-                    $.jGrowl("Error: Value in notificationMessage must have a value when NOT using key/value pairs!", {
-                        sticky: true,
-                        theme: 'Error'
-                    });
+                    window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
                     return;
                 }
             }
@@ -826,10 +795,7 @@ jQuery(document).ready(function() {
             for (k=0; k < conditionsArray.length; k++) {
                 var test_me = ko.toJSON(conditionsArray[k].jmespath());
                 if (test_me === '""') {
-                    $.jGrowl("Error: jmepath field must have a value", {
-                        sticky: true,
-                        theme: 'Error'
-                    });
+                    window.logMessages("Error: jmepath field must have a value");
                     return;
                 }
             }
@@ -911,10 +877,7 @@ jQuery(document).ready(function() {
 
             },
             error : function (XMLHttpRequest, textStatus, errorThrown) {
-                $.jGrowl("Error: " + XMLHttpRequest.responseText, {
-                    sticky : true,
-                    theme : 'Error'
-                });
+                window.logMessages("Error: " + XMLHttpRequest.responseText);
             },
             complete : function () {
             }
@@ -935,9 +898,5 @@ jQuery(document).ready(function() {
          });
     });
     // /Stop ## Delete Subscription #########################################
-
-
-
-
 });  // $(document).ready(function() {
 

@@ -74,6 +74,7 @@ jQuery(document).ready(function() {
 		$("#userName").text("Guest");
 		$("#loginBlock").show();
 		$("#logoutBlock").hide();
+		localStorage.setItem('errorsStore', []);
 	}
 
 	function loadDocumentLinks(){
@@ -135,7 +136,7 @@ jQuery(document).ready(function() {
             	    contentType: 'application/json; charset=utf-8',
             	    cache: false,
             	    error: function (XMLHttpRequest, textStatus, errorThrown) {
-            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Error'});
+            	        window.logMessages(XMLHttpRequest.responseText);
             	    },
             	    success: function (responseData, XMLHttpRequest, textStatus) {
             	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
@@ -152,10 +153,12 @@ jQuery(document).ready(function() {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $.jGrowl("Failure when trying to load backend instances", {sticky: false, theme: 'Error'});
+            window.logMessages("Failure when trying to load backend instances");
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
-            ko.applyBindings(new viewModel(responseData));
+            var observableObject = $("#selectInstances")[0];
+            ko.cleanNode(observableObject);
+            ko.applyBindings(new viewModel(responseData),observableObject);
         }
     });
 });
