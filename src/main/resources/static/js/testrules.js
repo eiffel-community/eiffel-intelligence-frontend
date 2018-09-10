@@ -41,6 +41,7 @@ jQuery(document).ready(
             callback.beforeSend();
           },
           error : function(XMLHttpRequest, textStatus, errorThrown) {
+            window.logMessages(XMLHttpRequest.responseText);
             callback.error(XMLHttpRequest, textStatus, errorThrown);
           },
           success : function(data, textStatus) {
@@ -62,6 +63,7 @@ jQuery(document).ready(
           JSON.parse(str);
           return true;
         } catch (e) {
+            window.logMessages(XMLHttpRequest.responseText);
           return false;
         }
       }
@@ -79,10 +81,7 @@ jQuery(document).ready(
           var context = ko.contextFor(event.target);
           self.rulesBindingList.splice(context.$index(), 1);
           if (self.rulesBindingList().length == 0) {
-            $.jGrowl("Deleted all rule types, but we need atleast one Rule type, Here add default rule type", {
-              sticky : false,
-              theme : 'Error'
-            });
+            window.logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
             self.rulesBindingList.push(ruleTemplate);
           }
         };
@@ -93,11 +92,7 @@ jQuery(document).ready(
           self.eventsBindingList.splice(context.$index(), 1);
           if (self.eventsBindingList().length == 0) {
             self.eventsBindingList.push({});
-            $.jGrowl("Deleted all events, but we need atleast one event.", {
-              sticky : false,
-              theme : 'Error'
-            });
-            
+            window.logMessages("Deleted all events, but we need atleast one event.");
           }
         };
 
@@ -109,11 +104,8 @@ jQuery(document).ready(
             try {
               formRules.push(JSON.parse($(this).val()));
             } catch (e) {
-              $.jGrowl("Invalid json rule format :\n" + $(this).val(), {
-                sticky : false,
-                theme : 'Error'
-              });
-              return false;
+                window.logMessages("Invalid json rule format :\n" + $(this).val());
+                return false;
             }
           });
           
@@ -122,11 +114,8 @@ jQuery(document).ready(
             try {
               formEvents.push(JSON.parse($(this).val()));
             } catch (e) {
-              $.jGrowl("Invalid json event format :\n" + $(this).val(), {
-                sticky : false,
-                theme : 'Error'
-              });
-              return false;
+                window.logMessages("Invalid json event format :\n" + $(this).val());
+                return false;
             }
           });
 
@@ -151,10 +140,7 @@ jQuery(document).ready(
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
-              $.jGrowl("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText, {
-                sticky : false,
-                theme : 'Error'
-              });
+                window.logMessages("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText);
             },
             complete : function() {
             }
@@ -192,8 +178,9 @@ jQuery(document).ready(
 	        try {
 	          jsonLintResult = jsonlint.parse(fileContent);
 	        } catch (e) {
-	          $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	          return false;
+	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+	            $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+	            return false;
 	        }
 	        $.jGrowl('JSON Format Check Succeeded', {
 	          sticky : false,
@@ -221,8 +208,9 @@ jQuery(document).ready(
             try {
               jsonLintResult = jsonlint.parse(fileContent);
             } catch (e) {
-              $.alert("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
-              return false;
+                window.logMessages("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
+                $.alert("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
+                return false;
             }
             $.jGrowl('JSON events Format Check Succeeded', {
               sticky : false,
@@ -321,10 +309,7 @@ jQuery(document).ready(
           try {
             formRules.push(JSON.parse($(this).val()));
           } catch (e) {
-            $.jGrowl("Invalid json format :\n" + $(this).val(), {
-              sticky : false,
-              theme : 'Error'
-            });
+            window.logMessages("Invalid json format :\n" + $(this).val());
             return false;
           }
         });
@@ -332,17 +317,13 @@ jQuery(document).ready(
           var jsonData = JSON.stringify(formRules, null, 2);
           downloadFile(jsonData, "application/json;charset=utf-8", "rules.json");
         } else {
-          $.jGrowl("Data not available for download!", {
-            sticky : false,
-            theme : 'Error'
-          });
-        }
-
+            window.logMessages("Data not available for download!");
+          }
       });
 
       function getTemplate(name) {
         var request = new XMLHttpRequest();
-        request.open("GET", '/download/' + name, true);
+        request.open("GET", frontendServiceUrl + '/download/' + name, true);
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
            var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
@@ -364,6 +345,27 @@ jQuery(document).ready(
         event.preventDefault();
         getTemplate("eventsTemplate");
       });
+      
+   // Start to check is backend Test Rule service status
+    	var isEnabled = true;
+    	console.log('Here are my modifications');
+    	$.ajax({
+    		url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
+    		contentType : 'application/json; charset=utf-8',
+    		type: 'GET',
+    		error: function () {},
+    		success: function (data) {
+    			isEnabled = JSON.parse(ko.toJSON(data)).status;
+    			if(isEnabled != true) {
+    				displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")}
+    			},
+    		complete: function () { }
+    	});
+    	// Finish to check backend Test Rule Service status
+    	
+    	function displayOverlay(text) {
+    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").addClass("testRulePage").appendTo("#testRule");
+    	}
 
     }
 );
