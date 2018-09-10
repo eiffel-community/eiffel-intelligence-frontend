@@ -45,7 +45,7 @@ public class IndexPage extends PageBaseClass {
         waitForJQueryToLoad();
         return testRulesPage;
     }
-    
+
     public SubscriptionPage clickSubscriptionPage() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
         WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
@@ -96,5 +96,11 @@ public class IndexPage extends PageBaseClass {
         switcherBtn.click();
         waitForJQueryToLoad();
     }
-}
 
+    public void clickAlarmButton(){
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsDropdown")));
+        WebElement alarmBtn = driver.findElement(By.id("alertsDropdown"));
+        alarmBtn.click();
+        waitForJQueryToLoad();
+    }
+}
