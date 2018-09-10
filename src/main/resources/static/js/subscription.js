@@ -82,12 +82,12 @@ jQuery(document).ready(function () {
         }
     }
     function doIfUserLoggedOut() {
-	    localStorage.removeItem("currentUser");
-	    $("#userName").text("Guest");
-	    $("#loginBlock").show();
-	    $("#logoutBlock").hide();
-	    $(".show_if_authorized").hide();
-	    localStorage.setItem('errorsStore', []);
+        localStorage.removeItem("currentUser");
+        $("#userName").text("Guest");
+        $("#loginBlock").show();
+        $("#logoutBlock").hide();
+        $(".show_if_authorized").hide();
+        localStorage.setItem('errorsStore', []);
     }
 
     // Check if EI Backend Server is online every X seconds
@@ -432,45 +432,59 @@ jQuery(document).ready(function () {
 
 
     // /Start ## Bulk delete#################################################
-    $('.container').on( 'click', 'button.bulk_delete', function (event) {
-    	var subscriptionsToDelete = [];
-    	var data = table.rows().nodes();
-    	$.each(data, function (index, value) {
-    		if ($(this).find('input').prop('checked') == true){
-    			subscriptionsToDelete.push(table.row(index).data().subscriptionName)
-    	    }
-    	});
-    	
-    	// Check if no Subscription has been marked to be deleted.
-    	if ( subscriptionsToDelete.length < 1 ){
-    		$.alert("No subscriptions has been marked to be deleted.");
-    		return;
-    	}
-    	
-    	var subscriptionsToDeleteString = "";
-    	for (i=0; i < subscriptionsToDelete.length; i++) {
-    		subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
-    	}
+    $('.container').on('click', 'button.bulk_delete', function (event) {
+        var subscriptionsToDelete = [];
+        var data = table.rows().nodes();
+        $.each(data, function (index, value) {
+            if ($(this).find('input').prop('checked') == true) {
+                subscriptionsToDelete.push(table.row(index).data().subscriptionName)
+            }
+        });
 
-    	var callback = {
-                beforeSend : function () {
-                },
-                success : function (data, textStatus) {
-                    $.jGrowl('Subscriptions deleted!', {
-                        sticky : false,
-                        theme : 'Notify'
-                    });
-                    //if success reload ajax table
-                    $('#modal_form').modal('hide');
-                    reload_table();
-                },
-                error : function (XMLHttpRequest, textStatus, errorThrown) {
-                    window.logMessages(XMLHttpRequest.responseText);
-                    reload_table();
-                    var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                    for (var i = 0; i < responseJSON.length; i++) {
-                        $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
-                    }
+        // Check if no Subscription has been marked to be deleted.
+        if (subscriptionsToDelete.length < 1) {
+            $.alert("No subscriptions has been marked to be deleted.");
+            return;
+        }
+
+        var subscriptionsToDeleteString = "";
+        for (i = 0; i < subscriptionsToDelete.length; i++) {
+            subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
+        }
+
+        var callback = {
+            beforeSend: function () {
+            },
+            success: function (data, textStatus) {
+                $.jGrowl('Subscriptions deleted!', {
+                    sticky: false,
+                    theme: 'Notify'
+                });
+                //if success reload ajax table
+                $('#modal_form').modal('hide');
+                reload_table();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.logMessages(XMLHttpRequest.responseText);
+                reload_table();
+                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                for (var i = 0; i < responseJSON.length; i++) {
+                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                }
+            },
+            complete: function () {
+            }
+        };
+
+        $.confirm({
+            title: 'Confirm!',
+            content: 'Are you sure you want to delete these subscriptions?<pre>' + subscriptionsToDeleteString,
+            buttons: {
+                confirm: function () {
+                    var ajaxHttpSender = new AjaxHttpSender();
+                    // replace all /n with comma
+                    subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
                 },
                 cancel: function () {
                 }
@@ -526,40 +540,41 @@ jQuery(document).ready(function () {
 
     var pom = document.getElementById('upload_sub');
     pom.onchange = function uploadFinished() {
-    	var subscriptionFile = pom.files[0];
-    	validateJsonAndCreateSubscriptions(subscriptionFile);
-	};
-	   function tryToCreateSubscription(subscriptionJson) {
-       	// Send Subscription JSON file to Spring MVC
-           // AJAX Callback handling
-           var callback = {
-               beforeSend : function () {
-               },
-               success : function (data, textStatus) {
-                   var returnData = [data];
-                   if (returnData.length > 0) {
-                       $.jGrowl("Subscriptions are successfully created", {
-                           sticky : false,
-                           theme : 'Error'
-                       });
-                       reload_table();
-                   }
-               },
-               error : function (XMLHttpRequest, textStatus, errorThrown) {
-                 window.logMessages("Failed to create next Subscriptions");
-                 reload_table();
-                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                 for (var i = 0; i < responseJSON.length; i++) {
-                   $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, {sticky: true, theme: 'Error'});
-                 }
-               },
-               complete : function () {
-               }
-           };
-           // Perform AJAX
-           var ajaxHttpSender = new AjaxHttpSender();
-           ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
-       }
+        var subscriptionFile = pom.files[0];
+        validateJsonAndCreateSubscriptions(subscriptionFile);
+    };
+    function tryToCreateSubscription(subscriptionJson) {
+        // Send Subscription JSON file to Spring MVC
+        // AJAX Callback handling
+        var callback = {
+            beforeSend: function () {
+            },
+            success: function (data, textStatus) {
+                var returnData = [data];
+                if (returnData.length > 0) {
+                    $.jGrowl("Subscriptions are successfully created", {
+                        sticky: false,
+                        theme: 'Error'
+                    });
+                    reload_table();
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.logMessages("Failed to create next Subscriptions");
+                reload_table();
+                $.jGrowl("Failed to create next Subscriptions", { sticky: false, theme: 'Error' });
+                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                for (var i = 0; i < responseJSON.length; i++) {
+                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                }
+            },
+            complete: function () {
+            }
+        };
+        // Perform AJAX
+        var ajaxHttpSender = new AjaxHttpSender();
+        ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
+    }
 
 
     // /Start ## upload_subscriptions #################################################
@@ -632,7 +647,7 @@ jQuery(document).ready(function () {
             success: function (data, textStatus) {
                 populate_json(data, mode);
             },
-            error : function (XMLHttpRequest, textStatus, errorThrown) {
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.logMessages("Error: " + XMLHttpRequest.responseText);
             },
             complete: function () { }
@@ -730,13 +745,13 @@ jQuery(document).ready(function () {
             return;
         }
 
-	//Currently a free-form field
-	/*
-        if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
-            window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
-            return;
-        }
-	*/
+        //Currently a free-form field
+        /*
+            if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
+                window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
+                return;
+            }
+        */
 
         if (vm.subscription()[0].subscriptionName() == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
@@ -761,22 +776,22 @@ jQuery(document).ready(function () {
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
             var test_key = ko.toJSON(notificationMessageKeyValuesArray[i].formkey);
             var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
-            if(vm.formpostkeyvaluepairs()){
-               if(test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""'){
+            if (vm.formpostkeyvaluepairs()) {
+                if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
                     return;
                 }
             }
-            else{
-                if(notificationMessageKeyValuesArray.length !== 1){
+            else {
+                if (notificationMessageKeyValuesArray.length !== 1) {
                     window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
                     return;
                 }
-                else if(test_key !== '""'){
+                else if (test_key !== '""') {
                     window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
                     return;
                 }
-                else if(test_value.replace(/\s/g, "") === '""'){
+                else if (test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
                     return;
                 }
@@ -871,7 +886,7 @@ jQuery(document).ready(function () {
                 reload_table();
 
             },
-            error : function (XMLHttpRequest, textStatus, errorThrown) {
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.logMessages("Error: " + XMLHttpRequest.responseText);
             },
             complete: function () {
@@ -893,5 +908,4 @@ jQuery(document).ready(function () {
         });
     });
     // /Stop ## Delete Subscription #########################################
-});  // $(document).ready(function() {
-
+});
