@@ -364,8 +364,21 @@ jQuery(document).ready(
     	// Finish to check backend Test Rule Service status
     	
     	function displayOverlay(text) {
-    	    $("<table id='overlay'><tbody><tr><td>" + text + "</td></tr></tbody></table>").addClass("testRulePage").appendTo("#testRule");
+          var overlay = document.createElement('div');
+          overlay.setAttribute('id', 'overlay')
+          overlay.setAttribute('class', 'testRulePage d-flex')
+          var padding = document.createElement('div');
+          padding.setAttribute('class','col-lg-3 col-md-1 d-none d-lg-block');
+          var textNode = document.createTextNode(" ");
+          padding.appendChild(textNode);
+          var main = document.createElement('div');    
+          main.setAttribute('class','col-lg-9 col-md-11 col-12 flexbox');
+          var textNode = document.createTextNode(text);
+          main.appendChild(textNode);
+          overlay.appendChild(padding);
+          overlay.appendChild(main);
+          var parent = document.getElementById('testRule');
+          parent.appendChild(overlay);
     	}
-
     }
 );

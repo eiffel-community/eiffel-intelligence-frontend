@@ -550,18 +550,3 @@ footer.sticky-footer {
 .elementDiv {
 	padding-bottom: 10px;
 }
-
-.testRulePage {
-	position: fixed;
-	top: 60px;
-	left: 250px;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, .5);
-	z-index: 10000;
-	vertical-align: middle;
-	text-align: center;
-	color: rgba(128, 0, 0, 1);
-	font-size: 25px;
-	font-weight: bold
-}
