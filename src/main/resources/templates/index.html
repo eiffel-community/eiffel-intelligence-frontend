@@ -19,10 +19,11 @@
   <link href="css/sb-admin.css" rel="stylesheet" />
   <link href="css/style.css" rel="stylesheet" />
 
-  <link href="assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-  <link href="assets/jquery-confirm/css/jquery-confirm.css" rel="stylesheet" />
-  <link href="assets/jgrowl/jquery.jgrowl.min.css" rel="stylesheet" />
-  <link href="assets/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+  <link href="assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"/>
+  <link href="assets/jquery-confirm/css/jquery-confirm.css" rel="stylesheet"/>
+  <link href="assets/jgrowl/jquery.jgrowl.min.css" rel="stylesheet"/>
+  <link href="assets/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
+  <link href="css/errMsg.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-dark" id="page-top">
@@ -134,7 +135,7 @@
           </div>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown">
             <i class="fa fa-fw fa-bell"></i>
             <span class="d-lg-none">Alerts
               <span class="badge badge-pill badge-warning">6 New</span>
@@ -143,37 +144,11 @@
               <i class="fa fa-fw fa-circle"></i>
             </span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="alertsDropdown">
-            <h6 class="dropdown-header">New Alerts:</h6>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
-              <span class="text-success">
-                <strong>
-                  <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
-              </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
-              <span class="text-danger">
-                <strong>
-                  <i class="fa fa-long-arrow-down fa-fw"></i>Status Update</strong>
-              </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
-              <span class="text-success">
-                <strong>
-                  <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
-              </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item small" href="#">View all alerts</a>
+          <div id="alerts" style="display: none;" class="dropdown-menu" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages">
+            <div class="dropdown-divider"> </div>
+              <a class="dropdown-item">
+                <div class="dropdown-message small" data-bind="text: message, attr: {title: message}"></div>
+              </a>
           </div>
         </li>
         <li class="nav-item">
@@ -253,8 +228,9 @@
   <script type="text/javascript" src="assets/jgrowl/jquery.jgrowl.min.js"></script>
   <script type="text/javascript" src="assets/dateformat/date.format.js"></script>
   <script type="text/javascript" src="assets/jsonlint/jsonlint.js"></script>
-
+  
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/errorMessages.js"></script>
 </body>
 
 </html>
