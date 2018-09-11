@@ -166,8 +166,8 @@ public class SubscriptionPage extends PageBaseClass {
 
     public String getSubscriptionNameFromSubscription() {
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[@class='odd']/td[2]")));
-        WebElement subscriptionNameElement = driver.findElement(By.xpath("//tr[@class='odd']/td[2]"));
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[@class='odd']/td[3]")));
+        WebElement subscriptionNameElement = driver.findElement(By.xpath("//tr[@class='odd']/td[3]"));
         return subscriptionNameElement.getText();
     }
 
@@ -195,6 +195,16 @@ public class SubscriptionPage extends PageBaseClass {
     public boolean textExistsInTable(String txt) {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean clickElementByXPath(String loc) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+            driver.findElement(By.xpath(loc)).click();
         } catch (Exception e) {
             return false;
         }
