@@ -2,6 +2,7 @@ package com.ericsson.ei.config;
 
 import com.ericsson.ei.frontend.exception.OSNotSupportedException;
 import com.ericsson.ei.frontend.exception.PropertiesNotLoadedException;
+
 import com.google.common.io.Files;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.firefox.FirefoxBinary;

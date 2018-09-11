@@ -46,13 +46,20 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
+    public boolean presenceOfClickDownloadRulesTemplateButton() {
+        try {
+            driver.findElement(By.className("download_rules_template"));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     public void clickDownloadRulesTemplate(String responseData) throws IOException {
         CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
                 (request).getURI().toString().contains("/rulesTemplate")));
 
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
-                ExpectedConditions.elementToBeClickable(By.className("download_rules_template")));
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
     }
@@ -62,28 +69,21 @@ public class TestRulesPage extends PageBaseClass {
         Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
                 (request).getURI().toString().contains("/eventsTemplate")));
 
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
-                ExpectedConditions.elementToBeClickable(By.className("download_events_template")));
         WebElement downloadEventsTemplateButton = driver.findElement(By.className("download_events_template"));
         downloadEventsTemplateButton.click();
     }
 
     public void uploadRulesTemplate(String filePath) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
-                ExpectedConditions.presenceOfElementLocated(By.id("uploadRulesFile")));
         WebElement uploadRulesInputField = driver.findElement(By.id("uploadRulesFile"));
         uploadRulesInputField.sendKeys(filePath);
     }
 
     public void uploadEventsTemplate(String filePath) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
-                ExpectedConditions.presenceOfElementLocated(By.id("uploadEventsFile")));
         WebElement uploadEventsInputField = driver.findElement(By.id("uploadEventsFile"));
         uploadEventsInputField.sendKeys(filePath);
     }
 
     public String getFirstRuleText() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule2")));
         WebElement textArea = driver.findElementsByClassName("formRules").get(0);
         return textArea.getText().replaceAll("[\\n ]", "");
     }

@@ -16,6 +16,10 @@ log/
 target/
 
 # Others
+<<<<<<< HEAD
+derby.log
+=======
 derby.log
 EIBackendInstancesInformation.json
 fileToWriteInstances.json
+>>>>>>> fe413762aead0916f28b6d8e890a22455b9f999d

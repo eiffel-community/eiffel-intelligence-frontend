@@ -66,6 +66,7 @@ public class WebController {
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
+
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
 
         return "testRules";
