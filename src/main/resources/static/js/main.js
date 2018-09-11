@@ -160,5 +160,31 @@ jQuery(document).ready(function() {
             ko.cleanNode(observableObject);
             ko.applyBindings(new viewModel(responseData),observableObject);
         }
-    });
+	});
+	
+	// Hide menu navbar when clicking a link
+	$("#subscriptionBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
+	$("#testRulesBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
+	$("#jmesPathRulesSetUpBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
+	$("#eiInfoBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
+	$("#addInstanceBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
+	$("#switcherBtn").click(function(e) {
+		e.preventDefault();
+		$("#navbarResponsive").removeClass("show");
+	});
 });

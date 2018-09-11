@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<meta name="description" content="" />
-<meta name="author" content="" />
-<script type="text/javascript" src="js/testrules.js"></script>
-<script type="text/javascript" src="js/downloadFile.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <script type="text/javascript" src="js/testrules.js"></script>
+    <script type="text/javascript" src="js/downloadFile.js"></script>
 </head>
+
 <body>
     <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
     <div class="container pull-left" id="testRule" style="max-width: 100%; max-height: 100%">
@@ -19,24 +21,25 @@
             <span style="color: #333333; background-color: #ffff00;">Upload Rules and events are in json list, Ex: [{},{}]</span>
         </p>
         <div class="row" style="max-height: 950; padding: 10px">
-            <div class="col-6 border border-right border-success" id="testRulesDOMObject" style="padding: 10px">
-                <div class="row butt divpad">
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Upload List of Rules" class="btn btn-primary upload_rules">
-                            Upload Rules <i class="fa fa-fw  fa-upload"></i>
+            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testRulesDOMObject">
+                <div class="d-flex flex-wrap butt">
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Upload List of Rules" class="btn btn-primary upload_rules rule-button">
+                            Upload Rules
+                            <i class="fa fa-fw  fa-upload"></i>
                         </button>
                         <input class="hidden" type='file' id='uploadRulesFile' name='file' style="position: absolute; left: -999em;" />
                     </div>
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Download rules template"
-                                class="btn btn-primary download_rules_template">
-                            Get Template <i class="fa fa-fw  fa-download"></i>
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Download rules template" class="btn btn-primary download_rules_template rule-button">
+                            Get Template
+                            <i class="fa fa-fw  fa-download"></i>
                         </button>
                     </div>
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_rule"
-                            data-bind="click : $root.addRule.bind()">
-                            Add Rule<i class="fa fa-fw  fa-plus"></i>
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_rule rule-button" data-bind="click : $root.addRule.bind()">
+                            Add Rule
+                            <i class="fa fa-fw  fa-plus"></i>
                         </button>
                     </div>
                 </div>
@@ -45,55 +48,54 @@
                 </div>
                 <div class="row-fluid rulesListDisplay" data-bind="foreach: rulesBindingList">
                     <div class="elementDiv" data-bind="attr: { id: 'Rule' + $index() }">
-                        <div class="row">
+                        <div class="d-flex flex-nowrap">
                             <div class="col-11">
-                                <textarea class="form-control formRules" rows="10"
-                                    data-bind="text : $root.parsedToString($data)"></textarea>
+                                <textarea class="form-control formRules" rows="10" data-bind="text : $root.parsedToString($data)"></textarea>
                             </div>
-                            <div class="col-1">
-                                <span class="badge-danger" data-bind="click : $root.removeRule.bind()"><i
-                                    class="fa fa-fw  fa-trash"></i></span>
+                            <div>
+                                <span class="badge-danger" data-bind="click : $root.removeRule.bind()">
+                                    <i class="fa fa-fw  fa-trash"></i>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-6 border border-right border-success" id="testEventsDOMObject"
-                style="max-height: 100%; padding: 10px">
-                <div class="row butt divpad">
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Upload List of events"
-                            class="btn btn-primary upload_events">
-                            Upload Events <i class="fa fa-fw  fa-upload"></i>
+            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testEventsDOMObject">
+                <div class="d-flex flex-wrap butt">
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Upload List of events" class="btn btn-primary upload_events rule-button">
+                            Upload Events
+                            <i class="fa fa-fw  fa-upload"></i>
                         </button>
                         <input class="hidden" type='file' id='uploadEventsFile' name='file' style="position: absolute; left: -999em;" />
                     </div>
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Download events template"
-                            class="btn btn-primary download_events_template">
-                            Get Template <i class="fa fa-fw  fa-download"></i>
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Download events template" class="btn btn-primary download_events_template rule-button">
+                            Get Template
+                            <i class="fa fa-fw  fa-download"></i>
                         </button>
                     </div>
-                    <div style="padding: 10px">
-                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_event"
-                            data-bind="click : $root.addEvent.bind()">
-                            Add Event<i class="fa fa-fw  fa-plus"></i>
+                    <div class="pr-1 pt-1">
+                        <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-primary add_event rule-button" data-bind="click : $root.addEvent.bind()">
+                            Add Event
+                            <i class="fa fa-fw  fa-plus"></i>
                         </button>
                     </div>
                 </div>
-                <div class="row-fluid divpad">
+                <div class="row-fluid">
                     <h3>Events</h3>
                 </div>
                 <div class="row-fluid eventsListDisplay" data-bind="foreach: eventsBindingList">
                     <div class="elementDiv" data-bind="attr: { id: 'Events' + $index() }">
-                        <div class="row">
+                        <div class="d-flex flex-nowrap">
                             <div class="col-11">
-                                <textarea class="form-control formEvents" rows="10"
-                                    data-bind="text : $root.parsedToString($data)"></textarea>
+                                <textarea class="form-control formEvents" rows="10" data-bind="text : $root.parsedToString($data)"></textarea>
                             </div>
-                            <div class="col-1">
-                                <span class="badge-danger" data-bind="click : $root.removeEvent.bind()"><i
-                                    class="fa fa-fw  fa-trash"></i></span>
+                            <div>
+                                <span class="badge-danger" data-bind="click : $root.removeEvent.bind()">
+                                    <i class="fa fa-fw  fa-trash"></i>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -103,14 +105,13 @@
         <div class="row-fluid divpad" id="submitButton">
             <div class="row">
                 <div class="col-5">
-                    <button data-toggle="tooltip" title="download the above rules into a json file"
-                        class="btn btn-success download_rules">
-                        Download Rules<i class="fa fa-fw  fa-download"></i>
+                    <button data-toggle="tooltip" title="download the above rules into a json file" class="btn btn-success download_rules white-space-normal">
+                        Download Rules
+                        <i class="fa fa-fw  fa-download"></i>
                     </button>
                 </div>
-                <div class="col-2">
-                    <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-success find_aggregated_object"
-                        data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
+                <div class="col-7">
+                    <button data-toggle="tooltip" title="Find the aggregated object" class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
                 </div>
             </div>
         </div>
@@ -118,10 +119,13 @@
     <div style="display: none">
         <div id="aggregatedresult">
             <h1>
-                <strong><span style="color: #0000ff;">Aggregated Object</span></strong>
+                <strong>
+                    <span style="color: #0000ff;">Aggregated Object</span>
+                </strong>
             </h1>
             <pre id="aggregatedresultData"></pre>
         </div>
     </div>
 </body>
+
 </html>
