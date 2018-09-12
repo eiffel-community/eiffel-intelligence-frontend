@@ -13,45 +13,40 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.Assert.assertEquals;
+import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class BackendInstancesUtilsTest {
 
-    private static final String NAME_VAL = "someName";
-    private static final String HOST_VAL = "someHost";
-    private static final int PORT_VAL = 9999;
-    private static final String PATH_VAL = "somePath";
-    private static final boolean HTTPS_VAL = false;
-    private static final boolean ACTIVE_VAL = false;
     private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
-    private static final String FILE_TO_WRITE = "src/test/resources/backendInstances/fileToWriteInstances.json";
-    private static final String FILE_TO_PARSE = "src/test/resources/backendInstances/fileToParseInstances.json";
 
     @Autowired
     private BackEndInstancesUtils utils;
 
-    @Autowired
-    private BackEndInformation info;
+    @MockBean
+    private BackEndInstanceFileUtils fileUtils;
 
     private JsonObject instance;
     private JsonArray instances;
@@ -60,44 +55,115 @@ public class BackendInstancesUtilsTest {
     public void before() throws IOException {
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
-        utils.setInstances(instances);
-    }
 
-    @Test
-    public void testSetBackendProperties() {
-        BackEndInformation information = new BackEndInformation(NAME_VAL, HOST_VAL, String.valueOf(PORT_VAL), PATH_VAL, HTTPS_VAL, ACTIVE_VAL);
-        utils.setBackEndProperties(information);
-        assertEquals(NAME_VAL, info.getName());
-        assertEquals(HOST_VAL, info.getHost());
-        assertEquals(PORT_VAL, Integer.parseInt(info.getPort()));
-        assertEquals(PATH_VAL, info.getPath());
-        assertEquals(HTTPS_VAL, info.isUseSecureHttpBackend());
-        assertEquals(ACTIVE_VAL, info.isActive());
+        utils.getDefaultBackendInformation().setHost(null);
     }
 
     @Test
     public void testCheckIfInstanceAlreadyExistTrue() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
         boolean result = utils.checkIfInstanceAlreadyExist(instance);
-        assertEquals(true, result);
+        assertEquals("checkIfInstanceAlreadyExist should return 'true', but returned '" + result + "'.",
+                true, result);
     }
 
     @Test
     public void testCheckIfInstanceAlreadyExistFalse() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+
         JsonObject newInstance = instance.getAsJsonObject();
         newInstance.addProperty("host", "newHost");
         newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
         newInstance.addProperty("path", "newPath");
         boolean result = utils.checkIfInstanceAlreadyExist(newInstance);
-        assertEquals(false, result);
+
+        assertEquals("checkIfInstanceAlreadyExist should return 'false', but returned '" + result + "'.",
+                false, result);
     }
 
     @Test
-    public void testWriteIntoFile() throws IOException {
-        Files.createFile(Paths.get(FILE_TO_WRITE));
-        utils.setEiInstancesPath(FILE_TO_WRITE);
-        utils.writeIntoFile();
-        JsonArray infoFromFile = new JsonParser().parse(new String(Files.readAllBytes(Paths.get(FILE_TO_WRITE)))).getAsJsonArray();
-        assertEquals(infoFromFile, utils.getInstances());
-        Files.deleteIfExists(Paths.get(FILE_TO_WRITE));
+    public void testCheckIfInstanceNameAlreadyExistTrue() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+
+        JsonObject newInstance = instance.getAsJsonObject();
+        newInstance.addProperty("host", "newHost");
+        newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
+        newInstance.addProperty("path", "newPath");
+
+        boolean result = utils.checkIfInstanceNameAlreadyExist(newInstance);
+        assertEquals("checkIfInstanceNameAlreadyExist should return 'true', but returned '" + result + "'.",
+                true, result);
+    }
+
+    @Test
+    public void testCheckIfInstanceNameAlreadyExistFalse() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+
+        JsonObject newInstance = instance.getAsJsonObject();
+        newInstance.addProperty("name", "newName");
+        boolean result = utils.checkIfInstanceNameAlreadyExist(newInstance);
+
+        assertEquals("checkIfInstanceNameAlreadyExist should return 'false', but returned '" + result + "'.",
+                false, result);
+    }
+
+    @Test
+    public void testGetBackEndInformationByName() {
+        // Test when name was found.
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+
+        String nameToGet = instances.get(0).getAsJsonObject().get("name").getAsString();
+        BackEndInformation result = utils.getBackEndInformationByName(nameToGet);
+
+        assertEquals("Expected instance data:\n" + instances.get(0).getAsJsonObject() + "\nBut got data:\n"
+                + result.getAsJsonObject(), instances.get(0).getAsJsonObject(), result.getAsJsonObject());
+
+        // Test where default Back End was returned
+        utils.setDefaultBackendInformation(
+                new BackEndInformation("otherName", "otherHost", "9998", "otherPath", false, true));
+        JsonObject defaultBackEnd = utils.getDefaultBackendInformation().getAsJsonObject();
+
+        BackEndInformation result2 = utils.getBackEndInformationByName(null);
+
+        assertEquals("Expected default data:\n" + defaultBackEnd + "\nBut got data:\n" + result2.getAsJsonObject(),
+                defaultBackEnd, result2.getAsJsonObject());
+
+        // Get first present back end
+        utils.getDefaultBackendInformation().setHost(null);
+
+        BackEndInformation result3 = utils.getBackEndInformationByName(null);
+        assertEquals("Expected first available instance:\n" + instances.get(0).getAsJsonObject() + "\nBut got data:\n"
+                + result3.getAsJsonObject(), instances.get(0).getAsJsonObject(), result3.getAsJsonObject());
+
+        // No back end data exist
+        when(fileUtils.getInstancesFromFile()).thenReturn(new JsonArray());
+        BackEndInformation result4 = utils.getBackEndInformationByName(null);
+        assertEquals("Expected 'null' but got:\n" + String.valueOf(result4), null, result4);
+
+    }
+
+    @Test
+    public void testAddNewBackEnd() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(new JsonArray());
+        utils.addNewBackEnd(instance);
+        assertEquals(instance, utils.getBackEndInformationList().get(0).getAsJsonObject());
+    }
+
+    @Test
+    public void testDeleteBackEnd() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+        assertEquals(true, utils.checkIfInstanceAlreadyExist(instance));
+        utils.deleteBackEnd(instance);
+        List<BackEndInformation> backEndList = utils.getBackEndInformationList();
+        for (BackEndInformation backend : backEndList) {
+            assertEquals(false, backend.getName().equals(instance.get("name").getAsString()));
+        }
+    }
+
+    @Test
+    public void testGetBackEndsAsJsonArray() {
+        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+        JsonArray result = utils.getBackEndsAsJsonArray();
+        assertEquals(instances, result);
     }
 }

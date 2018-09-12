@@ -13,13 +13,31 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +52,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 
 @RestController
 public class EIRequestsController {
@@ -47,22 +61,22 @@ public class EIRequestsController {
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
 
     private static final List<String> REQUESTS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
+    private static final String BACKEND_KEY_NAME = "backendurl";
 
     private CloseableHttpClient client = HttpClientBuilder.create().build();
 
     @Autowired
-    private BackEndInformation backEndInformation;
+    private BackEndInstancesUtils backEndInstancesUtils;
 
     /**
      * Bridge all EI Http Requests with GET method. Used for fetching
      * Subscription by id or all subscriptions and EI Env Info.
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth", "/curl",
         "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
-
         HttpGet eiRequest = new HttpGet(eiRequestUrl);
 
         String header = request.getHeader("Authorization");
@@ -80,8 +94,8 @@ public class EIRequestsController {
     @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
-
         String requestBody = "";
+
         try {
             requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
@@ -112,8 +126,8 @@ public class EIRequestsController {
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
     public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
-
         String requestBody = "";
+
         try {
             requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
@@ -155,7 +169,81 @@ public class EIRequestsController {
         return getResponse(eiRequest);
     }
 
-    private String getEIBackendSubscriptionAddress() {
+    private String getEIRequestURL(HttpServletRequest request) {
+        String eiBackendAddressSuffix = request.getServletPath();
+        String requestQuery = request.getQueryString();
+        String requestUrl = null;
+
+        if (requestQuery != null && requestQuery.contains(BACKEND_KEY_NAME)) {
+            // Selecting back end from user input as parameter.
+            List<NameValuePair> params = getParameters(requestQuery);
+            requestUrl = extractUrlFromParameters(params);
+            requestQuery = removeBackendDataFromQueryString(params);
+        } else {
+            BackEndInformation backEndInformation = getEIBackendInformation(request);
+        	requestUrl = getEIBackendSubscriptionAddress(backEndInformation);
+        }
+
+        if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
+            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
+            requestUrl = requestUrl + eiBackendAddressSuffix + query;
+        } else {
+            requestUrl = requestUrl + eiBackendAddressSuffix;
+        }
+        LOG.debug("Got HTTP Request with method " + request.getMethod() + "\nUrlSuffix: " + eiBackendAddressSuffix
+                + "\nForwarding Request to EI Backend with url: " + requestUrl);
+        return requestUrl;
+    }
+
+    private List<NameValuePair> getParameters(String requestQuery) {
+        List<NameValuePair> params = null;
+
+        try {
+            params = URLEncodedUtils.parse(new URI("?" + requestQuery), Charset.forName("UTF-8"));
+        } catch (URISyntaxException e) {
+            LOG.error("Error while encoding URL parameters: " + e);
+        }
+        return params;
+    }
+
+    private String extractUrlFromParameters(List<NameValuePair> params) {
+        String urlFromParams = null;
+        for (NameValuePair param : params) {
+            if (param.getName().equals(BACKEND_KEY_NAME)) {
+                urlFromParams = param.getValue();
+            }
+        }
+        return urlFromParams;
+    }
+
+    private String removeBackendDataFromQueryString(List<NameValuePair> params) {
+		List<NameValuePair> processedParams = new ArrayList<>();
+		for (NameValuePair param : params) {
+			String name = param.getName(), value = param.getValue();
+			if (name.equals(BACKEND_KEY_NAME)) {
+				continue;
+			}
+            processedParams.add(new BasicNameValuePair(name, value));
+        }
+
+        if (processedParams.size() == 0)
+            return null;
+
+		return URLEncodedUtils.format(processedParams, "UTF8");
+	}
+
+	private BackEndInformation getEIBackendInformation(HttpServletRequest request) {
+        if (request.getSession().getAttribute("backEndInstanceName") == null) {
+            request.getSession().setAttribute("backEndInstanceName",
+                    backEndInstancesUtils.getDefaultBackEndInstanceName());
+    	}
+
+        String backEndInstanceName = request.getSession().getAttribute("backEndInstanceName").toString();
+
+        return backEndInstancesUtils.getBackEndInformationByName(backEndInstanceName);
+	}
+
+    private String getEIBackendSubscriptionAddress(BackEndInformation backEndInformation) {
         String httpMethod = "http";
         if (backEndInformation.isUseSecureHttpBackend()) {
             httpMethod = "https";
@@ -168,23 +256,7 @@ public class EIRequestsController {
         return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort();
     }
 
-    private String getEIRequestURL(HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String requestUrl;
-        if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
-            String requestQuery = request.getQueryString();
-            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
-            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
-        } else {
-            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        }
-        LOG.info("Got HTTP Request with method " + request.getMethod()
-            + "\nUrlSuffix: " + eiBackendAddressSuffix
-            + "\nForwarding Request to EI Backend with url: " + requestUrl);
-        return requestUrl;
-    }
-
-    private ResponseEntity<String> getResponse(HttpRequestBase request) {
+	private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String responseBody = "";
         int statusCode = HttpStatus.PROCESSING.value();
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
