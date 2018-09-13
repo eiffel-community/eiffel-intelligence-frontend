@@ -416,7 +416,8 @@ jQuery(document).ready(function () {
     });
 
     $("#sidenavCollapse").click(function() {
-		table.ajax.reload();
+		table.responsive.rebuild();
+        table.responsive.recalc();
 	});
     // /Stop ## Datatables ##################################################
 
