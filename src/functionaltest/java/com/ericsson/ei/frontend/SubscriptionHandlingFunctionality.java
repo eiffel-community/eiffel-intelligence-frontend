@@ -139,7 +139,15 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.clickAddSubscription();
         String formHeaderID = "formHeader";
         assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
-
+        
+        // Test form "Cancel" button:Click "Cancel" button and verify that "Subscription Form" is closed
+        subscriptionPage.clickFormsCancelBtn();
+        assert (!subscriptionPage.presenceOfHeader(formHeaderID));    
+    
+        // Again, click "Add Subscription" button and verify that "Subscription Form" is open
+        subscriptionPage.clickAddSubscription();
+        assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
+        
         // On subscription form, select the template as "Mail Trigger" and verify
         String selectID = "selectTemplate";
         String tempMail = "Mail Trigger";
@@ -177,13 +185,31 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String tokenID = "tokenInput";
         String subName = "Selenium_test_subscription";
         String subNameID = "subscriptionNameInput";
+        String selectRepeatID = "selectRepeat";
+        String repeatValue = "true";
+        String conditionFieldID = "conditionID";
+        String requirementFieldID = "requirementID";
 
         subscriptionPage.selectDropdown(selectAuthID, authValue);
+       
         subscriptionPage.addFieldValue(userNameID, userName);
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
-        subscriptionPage.clickKVbtn(kvID);
+        subscriptionPage.clickKVbtn(kvID);        
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
+        
+        // Test "Repeat" dropdown: Select repeat value as "true" and then verify the selected value
+        subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
+        assert (new WebDriverWait(driver, 10)
+              .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
+        
+        // Test "Add Condition" button: click add condition button and check that it adds an additional "condition" field
+        subscriptionPage.clickAddConditionBtn();
+        assertEquals(2, subscriptionPage.countElements(conditionFieldID));
+        
+        // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
+        subscriptionPage.clickAddRequirementBtn();
+        assertEquals(2, subscriptionPage.countElements(requirementFieldID));
 
         // Test save subscription form: add subscription name as
         // "selenium_test_subscription" and then click "save" button verification
@@ -192,6 +218,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String responseSave = this.getJSONStringFromFile(SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
-        assert (subscriptionPage.textExistsInTable("Selenium_test_subscription"));
+        assert (subscriptionPage.textExistsInTable("Selenium_test_subscription"));           
+
     }
 }
