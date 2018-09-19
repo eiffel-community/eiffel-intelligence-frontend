@@ -20,7 +20,7 @@ function model(data){
     }
 }
 function logMessages(messageErr){
-    $.jGrowl(messageErr, {sticky: false, theme: 'Error'});
+    $.jGrowl(messageErr, {sticky: false, theme: 'Error', position:'center'});
     errorsStore.push({message:messageErr});
     sessionStorage.setItem('errorsStore', JSON.stringify(errorsStore));
     $('div.dropdown-menu').replaceWith("<div id=\"alerts\" style=\"display: none;\" class=\"dropdown-menu\" aria-labelledby=\"alertsDropdown\" data-bind=\"foreach: errorMessages\">" +
