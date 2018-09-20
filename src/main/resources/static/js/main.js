@@ -17,36 +17,43 @@ jQuery(document).ready(function() {
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
 	function loadMainPage() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("subscriptionpage.html");
 	}
 
 	$("#testRulesBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("testRules.html");
 	});
 
 	$("#eiInfoBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("eiInfo.html");
 	});
 
 	$("#loginBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("login.html");
 	});
 
 	$("#addInstanceBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").invisible();
       	$("#mainFrame").load("add-instances.html");
     });
 
     $("#switcherBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
         $("#selectInstances").invisible();
       	$("#mainFrame").load("switch-backend.html");
     });
 
 	$("#logoutBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$.ajax({
 			url : frontendServiceUrl + "/auth/logout",
@@ -65,6 +72,7 @@ jQuery(document).ready(function() {
 	});
 
 	$("#jmesPathRulesSetUpBtn").click(function() {
+		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("jmesPathRulesSetUp.html");
 	});
@@ -160,31 +168,5 @@ jQuery(document).ready(function() {
             ko.cleanNode(observableObject);
             ko.applyBindings(new viewModel(responseData),observableObject);
         }
-	});
-	
-	// Hide menu navbar when clicking a link
-	$("#subscriptionBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
-	});
-	$("#testRulesBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
-	});
-	$("#jmesPathRulesSetUpBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
-	});
-	$("#eiInfoBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
-	});
-	$("#addInstanceBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
-	});
-	$("#switcherBtn").click(function(e) {
-		e.preventDefault();
-		$("#navbarResponsive").removeClass("show");
 	});
 });
