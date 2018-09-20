@@ -4,13 +4,15 @@
     "port": "8091",
     "name": "test",
     "host": "localhost",
-    "https": false
+    "https": false,
+    "defaultBackend": false
   },
   {
     "path": "eiffel",
     "port": "8091",
     "name": "source",
     "host": "localhost",
-    "https": false
+    "https": false,
+    "defaultBackend": false
   }
 ]

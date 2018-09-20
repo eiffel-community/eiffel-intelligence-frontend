@@ -73,7 +73,7 @@ public class EIRequestsController {
      * Subscription by id or all subscriptions and EI Env Info.
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth", "/curl",
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
         "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = getEIRequestURL(request);
@@ -97,7 +97,7 @@ public class EIRequestsController {
         String requestBody = "";
 
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -129,7 +129,7 @@ public class EIRequestsController {
         String requestBody = "";
 
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -233,12 +233,11 @@ public class EIRequestsController {
 	}
 
 	private BackEndInformation getEIBackendInformation(HttpServletRequest request) {
-        if (request.getSession().getAttribute("backEndInstanceName") == null) {
-            request.getSession().setAttribute("backEndInstanceName",
-                    backEndInstancesUtils.getDefaultBackEndInstanceName());
-    	}
+	    String backEndInstanceName = null;
 
-        String backEndInstanceName = request.getSession().getAttribute("backEndInstanceName").toString();
+	    if (request.getSession().getAttribute("backEndInstanceName") != null) {
+            backEndInstanceName = request.getSession().getAttribute("backEndInstanceName").toString();
+    	}
 
         return backEndInstancesUtils.getBackEndInformationByName(backEndInstanceName);
 	}

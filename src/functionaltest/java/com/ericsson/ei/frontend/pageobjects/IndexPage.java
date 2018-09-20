@@ -81,6 +81,15 @@ public class IndexPage extends PageBaseClass {
         return addBackendPage;
     }
 
+    public SwitchBackendPage clickSwitchBackendInstanceBtn() throws IOException {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcherBtn")));
+        WebElement addInstanceBtn = driver.findElement(By.id("switcherBtn"));
+        addInstanceBtn.click();
+        SwitchBackendPage addBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
+        waitForJQueryToLoad();
+        return addBackendPage;
+    }
+
     public InfoPage clickEiInfoBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("eiInfoBtn")));
         WebElement eiInfoBtn = driver.findElement(By.id("eiInfoBtn"));

@@ -4,6 +4,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.Assert.*;
@@ -38,7 +40,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
 
     @Test
     public void testSubscription() throws Exception {
-        // Open index page
+        // Open index page.
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
 
@@ -84,7 +86,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // delete buttons.
         String keyForUser = "currentUser";
         String valueForUser = "ABCD";
-        js = ((JavascriptExecutor) driver);
+        js = (driver);
         js.executeScript(String.format("window.localStorage.setItem('%s','%s');", keyForUser, valueForUser));
         indexPageObject.clickSubscriptionPage();
         assert (subscriptionPage.textExistsInTable("Subscription1"));

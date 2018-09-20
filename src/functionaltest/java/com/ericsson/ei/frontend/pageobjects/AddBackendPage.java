@@ -17,7 +17,7 @@ public class AddBackendPage extends PageBaseClass {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public SwitchBackendPage addBackendInstance(String name, String host, int port, String contextPath) throws ClientProtocolException, IOException {
+    public void addBackendInstance(String name, String host, int port, String contextPath) throws ClientProtocolException, IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("backEndName")));
         WebElement backEndNameInput = driver.findElement(By.id("backEndName"));
         backEndNameInput.sendKeys(name);
@@ -38,9 +38,9 @@ public class AddBackendPage extends PageBaseClass {
         WebElement addInstanceBtn2 = driver.findElement(By.id("addInstanceBtn2"));
         addInstanceBtn2.click();
 
-        SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
-        waitForJQueryToLoad();
+        //SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
+        //waitForJQueryToLoad();
 
-        return switchBackendPage;
+        //return switchBackendPage;
     }
 }

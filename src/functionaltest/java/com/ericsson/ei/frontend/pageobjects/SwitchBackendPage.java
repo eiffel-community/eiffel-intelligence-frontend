@@ -10,9 +10,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ericsson.ei.frontend.SubscriptionHandlingFunctionality;
 
 public class SwitchBackendPage extends PageBaseClass {
 
+    public static final Logger LOG = LoggerFactory.getLogger(SubscriptionHandlingFunctionality.class);
     public SwitchBackendPage(CloseableHttpClient mockedHttpClient,
             FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
@@ -25,8 +30,11 @@ public class SwitchBackendPage extends PageBaseClass {
     }
 
     public void switchToBackendInstance(int backendNumber) {
+        LOG.error("########## Got here!!!!!!!! name: " + getNewInstanceName());
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("SelectBackendInstance" + backendNumber)));
+        LOG.error("########## Got here 1 !!!!!!!");
         WebElement selectBox = driver.findElement(By.id("SelectBackendInstance" + backendNumber));
+        LOG.error("########## Got here 2 !!!!!!!!");
         selectBox.click();
 
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcher")));

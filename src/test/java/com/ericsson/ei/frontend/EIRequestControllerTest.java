@@ -40,6 +40,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -65,7 +66,7 @@ public class EIRequestControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BackEndInformation backEndInformation;
+    private BackEndInstancesUtils backEndInstanceUtils;
 
     @Autowired
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
@@ -78,6 +79,7 @@ public class EIRequestControllerTest {
     @Before
     public void before() {
         backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
+        BackEndInformation backEndInformation = backEndInstanceUtils.getDefaultBackendInformation();
         backEndInformation.setName("test");
         backEndInformation.setHost("localhost");
         backEndInformation.setPort(String.valueOf(mockServerRule.getPort()));

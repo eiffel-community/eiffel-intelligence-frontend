@@ -50,14 +50,12 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
+        LOG.debug("Recieved request for instances.");
         try {
             String activeInstance = null;
             JsonArray allAvailableInstances = backEndInstancesUtils.getBackEndsAsJsonArray();
 
-            if (request.getSession().getAttribute("backEndInstanceName") == null) {
-                request.getSession().setAttribute("backEndInstanceName",
-                        backEndInstancesUtils.getDefaultBackEndInstanceName());
-            } else {
+            if (request.getSession().getAttribute("backEndInstanceName") != null) {
                 activeInstance = request.getSession().getAttribute("backEndInstanceName").toString();
             }
 
@@ -71,10 +69,13 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
+        LOG.debug("Recieved request to switch back end.");
         try {
             String selectedInstanceName = getSelectedInstanceName(request);
 
             request.getSession().setAttribute("backEndInstanceName", selectedInstanceName);
+
+            LOG.error("Session name: " + String.valueOf(request.getSession().getAttribute("backEndInstanceName")));
 
             return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
@@ -84,6 +85,7 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
+        LOG.debug("Recieved request to delete back end.");
         try {
             String instanceAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JsonObject objectToDelete = new JsonParser().parse(instanceAsString).getAsJsonObject();
@@ -98,9 +100,10 @@ public class BackEndInformationController {
 
     @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
+        LOG.debug("Recieved request to add instance.");
         try {
-            String nameOfNewInstance = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JsonObject instance = new JsonParser().parse(nameOfNewInstance).getAsJsonObject();
+            String newInstanceAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
             if (backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance)) {
                 return new ResponseEntity<>("Instance name must be unique", getHeaders(), HttpStatus.BAD_REQUEST);
@@ -108,7 +111,7 @@ public class BackEndInformationController {
 
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
-                return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
+                return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);
             }

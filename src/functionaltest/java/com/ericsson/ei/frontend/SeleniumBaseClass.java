@@ -1,6 +1,8 @@
 package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.config.SeleniumConfig;
+import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
+
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import org.junit.After;
@@ -49,10 +51,16 @@ public class SeleniumBaseClass {
 
     private static final String BACKEND_INSTANCES_INFORMATION_FILEPATH = String.join(
             File.separator, "src", "main", "resources", "EIBackendInstancesInformation.json");
+    private static final String BACKEND_INFO = "src/functionaltest/resources/fileToWriteInstances.json";
+
     private String default_instances_information;
+
+    @Autowired
+    private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     @Before
     public void setUp() throws Exception {
+        backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
         default_instances_information = getJSONStringFromFile(BACKEND_INSTANCES_INFORMATION_FILEPATH);
         MockitoAnnotations.initMocks(this);
         webController.setFrontendServicePort(randomServerPort);
@@ -63,6 +71,7 @@ public class SeleniumBaseClass {
 
     @After
     public void tearDown() throws Exception {
+        Files.deleteIfExists(Paths.get(BACKEND_INFO));
 
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
