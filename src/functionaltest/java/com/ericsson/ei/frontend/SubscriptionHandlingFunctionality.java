@@ -69,8 +69,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExist(viewButtonXPath));
 
         // Given LDAP is enabled, "Reload" subscriptions and then click
-        // subscription
-        // page with LDAP enabled with unauthorized user names
+        // subscription page with LDAP enabled with unauthorized user names
         // Verify that subscriptions exists but only with "View" button
         String responseSub = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
         String responseAuth = "{\"security\":true}";
@@ -84,15 +83,11 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExist(viewButtonXPath));
 
         // Given LDAP is enabled, "Reload" subscriptions and then click
-        // subscription
-        // page with LDAP enabled with both unauthorized and unauthorized user
-        // names (in
-        // this case authorized user is "ABCD" with subscriptions,
-        // "subscription1" and
-        // "subscription2")
-        // Verify that current user can see only their own subscriptions' edit
-        // and
-        // delete buttons.
+        // subscription page with LDAP enabled with both unauthorized and
+        // unauthorized user names (in this case authorized user is "ABCD" with
+        // subscriptions, "subscription1" and "subscription2") Verify that
+        // current user can see only their own subscriptions' edit and delete
+        // buttons.
         String keyForUser = "currentUser";
         String valueForUser = "ABCD";
 
@@ -107,8 +102,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExist(viewButtonXPath));
 
         // Now, path for "subscriptions2" with user name "DEF", so user "ABCD"
-        // is
-        // unauthorized for this subscription
+        // is unauthorized for this subscription
         String viewButtonXPath2 = "(//button[@id='view-Subscription2'])[2]";
         String editButtonXPath2 = "(//button[@id='edit-Subscription2'])[2]";
         String deleteButtonXPath2 = "(//button[@id='delete-Subscription2'])[2]";
@@ -130,8 +124,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         indexPageObject.clickSubscriptionPage().clickReload(response);
 
         // Delete all subscriptions with "Bulk Delete" button and verify that
-        // all
-        // subscriptions are deleted
+        // all subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
         assert (!subscriptionPage.textExistsInTable("Subscription1"));
@@ -158,16 +151,18 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
 
         // On subscription form, select the template as "Mail Trigger" and
-        // verify
-        // Test form "Cancel" button:Click "Cancel" button and verify that "Subscription Form" is closed
+        // verify Test form "Cancel" button:Click "Cancel" button and verify
+        // that "Subscription Form" is closed
         subscriptionPage.clickFormsCancelBtn();
         assert (!subscriptionPage.presenceOfHeader(formHeaderID));
 
-        // Again, click "Add Subscription" button and verify that "Subscription Form" is open
+        // Again, click "Add Subscription" button and verify that "Subscription
+        // Form" is open
         subscriptionPage.clickAddSubscription();
         assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
 
-        // On subscription form, select the template as "Mail Trigger" and verify
+        // On subscription form, select the template as "Mail Trigger" and
+        // verify
         String selectID = "selectTemplate";
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
@@ -176,9 +171,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com"))));
 
-        // On subscription form, select the template as "REST POST (Raw Body
-        // :JSON)"
-        // and verify
+        // On subscription form, select the template as "REST POST (Raw
+        // Body:JSON)" and verify
         String tempPost = "REST POST (Raw Body : JSON)";
         subscriptionPage.selectDropdown(selectID, tempPost);
         assert (new WebDriverWait(driver, 10)
@@ -187,8 +181,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
                 (webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
 
         // On subscription form, select the template as "Jenkins Pipeline
-        // Parameterized
-        // Job Trigger" and verify
+        // Parameterized Job Trigger" and verify
         String tempJenkins = "Jenkins Pipeline Parameterized Job Trigger";
         subscriptionPage.selectDropdown(selectID, tempJenkins);
         assertEquals("REST_POST", subscriptionPage.getValueFromSelect());
@@ -196,9 +189,8 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
                 subscriptionPage.getValueFromElement());
 
         // Choose Authorization as "Basic_AUTH" ===> input User Name as "ABCD"
-        // and Token
-        // as "EFGH" ===> click "Generate Key/Value Pair", verify the basic
-        // authentication is generated
+        // and Token as "EFGH" ===> click "Generate Key/Value Pair", verify the
+        // basic authentication is generated
         String selectAuthID = "selectAuth";
         String authValue = "BASIC_AUTH";
         String userName = "ABCD";
@@ -220,25 +212,26 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.clickKVbtn(kvID);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
 
-        // Test "Repeat" dropdown: Select repeat value as "true" and then verify the selected value
+        // Test "Repeat" dropdown: Select repeat value as "true" and then verify
+        // the selected value
         subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
         assert (new WebDriverWait(driver, 10)
-              .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
+                .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
 
-        // Test "Add Condition" button: click add condition button and check that it adds an additional "condition" field
+        // Test "Add Condition" button: click add condition button and check
+        // that it adds an additional "condition" field
         subscriptionPage.clickAddConditionBtn();
         assertEquals(2, subscriptionPage.countElements(conditionFieldID));
 
-        // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
+        // Test "Add Requirement" button: click the button and assert that it
+        // adds an additional "requirement" field
         subscriptionPage.clickAddRequirementBtn();
         assertEquals(2, subscriptionPage.countElements(requirementFieldID));
 
-        // Test save subscription form: add subscription name as
-        // "selenium_test_subscription" and then click "save" button
-        // verification
-        // that subscription is added in the datatable (and is displayed on the
-        // main
-        // page)
+        // Test save subscription form: add subscription name
+        // as "selenium_test_subscription" and then click "save" button
+        // verification that subscription is added in the datatable (and is
+        // displayed on the main page)
         String responseSave = getJSONStringFromFile(SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
