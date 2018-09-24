@@ -414,6 +414,11 @@ jQuery(document).ready(function () {
             }
         }
     });
+
+    $("#sidenavCollapse").click(function() {
+		table.responsive.rebuild();
+        table.responsive.recalc();
+	});
     // /Stop ## Datatables ##################################################
 
 

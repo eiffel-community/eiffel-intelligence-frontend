@@ -8,6 +8,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,7 +25,7 @@ public class SubscriptionPage extends PageBaseClass {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
             return true;
-        } catch (NoSuchElementException e) {
+        } catch ( TimeoutException e) {
             return false;
         }
     }
@@ -36,8 +37,8 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickFormsCancelBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("cancelButton")));
-        WebElement cancelBtn = driver.findElement(By.id("cancelButton"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("btnFormCancel")));
+        WebElement cancelBtn = driver.findElement(By.id("btnFormCancel"));
         cancelBtn.click();
     }
 
@@ -107,6 +108,14 @@ public class SubscriptionPage extends PageBaseClass {
         Select dropdown = new Select(selectNotificationType);
         return dropdown.getFirstSelectedOption().getText();
     }
+    
+    public String getValueFromSelectRepeat() {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("selectRepeat")));
+        WebElement selectNotificationType = driver.findElement(By.id("selectRepeat"));
+        Select dropdown = new Select(selectNotificationType);
+        return dropdown.getFirstSelectedOption().getText();
+    }
 
     public String getValueFromElement() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
@@ -163,6 +172,18 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement viewBtn = driver.findElement(By.className("close"));
         viewBtn.click();
     }
+    
+    public void clickAddConditionBtn() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addCondition")));
+        WebElement viewBtn = driver.findElement(By.id("addCondition"));
+        viewBtn.click();
+    }
+    
+    public void clickAddRequirementBtn(){
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addRequirement")));
+        WebElement viewBtn = driver.findElement(By.id("addRequirement"));
+        viewBtn.click();
+    }
 
     public String getSubscriptionNameFromSubscription() {
         new WebDriverWait(driver, TIMEOUT_TIMER)
@@ -209,5 +230,9 @@ public class SubscriptionPage extends PageBaseClass {
             return false;
         }
         return true;
+    }
+    
+    public int countElements(String id) {
+    	return driver.findElements(By.id(id)).size();   	
     }
 }
