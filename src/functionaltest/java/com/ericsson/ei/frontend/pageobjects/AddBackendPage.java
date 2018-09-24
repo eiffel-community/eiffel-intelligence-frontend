@@ -37,10 +37,5 @@ public class AddBackendPage extends PageBaseClass {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addInstanceBtn2")));
         WebElement addInstanceBtn2 = driver.findElement(By.id("addInstanceBtn2"));
         addInstanceBtn2.click();
-
-        //SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
-        //waitForJQueryToLoad();
-
-        //return switchBackendPage;
     }
 }

@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.codec.binary.StringUtils;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,7 +32,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.google.gson.JsonParser;
@@ -44,7 +43,7 @@ public class TestSubscriptionCRUD {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
-    private static final String BACKEND_INFO = "src/functionaltest/resources/fileToWriteInstances.json";
+    private static final String BACKEND_INFO = "src/functionaltest/resources/fileToWriteInstancesCrud.json";
     private static final String ADMIN = "admin";
     private static final String NOT_FOUND = "[]";
     private String subscriptionRequestBody;
@@ -62,9 +61,6 @@ public class TestSubscriptionCRUD {
     @Autowired
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
-    @Autowired
-    private BackEndInformation backEndInformation;
-
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this);
 
@@ -73,14 +69,9 @@ public class TestSubscriptionCRUD {
     @Before
     public void init() throws Exception {
         backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
-        backEndInformation.setName("test");
-        backEndInformation.setHost("localhost");
-        backEndInformation.setPort(String.valueOf(mockServerRule.getPort()));
-        backEndInformation.setPath("");
-        backEndInformation.setUseSecureHttpBackend(false);
-        backEndInformation.setDefaultBackend(true);
-        backEndInstancesUtils.setDefaultBackendInformation(backEndInformation);
-        backEndInstancesUtils.setDefaultBackEndInstanceName("test");
+        setDefaultBackEndInstanceToNull();
+        setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "");
+
         subscriptionRequestBody = FileUtils.readFileToString(new File(SUBSCRIPTION_FILE_PATH), "UTF-8");
         String auth = ADMIN + ":" + ADMIN;
         encodedAuth = StringUtils.newStringUtf8(Base64.encodeBase64(auth.getBytes()));
@@ -183,8 +174,28 @@ public class TestSubscriptionCRUD {
                         .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
     }
 
-    @AfterClass
-    public static void afterClass() throws IOException {
+    protected void setDefaultBackEndInstanceToNull() throws IOException {
+        backEndInstancesUtils.getDefaultBackendInformation().setName(null);
+        backEndInstancesUtils.getDefaultBackendInformation().setHost(null);
+        backEndInstancesUtils.getDefaultBackendInformation().setPort(null);
+        backEndInstancesUtils.getDefaultBackendInformation().setPath(null);
+        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
+        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(false);
         Files.deleteIfExists(Paths.get(BACKEND_INFO));
+    }
+
+    protected void setDefaultBackEndInstance(String name, String host, int port, String path) throws IOException {
+        Files.deleteIfExists(Paths.get(BACKEND_INFO));
+        backEndInstancesUtils.getDefaultBackendInformation().setName(name);
+        backEndInstancesUtils.getDefaultBackendInformation().setHost(host);
+        backEndInstancesUtils.getDefaultBackendInformation().setPort(String.valueOf(port));
+        backEndInstancesUtils.getDefaultBackendInformation().setPath(path);
+        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
+        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(true);
+    }
+
+    @After
+    public void after() throws IOException {
+        setDefaultBackEndInstanceToNull();
     }
 }

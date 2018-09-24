@@ -10,31 +10,25 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ericsson.ei.frontend.SubscriptionHandlingFunctionality;
 
 public class SwitchBackendPage extends PageBaseClass {
 
-    public static final Logger LOG = LoggerFactory.getLogger(SubscriptionHandlingFunctionality.class);
-    public SwitchBackendPage(CloseableHttpClient mockedHttpClient,
-            FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
+    public SwitchBackendPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
+            throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public String getNewInstanceName() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("BackendInstance1Name")));
-        WebElement backendInstance1Name = driver.findElement(By.id("BackendInstance1Name"));
+    public Object getInstanceNameAtPosition(int position) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("BackendInstance" + position + "Name")));
+        WebElement backendInstance1Name = driver.findElement(By.id("BackendInstance" + position + "Name"));
         return backendInstance1Name.getText();
     }
 
     public void switchToBackendInstance(int backendNumber) {
-        LOG.error("########## Got here!!!!!!!! name: " + getNewInstanceName());
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("SelectBackendInstance" + backendNumber)));
-        LOG.error("########## Got here 1 !!!!!!!");
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("SelectBackendInstance" + backendNumber)));
         WebElement selectBox = driver.findElement(By.id("SelectBackendInstance" + backendNumber));
-        LOG.error("########## Got here 2 !!!!!!!!");
         selectBox.click();
 
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcher")));
@@ -44,17 +38,19 @@ public class SwitchBackendPage extends PageBaseClass {
     }
 
     public void removeInstanceNumber(int number) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("removeBtn" + number)));
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id("removeBtn" + number)));
         WebElement removeBtn = driver.findElement(By.id("removeBtn1"));
         removeBtn.click();
     }
 
     public boolean presenceOfInstance(int number) {
         try {
-            driver.findElement(By.id("BackendInstance"+ number + "Name"));
+            driver.findElement(By.id("BackendInstance" + number + "Name"));
             return true;
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
+
 }

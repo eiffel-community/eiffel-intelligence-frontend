@@ -72,10 +72,7 @@ public class BackEndInformationController {
         LOG.debug("Recieved request to switch back end.");
         try {
             String selectedInstanceName = getSelectedInstanceName(request);
-
             request.getSession().setAttribute("backEndInstanceName", selectedInstanceName);
-
-            LOG.error("Session name: " + String.valueOf(request.getSession().getAttribute("backEndInstanceName")));
 
             return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
@@ -89,7 +86,8 @@ public class BackEndInformationController {
         try {
             String instanceAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JsonObject objectToDelete = new JsonParser().parse(instanceAsString).getAsJsonObject();
-            LOG.info("Input: " + objectToDelete);
+
+            LOG.debug("Object recieved to delete: " + objectToDelete);
 
             backEndInstancesUtils.deleteBackEnd(objectToDelete);
             return new ResponseEntity<>("Backend instance was deleted", getHeaders(), HttpStatus.OK);
@@ -106,13 +104,16 @@ public class BackEndInformationController {
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
             if (backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance)) {
+                LOG.debug("Not a unique name.");
                 return new ResponseEntity<>("Instance name must be unique", getHeaders(), HttpStatus.BAD_REQUEST);
             }
 
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
+                LOG.debug("Added new back end.");
                 return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
             } else {
+                LOG.debug("Back end already exist.");
                 return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {

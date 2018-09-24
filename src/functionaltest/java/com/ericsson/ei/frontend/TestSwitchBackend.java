@@ -1,31 +1,24 @@
 package com.ericsson.ei.frontend;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.codec.binary.StringUtils;
-import org.junit.*;
-import org.mockito.MockitoAnnotations;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.verify.VerificationTimes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import static org.junit.Assert.assertEquals;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-
-import static org.junit.Assert.*;
-
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.verify.VerificationTimes;
+
 import com.ericsson.ei.frontend.pageobjects.AddBackendPage;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 import com.ericsson.ei.frontend.pageobjects.SwitchBackendPage;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 
 public class TestSwitchBackend extends SeleniumBaseClass {
     private static MockServerClient mockClient1;
@@ -42,16 +35,13 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     private static final String INFORMATION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "InformationResponse.json");
 
-    public static final Logger LOG = LoggerFactory.getLogger(SubscriptionHandlingFunctionality.class);
-
-    @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
-
     @Test
     public void testSwitchBackend() throws Exception {
+        // Set up
         int portServer1 = mockServer1.getLocalPort();
         int portServer2 = mockServer2.getLocalPort();
-        backEndInstancesUtils.getDefaultBackendInformation().setPort(String.valueOf(portServer1));
+
+        setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "");
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
@@ -63,12 +53,10 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         AddBackendPage addBackendPage = indexPageObject.clickAddBackendInstanceBtn();
         addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
         SwitchBackendPage switchBackendPage = indexPageObject.clickSwitchBackendInstanceBtn();
-        assertEquals("new_instance", switchBackendPage.getNewInstanceName());
+
+        assertEquals("new_instance", switchBackendPage.getInstanceNameAtPosition(1));
 
         // Test switch to the newly added instance
-        // NOTE: switchToBackendInstance shoudl take a name instead of int,
-        // there may be already existing back end cfg when test is run,
-        // or disable default back end and run with test specific settings.
         switchBackendPage.switchToBackendInstance(1);
         mockClient2.verify(request().withMethod("GET").withPath("/auth/checkStatus"), VerificationTimes.atLeast(1));
 
@@ -124,10 +112,10 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
     @AfterClass
     public static void tearDownMocks() throws IOException {
-        mockServer1.stop();
-        mockServer2.stop();
-
         mockClient1.stop();
         mockClient2.stop();
+
+        mockServer1.stop();
+        mockServer2.stop();
     }
 }

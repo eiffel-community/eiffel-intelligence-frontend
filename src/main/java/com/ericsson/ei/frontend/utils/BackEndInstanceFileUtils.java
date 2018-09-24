@@ -72,7 +72,7 @@ public class BackEndInstanceFileUtils {
 
     private void ensureValidFile() throws IOException {
         if (!(new File(eiInstancesPath).isFile())) {
-            LOG.error("File does not exist! Trying creat file.");
+            LOG.error("File does not exist! Trying to creat file.");
             Files.createFile(Paths.get(eiInstancesPath));
             Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
             return;
