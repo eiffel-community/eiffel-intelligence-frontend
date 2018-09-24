@@ -25,6 +25,6 @@ public class TestAlarm extends SeleniumBaseClass {
 
         //Click alarm button few times
         IntStream.range(0, 5).forEachOrdered(i -> indexPageObject.clickAlarmButton());
-        assertEquals(3, driver.findElements(By.className("dropdown-item")).size());
+        assertEquals(2, driver.findElements(By.className("dropdown-item")).size());
     }
 }
