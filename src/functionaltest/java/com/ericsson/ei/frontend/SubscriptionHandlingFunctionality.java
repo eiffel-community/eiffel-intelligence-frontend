@@ -49,10 +49,9 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
                 .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
         // Press "Reload" button without enabling LDAP and verify that two
-        // subscriptions
-        // with names "Subscription1" and "Subscription2" are present AND there
-        // exists "edit" and
-        // "delete buttons" for unauthorized user "ABCD"
+        // subscriptions with names "Subscription1" and "Subscription2" are
+        // present AND there exists "edit" and" delete buttons" for unauthorized
+        // user "ABCD"
         String response = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
         String viewButtonXPath = "(//button[@id='view-Subscription1'])[2]";
         String editButtonXPath = "(//button[@id='edit-Subscription1'])[2]";

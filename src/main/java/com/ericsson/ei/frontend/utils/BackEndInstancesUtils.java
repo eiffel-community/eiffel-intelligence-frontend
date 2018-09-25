@@ -225,7 +225,7 @@ public class BackEndInstancesUtils {
             if (defaultBackendInformation.getHost().equals(information.getHost()) &&
                     defaultBackendInformation.getPort().equals(information.getPort()) &&
                     information.isDefaultBackend()) {
-                LOG.debug("default backend already set!");
+                LOG.debug("Default back end already set!");
                 return;
             }
         }

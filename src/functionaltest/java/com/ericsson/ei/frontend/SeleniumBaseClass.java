@@ -64,7 +64,7 @@ public class SeleniumBaseClass {
         backEndInstanceFileUtils.setEiInstancesPath(filePath);
 
         setDefaultBackEndInstanceToNull();
-        setDefaultBackEndInstance("test", "localhost", 12345, "");
+        setDefaultBackEndInstance("test", "localhost", 12345, "", true);
 
         MockitoAnnotations.initMocks(this);
         webController.setFrontendServicePort(randomServerPort);
@@ -87,21 +87,16 @@ public class SeleniumBaseClass {
     }
 
     protected void setDefaultBackEndInstanceToNull() throws IOException {
-        backEndInstancesUtils.getDefaultBackendInformation().setName(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setHost(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setPort(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setPath(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
-        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(false);
+        setDefaultBackEndInstance(null, null, 0, null, false);
     }
 
-    protected void setDefaultBackEndInstance(String name, String host, int port, String path) throws IOException {
+    protected void setDefaultBackEndInstance(String name, String host, int port, String path, boolean def) throws IOException {
         backEndInstancesUtils.getDefaultBackendInformation().setName(name);
         backEndInstancesUtils.getDefaultBackendInformation().setHost(host);
         backEndInstancesUtils.getDefaultBackendInformation().setPort(String.valueOf(port));
         backEndInstancesUtils.getDefaultBackendInformation().setPath(path);
         backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
-        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(true);
+        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(def);
     }
 
     protected static String getJSONStringFromFile(String filepath) throws IOException {

@@ -63,7 +63,9 @@ public class BackEndInformationController {
 
             return new ResponseEntity<>(allAvailableInstances.toString(), getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"path\":\"/\"}]", getHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"path\":\"/\"}]",
+                    getHeaders(), HttpStatus.OK);
         }
     }
 
@@ -76,7 +78,8 @@ public class BackEndInformationController {
 
             return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,7 +95,8 @@ public class BackEndInformationController {
             backEndInstancesUtils.deleteBackEnd(objectToDelete);
             return new ResponseEntity<>("Backend instance was deleted", getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -100,7 +104,8 @@ public class BackEndInformationController {
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to add instance.");
         try {
-            String newInstanceAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            String newInstanceAsString = request.getReader().lines()
+                    .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
             if (backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance)) {
@@ -117,7 +122,8 @@ public class BackEndInformationController {
                 return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

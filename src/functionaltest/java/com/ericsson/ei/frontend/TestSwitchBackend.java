@@ -28,12 +28,12 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
     private static final String BASE_URL = "localhost";
 
-    private static final String NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src",
-            "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
-    private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src",
-            "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
-    private static final String INFORMATION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest",
-            "resources", "responses", "InformationResponse.json");
+    private static final String NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
+    private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
+    private static final String INFORMATION_RESPONSE_FILEPATH = String.join(
+            File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
 
     @Test
     public void testSwitchBackend() throws Exception {
@@ -41,7 +41,8 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         int portServer1 = mockServer1.getLocalPort();
         int portServer2 = mockServer2.getLocalPort();
 
-        setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "");
+        setDefaultBackEndInstanceToNull();
+        setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "", true);
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
