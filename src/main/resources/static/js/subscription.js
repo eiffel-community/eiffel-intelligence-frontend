@@ -448,7 +448,6 @@ jQuery(document).ready(function () {
 
         // Check if no Subscription has been marked to be deleted.
         if (subscriptionsToDelete.length < 1) {
-            $.alert("No subscriptions has been marked to be deleted.");
             return;
         }
 
@@ -505,8 +504,12 @@ jQuery(document).ready(function () {
         req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
         req.responseType = "application/json;charset=utf-8";
         req.onload = function (event) {
-            var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
-            downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
+            if (this.responseText == ""){
+                window.logMessages("Failed to download template, Error: Could not contact the backend server.");
+            } else {
+                var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
+                downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
+            }
         };
         req.send();
     }
@@ -530,7 +533,6 @@ jQuery(document).ready(function () {
                 jsonLintResult = jsonlint.parse(fileContent);
             } catch (e) {
                 window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-                $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
                 return false;
             }
             $.jGrowl('JSON Format Check Succeeded', {
