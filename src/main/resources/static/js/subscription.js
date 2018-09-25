@@ -448,6 +448,7 @@ jQuery(document).ready(function () {
 
         // Check if no Subscription has been marked to be deleted.
         if (subscriptionsToDelete.length < 1) {
+            window.logMessages("No subscriptions has been marked to be deleted.");
             return;
         }
 
