@@ -13,10 +13,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.verify.VerificationTimes;
 
 import com.ericsson.ei.frontend.pageobjects.AddBackendPage;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
+import com.ericsson.ei.frontend.pageobjects.InfoPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 import com.ericsson.ei.frontend.pageobjects.SwitchBackendPage;
 
@@ -52,20 +52,15 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         // Test add backend instance
         indexPageObject.clickAdminBackendInstancesBtn();
         AddBackendPage addBackendPage = indexPageObject.clickAddBackendInstanceBtn();
-        addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
-        SwitchBackendPage switchBackendPage = indexPageObject.clickSwitchBackendInstanceBtn();
+        SwitchBackendPage switchBackendPage = addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
 
         assertEquals("new_instance", switchBackendPage.getInstanceNameAtPosition(1));
 
         // Test switch to the newly added instance
         switchBackendPage.switchToBackendInstance(1);
-        mockClient2.verify(request().withMethod("GET").withPath("/auth/checkStatus"), VerificationTimes.atLeast(1));
 
-        // infoPage always have the default back end given in
-        // application.properties, this maybe needs fixing.
-        // InfoPage infoPage = indexPageObject.clickEiInfoBtn();
-        // assertEquals("http://localhost:" + PORTSERVER2,
-        // infoPage.getConnectedBackend());
+        InfoPage infoPage = indexPageObject.clickEiInfoBtn();
+        assertEquals("http://localhost:" + portServer2, infoPage.getConnectedBackend());
 
         // Test that different set of subscriptions are available for each
         // instance

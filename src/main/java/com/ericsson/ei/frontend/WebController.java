@@ -17,6 +17,9 @@
 package com.ericsson.ei.frontend;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +49,7 @@ public class WebController {
     private boolean useSecureHttpFrontend;
 
     @Autowired
-    private BackEndInformation backEndInformation;
+    private BackEndInstancesUtils backEndInstancesUtils;
 
     @RequestMapping("/")
     public String greeting(Model model) {
@@ -72,11 +75,10 @@ public class WebController {
     }
 
     @RequestMapping("/eiInfo.html")
-    public String eiInfo(Model model) {
+    public String eiInfo(Model model, HttpServletRequest request) {
 
         model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-        String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
-        model.addAttribute("backendServerUrl", backendServerUrl);
+        model.addAttribute("backendServerUrl", getBackEndServiceUrl(request));
         return "eiInfo";
     }
 
@@ -117,6 +119,23 @@ public class WebController {
             frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
         }
         return frontendServiceUrl;
+    }
+
+    private String getBackEndServiceUrl(HttpServletRequest request) {
+        String activeInstance = null;
+        if (request.getSession().getAttribute("backEndInstanceName") != null) {
+            activeInstance = request.getSession().getAttribute("backEndInstanceName").toString();
+        }
+
+        BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(activeInstance);
+
+        String http = "http";
+        if (backEndInformation.isUseSecureHttpBackend()) {
+            http = "https";
+        }
+
+        String backendServerUrl = String.format("%s://%s:%s", http, backEndInformation.getHost(), backEndInformation.getPort());
+        return backendServerUrl;
     }
 
 }

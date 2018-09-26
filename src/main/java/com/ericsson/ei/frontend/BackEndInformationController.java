@@ -76,7 +76,8 @@ public class BackEndInformationController {
             String selectedInstanceName = getSelectedInstanceName(request);
             request.getSession().setAttribute("backEndInstanceName", selectedInstanceName);
 
-            return new ResponseEntity<>(getHeaders(), HttpStatus.MOVED_PERMANENTLY);
+            return new ResponseEntity<>("{\"message\": \"Backend instance with name '" + selectedInstanceName + "' was selected.\"}",
+                    getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -93,7 +94,9 @@ public class BackEndInformationController {
             LOG.debug("Object recieved to delete: " + objectToDelete);
 
             backEndInstancesUtils.deleteBackEnd(objectToDelete);
-            return new ResponseEntity<>("Backend instance was deleted", getHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "{\"message\":\"Backend instance with name '" + objectToDelete.get("name").getAsString() + "' was deleted.\"}",
+                    getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal error" + e.getMessage(), getHeaders(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -116,7 +119,9 @@ public class BackEndInformationController {
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
                 LOG.debug("Added new back end.");
-                return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "{\"message\":\"Backend instance with name '" + instance.get("name").getAsString() + "' was added.\"}",
+                        getHeaders(), HttpStatus.OK);
             } else {
                 LOG.debug("Back end already exist.");
                 return new ResponseEntity<>("Instance already exist", getHeaders(), HttpStatus.BAD_REQUEST);

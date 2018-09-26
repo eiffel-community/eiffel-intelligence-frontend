@@ -89,7 +89,7 @@ public class BackendInformationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instancesWithActive.toString()))
-            .andExpect(status().isMovedPermanently())
+            .andExpect(status().isOk())
             .andReturn();
     }
 
