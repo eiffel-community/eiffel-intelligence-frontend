@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.ericsson.ei.config.SeleniumConfig;
@@ -33,8 +35,11 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(
             File.separator, "src", "functionaltest", "resources", "responses", "AggregatedObjectResponse.json");
 
+    private static final Logger LOG = LoggerFactory.getLogger(TestRulesFunctionality.class);
+
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
+        LOG.error("#### Locate me!");
         // Load index page and wait for it to load
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
@@ -44,10 +49,18 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         assert(new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader()));
 
         // Verify that "download rules template" button works
+        String downloadedRulesTemplate = "";
         String mockedResponse = getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
-        testRulesPage.clickDownloadRulesTemplate(mockedResponse);
-        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
-        String downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
+
+        // On windows this may require more then one try due to timing issues.
+        int i = 0;
+        while (!downloadedRulesTemplate.equals(mockedResponse) && i <= 5) {
+            i++;
+            testRulesPage.clickDownloadRulesTemplate(mockedResponse);
+            new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
+            downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
+        }
+
         assertEquals(mockedResponse, downloadedRulesTemplate);
 
         // Verify that uploading the downloaded template file works.

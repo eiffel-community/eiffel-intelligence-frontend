@@ -13,6 +13,7 @@
 */
 package com.ericsson.ei.frontend;
 
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,9 +28,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,6 +65,8 @@ public class EIRequestControllerTest {
     private static final String DOWNLOAD_RULES_TEMPLATE_RESPONSE_PATH = "src/test/resources/backendResponses/downloadRulesTemplateResponse.json";
 
     private static final String BACKEND_INFO = "src/test/resources/backendResponses/fileToWriteInstances.json";
+
+    private static final Logger LOG = LoggerFactory.getLogger(EIRequestControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -166,6 +172,30 @@ public class EIRequestControllerTest {
     public void testDeleteSubscription() throws Exception {
         String responseBody = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}").toString();
         testDelete(SUBSCRIPTIONS_ONE_ENDPOINT, responseBody);
+    }
+
+    @Test
+    public void testBackEndOverride() throws Exception {
+        // Setting up secondary mock server/client.
+        String host = "localhost";
+        String key_value = "backendurl";
+        MockServerClient mockClient;
+        ClientAndServer mockServer;
+        mockServer = startClientAndServer();
+
+        int serverPort = mockServer.getLocalPort();
+        mockClient = new MockServerClient(host, serverPort);
+
+        String responseBody = new JsonParser().parse(new FileReader(SUBSCRIPTIONS_ONE_RESPONSE_PATH)).toString();
+        String requestQuery = String.format("%s?%s=http://%s:%s", SUBSCRIPTIONS_ONE_ENDPOINT, key_value, host, serverPort);
+
+        mockClient.when(HttpRequest.request().withMethod("GET").withPath(SUBSCRIPTIONS_ONE_ENDPOINT))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(requestQuery).servletPath(SUBSCRIPTIONS_ONE_ENDPOINT).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andExpect(content().string(responseBody)).andReturn();
+
+        mockClient.close();
     }
 
     private void testGet(String path, String responseBody) throws Exception {
