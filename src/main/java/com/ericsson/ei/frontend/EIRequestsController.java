@@ -181,7 +181,7 @@ public class EIRequestsController {
             requestQuery = removeBackendDataFromQueryString(params);
         } else {
             BackEndInformation backEndInformation = getEIBackendInformation(request);
-        	requestUrl = getEIBackendSubscriptionAddress(backEndInformation);
+        	requestUrl = backEndInformation.getUrlAsString();
         }
 
         if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
@@ -241,19 +241,6 @@ public class EIRequestsController {
 
         return backEndInstancesUtils.getBackEndInformationByName(backEndInstanceName);
 	}
-
-    private String getEIBackendSubscriptionAddress(BackEndInformation backEndInformation) {
-        String httpMethod = "http";
-        if (backEndInformation.isUseSecureHttpBackend()) {
-            httpMethod = "https";
-        }
-
-        if (backEndInformation.getPath() != null && !backEndInformation.getPath().isEmpty()) {
-            return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort() + "/"
-                    + backEndInformation.getPath();
-        }
-        return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort();
-    }
 
 	private ResponseEntity<String> getResponse(HttpRequestBase request) {
         String responseBody = "";

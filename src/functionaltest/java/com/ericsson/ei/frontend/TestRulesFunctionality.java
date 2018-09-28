@@ -39,7 +39,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
-        LOG.error("#### Locate me!");
         // Load index page and wait for it to load
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();

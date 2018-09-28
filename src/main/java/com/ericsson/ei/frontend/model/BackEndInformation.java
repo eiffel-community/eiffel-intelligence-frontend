@@ -52,7 +52,7 @@ public class BackEndInformation {
     @Value("${ei.backendServerPort:#{null}}")
     private String port;
 
-    @Value("${ei.backendContextPath:#{null}}")
+    @Value("${ei.backendContextPath:#{\"\"}}")
     private String path;
 
     @Value("${ei.useSecureHttpBackend:#{false}}")
@@ -77,5 +77,24 @@ public class BackEndInformation {
         instance.addProperty(HTTPS, useSecureHttpBackend);
         instance.addProperty(DEFAULT, defaultBackend);
         return instance;
+    }
+
+    /**
+     * Get the Class url data as String.
+     *
+     * @return
+     *      String
+     */
+    public String getUrlAsString() {
+        String httpMethod = "http";
+        if (this.isUseSecureHttpBackend()) {
+            httpMethod = "https";
+        }
+
+        if (this.getPath() != null && !this.getPath().isEmpty()) {
+            String formattedPath = ("/" + path).replaceAll("//", "/");
+            return httpMethod + "://" + host + ":" + port + formattedPath;
+        }
+        return httpMethod + "://" + host + ":" + port;
     }
 }
