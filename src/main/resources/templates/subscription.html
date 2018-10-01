@@ -163,8 +163,9 @@
                                                     placeholder="Value" class="form-control" type="text"></textarea>
                                             </td>
                                             <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
-                                                <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); }, clickBubble: false"
-                                                    data-toggle="tooltip" title="Delete Key/Value Pair" class="btn btn-danger float-right">
+                                                <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); },
+                                                    clickBubble: false, style:{visibility:($root.subscription()[0].notificationMessageKeyValues().length > 1) ? 'visible' : 'hidden'}"
+                                                    data-toggle="tooltip" title="Delete Key/Value Pair" class="btn btn-danger float-right" style="visibility:hidden">
                                                     <i class="glyphicon glyphicon-trash"></i>Delete
                                                 </button>
                                             </td>
