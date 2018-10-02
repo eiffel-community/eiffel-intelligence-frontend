@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,22 +61,21 @@ public class BackEndInstancesUtils {
     private List<BackEndInformation> backEndInformationList = new ArrayList<>();
 
     /**
-     * Function to check weather an instance host, port, path and https is unique.
+     * Function to check weather an instance host, port, path and https is
+     * unique.
      *
-     * @param instance
-     *      JsonObject
-     * @return
-     *      boolean
+     * @param JsonObject
+     * @return boolean
      */
     public boolean checkIfInstanceAlreadyExist(JsonObject instance) {
         parseBackEndInstances();
 
         for (BackEndInformation backendInformation : backEndInformationList) {
-        	// Ensure unique host, port and context paths
-            if (backendInformation.getHost().equals(instance.get(HOST).getAsString()) &&
-                    Integer.valueOf(backendInformation.getPort()) == instance.get(PORT).getAsInt() &&
-                    backendInformation.getPath().equals(instance.get(PATH).getAsString()) &&
-                    backendInformation.isUseSecureHttpBackend() == instance.get(HTTPS).getAsBoolean()) {
+            // Ensure unique host, port and context paths
+            if (backendInformation.getHost().equals(instance.get(HOST).getAsString())
+                    && Integer.valueOf(backendInformation.getPort()) == instance.get(PORT).getAsInt()
+                    && backendInformation.getPath().equals(instance.get(PATH).getAsString())
+                    && backendInformation.isUseSecureHttpBackend() == instance.get(HTTPS).getAsBoolean()) {
                 return true;
             }
         }
@@ -82,12 +83,11 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns weather the name is unique, the name is an identifier thus must be unique.
+     * Returns weather the name is unique, the name is an identifier thus must
+     * be unique.
      *
-     * @param instance
-     *      JsonObject
-     * @return
-     *      boolean
+     * @param JsonObject
+     * @return boolean
      */
     public boolean checkIfInstanceNameAlreadyExist(JsonObject instance) {
         parseBackEndInstances();
@@ -103,14 +103,13 @@ public class BackEndInstancesUtils {
     /**
      * Returns the BackEndInformation based on input name.
      *
-     * @param backEndName
-     *      String name
-     * @return
-     *      backendInformation if exist
-     *      null if no backendInformation exist
+     * @param String
+     *            name
+     * @return backendInformation if exist null if no backendInformation exist
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
-        LOG.debug("getBackEndInformationByName called for with name '" + backEndName + "'.");;
+        LOG.debug("getBackEndInformationByName called for with name '" + backEndName + "'.");
+        ;
         parseBackEndInstances();
 
         for (BackEndInformation backendInformation : backEndInformationList) {
@@ -120,8 +119,7 @@ public class BackEndInstancesUtils {
             }
         }
 
-        if (getDefaultBackendInformation().getHost() != null &&
-                getDefaultBackendInformation().getPort() != null) {
+        if (getDefaultBackendInformation().getHost() != null && getDefaultBackendInformation().getPort() != null) {
             LOG.debug("Returning (default) BackEndInformation.");
             return getDefaultBackendInformation();
         }
@@ -139,7 +137,7 @@ public class BackEndInstancesUtils {
      * Adds a new back end to the backEndInformationList and saves the data.
      *
      * @param instance
-     *      back end information as JsonObject
+     *            back end information as JsonObject
      */
     public void addNewBackEnd(JsonObject instance) {
         parseBackEndInstances();
@@ -152,34 +150,33 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Deletes a backend from the backEndInformationList and saves the new list.
+     * Deletes a back end from the backEndInformationList and saves the new list.
      *
      * @param objectToDelete
-     *      back end information as JsonObject
+     *            back end information as JsonObject
      */
     public void deleteBackEnd(JsonObject objectToDelete) {
         parseBackEndInstances();
         LOG.debug(backEndInformationList.toString());
         for (BackEndInformation backendInformation : backEndInformationList) {
-            if (backendInformation.getName().equals(objectToDelete.get(NAME).getAsString()) &&
-                    backendInformation.getHost().equals(objectToDelete.get(HOST).getAsString()) &&
-                    backendInformation.getPort().equals(objectToDelete.get(PORT).getAsString()) &&
-                    backendInformation.getPath().equals(objectToDelete.get(PATH).getAsString()) &&
-                    backendInformation.isUseSecureHttpBackend() == objectToDelete.get(HTTPS).getAsBoolean() &&
-                    !backendInformation.isDefaultBackend()) {
+            if (backendInformation.getName().equals(objectToDelete.get(NAME).getAsString())
+                    && backendInformation.getHost().equals(objectToDelete.get(HOST).getAsString())
+                    && backendInformation.getPort().equals(objectToDelete.get(PORT).getAsString())
+                    && backendInformation.getPath().equals(objectToDelete.get(PATH).getAsString())
+                    && backendInformation.isUseSecureHttpBackend() == objectToDelete.get(HTTPS).getAsBoolean()
+                    && !backendInformation.isDefaultBackend()) {
                 backEndInformationList.remove(backendInformation);
                 dumpBackEndInformationList();
                 break;
             }
-        LOG.debug(backEndInformationList.toString());
+            LOG.debug(backEndInformationList.toString());
         }
     }
 
     /**
      * Returns the bakckEndInformationList parsed to JsonArray.
      *
-     * @return
-     *      JsonArray with back end information data.
+     * @return JsonArray with back end information data.
      */
     public JsonArray getBackEndsAsJsonArray() {
         parseBackEndInstances();
@@ -215,16 +212,15 @@ public class BackEndInstancesUtils {
     }
 
     private void ensureDefaultBackEnd() {
-        if (defaultBackendInformation.getHost() == null ||
-                defaultBackendInformation.getPort() == null) {
+        if (defaultBackendInformation.getHost() == null || defaultBackendInformation.getPort() == null) {
             LOG.debug("No default Host or Port set!");
             return;
         }
         defaultBackendInformation.setDefaultBackend(true);
         for (BackEndInformation information : backEndInformationList) {
-            if (defaultBackendInformation.getHost().equals(information.getHost()) &&
-                    defaultBackendInformation.getPort().equals(information.getPort()) &&
-                    information.isDefaultBackend()) {
+            if (defaultBackendInformation.getHost().equals(information.getHost())
+                    && defaultBackendInformation.getPort().equals(information.getPort())
+                    && information.isDefaultBackend()) {
                 LOG.debug("Default back end already set!");
                 return;
             }

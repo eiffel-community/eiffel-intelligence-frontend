@@ -1,0 +1,20 @@
+[
+    {
+        "name": "someName",
+        "host": "someHost",
+        "port": 9888,
+        "path": "somePath",
+        "https": false,
+        "defaultBackend": false,
+        "active": true
+    },
+    {
+        "name": "otherName",
+        "host": "otherHost",
+        "port": 9998,
+        "path": "otherPath",
+        "https": false,
+        "defaultBackend": true,
+        "active": false
+    }
+]

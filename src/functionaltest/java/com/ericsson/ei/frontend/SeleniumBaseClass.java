@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,7 +39,7 @@ public class SeleniumBaseClass {
     EIRequestsController eIRequestsController;
 
     @Autowired
-    WebController webController;
+    WebControllerUtils webControllerUtils;
 
 
     protected FirefoxDriver driver;
@@ -67,7 +68,7 @@ public class SeleniumBaseClass {
         setDefaultBackEndInstance("test", "localhost", 12345, "", true);
 
         MockitoAnnotations.initMocks(this);
-        webController.setFrontendServicePort(randomServerPort);
+        webControllerUtils.setFrontendServicePort(randomServerPort);
 
         driver = SeleniumConfig.initFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);

@@ -112,15 +112,4 @@ public class BackendInformationControllerTest {
             .andExpect(status().isOk())
             .andReturn();
     }
-
-    @Test
-    public void testAddInstanceIfAlreadyExists() throws Exception {
-        when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instance.toString()))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("Instance already exist"))
-            .andReturn();
-    }
 }

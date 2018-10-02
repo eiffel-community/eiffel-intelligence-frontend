@@ -66,8 +66,6 @@ public class EIRequestControllerTest {
 
     private static final String BACKEND_INFO = "src/test/resources/backendResponses/fileToWriteInstances.json";
 
-    private static final Logger LOG = LoggerFactory.getLogger(EIRequestControllerTest.class);
-
     @Autowired
     private MockMvc mockMvc;
 

@@ -86,15 +86,17 @@ public class BackEndInformation {
      *      String
      */
     public String getUrlAsString() {
-        String httpMethod = "http";
+        String constructedUrl = "http";
         if (this.isUseSecureHttpBackend()) {
-            httpMethod = "https";
+            constructedUrl = "https";
         }
 
+        constructedUrl += "://" + host + ":" + port;
+
         if (this.getPath() != null && !this.getPath().isEmpty()) {
-            String formattedPath = ("/" + path).replaceAll("//", "/");
-            return httpMethod + "://" + host + ":" + port + formattedPath;
+            constructedUrl += ("/" + path).replaceAll("//", "/");
         }
-        return httpMethod + "://" + host + ":" + port;
+
+        return constructedUrl;
     }
 }
