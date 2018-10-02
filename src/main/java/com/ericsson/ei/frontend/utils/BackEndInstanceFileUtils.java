@@ -80,11 +80,6 @@ public class BackEndInstanceFileUtils {
 
         if (!fileContainsJsonArray()) {
             LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
-
-            // This will reset the JSON-file and save the corrupt data to 'eiInstancesPath'.broken Should
-            // Never be needed unless the user manually edits the JSAON-file.
-            //Files.copy(Paths.get(eiInstancesPath), Paths.get(eiInstancesPath + ".broken"));
-            //Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
         }
     }
 

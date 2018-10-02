@@ -61,50 +61,41 @@ public class BackendInstancesUtilsTest {
 
     @Test
     public void testCheckIfInstanceAlreadyExistTrue() {
+        boolean result;
         when(fileUtils.getInstancesFromFile()).thenReturn(instances);
-        boolean result = utils.checkIfInstanceAlreadyExist(instance);
-        assertEquals("checkIfInstanceAlreadyExist should return 'true', but returned '" + result + "'.",
-                true, result);
-    }
 
-    @Test
-    public void testCheckIfInstanceAlreadyExistFalse() {
-        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+        result = utils.checkIfInstanceAlreadyExist(instance);
+        assertEquals("Instance should already exist: '" + result + "'.", true, result);
 
         JsonObject newInstance = instance.getAsJsonObject();
         newInstance.addProperty("host", "newHost");
         newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
         newInstance.addProperty("path", "newPath");
-        boolean result = utils.checkIfInstanceAlreadyExist(newInstance);
+        result = utils.checkIfInstanceAlreadyExist(newInstance);
 
-        assertEquals("checkIfInstanceAlreadyExist should return 'false', but returned '" + result + "'.",
-                false, result);
+        assertEquals("Instance should not exist: '" + result + "'.", false, result);
     }
 
     @Test
-    public void testCheckIfInstanceNameAlreadyExistTrue() {
+    public void testCheckIfInstanceNameAlreadyExist() {
         when(fileUtils.getInstancesFromFile()).thenReturn(instances);
+        JsonObject newInstance;
+        boolean result;
 
-        JsonObject newInstance = instance.getAsJsonObject();
+        // Changing instance host, port and path, but keeps name
+        newInstance = instance.getAsJsonObject();
         newInstance.addProperty("host", "newHost");
         newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
         newInstance.addProperty("path", "newPath");
 
-        boolean result = utils.checkIfInstanceNameAlreadyExist(newInstance);
-        assertEquals("checkIfInstanceNameAlreadyExist should return 'true', but returned '" + result + "'.",
-                true, result);
-    }
+        result = utils.checkIfInstanceNameAlreadyExist(newInstance);
+        assertEquals("Instance name should already exist: '" + result + "'.", true, result);
 
-    @Test
-    public void testCheckIfInstanceNameAlreadyExistFalse() {
-        when(fileUtils.getInstancesFromFile()).thenReturn(instances);
-
-        JsonObject newInstance = instance.getAsJsonObject();
+        // Changing instance name and it should pass check
         newInstance.addProperty("name", "newName");
-        boolean result = utils.checkIfInstanceNameAlreadyExist(newInstance);
+        result = utils.checkIfInstanceNameAlreadyExist(newInstance);
 
-        assertEquals("checkIfInstanceNameAlreadyExist should return 'false', but returned '" + result + "'.",
-                false, result);
+        assertEquals("Instance name should not exist: '" + result + "'.", false, result);
     }
 
     @Test

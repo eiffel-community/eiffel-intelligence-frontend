@@ -83,7 +83,7 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns weather the name is unique, the name is an identifier thus must
+     * Returns whether the name is unique, the name is an identifier thus must
      * be unique.
      *
      * @param JsonObject
@@ -146,7 +146,7 @@ public class BackEndInstancesUtils {
         } catch (IOException e) {
             LOG.error("Failure when trying to add instance " + e.getMessage());
         }
-        dumpBackEndInformationList();
+        saveBackEndInformationList();
     }
 
     /**
@@ -166,7 +166,7 @@ public class BackEndInstancesUtils {
                     && backendInformation.isUseSecureHttpBackend() == objectToDelete.get(HTTPS).getAsBoolean()
                     && !backendInformation.isDefaultBackend()) {
                 backEndInformationList.remove(backendInformation);
-                dumpBackEndInformationList();
+                saveBackEndInformationList();
                 break;
             }
             LOG.debug(backEndInformationList.toString());
@@ -191,7 +191,7 @@ public class BackEndInstancesUtils {
         return backEndList;
     }
 
-    private void dumpBackEndInformationList() {
+    private void saveBackEndInformationList() {
         JsonArray jsonArrayToDump = parseBackEndsAsJsonArray();
         backEndInstanceFileUtils.dumpJsonArray(jsonArrayToDump);
     }
@@ -226,6 +226,6 @@ public class BackEndInstancesUtils {
             }
         }
         backEndInformationList.add(defaultBackendInformation);
-        dumpBackEndInformationList();
+        saveBackEndInformationList();
     }
 }
