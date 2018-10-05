@@ -40,9 +40,9 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         // Set up
         int portServer1 = mockServer1.getLocalPort();
         int portServer2 = mockServer2.getLocalPort();
-
-        setDefaultBackEndInstanceToNull();
-        setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "", true);
+        
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "", true);
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);

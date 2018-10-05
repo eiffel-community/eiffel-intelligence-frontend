@@ -83,6 +83,7 @@ public class EIRequestsController {
         String requestBody = "";
 
         try {
+        	// Replaces \r with nothing in case system is run on windows \r may disturb tests. \r does not affect EI functionality.
             requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
