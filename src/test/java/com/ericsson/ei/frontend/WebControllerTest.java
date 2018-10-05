@@ -49,7 +49,7 @@ public class WebControllerTest {
 
     @Before
     public void beforeClass() {
-        when(controllerUtils.getFrontendServiceUrl()).thenReturn(FRONT_END_SERVICE_URL);
+        when(controllerUtils.getFrontEndServiceUrl()).thenReturn(FRONT_END_SERVICE_URL);
         when(controllerUtils.getBackEndServiceUrl(any())).thenReturn(BACK_END_SERVICE_URL);
     }
 

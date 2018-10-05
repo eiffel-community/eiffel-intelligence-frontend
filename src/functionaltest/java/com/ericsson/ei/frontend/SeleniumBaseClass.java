@@ -51,10 +51,10 @@ public class SeleniumBaseClass {
 
     @Autowired
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
-
+    
     @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
-
+    protected BackEndInstancesUtils backEndInstancesUtils;
+    
     @Before
     public void setUp() throws Exception {
         File tempFile = File.createTempFile("tempfile", ".json");
@@ -64,9 +64,8 @@ public class SeleniumBaseClass {
         Files.write(Paths.get(filePath), "[]".getBytes());
         backEndInstanceFileUtils.setEiInstancesPath(filePath);
 
-        setDefaultBackEndInstanceToNull();
-        setDefaultBackEndInstance("test", "localhost", 12345, "", true);
-
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
         MockitoAnnotations.initMocks(this);
         webControllerUtils.setFrontendServicePort(randomServerPort);
 
@@ -84,20 +83,7 @@ public class SeleniumBaseClass {
             fail(verificationErrorString);
         }
 
-        setDefaultBackEndInstanceToNull();
-    }
-
-    protected void setDefaultBackEndInstanceToNull() throws IOException {
-        setDefaultBackEndInstance(null, null, 0, null, false);
-    }
-
-    protected void setDefaultBackEndInstance(String name, String host, int port, String path, boolean def) throws IOException {
-        backEndInstancesUtils.getDefaultBackendInformation().setName(name);
-        backEndInstancesUtils.getDefaultBackendInformation().setHost(host);
-        backEndInstancesUtils.getDefaultBackendInformation().setPort(String.valueOf(port));
-        backEndInstancesUtils.getDefaultBackendInformation().setPath(path);
-        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
-        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(def);
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 
     protected static String getJSONStringFromFile(String filepath) throws IOException {

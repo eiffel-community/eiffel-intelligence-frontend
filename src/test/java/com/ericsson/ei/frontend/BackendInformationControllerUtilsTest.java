@@ -66,9 +66,6 @@ public class BackendInformationControllerUtilsTest {
     private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
     private static final String NOT_DEFAULT_BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedNotDefaultResponseInstances.json";
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @MockBean
     private BackEndInstancesUtils backEndInstancesUtils;
 
@@ -86,8 +83,6 @@ public class BackendInformationControllerUtilsTest {
     private BufferedReader mockedReader;
     private Stream<String> stream;
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInfoirmationControllerUtils.class);
-
     @Before
     public void before() throws Exception {
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
@@ -96,18 +91,7 @@ public class BackendInformationControllerUtilsTest {
                 .getAsJsonArray();
         instancesWithNotDefaultActive = new JsonParser()
                 .parse(new FileReader(NOT_DEFAULT_BACKEND_RESPONSE_INSTANCES_FILE_PATH)).getAsJsonArray();
-        // information = new ArrayList<>();
-        // for (JsonElement element : instances) {
-        // information.add(new ObjectMapper().readValue(element.toString(),
-        // BackEndInformation.class));
-        // }
 
-        // BackEndInformation backendInformation = new
-        // BackEndInformation("TestName", "TestHost", "12345", "", false,
-        // false);
-        // BackEndInformation backendInformationNull = new
-        // BackEndInformation("NullName", "NullHost", "12345", "", false,
-        // false);
         mockedRequest = Mockito.mock(HttpServletRequest.class);
         mockedSession = Mockito.mock(HttpSession.class);
         mockedReader = Mockito.mock(BufferedReader.class);

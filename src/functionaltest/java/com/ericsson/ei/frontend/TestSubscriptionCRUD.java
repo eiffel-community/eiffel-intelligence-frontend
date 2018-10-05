@@ -43,7 +43,6 @@ public class TestSubscriptionCRUD {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
-    private static final String BACKEND_INFO = "src/functionaltest/resources/fileToWriteInstancesCrud.json";
     private static final String ADMIN = "admin";
     private static final String NOT_FOUND = "[]";
     private String subscriptionRequestBody;
@@ -68,9 +67,15 @@ public class TestSubscriptionCRUD {
 
     @Before
     public void init() throws Exception {
-        backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
-        setDefaultBackEndInstanceToNull();
-        setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "");
+    	File tempFile = File.createTempFile("tempfile", ".json");
+        tempFile.deleteOnExit();
+
+        String filePath = tempFile.getAbsolutePath().toString();
+        Files.write(Paths.get(filePath), "[]".getBytes());
+        backEndInstanceFileUtils.setEiInstancesPath(filePath);
+        
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
 
         subscriptionRequestBody = FileUtils.readFileToString(new File(SUBSCRIPTION_FILE_PATH), "UTF-8");
         String auth = ADMIN + ":" + ADMIN;
@@ -174,28 +179,8 @@ public class TestSubscriptionCRUD {
                         .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
     }
 
-    protected void setDefaultBackEndInstanceToNull() throws IOException {
-        backEndInstancesUtils.getDefaultBackendInformation().setName(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setHost(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setPort(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setPath(null);
-        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
-        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(false);
-        Files.deleteIfExists(Paths.get(BACKEND_INFO));
-    }
-
-    protected void setDefaultBackEndInstance(String name, String host, int port, String path) throws IOException {
-        Files.deleteIfExists(Paths.get(BACKEND_INFO));
-        backEndInstancesUtils.getDefaultBackendInformation().setName(name);
-        backEndInstancesUtils.getDefaultBackendInformation().setHost(host);
-        backEndInstancesUtils.getDefaultBackendInformation().setPort(String.valueOf(port));
-        backEndInstancesUtils.getDefaultBackendInformation().setPath(path);
-        backEndInstancesUtils.getDefaultBackendInformation().setUseSecureHttpBackend(false);
-        backEndInstancesUtils.getDefaultBackendInformation().setDefaultBackend(true);
-    }
-
     @After
     public void after() throws IOException {
-        setDefaultBackEndInstanceToNull();
+    	backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 }

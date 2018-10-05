@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +107,7 @@ public class BackEndInstancesUtils {
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
         LOG.debug("getBackEndInformationByName called for with name '" + backEndName + "'.");
-        ;
+        
         parseBackEndInstances();
 
         for (BackEndInformation backendInformation : backEndInformationList) {
@@ -182,7 +180,32 @@ public class BackEndInstancesUtils {
         parseBackEndInstances();
         return parseBackEndsAsJsonArray();
     }
-
+    
+    /**
+     * Quick function to set default back end to null
+     */
+    public void setDefaultBackEndInstanceToNull() {
+        setDefaultBackEndInstance(null, null, 0, null, false);
+    }
+    
+    /**
+     * Tunction that may be used to set default back end.
+     * 
+     * @param name
+     * @param host
+     * @param port
+     * @param path
+     * @param def
+     */
+    public void setDefaultBackEndInstance(String name, String host, int port, String path, boolean def) {
+        getDefaultBackendInformation().setName(name);
+        getDefaultBackendInformation().setHost(host);
+        getDefaultBackendInformation().setPort(String.valueOf(port));
+        getDefaultBackendInformation().setPath(path);
+        getDefaultBackendInformation().setUseSecureHttpBackend(false);
+        getDefaultBackendInformation().setDefaultBackend(def);
+    }
+    
     private JsonArray parseBackEndsAsJsonArray() {
         JsonArray backEndList = new JsonArray();
         for (BackEndInformation backendInformation : backEndInformationList) {
@@ -200,12 +223,13 @@ public class BackEndInstancesUtils {
         try {
             JsonArray instances = backEndInstanceFileUtils.getInstancesFromFile();
             backEndInformationList.clear();
-
+            LOG.error("Instanes!!! + " + instances.toString());
             for (JsonElement element : instances) {
                 backEndInformationList.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
             }
 
             ensureDefaultBackEnd();
+            LOG.error("Instanes!!! + " + backEndInformationList.toString());
         } catch (IOException e) {
             LOG.error("Failure when trying to parse json " + e.getMessage());
         }

@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.ericsson.ei.config.SeleniumConfig;
@@ -34,8 +32,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
             File.separator, "src", "functionaltest", "resources", "responses", "EventsTemplateObject.json");
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(
             File.separator, "src", "functionaltest", "resources", "responses", "AggregatedObjectResponse.json");
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestRulesFunctionality.class);
 
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {

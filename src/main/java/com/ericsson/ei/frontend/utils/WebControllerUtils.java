@@ -16,26 +16,25 @@
 */
 package com.ericsson.ei.frontend.utils;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class WebControllerUtils {
-
-    private static final Logger LOG = LoggerFactory.getLogger(WebControllerUtils.class);
 
     @Value("${ei.frontendServiceHost}")
     private String frontendServiceHost;
@@ -53,31 +52,24 @@ public class WebControllerUtils {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
-    private String frontendServiceUrl;
-
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
 
-    @PostConstruct
-    public void init() {
-        LOG.info("Initiating FrontEndUtils.");
-        setFrontEndServiceUrl();
-
-    }
-
-    private void setFrontEndServiceUrl() {
-        String httpMethod = "http";
-
+    public String getFrontEndServiceUrl() {
+        String requestedUrl = null;
+        String http = "http";
+        String path = "";
         if (useSecureHttpFrontend) {
-            httpMethod = "https";
+        	http = "https";
         }
 
         if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-            frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod, frontendServiceHost, frontendServicePort,
-                    frontendContextPath);
-        } else {
-            frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
+        	path = ("/" + frontendContextPath).replace("//", "/");
         }
+        
+        requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, path);
+        
+        return requestedUrl;
     }
 
     public String getBackEndServiceUrl(HttpSession httpSession) {

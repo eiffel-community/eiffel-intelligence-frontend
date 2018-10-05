@@ -100,6 +100,15 @@ public class BackEndInfoirmationControllerUtils {
     }
 
     public ResponseEntity<String> handleRequestToAddBackEnd(HttpServletRequest request) {
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
+    	LOG.error("########");
         try {
             String newInstanceAsString = request.getReader().lines()
                     .collect(Collectors.joining(System.lineSeparator()));
@@ -115,7 +124,7 @@ public class BackEndInfoirmationControllerUtils {
 
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
-                LOG.debug("Added new back end.");
+                LOG.error("Added new back end. " + instance.toString());
                 return new ResponseEntity<>(
                         "{\"message\": \"Backend instance with name '"
                         + instance.get("name").getAsString() + "' was added.\"}",
