@@ -16,16 +16,14 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.utils.WebControllerUtils;
-
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Controller
 public class WebController {
@@ -33,10 +31,8 @@ public class WebController {
     @Autowired
     private WebControllerUtils frontEndUtils;
 
-    public static final Logger LOG = LoggerFactory.getLogger(WebController.class);
     @RequestMapping("/")
     public String greeting(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         String eiffelDocumentationUrlLinks = String.format("%s", frontEndUtils.getEiffelDocumentationUrls());
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
@@ -45,21 +41,18 @@ public class WebController {
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "subscription";
     }
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model, HttpServletRequest request) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
         return "eiInfo";
@@ -67,7 +60,6 @@ public class WebController {
 
     @RequestMapping("/login.html")
     public String login(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "login";
     }
@@ -80,14 +72,12 @@ public class WebController {
 
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "add-instances";
     }
 
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
-    	LOG.error("FRONTEND: " + frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "switch-backend";
     }

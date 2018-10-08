@@ -62,30 +62,8 @@ public class BackEndInstanceFileUtils {
     public void dumpJsonArray(JsonArray jsonArrayToDump) {
         try {
             ensureValidFile();
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
             Files.write(Paths.get(eiInstancesPath), jsonArrayToDump.toString().getBytes());
         } catch (IOException e) {
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
-            LOG.error("Couldn't add instance to file ");
             LOG.error("Couldn't add instance to file " + e.getMessage());
         }
 

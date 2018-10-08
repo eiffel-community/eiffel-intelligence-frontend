@@ -45,6 +45,14 @@ public class BackEndInfoirmationControllerUtils {
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
 
+    /**
+     * Processes a request to get all available back ends and returns
+     * data containing all back end instances with added information
+     * weather a back end is set as active or not.
+     *
+     * @param request
+     * @return new ResponseEntity
+     */
     public ResponseEntity<String> handleRequestForInstances(HttpServletRequest request) {
         try {
             String activeInstance = null;
@@ -65,6 +73,13 @@ public class BackEndInfoirmationControllerUtils {
         }
     }
 
+    /**
+     * Processes requests to switch back end, and sets the back end name to a session variable that is
+     * kept for current session.
+     *
+     * @param request
+     * @return new ResponseEntity
+     */
     public ResponseEntity<String> handleRequestToSwitchBackEnd(HttpServletRequest request) {
         try {
             String selectedInstanceName = getSelectedInstanceName(request);
@@ -80,6 +95,13 @@ public class BackEndInfoirmationControllerUtils {
         }
     }
 
+    /**
+     * Processes requests made to delete back end and deletes
+     * the given jsonobject from the back end list and file.
+     *
+     * @param request
+     * @return new ResponseEntity
+     */
     public ResponseEntity<String> handleRequestToDeleteBackEnd(HttpServletRequest request) {
         try {
             String instanceAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
@@ -99,16 +121,14 @@ public class BackEndInfoirmationControllerUtils {
         }
     }
 
+    /**
+     * Processes requests to add back end, gets data as String formatted JsonObject
+     * and adds the date to the back end information if the data is unique.
+     *
+     * @param request
+     * @return new ResponseEntity
+     */
     public ResponseEntity<String> handleRequestToAddBackEnd(HttpServletRequest request) {
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
-    	LOG.error("########");
         try {
             String newInstanceAsString = request.getReader().lines()
                     .collect(Collectors.joining(System.lineSeparator()));
@@ -124,7 +144,7 @@ public class BackEndInfoirmationControllerUtils {
 
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
-                LOG.error("Added new back end. " + instance.toString());
+                LOG.debug("Added new back end.");
                 return new ResponseEntity<>(
                         "{\"message\": \"Backend instance with name '"
                         + instance.get("name").getAsString() + "' was added.\"}",

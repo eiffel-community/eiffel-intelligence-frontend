@@ -107,7 +107,7 @@ public class BackEndInstancesUtils {
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
         LOG.debug("getBackEndInformationByName called for with name '" + backEndName + "'.");
-        
+
         parseBackEndInstances();
 
         for (BackEndInformation backendInformation : backEndInformationList) {
@@ -155,7 +155,6 @@ public class BackEndInstancesUtils {
      */
     public void deleteBackEnd(JsonObject objectToDelete) {
         parseBackEndInstances();
-        LOG.debug(backEndInformationList.toString());
         for (BackEndInformation backendInformation : backEndInformationList) {
             if (backendInformation.getName().equals(objectToDelete.get(NAME).getAsString())
                     && backendInformation.getHost().equals(objectToDelete.get(HOST).getAsString())
@@ -167,7 +166,6 @@ public class BackEndInstancesUtils {
                 saveBackEndInformationList();
                 break;
             }
-            LOG.debug(backEndInformationList.toString());
         }
     }
 
@@ -180,17 +178,17 @@ public class BackEndInstancesUtils {
         parseBackEndInstances();
         return parseBackEndsAsJsonArray();
     }
-    
+
     /**
      * Quick function to set default back end to null
      */
     public void setDefaultBackEndInstanceToNull() {
         setDefaultBackEndInstance(null, null, 0, null, false);
     }
-    
+
     /**
      * Tunction that may be used to set default back end.
-     * 
+     *
      * @param name
      * @param host
      * @param port
@@ -205,7 +203,7 @@ public class BackEndInstancesUtils {
         getDefaultBackendInformation().setUseSecureHttpBackend(false);
         getDefaultBackendInformation().setDefaultBackend(def);
     }
-    
+
     private JsonArray parseBackEndsAsJsonArray() {
         JsonArray backEndList = new JsonArray();
         for (BackEndInformation backendInformation : backEndInformationList) {
@@ -223,13 +221,10 @@ public class BackEndInstancesUtils {
         try {
             JsonArray instances = backEndInstanceFileUtils.getInstancesFromFile();
             backEndInformationList.clear();
-            LOG.error("Instanes!!! + " + instances.toString());
             for (JsonElement element : instances) {
                 backEndInformationList.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
             }
-
             ensureDefaultBackEnd();
-            LOG.error("Instanes!!! + " + backEndInformationList.toString());
         } catch (IOException e) {
             LOG.error("Failure when trying to parse json " + e.getMessage());
         }

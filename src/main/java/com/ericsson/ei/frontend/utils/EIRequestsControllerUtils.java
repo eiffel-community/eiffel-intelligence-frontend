@@ -49,6 +49,14 @@ public class EIRequestsControllerUtils {
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
 
+    /**
+     * Processes an HttpServletRequest and extract the URL parameters from it and reformats
+     * the requests and removes EI Front End specific parameters if any and builds a new URL
+     * to be used to call the requested, selected or default EI back end.
+     *
+     * @param request
+     * @return String
+     */
     public String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestQuery = request.getQueryString();
