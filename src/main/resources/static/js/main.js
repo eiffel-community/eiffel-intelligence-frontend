@@ -138,7 +138,7 @@ jQuery(document).ready(function() {
         self.onChange = function(){
             if(typeof self.selectedActive() !== "undefined"){
                 $.ajax({
-                    url: frontendServiceUrl + "/switchBackend",
+                    url: frontendServiceUrl + "/switch-backend",
             	    type: "POST",
             	    data: self.selectedActive(),
             	    contentType: 'application/json; charset=utf-8',

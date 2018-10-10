@@ -13,14 +13,27 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.google.gson.JsonParser;
-import org.junit.*;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,13 +42,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -60,26 +70,26 @@ public class EIRequestControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BackEndInformation backEndInformation;
+    private BackEndInstancesUtils backEndInstanceUtils;
+
+    @Autowired
+    private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this);
 
     private MockServerClient mockServerClient;
 
-    @BeforeClass
-    public static void beforeClass() {
-        System.setProperty("ei.backendInstancesPath", BACKEND_INFO);
-    }
-
     @Before
     public void before() {
+        backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
+        BackEndInformation backEndInformation = backEndInstanceUtils.getDefaultBackendInformation();
         backEndInformation.setName("test");
         backEndInformation.setHost("localhost");
         backEndInformation.setPort(String.valueOf(mockServerRule.getPort()));
         backEndInformation.setPath("");
         backEndInformation.setUseSecureHttpBackend(false);
-        backEndInformation.setActive(true);
+        backEndInformation.setDefaultBackend(true);
     }
 
     @Test
@@ -135,20 +145,11 @@ public class EIRequestControllerTest {
 
     @Test
     public void testGetWithEmptyResponseBody() throws Exception {
-        mockServerClient
-            .when(HttpRequest.request()
-                .withMethod("GET")
-                .withPath(SUBSCRIPTIONS_ENDPOINT)
-            )
-            .respond(HttpResponse.response()
-                .withStatusCode(200)
-            );
-        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTIONS_ENDPOINT)
-            .servletPath(SUBSCRIPTIONS_ENDPOINT)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(content().string("[]"))
-            .andReturn();
+        mockServerClient.when(HttpRequest.request().withMethod("GET").withPath(SUBSCRIPTIONS_ENDPOINT))
+                .respond(HttpResponse.response().withStatusCode(200));
+        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTIONS_ENDPOINT).servletPath(SUBSCRIPTIONS_ENDPOINT)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andExpect(content().string("[]"))
+                .andReturn();
     }
 
     @Test
@@ -171,89 +172,66 @@ public class EIRequestControllerTest {
         testDelete(SUBSCRIPTIONS_ONE_ENDPOINT, responseBody);
     }
 
-    private void testGet(String path, String responseBody) throws Exception {
-        mockServerClient
-            .when(HttpRequest.request()
-                .withMethod("GET")
-                .withPath(path)
-            )
-            .respond(HttpResponse.response()
-                .withBody(responseBody)
-                .withStatusCode(200)
-            );
+    @Test
+    public void testBackEndOverride() throws Exception {
+        // Setting up secondary mock server/client.
+        String host = "localhost";
+        String key_value = "backendurl";
+        MockServerClient mockClient;
+        ClientAndServer mockServer;
+        mockServer = startClientAndServer();
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path)
-            .servletPath(path)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(content().string(responseBody))
-            .andReturn();
+        int serverPort = mockServer.getLocalPort();
+        mockClient = new MockServerClient(host, serverPort);
+
+        String responseBody = new JsonParser().parse(new FileReader(SUBSCRIPTIONS_ONE_RESPONSE_PATH)).toString();
+        String requestQuery = String.format("%s?%s=http://%s:%s", SUBSCRIPTIONS_ONE_ENDPOINT, key_value, host, serverPort);
+
+        mockClient.when(HttpRequest.request().withMethod("GET").withPath(SUBSCRIPTIONS_ONE_ENDPOINT))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(requestQuery).servletPath(SUBSCRIPTIONS_ONE_ENDPOINT).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andExpect(content().string(responseBody)).andReturn();
+
+        mockClient.close();
+    }
+
+    private void testGet(String path, String responseBody) throws Exception {
+        mockServerClient.when(HttpRequest.request().withMethod("GET").withPath(path))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(path).servletPath(path).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andExpect(content().string(responseBody)).andReturn();
     }
 
     private void testPost(String path, String requestBody, String responseBody) throws Exception {
-        mockServerClient
-            .when(HttpRequest.request()
-                .withMethod("POST")
-                .withPath(path)
-                .withBody(requestBody)
-            )
-            .respond(HttpResponse.response()
-                .withBody(responseBody)
-                .withStatusCode(200)
-            );
+        mockServerClient.when(HttpRequest.request().withMethod("POST").withPath(path).withBody(requestBody))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
 
-        mockMvc.perform(MockMvcRequestBuilders.post(path)
-            .servletPath(path)
-            .content(requestBody)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(content().string(responseBody))
-            .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post(path).servletPath(path).content(requestBody)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+                .andExpect(content().string(responseBody)).andReturn();
     }
 
     private void testPut(String path, String requestBody, String responseBody) throws Exception {
-        mockServerClient
-            .when(HttpRequest.request()
-                .withMethod("PUT")
-                .withPath(path)
-                .withBody(requestBody)
-            )
-            .respond(HttpResponse.response()
-                .withBody(responseBody)
-                .withStatusCode(200)
-            );
+        mockServerClient.when(HttpRequest.request().withMethod("PUT").withPath(path).withBody(requestBody))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
 
-        mockMvc.perform(MockMvcRequestBuilders.put(path)
-            .servletPath(path)
-            .content(requestBody)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(content().string(responseBody))
-            .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.put(path).servletPath(path).content(requestBody)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+                .andExpect(content().string(responseBody)).andReturn();
     }
 
     private void testDelete(String path, String responseBody) throws Exception {
-        mockServerClient
-            .when(HttpRequest.request()
-                .withMethod("DELETE")
-                .withPath(path)
-            )
-            .respond(HttpResponse.response()
-                .withBody(responseBody)
-                .withStatusCode(200)
-            );
+        mockServerClient.when(HttpRequest.request().withMethod("DELETE").withPath(path))
+                .respond(HttpResponse.response().withBody(responseBody).withStatusCode(200));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(path)
-            .servletPath(path)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(content().string(responseBody))
-            .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.delete(path).servletPath(path).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andExpect(content().string(responseBody)).andReturn();
     }
 
     @AfterClass
     public static void afterClass() throws IOException {
-        System.clearProperty("ei.backendInstancesPath");
         Files.deleteIfExists(Paths.get(BACKEND_INFO));
     }
 }

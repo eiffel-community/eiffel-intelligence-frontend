@@ -13,13 +13,15 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,14 +34,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -48,6 +49,7 @@ public class BackendInformationControllerTest {
 
     private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
+    private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,12 +59,14 @@ public class BackendInformationControllerTest {
 
     private JsonObject instance;
     private JsonArray instances;
+    private JsonArray instancesWithActive;
     private List<BackEndInformation> information;
 
     @Before
     public void before() throws Exception {
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
+        instancesWithActive = new JsonParser().parse(new FileReader(BACKEND_RESPONSE_INSTANCES_FILE_PATH)).getAsJsonArray();
         information = new ArrayList<>();
         for(JsonElement element : instances) {
             information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
@@ -71,43 +75,32 @@ public class BackendInformationControllerTest {
 
     @Test
     public void testGetInstances() throws Exception {
-        when(utils.getInstances()).thenReturn(instances);
+        when(utils.getBackEndsAsJsonArray()).thenReturn(instances);
         mockMvc.perform(MockMvcRequestBuilders.get("/get-instances")
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().string(instances.toString()))
+            .andExpect(content().string(instancesWithActive.toString()))
+            .andReturn();
+    }
+
+    @Test
+    public void testSwitchInstance() throws Exception {
+        when(utils.getBackEndInformationList()).thenReturn(information);
+        mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .content(instancesWithActive.toString()))
+            .andExpect(status().isOk())
             .andReturn();
     }
 
     @Test
     public void testAddInstance() throws Exception {
         when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
-        when(utils.getInstances()).thenReturn(new JsonArray());
+        when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
         mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
-            .andExpect(status().isMovedPermanently())
-            .andReturn();
-    }
-
-    @Test
-    public void testAddInstanceIfAlreadyExists() throws Exception {
-        when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instance.toString()))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("Instance already exist"))
-            .andReturn();
-    }
-
-    @Test
-    public void testSwitchInstance() throws Exception {
-        when(utils.getInformation()).thenReturn(information);
-        mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instances.toString()))
-            .andExpect(status().isMovedPermanently())
+            .andExpect(status().isOk())
             .andReturn();
     }
 
@@ -115,21 +108,8 @@ public class BackendInformationControllerTest {
     public void testDeleteInstance() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/switch-backend")
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instances.toString()))
+            .content(instance.toString()))
             .andExpect(status().isOk())
             .andReturn();
     }
-
-    @Test
-    public void testSwitchBackEndInstanceByMainPage() throws Exception {
-        when(utils.getInformation()).thenReturn(information);
-        mockMvc.perform(MockMvcRequestBuilders.post("/switchBackend")
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content("otherName"))
-            .andExpect(status().isOk())
-            .andReturn();
-    }
-
-
-
 }

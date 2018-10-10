@@ -16,73 +16,51 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import lombok.Setter;
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Controller
 public class WebController {
 
-    @Value("${ei.frontendServiceHost}")
-    private String frontendServiceHost;
-
-    @Setter
-    @Value("${ei.frontendServicePort}")
-    private int frontendServicePort;
-
-    @Value("${ei.frontendContextPath}")
-    private String frontendContextPath;
-
-    @Value("${ei.eiffelDocumentationUrls}")
-    private String eiffelDocumentationUrls;
-
-    @Value("${ei.useSecureHttpFrontend}")
-    private boolean useSecureHttpFrontend;
-
     @Autowired
-    private BackEndInformation backEndInformation;
+    private WebControllerUtils frontEndUtils;
 
     @RequestMapping("/")
     public String greeting(Model model) {
-
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-        String eiffelDocumentationUrlLinks = String.format("%s", eiffelDocumentationUrls);
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        String eiffelDocumentationUrlLinks = String.format("%s", frontEndUtils.getEiffelDocumentationUrls());
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
         return "index";
     }
 
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
-
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "subscription";
     }
 
     @RequestMapping("/testRules.html")
     public String testRules(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "testRules";
     }
 
     @RequestMapping("/eiInfo.html")
-    public String eiInfo(Model model) {
-
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
-        String backendServerUrl = String.format("http://%s:%s", backEndInformation.getHost(), backEndInformation.getPort());
-        model.addAttribute("backendServerUrl", backendServerUrl);
+    public String eiInfo(Model model, HttpServletRequest request) {
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
         return "eiInfo";
     }
 
     @RequestMapping("/login.html")
     public String login(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "login";
     }
 
@@ -94,29 +72,14 @@ public class WebController {
 
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "add-instances";
     }
 
     @RequestMapping("/switch-backend.html")
     public String switchBackEnd(Model model) {
-        model.addAttribute("frontendServiceUrl", getFrontendServiceUrl());
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "switch-backend";
-    }
-
-    private String getFrontendServiceUrl() {
-        String httpMethod = "http";
-        if (useSecureHttpFrontend) {
-            httpMethod = "https";
-        }
-        String frontendServiceUrl;
-        if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-            frontendServiceUrl = String.format("%s://%s:%d/%s", httpMethod, frontendServiceHost, frontendServicePort,
-                    frontendContextPath);
-        } else {
-            frontendServiceUrl = String.format("%s://%s:%d", httpMethod, frontendServiceHost, frontendServicePort);
-        }
-        return frontendServiceUrl;
     }
 
 }
