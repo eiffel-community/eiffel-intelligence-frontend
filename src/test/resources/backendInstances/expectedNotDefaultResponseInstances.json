@@ -5,7 +5,8 @@
         "port": 9888,
         "path": "somePath",
         "https": false,
-        "defaultBackend": false
+        "defaultBackend": false,
+        "active": true
     },
     {
         "name": "otherName",
@@ -13,6 +14,7 @@
         "port": 9998,
         "path": "otherPath",
         "https": false,
-        "defaultBackend": true
+        "defaultBackend": true,
+        "active": false
     }
 ]

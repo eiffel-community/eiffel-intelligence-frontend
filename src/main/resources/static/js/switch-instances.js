@@ -29,7 +29,7 @@ function multipleInstancesModel(data) {
     	$.ajax({
             url: frontendServiceUrl + "/switch-backend",
             type: "DELETE",
-            data: ko.toJSON(self.instances),
+            data: ko.toJSON(this),
             contentType: 'application/json; charset=utf-8',
             cache: false,
             error: function (XMLHttpRequest, textStatus, errorThrown) {

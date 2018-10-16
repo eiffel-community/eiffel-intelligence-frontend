@@ -41,7 +41,6 @@ jQuery(document).ready(
             callback.beforeSend();
           },
           error : function(XMLHttpRequest, textStatus, errorThrown) {
-            window.logMessages(XMLHttpRequest.responseText);
             callback.error(XMLHttpRequest, textStatus, errorThrown);
           },
           success : function(data, textStatus) {
@@ -140,7 +139,11 @@ jQuery(document).ready(
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failed to generate the aggregated object" + " Error: " + XMLHttpRequest.responseText);
+                if (XMLHttpRequest.responseText == ""){
+                    window.logMessages("Failed to generate the aggregated object, Error: Could not contact the backend server.");
+                } else {
+                    window.logMessages("Failed to generate the aggregated object, Error: " + XMLHttpRequest.responseText);
+                }
             },
             complete : function() {
             }
@@ -179,7 +182,6 @@ jQuery(document).ready(
 	          jsonLintResult = jsonlint.parse(fileContent);
 	        } catch (e) {
 	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	            $.alert("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
 	            return false;
 	        }
 	        $.jGrowl('JSON Format Check Succeeded', {
@@ -209,7 +211,6 @@ jQuery(document).ready(
               jsonLintResult = jsonlint.parse(fileContent);
             } catch (e) {
                 window.logMessages("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
-                $.alert("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
                 return false;
             }
             $.jGrowl('JSON events Format Check Succeeded', {
@@ -326,8 +327,12 @@ jQuery(document).ready(
         request.open("GET", frontendServiceUrl + '/download/' + name, true);
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
-           var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
-           downloadFile(jsonData, "application/json;charset=utf-8", name + ".json");
+           if (this.responseText == ""){
+               window.logMessages("Failed to download template, Error: Could not contact the backend server.");
+           } else {
+               var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
+               downloadFile(jsonData, "application/json;charset=utf-8", name + ".json");
+           }
         };
         request.send();
       }

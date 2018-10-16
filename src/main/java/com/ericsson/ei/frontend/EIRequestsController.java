@@ -13,10 +13,19 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import java.io.IOException;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -34,24 +43,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 @RestController
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
 
-    private static final List<String> REQUESTS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
-
     private CloseableHttpClient client = HttpClientBuilder.create().build();
 
     @Autowired
-    private BackEndInformation backEndInformation;
+    private EIRequestsControllerUtils eiRequestsControllerUtils;
 
     /**
      * Bridge all EI Http Requests with GET method. Used for fetching
@@ -61,11 +62,10 @@ public class EIRequestsController {
     @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
         "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = getEIRequestURL(request);
-
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
         HttpGet eiRequest = new HttpGet(eiRequestUrl);
-
         String header = request.getHeader("Authorization");
+
         if (header != null) {
             eiRequest.addHeader("Authorization", header);
         }
@@ -79,11 +79,12 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = getEIRequestURL(request);
-
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
         String requestBody = "";
+
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        	// Replaces \r with nothing in case system is run on windows \r may disturb tests. \r does not affect EI functionality.
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -111,11 +112,11 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
     public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = getEIRequestURL(request);
-
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
         String requestBody = "";
+
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -143,7 +144,7 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = getEIRequestURL(request);
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
 
         HttpDelete eiRequest = new HttpDelete(eiRequestUrl);
 
@@ -153,35 +154,6 @@ public class EIRequestsController {
         }
 
         return getResponse(eiRequest);
-    }
-
-    private String getEIBackendSubscriptionAddress() {
-        String httpMethod = "http";
-        if (backEndInformation.isUseSecureHttpBackend()) {
-            httpMethod = "https";
-        }
-
-        if (backEndInformation.getPath() != null && !backEndInformation.getPath().isEmpty()) {
-            return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort() + "/"
-                    + backEndInformation.getPath();
-        }
-        return httpMethod + "://" + backEndInformation.getHost() + ":" + backEndInformation.getPort();
-    }
-
-    private String getEIRequestURL(HttpServletRequest request) {
-        String eiBackendAddressSuffix = request.getServletPath();
-        String requestUrl;
-        if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
-            String requestQuery = request.getQueryString();
-            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
-            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix + query;
-        } else {
-            requestUrl = getEIBackendSubscriptionAddress() + eiBackendAddressSuffix;
-        }
-        LOG.info("Got HTTP Request with method " + request.getMethod()
-            + "\nUrlSuffix: " + eiBackendAddressSuffix
-            + "\nForwarding Request to EI Backend with url: " + requestUrl);
-        return requestUrl;
     }
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
@@ -203,5 +175,4 @@ public class EIRequestsController {
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
     }
-
 }

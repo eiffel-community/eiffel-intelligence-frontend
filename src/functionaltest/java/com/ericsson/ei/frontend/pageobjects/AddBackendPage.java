@@ -38,9 +38,8 @@ public class AddBackendPage extends PageBaseClass {
         WebElement addInstanceBtn2 = driver.findElement(By.id("addInstanceBtn2"));
         addInstanceBtn2.click();
 
-        SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
+        SwitchBackendPage addBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
-
-        return switchBackendPage;
+        return addBackendPage;
     }
 }

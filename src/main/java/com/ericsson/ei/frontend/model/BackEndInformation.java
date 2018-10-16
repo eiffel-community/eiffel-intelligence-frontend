@@ -16,11 +16,18 @@
 */
 package com.ericsson.ei.frontend.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -29,6 +36,14 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BackEndInformation {
+    private static final String NAME = "name";
+    private static final String HOST = "host";
+    private static final String PORT = "port";
+    private static final String PATH = "path";
+    private static final String HTTPS = "https";
+    private static final String DEFAULT = "defaultBackend";
+
+    @Value("${ei.backendServerName:#{null}}")
     private String name;
 
     @Value("${ei.backendServerHost:#{null}}")
@@ -37,7 +52,7 @@ public class BackEndInformation {
     @Value("${ei.backendServerPort:#{null}}")
     private String port;
 
-    @Value("${ei.backendContextPath:#{null}}")
+    @Value("${ei.backendContextPath:#{\"\"}}")
     private String path;
 
     @Value("${ei.useSecureHttpBackend:#{false}}")
@@ -45,5 +60,43 @@ public class BackEndInformation {
     @SerializedName("https")
     private boolean useSecureHttpBackend;
 
-    private boolean active;
+    private boolean defaultBackend;
+
+    /**
+     * Get the class data as a JsonObject.
+     *
+     * @return
+     *      JsonObject
+     */
+    public JsonObject getAsJsonObject() {
+        JsonObject instance = new JsonObject();
+        instance.addProperty(NAME, name);
+        instance.addProperty(HOST, host);
+        instance.addProperty(PORT, Integer.valueOf(port));
+        instance.addProperty(PATH, path);
+        instance.addProperty(HTTPS, useSecureHttpBackend);
+        instance.addProperty(DEFAULT, defaultBackend);
+        return instance;
+    }
+
+    /**
+     * Get the Class url data as String.
+     *
+     * @return
+     *      String
+     */
+    public String getUrlAsString() {
+        String constructedUrl = "http";
+        if (this.isUseSecureHttpBackend()) {
+            constructedUrl = "https";
+        }
+
+        constructedUrl += "://" + host + ":" + port;
+
+        if (this.getPath() != null && !this.getPath().isEmpty()) {
+            constructedUrl += ("/" + path).replaceAll("//", "/");
+        }
+
+        return constructedUrl;
+    }
 }

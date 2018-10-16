@@ -13,41 +13,44 @@
 */
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WebControllerTest {
 
+    private static String FRONT_END_SERVICE_URL = "http://localhost:9090/somePath";
+    private static String BACK_END_SERVICE_URL = "http://localhost:9090/somePath";
+
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebController controller;
+    @MockBean
+    private WebControllerUtils controllerUtils;
 
     @Before
     public void beforeClass() {
-        ReflectionTestUtils.setField(controller,"frontendServiceHost", "localhost");
-        ReflectionTestUtils.setField(controller,"frontendServicePort", 9090);
-        ReflectionTestUtils.setField(controller,"frontendContextPath", "somePath");
-        ReflectionTestUtils.setField(controller,"useSecureHttpFrontend", false);
+        when(controllerUtils.getFrontEndServiceUrl()).thenReturn(FRONT_END_SERVICE_URL);
+        when(controllerUtils.getBackEndServiceUrl(any())).thenReturn(BACK_END_SERVICE_URL);
     }
 
     @Test

@@ -1,31 +1,31 @@
 package com.ericsson.ei.frontend;
 
-import com.ericsson.ei.config.SeleniumConfig;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.Assert.fail;
+import com.ericsson.ei.config.SeleniumConfig;
+import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
+import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,7 +39,7 @@ public class SeleniumBaseClass {
     EIRequestsController eIRequestsController;
 
     @Autowired
-    WebController webController;
+    WebControllerUtils webControllerUtils;
 
 
     protected FirefoxDriver driver;
@@ -47,15 +47,27 @@ public class SeleniumBaseClass {
 
     private StringBuffer verificationErrors = new StringBuffer();
 
-    private static final String BACKEND_INSTANCES_INFORMATION_FILEPATH = String.join(
-            File.separator, "src", "main", "resources", "EIBackendInstancesInformation.json");
-    private String default_instances_information;
+    private String filePath = "";
 
+    @Autowired
+    private BackEndInstanceFileUtils backEndInstanceFileUtils;
+    
+    @Autowired
+    protected BackEndInstancesUtils backEndInstancesUtils;
+    
     @Before
     public void setUp() throws Exception {
-        default_instances_information = getJSONStringFromFile(BACKEND_INSTANCES_INFORMATION_FILEPATH);
+        File tempFile = File.createTempFile("tempfile", ".json");
+        tempFile.deleteOnExit();
+
+        filePath = tempFile.getAbsolutePath().toString();
+        Files.write(Paths.get(filePath), "[]".getBytes());
+        backEndInstanceFileUtils.setEiInstancesPath(filePath);
+
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
         MockitoAnnotations.initMocks(this);
-        webController.setFrontendServicePort(randomServerPort);
+        webControllerUtils.setFrontendServicePort(randomServerPort);
 
         driver = SeleniumConfig.initFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
@@ -63,19 +75,15 @@ public class SeleniumBaseClass {
 
     @After
     public void tearDown() throws Exception {
-
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
-
-        // Reset whats inside EIBackendInstancesInformation since test will fail if run multiple times otherwise
-        FileWriter backendInstancesInformationWriter = new FileWriter(BACKEND_INSTANCES_INFORMATION_FILEPATH, false);
-        backendInstancesInformationWriter.write(default_instances_information);
-        backendInstancesInformationWriter.close();
 
         String verificationErrorString = verificationErrors.toString();
         if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
+
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 
     protected static String getJSONStringFromFile(String filepath) throws IOException {

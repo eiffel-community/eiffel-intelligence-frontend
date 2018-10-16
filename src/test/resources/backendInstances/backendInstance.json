@@ -3,5 +3,6 @@
     "host": "someHost",
     "port": 9888,
     "path": "somePath",
-    "https": false
+    "https": false,
+    "defaultBackend": false
 }

@@ -23,7 +23,7 @@ public class PageBaseClass {
     CloseableHttpResponse mockedHttpResponse;
     protected FirefoxDriver driver;
     protected String baseUrl;
-    protected final int TIMEOUT_TIMER = 10;
+    protected final int TIMEOUT_TIMER = 11;
 
     public PageBaseClass(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
         super();

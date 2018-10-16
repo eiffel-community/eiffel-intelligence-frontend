@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestAlarm extends SeleniumBaseClass {
 
@@ -25,6 +25,6 @@ public class TestAlarm extends SeleniumBaseClass {
 
         //Click alarm button few times
         IntStream.range(0, 5).forEachOrdered(i -> indexPageObject.clickAlarmButton());
-        assertEquals(2, driver.findElements(By.className("dropdown-item")).size());
+        assertTrue(driver.findElements(By.className("dropdown-item")).size() >= 2);
     }
 }
