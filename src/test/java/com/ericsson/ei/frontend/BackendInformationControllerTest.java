@@ -50,8 +50,11 @@ public class BackendInformationControllerTest {
     private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
     private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
+<<<<<<< HEAD
 
     private static final String FRONT_END_REST = "/backend";
+=======
+>>>>>>> 87609f7ef0801d02531c44d6ec1dc37dce79b4c3
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +81,11 @@ public class BackendInformationControllerTest {
     @Test
     public void testGetInstances() throws Exception {
         when(utils.getBackEndsAsJsonArray()).thenReturn(instances);
+<<<<<<< HEAD
         mockMvc.perform(MockMvcRequestBuilders.get(FRONT_END_REST)
+=======
+        mockMvc.perform(MockMvcRequestBuilders.get("/get-instances")
+>>>>>>> 87609f7ef0801d02531c44d6ec1dc37dce79b4c3
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().string(instancesWithActive.toString()))
@@ -88,7 +95,13 @@ public class BackendInformationControllerTest {
     @Test
     public void testSwitchInstance() throws Exception {
         when(utils.getBackEndInformationList()).thenReturn(information);
+<<<<<<< HEAD
         mockMvc.perform(MockMvcRequestBuilders.put(FRONT_END_REST)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .content(instancesWithActive.toString()))
+            .andExpect(status().isOk())
+=======
+        mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instancesWithActive.toString()))
             .andExpect(status().isOk())
@@ -99,9 +112,22 @@ public class BackendInformationControllerTest {
     public void testAddInstance() throws Exception {
         when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
         when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .content(instance.toString()))
+            .andExpect(status().isOk())
+>>>>>>> 87609f7ef0801d02531c44d6ec1dc37dce79b4c3
+            .andReturn();
+    }
+
+    @Test
+    public void testAddInstance() throws Exception {
+        when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
+        when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
         mockMvc.perform(MockMvcRequestBuilders.post(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
+<<<<<<< HEAD
             .andExpect(status().isOk())
             .andReturn();
     }
@@ -111,6 +137,8 @@ public class BackendInformationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
+=======
+>>>>>>> 87609f7ef0801d02531c44d6ec1dc37dce79b4c3
             .andExpect(status().isOk())
             .andReturn();
     }
