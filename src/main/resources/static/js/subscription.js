@@ -557,7 +557,7 @@ jQuery(document).ready(function () {
             success: function (data, textStatus) {
                 var returnData = [data];
                 if (returnData.length > 0) {
-                    $.jGrowl("Subscriptions are successfully created", {
+                    $.jGrowl("Subscriptions were successfully created.", {
                         sticky: false,
                         theme: 'Error'
                     });
@@ -565,9 +565,9 @@ jQuery(document).ready(function () {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failed to create next Subscriptions");
+                window.logMessages("Failed to create Subscriptions.");
                 reload_table();
-                $.jGrowl("Failed to create next Subscriptions", { sticky: false, theme: 'Error' });
+                $.jGrowl("Failed to create Subscriptions.", { sticky: false, theme: 'Error' });
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
@@ -612,7 +612,7 @@ jQuery(document).ready(function () {
             validateJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating download file window. 
+        // If MS Internet Explorer -> special handling for creating download file window.
         if (window.navigator.msSaveOrOpenBlob) {
             createUploadWindowMSExplorer();
         }
@@ -913,4 +913,11 @@ jQuery(document).ready(function () {
         });
     });
     // /Stop ## Delete Subscription #########################################
+
+    // Delay display buttons
+    setTimeout(showButtons, 800);
+    function showButtons() {
+        $(".loadingAnimation").hide();
+        $(".subButtons").show();
+    }
 });

@@ -15,6 +15,7 @@ jQuery(document).ready(function() {
 	// Fetch injected URL from DOM
 	var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
+	var frontendServiceBackEndPath = "/backend";
 
 	function loadMainPage() {
 		$("#navbarResponsive").removeClass("show");
@@ -138,8 +139,8 @@ jQuery(document).ready(function() {
         self.onChange = function(){
             if(typeof self.selectedActive() !== "undefined"){
                 $.ajax({
-                    url: frontendServiceUrl + "/switch-backend",
-            	    type: "POST",
+                    url: frontendServiceUrl + frontendServiceBackEndPath,
+            	    type: "PUT",
             	    data: self.selectedActive(),
             	    contentType: 'application/json; charset=utf-8',
             	    cache: false,
@@ -147,7 +148,11 @@ jQuery(document).ready(function() {
             	        window.logMessages(XMLHttpRequest.responseText);
             	    },
             	    success: function (responseData, XMLHttpRequest, textStatus) {
-            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
+						console.log("Response from IE front end back end: " + responseData.message);
+						$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
+						$("#navbarResponsive").removeClass("show");
+						$("#selectInstances").visible();
+						$("#mainFrame").load("subscriptionpage.html");
             	    }
                 });
             } else {
@@ -156,7 +161,7 @@ jQuery(document).ready(function() {
         }
     }
     $.ajax({
-        url: frontendServiceUrl + "/get-instances",
+        url: frontendServiceUrl + frontendServiceBackEndPath,
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         cache: false,

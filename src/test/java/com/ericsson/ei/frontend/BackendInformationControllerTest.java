@@ -51,6 +51,8 @@ public class BackendInformationControllerTest {
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
     private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
 
+    private static final String FRONT_END_REST = "/backend";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -76,7 +78,7 @@ public class BackendInformationControllerTest {
     @Test
     public void testGetInstances() throws Exception {
         when(utils.getBackEndsAsJsonArray()).thenReturn(instances);
-        mockMvc.perform(MockMvcRequestBuilders.get("/get-instances")
+        mockMvc.perform(MockMvcRequestBuilders.get(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().string(instancesWithActive.toString()))
@@ -86,7 +88,7 @@ public class BackendInformationControllerTest {
     @Test
     public void testSwitchInstance() throws Exception {
         when(utils.getBackEndInformationList()).thenReturn(information);
-        mockMvc.perform(MockMvcRequestBuilders.post("/switch-backend")
+        mockMvc.perform(MockMvcRequestBuilders.put(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instancesWithActive.toString()))
             .andExpect(status().isOk())
@@ -97,7 +99,7 @@ public class BackendInformationControllerTest {
     public void testAddInstance() throws Exception {
         when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
         when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
-        mockMvc.perform(MockMvcRequestBuilders.post("/add-instances")
+        mockMvc.perform(MockMvcRequestBuilders.post(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
             .andExpect(status().isOk())
@@ -106,7 +108,7 @@ public class BackendInformationControllerTest {
 
     @Test
     public void testDeleteInstance() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/switch-backend")
+        mockMvc.perform(MockMvcRequestBuilders.delete(FRONT_END_REST)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .content(instance.toString()))
             .andExpect(status().isOk())
