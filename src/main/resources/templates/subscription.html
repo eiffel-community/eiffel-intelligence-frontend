@@ -240,16 +240,24 @@
 
                             <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                             <div class="pl-0 ml-0">
+                                <!-- ko if: $index() !== 0 -->
+                                <h5 align="center">OR</h5>
+                                <!-- /ko -->
                                 <img data-toggle="tooltip" data-placement="top" width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"
                                 />
                             </div>
                             <div class="p-1 border border-primary form-group">
+                            
                                 <label class="control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
 
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
-                                        <label class="control-label font-weight-bold">Condition</label>
+										<!-- ko if: $index() !== 0 -->
+										<h6 align="center">AND</h6>
+										<!-- /ko -->
+
+										<label class="control-label font-weight-bold">Condition</label>
                                         <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath"
                                             placeholder="jmespath" class="form-control" type="text"></textarea>
                                         <div class="pt-1 d-flex justify-content-end">
