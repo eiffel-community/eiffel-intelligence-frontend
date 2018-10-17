@@ -229,16 +229,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
 
-        // Test "Add Condition" button: click add condition button and check
-        // that it adds an additional "condition" field
-        subscriptionPage.clickAddConditionBtn();
-        assertEquals(2, subscriptionPage.countElements(conditionFieldID));
-
-        // Test "Add Requirement" button: click the button and assert that it
-        // adds an additional "requirement" field
-        subscriptionPage.clickAddRequirementBtn();
-        assertEquals(2, subscriptionPage.countElements(requirementFieldID));
-
         // Test save subscription form: add subscription name
         // as "selenium_test_subscription" and then click "save" button
         // verification that subscription is added in the datatable (and is
