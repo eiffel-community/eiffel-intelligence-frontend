@@ -39,21 +39,18 @@ jQuery(document).ready(function() {
 	});
 
 	$("#loginBtn").click(function() {
-		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("login.html");
 	});
 
 	$("#addInstanceBtn").click(function() {
-		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").invisible();
       	$("#mainFrame").load("add-instances.html");
     });
 
     $("#switcherBtn").click(function() {
-		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
         $("#selectInstances").invisible();
       	$("#mainFrame").load("switch-backend.html");
