@@ -46,6 +46,7 @@ public class BackEndInstancesUtils {
     private static final String PORT = "port";
     private static final String PATH = "path";
     private static final String HTTPS = "https";
+    private static final long SECONDS_BETWEEN_PARSING = 20;
 
     @Value("${ei.backendServerName:#{null}}")
     private String defaultBackEndInstanceName;
@@ -57,6 +58,10 @@ public class BackEndInstancesUtils {
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     private List<BackEndInformation> backEndInformationList = new ArrayList<>();
+    private boolean parsing = false;
+    private boolean isRunningTests = false;
+    private long nextTimeToParse = 0;
+    private boolean savedSinceLastParsing = false;
 
     /**
      * Function to check weather an instance host, port, path and https is
@@ -215,9 +220,15 @@ public class BackEndInstancesUtils {
     private void saveBackEndInformationList() {
         JsonArray jsonArrayToDump = parseBackEndsAsJsonArray();
         backEndInstanceFileUtils.dumpJsonArray(jsonArrayToDump);
+        savedSinceLastParsing = true;
     }
 
     private void parseBackEndInstances() {
+        if (!parsingIsApplicable()) {
+            return;
+        }
+        parsing = true;
+
         try {
             JsonArray instances = backEndInstanceFileUtils.getInstancesFromFile();
             backEndInformationList.clear();
@@ -228,6 +239,38 @@ public class BackEndInstancesUtils {
         } catch (IOException e) {
             LOG.error("Failure when trying to parse json " + e.getMessage());
         }
+
+        parsing = false;
+        savedSinceLastParsing = false;
+        nextTimeToParse  = System.currentTimeMillis() + (SECONDS_BETWEEN_PARSING * 1000);
+    }
+
+    private boolean parsingIsApplicable() {
+        // Parse for tests
+        if (isRunningTests) {
+            return true;
+        }
+
+        // Check if we currently are parsing.
+        if (parsing) {
+            long stopTime = System.currentTimeMillis() + 10000;
+            while (parsing && stopTime > System.currentTimeMillis()) {
+                // Do nothing for maximum of 10 seconds.
+            }
+            return false;
+        }
+
+        // Check if we did not parse for some time.
+        if (nextTimeToParse <= System.currentTimeMillis()) {
+            return true;
+        }
+
+        // Check if we did any save after last parsing.
+        if (savedSinceLastParsing ) {
+            return true;
+        }
+
+        return false;
     }
 
     private void ensureDefaultBackEnd() {
@@ -245,6 +288,5 @@ public class BackEndInstancesUtils {
             }
         }
         backEndInformationList.add(defaultBackendInformation);
-        saveBackEndInformationList();
     }
 }
