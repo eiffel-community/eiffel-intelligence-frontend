@@ -18,18 +18,21 @@ jQuery(document).ready(function() {
 	var frontendServiceBackEndPath = "/backend";
 
 	function loadMainPage() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("subscriptionpage.html");
 	}
 
 	$("#testRulesBtn").click(function() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("testRules.html");
 	});
 
 	$("#eiInfoBtn").click(function() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("eiInfo.html");
@@ -159,19 +162,22 @@ jQuery(document).ready(function() {
                 $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
               }
         }
-    }
-    $.ajax({
-        url: frontendServiceUrl + frontendServiceBackEndPath,
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        cache: false,
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            window.logMessages("Failure when trying to load backend instances");
-        },
-        success: function (responseData, XMLHttpRequest, textStatus) {
-            var observableObject = $("#selectInstances")[0];
-            ko.cleanNode(observableObject);
-            ko.applyBindings(new viewModel(responseData),observableObject);
-        }
-	});
+	}
+	function updateBackEndInstanceList() {
+		$.ajax({
+			url: frontendServiceUrl + frontendServiceBackEndPath,
+			type: "GET",
+			contentType: 'application/json; charset=utf-8',
+			cache: false,
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				window.logMessages("Failure when trying to load backend instances");
+			},
+			success: function (responseData, XMLHttpRequest, textStatus) {
+				var observableObject = $("#selectInstances")[0];
+				ko.cleanNode(observableObject);
+				ko.applyBindings(new viewModel(responseData),observableObject);
+			}
+		});
+	}
+	updateBackEndInstanceList();
 });
