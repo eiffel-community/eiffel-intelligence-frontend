@@ -82,7 +82,7 @@
                         <h3 class="modal-title text-center" id="formHeader">Subscription Form</h3>
                     </div>
                 </div>
-                <div class="modal-body form" align="left">
+                <div class="modal-body form" allign="left">
                     <form action="#" id="form" class="form-horizontal">
                         <input type="hidden" value="" name="id" />
                         <div id="ViewModelDOMObject" class="form-body">
@@ -105,10 +105,12 @@
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
-                                  <font color="red" size="2">Only numbers,letters and underscore allowed</font>
+                                    <font class="hiddenField" id="invalidLetters" color="red" size="2">Only letters, numbers and underscore allowed</font>
+                                    <br>
+                                    <font class="hiddenField" id="noNameGiven" color="red" size="2">SubscriptionName must not be empty</font>
+
                                     <input id="subscriptionNameInput" data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
-                                        name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"
-                                    />
+                                        name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -136,6 +138,7 @@
                                                optionsValue: 'value',
                                                value: $data.notificationType,
                                                optionsCaption: 'Choose...'"></select>
+                                    <font class="hiddenField" id="notificationTypeNotSet" color="red" size="2">> NotificationType must be set</font>
                                 </div>
                             </div>
 
@@ -152,7 +155,26 @@
 
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
-
+                                <div>
+                                    <font class="hiddenField" id="noNotificationKeyOrValue" color="red" size="2">
+                                            NotificationMessage key and or values must be set
+                                    </font>
+                                </div>
+                                <div>
+                                    <font class="hiddenField" id="notificationMessageKeyValuesArrayToLarge" color="red" size="2">
+                                            Only one array is allowed for notificationMessage when NOT using key/value pairs
+                                    </font>
+                                </div>
+                                <div>
+                                    <font class="hiddenField" id="keyInNotificationMessage" color="red" size="2">
+                                        Key in notificationMessage must be empty when NOT using key/value pairs
+                                    </font>
+                                </div>
+                                <div>
+                                    <font class="hiddenField" id="noNotificationMessage" color="red" size="2">
+                                        Value in notificationMessage must have a value when NOT using key/value pairs
+                                    </font>
+                                </div>
                                 <table width="100%">
                                     <thead>
                                         <tr>
@@ -234,12 +256,14 @@
                                                optionsText: $data.repeat(),
                                                value: $data.repeat,
                                                optionsCaption: 'Choose...'"></select>
+                                    <font class="hiddenField" id="repeatNotSet" color="red" size="2">> Repeat must be set</font>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                                 <div>
+                                    <font class="hiddenField" id="noNotificationMetaGiven" color="red" size="2">NotificationMeta must not be empty</font>
                                     <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
@@ -255,6 +279,7 @@
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
+                                    <font class="hiddenField" id="emptyCondition1" color="red" size="2">Condition must not be empty</font>
 
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">

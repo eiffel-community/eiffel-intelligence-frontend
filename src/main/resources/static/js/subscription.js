@@ -739,6 +739,7 @@ jQuery(document).ready(function () {
 
     // /Start ## Save Subscription ##########################################
     $('div.modal-footer').on('click', 'button.save_record', function (event) {
+        var error = false;
         event.stopPropagation();
         event.preventDefault();
         var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
@@ -746,39 +747,39 @@ jQuery(document).ready(function () {
             notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
-
+        $('.hiddenField').hide();
         //START: Make sure all datatables field has a value
-        if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
-            window.logMessages("Only numbers,letters and underscore is valid to type in subscriptionName field.");
-            return;
-        }
-
-        //Currently a free-form field
-        /*
-            if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
-                window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
-                return;
-            }
-        */
-
+        // Validate SubscriptionName field
         if (vm.subscription()[0].subscriptionName() == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
-            return;
+            $('#noNameGiven').show();
+            error = true;
         }
+        if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
+            window.logMessages("Only numbers,letters and underscore is valid to type in subscriptionName field.");
+            $('#invalidLetters').show();
+            error = true;
+        }
+
+        // Validate notificationType field
         if (vm.subscription()[0].notificationType() == null) {
             window.logMessages("Error: notificationType field must boolean a value");
-            return;
+            $('#notificationTypeNotSet').show();
+            error = true;
         }
+        // Validate notificationMeta field
         if (vm.subscription()[0].notificationMeta() == "") {
             window.logMessages("Error: notificationMeta field must have a value");
-            return;
+            $('#noNotificationMetaGiven').show();
+            error = true;
         }
+        // Validate repeat field
         if (vm.subscription()[0].repeat() == null) {
             window.logMessages("Error: repeat field must have a boolean value");
-            return;
+            $('#repeatNotSet').show();
+            error = true;
         }
         //END OF: Make sure all datatables field has a value
-
 
         //START: Check of other subscription fields values
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
@@ -787,25 +788,28 @@ jQuery(document).ready(function () {
             if (vm.formpostkeyvaluepairs()) {
                 if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
-                    return;
+                    $('#noNotificationKeyOrValue').show();
+                    error = true;
                 }
             }
             else {
                 if (notificationMessageKeyValuesArray.length !== 1) {
                     window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
-                    return;
+                    $('#notificationMessageKeyValuesArrayToLarge').show();
+                    error = true;
                 }
                 else if (test_key !== '""') {
                     window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
-                    return;
+                    $('#keyInNotificationMessage').show();
+                    error = true;
                 }
                 else if (test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
-                    return;
+                    $('#noNotificationMessage').show();
+                    error = true;
                 }
             }
         }
-
 
         var requirementsArray = vm.subscription()[0].requirements();
         for (i = 0; i < requirementsArray.length; i++) {
@@ -813,10 +817,16 @@ jQuery(document).ready(function () {
             for (k = 0; k < conditionsArray.length; k++) {
                 var test_me = ko.toJSON(conditionsArray[k].jmespath());
                 if (test_me === '""') {
-                    window.logMessages("Error: jmepath field must have a value");
-                    return;
+                    window.logMessages("Error: JMESPath field must have a value");
+                    $('#emptyCondition1').show();
+                    $('.emptyCondition').show();
+                    error = true;
                 }
             }
+        }
+        // If errors return.
+        if (error) {
+            return;
         }
         //END: Check of other subscription fields values
 
