@@ -18,6 +18,7 @@ package com.ericsson.ei.frontend.utils;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,7 @@ public class BackEndInfoirmationControllerUtils {
                     allAvailableInstances.toString(),
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
+            LOG.error("ERROR!\n" + e.getMessage());
             return new ResponseEntity<>(
                     "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"path\":\"/\"}]",
                     getHeaders(), HttpStatus.OK);

@@ -53,6 +53,7 @@ public class BackendInstancesUtilsTest {
 
     @Before
     public void before() throws IOException {
+        utils.setRunningTests(true);
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
 

@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
 var frontendServiceUrl = $('#frontendServiceUrl').text();
+var frontendServicePath = "/backend";
 function instanceModel() {
     var self = this;
 	self.instance = {
@@ -19,16 +20,16 @@ function instanceModel() {
 		    $.jGrowl("Port value should be from 1 to 65535", {sticky: false, theme: 'Error'});
 		} else {
 			$.ajax({
-				url: frontendServiceUrl + "/add-instances",
+				url: frontendServiceUrl + frontendServicePath,
 				type: "POST",
 				data: data,
 				contentType: 'application/json; charset=utf-8',
 				cache: false,
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					window.logMessages(XMLHttpRequest.responseText);
+					window.logMessages(JSON.parse(XMLHttpRequest.responseText)["message"]);
 				},
 				success: function (responseData, XMLHttpRequest, textStatus) {
-					$.jGrowl("Added new backend instance", {sticky: false, theme: 'Notify'});
+					$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
 					$("#mainFrame").load("switch-backend.html");
 				}
 			});
