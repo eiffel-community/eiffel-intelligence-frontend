@@ -31,13 +31,6 @@ jQuery(document).ready(function() {
 		$("#mainFrame").load("testRules.html");
 	});
 
-	$("#eiInfoBtn").click(function() {
-		updateBackEndInstanceList();
-		$("#navbarResponsive").removeClass("show");
-	    $("#selectInstances").visible();
-		$("#mainFrame").load("eiInfo.html");
-	});
-
 	$("#loginBtn").click(function() {
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
