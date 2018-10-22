@@ -749,33 +749,48 @@ jQuery(document).ready(function () {
 
         $('.hiddenField').hide();
         //START: Make sure all datatables field has a value
+        var subscriptionName = String(vm.subscription()[0].subscriptionName());
         // Validate SubscriptionName field
-        if (vm.subscription()[0].subscriptionName() == "") {
+        if (subscriptionName == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
+            $('#invalidLetters').text("SubscriptionName must not be empty");
             $('#noNameGiven').show();
             error = true;
         }
-        if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
-            window.logMessages("Only numbers,letters and underscore is valid to type in subscriptionName field.");
+
+        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
+        var regExpression = /(\W)/g;
+        if ((regExpression.test(subscriptionName))) {
+            var matches = subscriptionName.match(regExpression);
+            console.log("Invalid characters: [" + matches + "].")
+            window.logMessages(
+                "Only numbers,letters and underscore is valid to type in subscriptionName "
+                + " field. \nInvalid letters [" + matches + "].");
+            $('#invalidLetters').text(
+                "Only letters, numbers and underscore allowed! "
+                + "\nInvalid characters: [" + matches + "]");
             $('#invalidLetters').show();
             error = true;
         }
 
         // Validate notificationType field
         if (vm.subscription()[0].notificationType() == null) {
-            window.logMessages("Error: notificationType field must boolean a value");
+            window.logMessages("Error: notificationType value needs to be set");
+            $('#notificationTypeNotSet').text("> NotificationType must be set");
             $('#notificationTypeNotSet').show();
             error = true;
         }
         // Validate notificationMeta field
         if (vm.subscription()[0].notificationMeta() == "") {
             window.logMessages("Error: notificationMeta field must have a value");
+            $('#noNotificationMetaGiven').text("NotificationMeta must not be empty");
             $('#noNotificationMetaGiven').show();
             error = true;
         }
         // Validate repeat field
         if (vm.subscription()[0].repeat() == null) {
-            window.logMessages("Error: repeat field must have a boolean value");
+            window.logMessages("Error: repeat field must be selected true or false");
+            $('#repeatNotSet').text("> Repeat must be set");
             $('#repeatNotSet').show();
             error = true;
         }
@@ -788,6 +803,7 @@ jQuery(document).ready(function () {
             if (vm.formpostkeyvaluepairs()) {
                 if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
+                    $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
                     $('#noNotificationKeyOrValue').show();
                     error = true;
                 }
@@ -795,16 +811,19 @@ jQuery(document).ready(function () {
             else {
                 if (notificationMessageKeyValuesArray.length !== 1) {
                     window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
+                    $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
                     $('#notificationMessageKeyValuesArrayToLarge').show();
                     error = true;
                 }
                 else if (test_key !== '""') {
                     window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
+                    $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
                     $('#keyInNotificationMessage').show();
                     error = true;
                 }
                 else if (test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
+                    $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
                     $('#noNotificationMessage').show();
                     error = true;
                 }
@@ -815,10 +834,10 @@ jQuery(document).ready(function () {
         for (i = 0; i < requirementsArray.length; i++) {
             var conditionsArray = requirementsArray[i].conditions();
             for (k = 0; k < conditionsArray.length; k++) {
-                var test_me = ko.toJSON(conditionsArray[k].jmespath());
-                if (test_me === '""') {
+                var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
+                if (conditionToTest === '""') {
                     window.logMessages("Error: JMESPath field must have a value");
-                    $('#emptyCondition1').show();
+                    $('.emptyCondition').text("Condition must not be empty");
                     $('.emptyCondition').show();
                     error = true;
                 }
