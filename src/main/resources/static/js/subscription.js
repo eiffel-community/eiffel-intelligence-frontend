@@ -94,10 +94,7 @@ jQuery(document).ready(function () {
     window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
-    $('.container').on('click', 'button.btnEIConnectionStatus', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-
+    $("#btnEIConnection").click(function () {
         checkBackendStatus();
     });
     // END OF EI Backend Server check #########################################
@@ -428,16 +425,23 @@ jQuery(document).ready(function () {
     });
     // /Stop ## check all subscriptions #####################################
 
+    // /Start ## Add Subscription ########################################
+    $("#addSubscription").click(function () {
+        vm.choosen_subscription_template(null);
+        json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
+        populate_json(json_obj_clone, "add");
+    });
+    // /Stop ## Add Subscription ############################################
 
     // /Start ## Reload Table################################################
-    $('.container').on('click', 'button.table_reload', function (event) {
-        reload_table();
+    $("#reloadButton").click(function () {
+    	reload_table();
     });
     // /Stop ## Reload Table#################################################
 
 
     // /Start ## Bulk delete#################################################
-    $('.container').on('click', 'button.bulk_delete', function (event) {
+    $("#bulkDelete").click(function () {
         var subscriptionsToDelete = [];
         var data = table.rows().nodes();
         $.each(data, function (index, value) {
@@ -516,9 +520,7 @@ jQuery(document).ready(function () {
     }
 
     // /Start ## get_subscription_template #################################################
-    $('.container').on('click', 'button.get_subscription_template', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
+    $("#getTemplateButton").click(function () {
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
@@ -586,10 +588,7 @@ jQuery(document).ready(function () {
 
 
     // /Start ## upload_subscriptions #################################################
-    $('.container').on('click', 'button.upload_subscriptions', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-
+    $("#uploadSubscription").click(function () {
         function createUploadWindow() {
             //            var pom = document.createElement('input');
             //            pom.setAttribute('id', 'uploadFile');
@@ -625,18 +624,6 @@ jQuery(document).ready(function () {
         }
     });
     // /END ## upload_subscriptions #################################################
-
-
-    // /Start ## Add Subscription ########################################
-    $('.container').on('click', 'button.btn.btn-success.add_subscription', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        vm.choosen_subscription_template(null);
-        json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
-        populate_json(json_obj_clone, "add");
-    });
-    // /Stop ## Add Subscription ############################################
-
 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {

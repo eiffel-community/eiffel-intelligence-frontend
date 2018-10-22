@@ -154,7 +154,7 @@ public class BackendInformationControllerUtilsTest {
     }
 
     @Test
-    public void TestHandleRequestToDeleteBackEnd() throws Exception {
+    public void testHandleRequestToDeleteBackEnd() throws Exception {
         ResponseEntity<String> response;
         ResponseEntity<String> expectedResponse;
 
@@ -166,7 +166,7 @@ public class BackendInformationControllerUtilsTest {
     }
 
     @Test
-    public void TestHandleRequestToAddBackEnd() throws Exception {
+    public void testHandleRequestToAddBackEnd() throws Exception {
         when(stream.collect(any())).thenReturn(instance.toString());
         ResponseEntity<String> response;
         ResponseEntity<String> expectedResponse;

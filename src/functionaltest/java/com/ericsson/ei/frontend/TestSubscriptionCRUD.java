@@ -73,11 +73,12 @@ public class TestSubscriptionCRUD {
         String filePath = tempFile.getAbsolutePath().toString();
         Files.write(Paths.get(filePath), "[]".getBytes());
         backEndInstanceFileUtils.setEiInstancesPath(filePath);
-        
+
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
 
         subscriptionRequestBody = FileUtils.readFileToString(new File(SUBSCRIPTION_FILE_PATH), "UTF-8");
+        subscriptionRequestBody = subscriptionRequestBody.replaceAll("\r", "");
         String auth = ADMIN + ":" + ADMIN;
         encodedAuth = StringUtils.newStringUtf8(Base64.encodeBase64(auth.getBytes()));
         responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}")
