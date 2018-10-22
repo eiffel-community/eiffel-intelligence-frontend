@@ -4,6 +4,9 @@
 .sub-action-column {
     min-width: 160px;
 }
+.card-standard {
+	width: 25rem;
+}
 .rule-button {
     width: 150px;
 }
@@ -13,8 +16,17 @@
 .white-space-normal {
     white-space: normal;
 }
-.card-switch-backend {
-    max-width: 40rem; 
+.justify-content-center {
+    display: flex;
+    justify-content: center;
+}
+.split {
+	width: 50%;
+}
+@media (max-width: 576px) {
+    .split {
+        width: 100%;
+    }
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -49,7 +61,7 @@ body {
     padding-top: 60px;
     overflow: scroll !important;
 }
-@media (max-width: 576px) {
+@media (max-width: 992px) {
     body {
         padding-top: 80px;
     }

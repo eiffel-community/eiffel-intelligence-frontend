@@ -18,46 +18,44 @@
 
     <script type="text/javascript" src="resources/subscription_templates.js"></script>
 
-    <div style="max-width: 100%;" class="container pull-left">
-        <div class="d-flex">
-            <div class="col-lg-10 col-md-10 col-9">
-                <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${frontendServiceUrl}"></span>)
-                </h1>
-            </div>
-            <div class="col-lg-2 col-md-2 col-3">
-                <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status."
-                    type="button" id="btnEIConnection" class="btn btnEIConnectionStatus white-space-normal">
-                    <i class="glyphicon"></i>EI Backend Status
-                </button>
-            </div>
+    <div class="d-flex mr-4">
+        <div class="col-lg-10 col-md-10 col-9">
+            <h1 style="font-size:20pt">Eiffel Intelligence Subscription Handling (<span th:text="${frontendServiceUrl}"></span>)
+            </h1>
         </div>
-
-        <div class="pb-1 col-12">
-            <h3 id="subData">Subscription Data</h3>
-            <br/>
-            <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="mt-1 btn btn-success add_subscription show_if_authorized">
-                <i class="glyphicon glyphicon-plus"></i> Add Subscription
+        <div class="col-lg-2 col-md-2 col-3">
+            <button data-toggle="tooltip" title="EI connection status check is refreshed continuesly. Click button to force check status."
+                type="button" id="btnEIConnection" class="btn btnEIConnectionStatus white-space-normal">
+                <i class="glyphicon"></i>EI Backend Status
             </button>
-            <button id="reloadButton" data-toggle="tooltip" title="Reload all subscriptions data from EI" class="mt-1 btn btn-default table_reload">
-                <i class="glyphicon glyphicon-refresh"></i> Reload
-            </button>
-            <button id="bulkDelete" data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="mt-1 btn btn-danger bulk_delete show_if_authorized">
-                <i class="glyphicon glyphicon-trash"></i> Bulk Delete
-            </button>
-            <button id="getTemplateButton" data-toggle="tooltip" title="Download Subscription JSON template" class="mt-1 btn btn-primary get_subscription_template">
-                <i class="glyphicon glyphicon-download"></i> Get Template
-            </button>
-            <button data-toggle="tooltip" title="Upload Subscription JSON" class="mt-1 btn btn-info upload_subscriptions show_if_authorized">
-                <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
-            </button>
-            <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
         </div>
+    </div>
 
-        <!-- Datatable -->
+    <div class="pb-1 col-12">
+        <h3 id="subData">Subscription Data</h3>
+        <br/>
+        <button id="addSubscription" data-toggle="tooltip" title="Add a new subscription to EI" class="mt-1 btn btn-success add_subscription show_if_authorized">
+            <i class="glyphicon glyphicon-plus"></i> Add Subscription
+        </button>
+        <button id="reloadButton" data-toggle="tooltip" title="Reload all subscriptions data from EI" class="mt-1 btn btn-default table_reload">
+            <i class="glyphicon glyphicon-refresh"></i> Reload
+        </button>
+        <button id="bulkDelete" data-toggle="tooltip" title="Delete all marked subscriptions from EI" class="mt-1 btn btn-danger bulk_delete show_if_authorized">
+            <i class="glyphicon glyphicon-trash"></i> Bulk Delete
+        </button>
+        <button id="getTemplateButton" data-toggle="tooltip" title="Download Subscription JSON template" class="mt-1 btn btn-primary get_subscription_template">
+            <i class="glyphicon glyphicon-download"></i> Get Template
+        </button>
+        <button data-toggle="tooltip" title="Upload Subscription JSON" class="mt-1 btn btn-info upload_subscriptions show_if_authorized">
+            <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
+        </button>
+        <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
+    </div>
 
-        <div class="card-body">
-            <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
-        </div>
+    <!-- Datatable -->
+
+    <div class="pl-2 pr-2">
+        <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
     </div>
 
     <!-- Bootstrap modal -->
