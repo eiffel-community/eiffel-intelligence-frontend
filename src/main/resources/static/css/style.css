@@ -20,9 +20,9 @@
     display: flex;
     justify-content: center;
 }
-.justify-content-right {
+.justify-content-end {
     display: flex;
-    justify-content: right;
+    justify-content: flex-end;
 }
 .split {
 	max-width: 50%;
@@ -91,6 +91,6 @@ body {
 }
 @media (max-width: 576px) {
     body {
-        padding-top: 80px;
+        padding-top: 100px;
     }
 }
