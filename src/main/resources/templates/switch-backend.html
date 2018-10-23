@@ -9,43 +9,41 @@
 </head>
 <body class="bg-dark">
 <div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
-<div class="ml-3 mr-3">
-    <div class="justify-content-center">
-	    <div class="card">
-	        <div class="card-header">Switch backend</div>
-	        <div class="card-body" id="instancesModel">
-	            <div class="table-responsive">
-	            <table class="table">
-	                <thead>
-	                <tr>
-	                    <th>Active</th>
-	                    <th>Name</th>
-	                    <th>Host</th>
-	                    <th>Port</th>
-	                    <th>Path</th>
-	                    <th>Secured</th>
-	                    <th></th>
-	                </tr>
-	                </thead>
-	                <tbody data-bind="foreach: instances">
-	                <tr>
-	                    <td align="center"><input align="center" name="activate" type="radio"
-	                                              data-bind="checked: active, checkedValue: true, click: $parent.checked, attr: { id: 'SelectBackendInstance' + $index()}"/></td>
-	                    <td data-bind="text: name, attr: { id: 'BackendInstance' + $index() + 'Name'}"></td>
-	                    <td data-bind="text: host"></td>
-	                    <td data-bind="text: port"></td>
-	                    <td data-bind="text: path"></td>
-	                    <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
-	                    <td align="center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()}">Remove</a></td>
-	                </tr>
-	                </tbody>
-	            </table>
-	        </div>
-	            <button id="switcher" type="button" class="btn btn-primary btn-block"
-	                    data-bind="click: function(){$root.submit($root.instances);}">Submit
-	            </button>
-	        </div>
-	    </div>
+<div class="justify-content-center ml-3 mr-3">
+    <div class="card">
+        <div class="card-header">Switch backend</div>
+        <div class="card-body" id="instancesModel">
+            <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Active</th>
+                    <th>Name</th>
+                    <th>Host</th>
+                    <th>Port</th>
+                    <th>Path</th>
+                    <th>Secured</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: instances">
+                <tr>
+                    <td align="center"><input align="center" name="activate" type="radio"
+                                              data-bind="checked: active, checkedValue: true, click: $parent.checked, attr: { id: 'SelectBackendInstance' + $index()}"/></td>
+                    <td data-bind="text: name, attr: { id: 'BackendInstance' + $index() + 'Name'}"></td>
+                    <td data-bind="text: host"></td>
+                    <td data-bind="text: port"></td>
+                    <td data-bind="text: path"></td>
+                    <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
+                    <td align="center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()}">Remove</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+            <button id="switcher" type="button" class="btn btn-primary btn-block"
+                    data-bind="click: function(){$root.submit($root.instances);}">Submit
+            </button>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="js/switch-instances.js"></script>

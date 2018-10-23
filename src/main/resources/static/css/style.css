@@ -89,7 +89,7 @@ body {
     padding-top: 60px;
     overflow: scroll !important;
 }
-@media (max-width: 992px) {
+@media (max-width: 576px) {
     body {
         padding-top: 80px;
     }
