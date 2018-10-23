@@ -95,9 +95,6 @@ jQuery(document).ready(function () {
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $("#btnEIConnection").click(function () {
-        event.stopPropagation();
-        event.preventDefault();
-
         checkBackendStatus();
     });
     // END OF EI Backend Server check #########################################
@@ -430,8 +427,6 @@ jQuery(document).ready(function () {
 
     // /Start ## Add Subscription ########################################
     $("#addSubscription").click(function () {
-        event.stopPropagation();
-        event.preventDefault();
         vm.choosen_subscription_template(null);
         json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
         populate_json(json_obj_clone, "add");
@@ -526,8 +521,6 @@ jQuery(document).ready(function () {
 
     // /Start ## get_subscription_template #################################################
     $("#getTemplateButton").click(function () {
-        event.stopPropagation();
-        event.preventDefault();
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
@@ -596,9 +589,6 @@ jQuery(document).ready(function () {
 
     // /Start ## upload_subscriptions #################################################
     $("#uploadSubscription").click(function () {
-        event.stopPropagation();
-        event.preventDefault();
-
         function createUploadWindow() {
             //            var pom = document.createElement('input');
             //            pom.setAttribute('id', 'uploadFile');

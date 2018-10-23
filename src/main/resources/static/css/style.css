@@ -21,11 +21,11 @@
     justify-content: center;
 }
 .split {
-	width: 50%;
+	max-width: 50%;
 }
 @media (max-width: 576px) {
     .split {
-        width: 100%;
+        max-width: 100%;
     }
 }
 .table-responsive>.table-bordered {
