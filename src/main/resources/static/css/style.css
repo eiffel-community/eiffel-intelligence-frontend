@@ -20,6 +20,10 @@
     display: flex;
     justify-content: center;
 }
+.justify-content-right {
+    display: flex;
+    justify-content: right;
+}
 .split {
 	max-width: 50%;
 }
