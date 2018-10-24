@@ -39,7 +39,7 @@
       aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <select id="selectInstances" data-bind="optionsCaption: 'Choose backend instance', options: instances, optionsText: 'information', optionsValue: 'name', value: selectedActive, event: {change: onChange}"></select>
+    <select class="split mt-1" id="selectInstances" data-bind="optionsCaption: 'Choose backend instance', options: instances, optionsText: 'information', optionsValue: 'name', value: selectedActive, event: {change: onChange}"></select>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li id="subscriptionBtn" class="nav-item">
@@ -54,7 +54,7 @@
             <span class="nav-link-text">Test Rules</span>
           </a>
         </li>
-        <li id="eiInfoBtn" class="nav-item" data-toggle="tooltip" data-placement="right" title="Eiffel Intelligence Information">
+        <li id="eiInfoBtn" class="nav-item">
           <a class="nav-link" href="#">
             <i class="fa fa-fw fa-info"></i>
             <span class="nav-link-text">Eiffel Intelligence Info</span>
