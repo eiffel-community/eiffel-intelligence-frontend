@@ -16,14 +16,6 @@
 .white-space-normal {
     white-space: normal;
 }
-.justify-content-center {
-    display: flex;
-    justify-content: center;
-}
-.justify-content-end {
-    display: flex;
-    justify-content: flex-end;
-}
 .split {
 	max-width: 50%;
 }
