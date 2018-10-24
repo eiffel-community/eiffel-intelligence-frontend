@@ -106,8 +106,8 @@
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
                                     <!-- text injected from subscription.js -->
-                                    <font class="hiddenField" id="invalidLetters" color="red" size="2" />
-                                    <font class="hiddenField" id="noNameGiven" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="invalidLetters" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="noNameGiven" color="red" size="2" />
 
                                     <input id="subscriptionNameInput" data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
                                         name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
@@ -138,7 +138,7 @@
                                                optionsValue: 'value',
                                                value: $data.notificationType,
                                                optionsCaption: 'Choose...'"></select>
-                                    <font class="hiddenField" id="notificationTypeNotSet" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="notificationTypeNotSet" color="red" size="2" />
                                 </div>
                             </div>
 
@@ -156,16 +156,16 @@
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
                                 <div>
-                                    <font class="hiddenField" id="noNotificationKeyOrValue" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="noNotificationKeyOrValue" color="red" size="2" />
                                 </div>
                                 <div>
-                                    <font class="hiddenField" id="notificationMessageKeyValuesArrayToLarge" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="notificationMessageKeyValuesArrayToLarge" color="red" size="2" />
                                 </div>
                                 <div>
-                                    <font class="hiddenField" id="keyInNotificationMessage" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="keyInNotificationMessage" color="red" size="2" />
                                 </div>
                                 <div>
-                                    <font class="hiddenField" id="noNotificationMessage" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
                                 <table width="100%">
                                     <thead>
@@ -248,14 +248,14 @@
                                                optionsText: $data.repeat(),
                                                value: $data.repeat,
                                                optionsCaption: 'Choose...'"></select>
-                                    <font class="hiddenField" id="repeatNotSet" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="repeatNotSet" color="red" size="2" />
                                     <span class="help-block"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                                 <div>
-                                    <font class="hiddenField" id="noNotificationMetaGiven" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="noNotificationMetaGiven" color="red" size="2" />
                                     <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
@@ -285,7 +285,7 @@
 
                                         <!-- ko ifnot: $data.jmespath() -->
                                         <div>
-                                            <font class="hiddenField emptyCondition" color="red" size="2" />
+                                            <font class="addSubscriptionErrors emptyCondition" color="red" size="2" />
                                         </div>
                                         <!-- /ko -->
 
