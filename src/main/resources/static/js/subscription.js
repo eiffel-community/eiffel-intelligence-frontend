@@ -753,7 +753,7 @@ jQuery(document).ready(function () {
         // Validate SubscriptionName field
         if (subscriptionName == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
-            $('#invalidLetters').text("SubscriptionName must not be empty");
+            $('#noNameGiven').text("SubscriptionName must not be empty");
             $('#noNameGiven').show();
             error = true;
         }
@@ -761,14 +761,14 @@ jQuery(document).ready(function () {
         // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
         var regExpression = /(\W)/g;
         if ((regExpression.test(subscriptionName))) {
-            var matches = subscriptionName.match(regExpression);
-            console.log("Invalid characters: [" + matches + "].")
+            var invalidLetters = subscriptionName.match(regExpression);
+            console.log("Invalid characters: [" + invalidLetters + "].")
             window.logMessages(
                 "Only numbers,letters and underscore is valid to type in subscriptionName "
-                + " field. \nInvalid letters [" + matches + "].");
+                + " field. \nInvalid letters [" + invalidLetters + "].");
             $('#invalidLetters').text(
                 "Only letters, numbers and underscore allowed! "
-                + "\nInvalid characters: [" + matches + "]");
+                + "\nInvalid characters: [" + invalidLetters + "]");
             $('#invalidLetters').show();
             error = true;
         }
