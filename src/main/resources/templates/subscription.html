@@ -81,7 +81,7 @@
                         <h3 class="modal-title text-center" id="formHeader">Subscription Form</h3>
                     </div>
                 </div>
-                <div class="modal-body form" align="left">
+                <div class="modal-body form">
                     <form action="#" id="form" class="form-horizontal">
                         <input type="hidden" value="" name="id" />
                         <div id="ViewModelDOMObject" class="form-body">
@@ -104,10 +104,12 @@
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
-                                  <font color="red" size="2">Only numbers,letters and underscore allowed</font>
+                                    <!-- text injected from subscription.js -->
+                                    <font class="addSubscriptionErrors" id="invalidLetters" color="red" size="2" />
+                                    <font class="addSubscriptionErrors" id="noNameGiven" color="red" size="2" />
+
                                     <input id="subscriptionNameInput" data-toggle="tooltip" title="Specify a SubsciptionName" data-bind="textInput:$data.subscriptionName"
-                                        name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"
-                                    />
+                                        name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
@@ -135,6 +137,7 @@
                                                optionsValue: 'value',
                                                value: $data.notificationType,
                                                optionsCaption: 'Choose...'"></select>
+                                    <font class="addSubscriptionErrors" id="notificationTypeNotSet" color="red" size="2" />
                                 </div>
                             </div>
 
@@ -151,7 +154,18 @@
 
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
-
+                                <div>
+                                    <font class="addSubscriptionErrors" id="noNotificationKeyOrValue" color="red" size="2" />
+                                </div>
+                                <div>
+                                    <font class="addSubscriptionErrors" id="notificationMessageKeyValuesArrayToLarge" color="red" size="2" />
+                                </div>
+                                <div>
+                                    <font class="addSubscriptionErrors" id="keyInNotificationMessage" color="red" size="2" />
+                                </div>
+                                <div>
+                                    <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
+                                </div>
                                 <table width="100%">
                                     <thead>
                                         <tr>
@@ -233,12 +247,14 @@
                                                optionsText: $data.repeat(),
                                                value: $data.repeat,
                                                optionsCaption: 'Choose...'"></select>
+                                    <font class="addSubscriptionErrors" id="repeatNotSet" color="red" size="2" />
                                     <span class="help-block"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                                 <div>
+                                    <font class="addSubscriptionErrors" id="noNotificationMetaGiven" color="red" size="2" />
                                     <textarea id="metaData" data-toggle="tooltip" title="Specify notification meta data" data-bind="textInput:$data.notificationMeta"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
@@ -254,17 +270,24 @@
                                 <img data-toggle="tooltip" data-placement="top" width="16" alt="Information" src="assets/images/information.png" title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups"
                                 />
                             </div>
-                            <div class="p-1 border border-primary form-group">                            
+                            <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
 
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
+
 										<!-- ko if: $index() !== 0 -->
 										<h5 style="display:inline">AND</h5>
 										<!-- /ko -->
-
 										<label style="display:inline" class="control-label font-weight-bold">Condition</label>
+
+                                        <!-- ko ifnot: $data.jmespath() -->
+                                        <div>
+                                            <font class="addSubscriptionErrors emptyCondition" color="red" size="2" />
+                                        </div>
+                                        <!-- /ko -->
+
                                         <textarea data-toggle="tooltip" title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath"
                                             placeholder="jmespath" class="form-control" type="text"></textarea>
                                         <div class="pt-1 d-flex justify-content-end">
@@ -301,7 +324,8 @@
                     <button data-toggle="tooltip" title="Save the changes to EI." type="button" id="btnSave" class="btn btn-primary save_record">
                         Save
                     </button>
-                    <button data-toggle="tooltip" title="Cancel and abort all changes" type="button" id="btnFormCancel" class="btn btn-danger" data-dismiss="modal">Cancel
+                    <button data-toggle="tooltip" title="Cancel and abort all changes" type="button" id="btnFormCancel" class="btn btn-danger" data-dismiss="modal">
+                        Cancel
                     </button>
                 </div>
             </div>

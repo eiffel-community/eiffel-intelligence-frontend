@@ -58,7 +58,7 @@ public class BackEndInstancesUtils {
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     private List<BackEndInformation> backEndInformationList = new ArrayList<>();
-    private boolean parsing = false;
+    private boolean currentlyParsing = false;
     private boolean isRunningTests = false;
     private long nextTimeToParse = 0;
     private boolean savedSinceLastParsing = false;
@@ -227,7 +227,7 @@ public class BackEndInstancesUtils {
         if (!parsingIsApplicable()) {
             return;
         }
-        parsing = true;
+        currentlyParsing = true;
 
         try {
             JsonArray instances = backEndInstanceFileUtils.getInstancesFromFile();
@@ -240,32 +240,46 @@ public class BackEndInstancesUtils {
             LOG.error("Failure when trying to parse json " + e.getMessage());
         }
 
-        parsing = false;
+        currentlyParsing = false;
         savedSinceLastParsing = false;
         nextTimeToParse  = System.currentTimeMillis() + (SECONDS_BETWEEN_PARSING * 1000);
     }
 
     private boolean parsingIsApplicable() {
-        // Parse for tests
+        /**
+         * If this is a test and test is dependent on parsing to be executed
+         * we want to parse.
+         */
         if (isRunningTests) {
             return true;
         }
 
-        // Check if we currently are parsing.
-        if (parsing) {
+        /**
+         * If parsing is ongoing wait for it to finish, we do not parse again
+         * since it should already be up to date.
+         */
+        if (currentlyParsing) {
             long stopTime = System.currentTimeMillis() + 10000;
-            while (parsing && stopTime > System.currentTimeMillis()) {
-                // Do nothing for maximum of 10 seconds.
+            while (currentlyParsing && stopTime > System.currentTimeMillis()) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
             }
             return false;
         }
 
-        // Check if we did not parse for some time.
+        /**
+         * If parsing has not been done for a set amount of time,
+         * then we want to parse.
+         */
         if (nextTimeToParse <= System.currentTimeMillis()) {
             return true;
         }
 
-        // Check if we did any save after last parsing.
+        /**
+         * If an update has happened to the file, then we should parse the file.
+         */
         if (savedSinceLastParsing ) {
             return true;
         }
