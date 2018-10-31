@@ -832,6 +832,8 @@ jQuery(document).ready(function () {
         }
         // If errors return.
         if (error) {
+            $('#errorExists').text("Required fields not filled or invalid data");
+            $('#errorExists').show();
             return;
         }
         //END: Check of other subscription fields values
