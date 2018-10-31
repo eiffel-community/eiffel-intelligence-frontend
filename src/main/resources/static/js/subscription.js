@@ -867,9 +867,13 @@ jQuery(document).ready(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {
+                    errors = errors + "\n" + responseJSON[i].reason;
                     $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
                 }
+                $('#serverError').text(errors);
+                $('#serverError').show();
             },
             complete: function () {
                 $('#btnSave').text('save'); //change button text
