@@ -136,6 +136,7 @@ jQuery(document).ready(
                 doc.open();
                 doc.write(divText);
                 doc.close();
+                myWindow.focus();
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
