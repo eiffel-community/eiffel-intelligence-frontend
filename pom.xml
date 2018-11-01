@@ -154,6 +154,7 @@
         <configuration>
           <forkCount>2C</forkCount>
           <reuseForks>false</reuseForks>
+          <useSystemClassLoader>false</useSystemClassLoader>
           <excludes>
             <exclude>${someModule.test.excludes}</exclude>
           </excludes>

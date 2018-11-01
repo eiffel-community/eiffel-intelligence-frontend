@@ -288,7 +288,7 @@
                                         </div>
                                         <!-- /ko -->
 
-                                        <textarea title="Write a Subscription Rule(JmePath)" data-bind="textInput:$data.jmespath()" name="jmespath"
+                                        <textarea title="Write a Subscription Rule(JmesPath)" data-bind="textInput:$data.jmespath()" name="jmespath"
                                             placeholder="jmespath" class="form-control" type="text"></textarea>
                                         <div class="pt-1 d-flex justify-content-end">
 
@@ -321,6 +321,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <font class="addSubscriptionErrors" id="errorExists" color="red" size="3" />
+                    <font class="addSubscriptionErrors" id="serverError" color="red" size="3" />
                     <button title="Save the changes to EI." type="button" id="btnSave" class="btn btn-primary save_record">
                         Save
                     </button>
