@@ -25,7 +25,7 @@ jQuery(document).ready(
 
       frontendServiceUrl = $('#frontendServiceUrl').text();
       //load tooltip on hover
-      $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+      $('[data-toggle="tooltip"]').tooltip({ trigger: "click" });
 
       // /Start ## Global AJAX Sender function ##################################
       var AjaxHttpSender = function() {

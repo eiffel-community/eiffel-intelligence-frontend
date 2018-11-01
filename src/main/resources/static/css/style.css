@@ -64,6 +64,16 @@
     height: 45px;
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
+.cursor-pointer {
+	cursor: pointer;
+}
+.badge-container {
+	display: inline-block;
+	padding: .1em;
+	text-align: center;
+	white-space: nowrap;
+	border-radius: .25rem;
+}
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
