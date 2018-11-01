@@ -12,7 +12,6 @@ function singleInstanceModel(name, host, port, path, https, active) {
 }
 
 function viewModel(data) {
-    console.log("Updating instances!");
     var self = this;
     var currentName;
     self.instances = ko.observableArray();
@@ -61,10 +60,8 @@ function updateBackEndInstanceList() {
             window.logMessages("Failure when trying to load backend instances");
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
-            console.log("Found Instances!")
             var observableObject = $("#selectInstances")[0];
             ko.cleanNode(observableObject);
-            console.log("observableObject" + observableObject)
             ko.applyBindings(new viewModel(responseData),observableObject);
         }
     });

@@ -18,6 +18,7 @@ jQuery(document).ready(function() {
 	var frontendServiceBackEndPath = "/backend";
 
 	function updateSelector() {
+		// Moved this to its own file so that we may use it in multiple .js files.
 		$.getScript( "js/updateSelector.js" )
 			.done(function( script, textStatus ) {
 			updateBackEndInstanceList();
