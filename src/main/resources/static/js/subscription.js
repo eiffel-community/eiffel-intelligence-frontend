@@ -384,17 +384,13 @@ jQuery(document).ready(function () {
                 "data": "repeat"
             },
             {
-                "targets": [9], //last column
+                "targets": [9],
                 "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    if (isSecured == true && row.userName == currentUser && row.userName != null) {
-                        return '<button id="view-' + data.subscriptionName + '" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" title="Delete subscription" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else if (isSecured == false) {
+                    if (isSecured == false || (row.userName == currentUser && row.userName != null)) {
                         return '<button id="view-' + data.subscriptionName + '" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
                             + '<button id="edit-' + data.subscriptionName + '" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
                             + '<button id="delete-' + data.subscriptionName + '" title="Delete subscription" class="btn btn-sm btn-danger delete_record">Delete</button>';
