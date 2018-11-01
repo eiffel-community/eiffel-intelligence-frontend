@@ -24,6 +24,8 @@ jQuery(document).ready(
     function() {
 
       frontendServiceUrl = $('#frontendServiceUrl').text();
+      //load tooltip on hover
+      $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
       // /Start ## Global AJAX Sender function ##################################
       var AjaxHttpSender = function() {
@@ -235,10 +237,10 @@ jQuery(document).ready(
         };
         
         var pomEvents = document.getElementById('uploadEventsFile');
-          pomEvents.onchange = function uploadFinished() {
+        pomEvents.onchange = function uploadFinished() {
             var subscriptionFile = pomEvents.files[0];
             validateEventsJsonAndCreateSubscriptions(subscriptionFile);
-          };
+        };
           
       //Upload events list json data
       $(".container").on("click", "button.upload_rules", function(event) {
@@ -353,7 +355,6 @@ jQuery(document).ready(
       
    // Start to check is backend Test Rule service status
     	var isEnabled = true;
-    	console.log('Here are my modifications');
     	$.ajax({
     		url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
     		contentType : 'application/json; charset=utf-8',

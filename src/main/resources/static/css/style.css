@@ -22,6 +22,7 @@
 @media (max-width: 576px) {
     .split {
         max-width: 100%;
+        width: 100%;
     }
 }
 .table-responsive>.table-bordered {
@@ -83,6 +84,6 @@ body {
 }
 @media (max-width: 576px) {
     body {
-        padding-top: 100px;
+        padding-top: 80px;
     }
 }
