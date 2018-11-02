@@ -17,24 +17,21 @@
   <link href="assets/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
   <link href="assets/datatables/responsive.dataTables.min.css" rel="stylesheet" />
   <link href="css/sb-admin.css" rel="stylesheet" />
-  <link href="css/style.css" rel="stylesheet" />
-
   <link href="assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"/>
   <link href="assets/jquery-confirm/css/jquery-confirm.css" rel="stylesheet"/>
   <link href="assets/jgrowl/jquery.jgrowl.min.css" rel="stylesheet"/>
   <link href="assets/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
   <link href="css/errMsg.css" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet" />
 </head>
 
 <body class="bg-dark" id="page-top">
-
-
   <div class="hidden" style="display: none" id="eiffelDocumentationUrlLinks" th:text="${eiffelDocumentationUrlLinks}"></div>
   <div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <a class="navbar-brand" th:href="${frontendServiceUrl}">
-      <img width="32" alt="Information" src="assets/images/favicon-32x32.png" />Eiffel Intelligence</a>
+      <img alt="Favorite Icon" src="assets/images/favicon-32x32.png" />Eiffel Intelligence</a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
       aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -152,19 +149,13 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <script type="text/javascript" src="assets/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="assets/bootstrap/js/popper.min.js"></script>
-  <script type="text/javascript" src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="assets/jquery-easing/jquery.easing.min.js"></script>
   <script type="text/javascript" src="assets/datatables/jquery.dataTables.js"></script>
   <script type="text/javascript" src="assets/datatables/dataTables.bootstrap4.js"></script>
   <script type="text/javascript" src="assets/datatables/dataTables.responsive.min.js"></script>
-
-  <script type="text/javascript" src="assets/js/sb-admin.min.js"></script>
-  <script type="text/javascript" src="assets/js/sb-admin-datatables.min.js"></script>
 
   <script type="text/javascript" src="assets/knockout/knockout-3.4.2.js"></script>
   <script type="text/javascript" src="assets/knockout/knockout.mapping.js"></script>
@@ -175,8 +166,13 @@
   <script type="text/javascript" src="assets/dateformat/date.format.js"></script>
   <script type="text/javascript" src="assets/jsonlint/jsonlint.js"></script>
 
+  <script type="text/javascript" src="assets/bootstrap/js/popper.min.js"></script>
+  <script type="text/javascript" src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript" src="assets/js/sb-admin.min.js"></script>
+  <script type="text/javascript" src="assets/js/sb-admin-datatables.min.js"></script>
+
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/errorMessages.js"></script>
 </body>
-
 </html>
