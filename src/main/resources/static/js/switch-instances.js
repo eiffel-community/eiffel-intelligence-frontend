@@ -64,10 +64,9 @@ function multipleInstancesModel(data) {
 			},
 			success: function (responseData, XMLHttpRequest, textStatus) {
 				console.log("Response from IE front end back end: " + responseData.message);
-				$.getScript( "js/updateSelector.js" )
+				$.getScript( "js/main.js" )
 					.done(function( script, textStatus ) {
-						console.log( "Status of load: " + textStatus );
-						updateBackEndInstanceList();
+					updateBackEndInstanceList();
 				});
 				$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
 				$("#navbarResponsive").removeClass("show");
