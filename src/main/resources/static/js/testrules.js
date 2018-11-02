@@ -24,8 +24,7 @@ jQuery(document).ready(
     function() {
 
       frontendServiceUrl = $('#frontendServiceUrl').text();
-      //load tooltip on hover
-      $('[data-toggle="tooltip"]').tooltip({ trigger: "click" });
+      loadTooltip();
 
       // /Start ## Global AJAX Sender function ##################################
       var AjaxHttpSender = function() {
@@ -201,6 +200,7 @@ jQuery(document).ready(
 	        vm.rulesBindingList = ko.observableArray(rulesList);
 	        ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
 	        ko.applyBindings(vm, $("#submitButton")[0]);
+	        loadTooltip();
 	      };
 	    reader.readAsText(subscriptionFile);
       }
@@ -226,6 +226,7 @@ jQuery(document).ready(
             $('.eventsListDisplay > div:gt(0)').remove();
             vm.eventsBindingList = ko.observableArray(eventsList);
             ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
+            loadTooltip();
           };
           reader.readAsText(subscriptionFile);
        }
@@ -373,5 +374,9 @@ jQuery(document).ready(
           var parent = document.getElementById('testRule');
           parent.appendChild(overlay);
     	}
+
+        function loadTooltip() {
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+        }
     }
 );
