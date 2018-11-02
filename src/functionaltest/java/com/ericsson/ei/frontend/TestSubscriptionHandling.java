@@ -16,7 +16,7 @@ import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
-public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
+public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
@@ -37,7 +37,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     private JavascriptExecutor js;
 
     @Test
-    public void testSubscription() throws Exception {
+    public void testSubscriptionHandlingWithLDAPEnabled() throws Exception {
         // Open index page.
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
@@ -207,18 +207,18 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(userNameID, userName);
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
-        subscriptionPage.clickKVbtn(kvID);        
+        subscriptionPage.clickKVbtn(kvID);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
-        
+
         // Test "Repeat" dropdown: Select repeat value as "true" and then verify the selected value
         subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
         assert (new WebDriverWait(driver, 10)
               .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
-        
+
         // Test "Add Condition" button: click add condition button and check that it adds an additional "condition" field
         subscriptionPage.clickAddConditionBtn();
         assertEquals(2, subscriptionPage.countElements(conditionFieldID));
-        
+
         // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
         subscriptionPage.clickAddRequirementBtn();
         assertEquals(2, subscriptionPage.countElements(requirementFieldID));
