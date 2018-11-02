@@ -8,7 +8,6 @@ var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" 
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-    $('[data-toggle="tooltip"]').tooltip();
 
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
@@ -192,9 +191,8 @@ jQuery(document).ready(function () {
             var data = self.subscription().slice(0);
             self.subscription([]);
             self.subscription(data);
-
             self.subscription.valueHasMutated();
-
+            loadTooltip();
         };
 
 
@@ -214,6 +212,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
         self.addNotificationMsgKeyValuePairAuth = function (data, event) {
@@ -229,6 +228,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -246,6 +246,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -385,22 +386,18 @@ jQuery(document).ready(function () {
                 "data": "repeat"
             },
             {
-                "targets": [9], //last column
+                "targets": [9],
                 "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    if (isSecured == true && row.userName == currentUser && row.userName != null) {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else if (isSecured == false) {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    if (isSecured == false || (row.userName == currentUser && row.userName != null)) {
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
                     }
                 }
             }
@@ -708,6 +705,9 @@ jQuery(document).ready(function () {
             }
             $('.modal-title').text(title_);
             save_method = save_method_in;
+            $('#modal_form').on('shown.bs.modal', function() {
+            	loadTooltip();
+            });
         }
     }
 
@@ -944,5 +944,9 @@ jQuery(document).ready(function () {
     function showButtons() {
         $(".loadingAnimation").hide();
         $(".subButtons").show();
+    }
+
+    function loadTooltip() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
     }
 });

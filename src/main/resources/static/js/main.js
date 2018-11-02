@@ -179,4 +179,10 @@ jQuery(document).ready(function() {
 			}
 		});
 	}
+
+	$('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'tooltip' && $(e.target)[0].className !== 'tooltip-inner') {
+            $('[data-toggle="tooltip"]').tooltip('hide');
+        }
+    });
 });
