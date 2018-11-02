@@ -264,15 +264,8 @@ jQuery(document).ready(
           validateRulesJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating
-        // download
-        // file window.
-        if (window.navigator.msSaveOrOpenBlob) {
-          createUploadWindowMSExplorer();
-        } else {
-          // HTML5 Download File window handling
-          createRulesUploadWindow();
-        }
+        // HTML5 Download File window handling
+        createRulesUploadWindow();
       });
 
       //Upload list of events json data
@@ -296,14 +289,9 @@ jQuery(document).ready(
           validateEventsJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating download
-        // file window.
-        if (window.navigator.msSaveOrOpenBlob) {
-          createUploadWindowMSExplorer();
-        } else {
-          // HTML5 Download File window handling
-          createUploadWindow();
-        }
+
+        // HTML5 Download File window handling
+        createUploadWindow();
       });
 
       // Download the modified rule
