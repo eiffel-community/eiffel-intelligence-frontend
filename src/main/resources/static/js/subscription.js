@@ -191,9 +191,8 @@ jQuery(document).ready(function () {
             var data = self.subscription().slice(0);
             self.subscription([]);
             self.subscription(data);
-
             self.subscription.valueHasMutated();
-
+            loadTooltip();
         };
 
 
@@ -213,6 +212,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
         self.addNotificationMsgKeyValuePairAuth = function (data, event) {
@@ -228,6 +228,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -245,6 +246,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -391,11 +393,11 @@ jQuery(document).ready(function () {
                 "data": null,
                 "render": function (data, type, row, meta) {
                     if (isSecured == false || (row.userName == currentUser && row.userName != null)) {
-                        return '<button id="view-' + data.subscriptionName + '" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" title="Delete subscription" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
-                        return '<button id="view-' + data.subscriptionName + '" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
                     }
                 }
             }
@@ -704,8 +706,7 @@ jQuery(document).ready(function () {
             $('.modal-title').text(title_);
             save_method = save_method_in;
             $('#modal_form').on('shown.bs.modal', function() {
-                // load tooltips for modal
-                $('[data-toggle="tooltip"]').tooltip({ trigger: "click" });
+            	loadTooltip();
             });
         }
     }
@@ -943,5 +944,9 @@ jQuery(document).ready(function () {
     function showButtons() {
         $(".loadingAnimation").hide();
         $(".subButtons").show();
+    }
+    
+    function loadTooltip() {
+    	$('[data-toggle="tooltip"]').tooltip({ trigger: "click" });
     }
 });

@@ -21,16 +21,16 @@
             <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testRulesDOMObject">
                 <div class="d-flex flex-wrap">
 	                <div class="col-11">
-	                   <button title="Upload List of Rules" class="btn btn-primary upload_rules rule-button mr-1 mt-1 d-inline-block">
+	                   <button class="btn btn-primary upload_rules rule-button mr-1 mt-1 d-inline-block">
                            Upload Rules
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hidden" type='file' id='uploadRulesFile' name='file' style="position: absolute; left: -999em;" />
-	                   <button title="Download rules template" class="btn btn-primary download_rules_template rule-button mr-1 mt-1 d-inline-block">
+	                   <button class="btn btn-primary download_rules_template rule-button mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-	                   <button title="Add a rule" class="btn btn-primary add_rule rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind()">
+	                   <button class="btn btn-primary add_rule rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind()">
                            Add Rule
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
@@ -50,7 +50,7 @@
                             </div>
                             <div>
                                 <h6>
-                                    <span class="badge-container badge-danger cursor-pointer" title="Remove the rule" data-bind="click : $root.removeRule.bind()">
+                                    <span class="badge-rounded badge-danger cursor-pointer" data-bind="click : $root.removeRule.bind()">
                                         <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
                                     </span>
                                 </h6>
@@ -62,16 +62,16 @@
             <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testEventsDOMObject">
                 <div class="d-flex flex-wrap">
                     <div class="col-11">
-                       <button title="Upload List of events" class="btn btn-primary upload_events rule-button mr-1 mt-1 d-inline-block">
+                       <button class="btn btn-primary upload_events rule-button mr-1 mt-1 d-inline-block">
                            Upload Events
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hidden" type='file' id='uploadEventsFile' name='file' style="position: absolute; left: -999em;" />
-                       <button title="Download events template" class="btn btn-primary download_events_template rule-button mr-1 mt-1 d-inline-block">
+                       <button class="btn btn-primary download_events_template rule-button mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-                       <button title="Add an event" class="btn btn-primary add_event rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind()">
+                       <button class="btn btn-primary add_event rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind()">
                            Add Event
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
@@ -91,7 +91,7 @@
                             </div>
                             <div>
                                 <h6>
-	                                <span class="badge-container badge-danger cursor-pointer" title="Remove the event" data-bind="click : $root.removeEvent.bind()">
+	                                <span class="badge-rounded badge-danger cursor-pointer" data-bind="click : $root.removeEvent.bind()">
 		                                <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
 	                                </span>
                                 </h6>
@@ -104,13 +104,13 @@
         <div class="row-fluid divpad" id="submitButton">
             <div class="row">
                 <div class="col-5">
-                    <button title="Download the above rules into a json file" class="btn btn-success download_rules white-space-normal">
+                    <button class="btn btn-success download_rules white-space-normal">
                         Download Rules
                         <i class="fa fa-fw  fa-download"></i>
                     </button>
                 </div>
                 <div class="col-7">
-                    <button title="Find the aggregated object" class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
+                    <button class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
                 </div>
             </div>
         </div>

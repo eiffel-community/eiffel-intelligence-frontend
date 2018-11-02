@@ -67,7 +67,7 @@
 .cursor-pointer {
 	cursor: pointer;
 }
-.badge-container {
+.badge-rounded {
 	display: inline-block;
 	padding: .1em;
 	text-align: center;
