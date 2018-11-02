@@ -945,8 +945,8 @@ jQuery(document).ready(function () {
         $(".loadingAnimation").hide();
         $(".subButtons").show();
     }
-    
+
     function loadTooltip() {
-    	$('[data-toggle="tooltip"]').tooltip({ trigger: "click" });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
     }
 });
