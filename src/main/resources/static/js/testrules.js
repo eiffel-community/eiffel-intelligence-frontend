@@ -159,7 +159,7 @@ jQuery(document).ready(
 
         // This function for adding rule
         self.addRule = function() {
-          self.rulesBindingList.push(ruleTemplate);
+          self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
         };
         // This function for adding rule
         self.addEvent = function() {
