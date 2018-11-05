@@ -50,6 +50,6 @@
         "ttlValue" : 600
     },
     "erUrl" : {
-        "url" : "http://localhost:8080/search/"
+        "url" : "http://localhost:8080/eventrepository/search/"
     }
 }

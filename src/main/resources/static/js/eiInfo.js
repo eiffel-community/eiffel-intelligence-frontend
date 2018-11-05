@@ -162,7 +162,7 @@ jQuery(document).ready(function() {
 	                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
 	                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
 	                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
-	                generateEIInformationBasedOnList([data.erUrl], "Eiffel Intelligence Backend EventRepository Url");
+	                generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
 	                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
               },
               complete: function (XMLHttpRequest, textStatus) {}
