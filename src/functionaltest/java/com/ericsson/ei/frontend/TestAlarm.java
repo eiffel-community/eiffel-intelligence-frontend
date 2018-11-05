@@ -24,7 +24,9 @@ public class TestAlarm extends SeleniumBaseClass {
         testRulesPage.clickRemoveEventNumber(0);
 
         //Click alarm button few times
-        IntStream.range(0, 5).forEachOrdered(i -> indexPageObject.clickAlarmButton());
+        for (int i = 0; i < 5; i++) {
+            indexPageObject.clickAlarmButton();
+        }
         assertTrue(driver.findElements(By.className("dropdown-item")).size() >= 2);
     }
 }

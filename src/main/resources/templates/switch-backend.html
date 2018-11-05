@@ -9,8 +9,8 @@
 </head>
 <body class="bg-dark">
 <div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
-<div class="container pull-left">
-    <div class="card card-switch-backend mx-auto mt-5">
+<div class="d-flex justify-content-center ml-3 mr-3">
+    <div class="card">
         <div class="card-header">Switch backend</div>
         <div class="card-body" id="instancesModel">
             <div class="table-responsive">
@@ -30,10 +30,10 @@
                 <tr>
                     <td align="center"><input align="center" name="activate" type="radio"
                                               data-bind="checked: active, checkedValue: true, click: $parent.checked, attr: { id: 'SelectBackendInstance' + $index()}"/></td>
-                    <td data-bind="text: name, attr: { id: 'BackendInstance' + $index() + 'Name'}" align="center"></td>
-                    <td data-bind="text: host" align="center"></td>
-                    <td data-bind="text: port" align="center"></td>
-                    <td data-bind="text: path" align="center"></td>
+                    <td data-bind="text: name, attr: { id: 'BackendInstance' + $index() + 'Name'}"></td>
+                    <td data-bind="text: host"></td>
+                    <td data-bind="text: port"></td>
+                    <td data-bind="text: path"></td>
                     <td align="center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
                     <td align="center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()}">Remove</a></td>
                 </tr>

@@ -15,20 +15,24 @@ jQuery(document).ready(function() {
 	// Fetch injected URL from DOM
 	var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
 	var frontendServiceUrl = $('#frontendServiceUrl').text();
+	var frontendServiceBackEndPath = "/backend";
 
 	function loadMainPage() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("subscriptionpage.html");
 	}
 
 	$("#testRulesBtn").click(function() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("testRules.html");
 	});
 
 	$("#eiInfoBtn").click(function() {
+		updateBackEndInstanceList();
 		$("#navbarResponsive").removeClass("show");
 	    $("#selectInstances").visible();
 		$("#mainFrame").load("eiInfo.html");
@@ -138,8 +142,8 @@ jQuery(document).ready(function() {
         self.onChange = function(){
             if(typeof self.selectedActive() !== "undefined"){
                 $.ajax({
-                    url: frontendServiceUrl + "/switch-backend",
-            	    type: "POST",
+                    url: frontendServiceUrl + frontendServiceBackEndPath,
+            	    type: "PUT",
             	    data: self.selectedActive(),
             	    contentType: 'application/json; charset=utf-8',
             	    cache: false,
@@ -147,26 +151,38 @@ jQuery(document).ready(function() {
             	        window.logMessages(XMLHttpRequest.responseText);
             	    },
             	    success: function (responseData, XMLHttpRequest, textStatus) {
-            	        $.jGrowl(XMLHttpRequest.responseText, {sticky: false, theme: 'Notify'});
+						console.log("Response from IE front end back end: " + responseData.message);
+						$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
+						$("#navbarResponsive").removeClass("show");
+						$("#selectInstances").visible();
+						$("#mainFrame").load("subscriptionpage.html");
             	    }
                 });
             } else {
                 $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
               }
         }
-    }
-    $.ajax({
-        url: frontendServiceUrl + "/get-instances",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        cache: false,
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            window.logMessages("Failure when trying to load backend instances");
-        },
-        success: function (responseData, XMLHttpRequest, textStatus) {
-            var observableObject = $("#selectInstances")[0];
-            ko.cleanNode(observableObject);
-            ko.applyBindings(new viewModel(responseData),observableObject);
+	}
+	function updateBackEndInstanceList() {
+		$.ajax({
+			url: frontendServiceUrl + frontendServiceBackEndPath,
+			type: "GET",
+			contentType: 'application/json; charset=utf-8',
+			cache: false,
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				window.logMessages("Failure when trying to load backend instances");
+			},
+			success: function (responseData, XMLHttpRequest, textStatus) {
+				var observableObject = $("#selectInstances")[0];
+				ko.cleanNode(observableObject);
+				ko.applyBindings(new viewModel(responseData),observableObject);
+			}
+		});
+	}
+
+	$('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'tooltip' && $(e.target)[0].className !== 'tooltip-inner') {
+            $('[data-toggle="tooltip"]').tooltip('hide');
         }
-	});
+    });
 });

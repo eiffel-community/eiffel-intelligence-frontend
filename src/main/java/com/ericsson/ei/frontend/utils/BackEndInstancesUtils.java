@@ -46,6 +46,7 @@ public class BackEndInstancesUtils {
     private static final String PORT = "port";
     private static final String PATH = "path";
     private static final String HTTPS = "https";
+    private static final long SECONDS_BETWEEN_PARSING = 20;
 
     @Value("${ei.backendServerName:#{null}}")
     private String defaultBackEndInstanceName;
@@ -57,6 +58,10 @@ public class BackEndInstancesUtils {
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     private List<BackEndInformation> backEndInformationList = new ArrayList<>();
+    private boolean currentlyParsing = false;
+    private boolean isRunningTests = false;
+    private long nextTimeToParse = 0;
+    private boolean savedSinceLastParsing = false;
 
     /**
      * Function to check weather an instance host, port, path and https is
@@ -215,9 +220,15 @@ public class BackEndInstancesUtils {
     private void saveBackEndInformationList() {
         JsonArray jsonArrayToDump = parseBackEndsAsJsonArray();
         backEndInstanceFileUtils.dumpJsonArray(jsonArrayToDump);
+        savedSinceLastParsing = true;
     }
 
     private void parseBackEndInstances() {
+        if (!parsingIsApplicable()) {
+            return;
+        }
+        currentlyParsing = true;
+
         try {
             JsonArray instances = backEndInstanceFileUtils.getInstancesFromFile();
             backEndInformationList.clear();
@@ -228,6 +239,52 @@ public class BackEndInstancesUtils {
         } catch (IOException e) {
             LOG.error("Failure when trying to parse json " + e.getMessage());
         }
+
+        currentlyParsing = false;
+        savedSinceLastParsing = false;
+        nextTimeToParse  = System.currentTimeMillis() + (SECONDS_BETWEEN_PARSING * 1000);
+    }
+
+    private boolean parsingIsApplicable() {
+        /**
+         * If this is a test and test is dependent on parsing to be executed
+         * we want to parse.
+         */
+        if (isRunningTests) {
+            return true;
+        }
+
+        /**
+         * If parsing is ongoing wait for it to finish, we do not parse again
+         * since it should already be up to date.
+         */
+        if (currentlyParsing) {
+            long stopTime = System.currentTimeMillis() + 10000;
+            while (currentlyParsing && stopTime > System.currentTimeMillis()) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+            }
+            return false;
+        }
+
+        /**
+         * If parsing has not been done for a set amount of time,
+         * then we want to parse.
+         */
+        if (nextTimeToParse <= System.currentTimeMillis()) {
+            return true;
+        }
+
+        /**
+         * If an update has happened to the file, then we should parse the file.
+         */
+        if (savedSinceLastParsing ) {
+            return true;
+        }
+
+        return false;
     }
 
     private void ensureDefaultBackEnd() {
@@ -245,6 +302,5 @@ public class BackEndInstancesUtils {
             }
         }
         backEndInformationList.add(defaultBackendInformation);
-        saveBackEndInformationList();
     }
 }

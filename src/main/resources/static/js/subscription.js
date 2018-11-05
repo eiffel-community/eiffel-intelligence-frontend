@@ -8,7 +8,6 @@ var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" 
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-    $('[data-toggle="tooltip"]').tooltip();
 
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
@@ -94,10 +93,7 @@ jQuery(document).ready(function () {
     window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
-    $('.container').on('click', 'button.btnEIConnectionStatus', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-
+    $("#btnEIConnection").click(function () {
         checkBackendStatus();
     });
     // END OF EI Backend Server check #########################################
@@ -195,9 +191,8 @@ jQuery(document).ready(function () {
             var data = self.subscription().slice(0);
             self.subscription([]);
             self.subscription(data);
-
             self.subscription.valueHasMutated();
-
+            loadTooltip();
         };
 
 
@@ -217,6 +212,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
         self.addNotificationMsgKeyValuePairAuth = function (data, event) {
@@ -232,6 +228,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -249,6 +246,7 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            loadTooltip();
         };
 
 
@@ -388,22 +386,18 @@ jQuery(document).ready(function () {
                 "data": "repeat"
             },
             {
-                "targets": [9], //last column
+                "targets": [9],
                 "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    if (isSecured == true && row.userName == currentUser && row.userName != null) {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else if (isSecured == false) {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    if (isSecured == false || (row.userName == currentUser && row.userName != null)) {
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
                     } else {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button>';
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
                     }
                 }
             }
@@ -428,16 +422,23 @@ jQuery(document).ready(function () {
     });
     // /Stop ## check all subscriptions #####################################
 
+    // /Start ## Add Subscription ########################################
+    $("#addSubscription").click(function () {
+        vm.choosen_subscription_template(null);
+        json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
+        populate_json(json_obj_clone, "add");
+    });
+    // /Stop ## Add Subscription ############################################
 
     // /Start ## Reload Table################################################
-    $('.container').on('click', 'button.table_reload', function (event) {
-        reload_table();
+    $("#reloadButton").click(function () {
+    	reload_table();
     });
     // /Stop ## Reload Table#################################################
 
 
     // /Start ## Bulk delete#################################################
-    $('.container').on('click', 'button.bulk_delete', function (event) {
+    $("#bulkDelete").click(function () {
         var subscriptionsToDelete = [];
         var data = table.rows().nodes();
         $.each(data, function (index, value) {
@@ -516,9 +517,7 @@ jQuery(document).ready(function () {
     }
 
     // /Start ## get_subscription_template #################################################
-    $('.container').on('click', 'button.get_subscription_template', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
+    $("#getTemplateButton").click(function () {
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
@@ -560,7 +559,7 @@ jQuery(document).ready(function () {
             success: function (data, textStatus) {
                 var returnData = [data];
                 if (returnData.length > 0) {
-                    $.jGrowl("Subscriptions are successfully created", {
+                    $.jGrowl("Subscriptions were successfully created.", {
                         sticky: false,
                         theme: 'Error'
                     });
@@ -568,9 +567,9 @@ jQuery(document).ready(function () {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failed to create next Subscriptions");
+                window.logMessages("Failed to create Subscriptions.");
                 reload_table();
-                $.jGrowl("Failed to create next Subscriptions", { sticky: false, theme: 'Error' });
+                $.jGrowl("Failed to create Subscriptions.", { sticky: false, theme: 'Error' });
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
@@ -586,10 +585,7 @@ jQuery(document).ready(function () {
 
 
     // /Start ## upload_subscriptions #################################################
-    $('.container').on('click', 'button.upload_subscriptions', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-
+    $("#uploadSubscription").click(function () {
         function createUploadWindow() {
             //            var pom = document.createElement('input');
             //            pom.setAttribute('id', 'uploadFile');
@@ -615,7 +611,7 @@ jQuery(document).ready(function () {
             validateJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating download file window. 
+        // If MS Internet Explorer -> special handling for creating download file window.
         if (window.navigator.msSaveOrOpenBlob) {
             createUploadWindowMSExplorer();
         }
@@ -625,18 +621,6 @@ jQuery(document).ready(function () {
         }
     });
     // /END ## upload_subscriptions #################################################
-
-
-    // /Start ## Add Subscription ########################################
-    $('.container').on('click', 'button.btn.btn-success.add_subscription', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        vm.choosen_subscription_template(null);
-        json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
-        populate_json(json_obj_clone, "add");
-    });
-    // /Stop ## Add Subscription ############################################
-
 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
@@ -721,6 +705,9 @@ jQuery(document).ready(function () {
             }
             $('.modal-title').text(title_);
             save_method = save_method_in;
+            $('#modal_form').on('shown.bs.modal', function() {
+            	loadTooltip();
+            });
         }
     }
 
@@ -739,6 +726,7 @@ jQuery(document).ready(function () {
 
     // /Start ## Save Subscription ##########################################
     $('div.modal-footer').on('click', 'button.save_record', function (event) {
+        var error = false;
         event.stopPropagation();
         event.preventDefault();
         var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
@@ -746,39 +734,54 @@ jQuery(document).ready(function () {
             notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
-
+        $('.addSubscriptionErrors').hide();
         //START: Make sure all datatables field has a value
-        if (!(/[a-z]|[A-Z]|[0-9]|[\_]/.test(String(vm.subscription()[0].subscriptionName()).slice(-1)))) {
-            window.logMessages("Only numbers,letters and underscore is valid to type in subscriptionName field.");
-            return;
-        }
-
-        //Currently a free-form field
-        /*
-            if (!(/[a-z]|[A-Z]|[0-9]|[\:\/\.]/.test(String(vm.subscription()[0].notificationMeta()).slice(-1)))) {
-                window.logMessages("Only numbers and letters is valid to type in notificationMeta field.");
-                return;
-            }
-        */
-
-        if (vm.subscription()[0].subscriptionName() == "") {
+        var subscriptionName = String(vm.subscription()[0].subscriptionName());
+        // Validate SubscriptionName field
+        if (subscriptionName == "") {
             window.logMessages("Error: SubscriptionName field must have a value");
-            return;
+            $('#noNameGiven').text("SubscriptionName must not be empty");
+            $('#noNameGiven').show();
+            error = true;
         }
+
+        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
+        var regExpression = /(\W)/g;
+        if ((regExpression.test(subscriptionName))) {
+            var invalidLetters = subscriptionName.match(regExpression);
+            console.log("Invalid characters: [" + invalidLetters + "].")
+            window.logMessages(
+                "Only numbers,letters and underscore is valid to type in subscriptionName "
+                + " field. \nInvalid letters [" + invalidLetters + "].");
+            $('#invalidLetters').text(
+                "Only letters, numbers and underscore allowed! "
+                + "\nInvalid characters: [" + invalidLetters + "]");
+            $('#invalidLetters').show();
+            error = true;
+        }
+
+        // Validate notificationType field
         if (vm.subscription()[0].notificationType() == null) {
-            window.logMessages("Error: notificationType field must boolean a value");
-            return;
+            window.logMessages("Error: notificationType value needs to be set");
+            $('#notificationTypeNotSet').text("> NotificationType must be set");
+            $('#notificationTypeNotSet').show();
+            error = true;
         }
+        // Validate notificationMeta field
         if (vm.subscription()[0].notificationMeta() == "") {
             window.logMessages("Error: notificationMeta field must have a value");
-            return;
+            $('#noNotificationMetaGiven').text("NotificationMeta must not be empty");
+            $('#noNotificationMetaGiven').show();
+            error = true;
         }
+        // Validate repeat field
         if (vm.subscription()[0].repeat() == null) {
-            window.logMessages("Error: repeat field must have a boolean value");
-            return;
+            window.logMessages("Error: repeat field must be selected true or false");
+            $('#repeatNotSet').text("> Repeat must be set");
+            $('#repeatNotSet').show();
+            error = true;
         }
         //END OF: Make sure all datatables field has a value
-
 
         //START: Check of other subscription fields values
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
@@ -787,36 +790,51 @@ jQuery(document).ready(function () {
             if (vm.formpostkeyvaluepairs()) {
                 if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
-                    return;
+                    $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
+                    $('#noNotificationKeyOrValue').show();
+                    error = true;
                 }
             }
             else {
                 if (notificationMessageKeyValuesArray.length !== 1) {
                     window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
-                    return;
+                    $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
+                    $('#notificationMessageKeyValuesArrayToLarge').show();
+                    error = true;
                 }
                 else if (test_key !== '""') {
                     window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
-                    return;
+                    $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
+                    $('#keyInNotificationMessage').show();
+                    error = true;
                 }
                 else if (test_value.replace(/\s/g, "") === '""') {
                     window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
-                    return;
+                    $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
+                    $('#noNotificationMessage').show();
+                    error = true;
                 }
             }
         }
-
 
         var requirementsArray = vm.subscription()[0].requirements();
         for (i = 0; i < requirementsArray.length; i++) {
             var conditionsArray = requirementsArray[i].conditions();
             for (k = 0; k < conditionsArray.length; k++) {
-                var test_me = ko.toJSON(conditionsArray[k].jmespath());
-                if (test_me === '""') {
-                    window.logMessages("Error: jmepath field must have a value");
-                    return;
+                var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
+                if (conditionToTest === '""') {
+                    window.logMessages("Error: JMESPath field must have a value");
+                    $('.emptyCondition').text("Condition must not be empty");
+                    $('.emptyCondition').show();
+                    error = true;
                 }
             }
+        }
+        // If errors return.
+        if (error) {
+            $('#errorExists').text("Required fields not filled or invalid data");
+            $('#errorExists').show();
+            return;
         }
         //END: Check of other subscription fields values
 
@@ -851,9 +869,13 @@ jQuery(document).ready(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {
+                    errors = errors + "\n" + responseJSON[i].reason;
                     $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
                 }
+                $('#serverError').text(errors);
+                $('#serverError').show();
             },
             complete: function () {
                 $('#btnSave').text('save'); //change button text
@@ -916,4 +938,15 @@ jQuery(document).ready(function () {
         });
     });
     // /Stop ## Delete Subscription #########################################
+
+    // Delay display buttons
+    setTimeout(showButtons, 800);
+    function showButtons() {
+        $(".loadingAnimation").hide();
+        $(".subButtons").show();
+    }
+
+    function loadTooltip() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+    }
 });

@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
 var frontendServiceUrl = $('#frontendServiceUrl').text();
+var frontendServiceBackEndPath = "/backend";
 var sendbtn = document.getElementById('switcher').disabled = true;
 function singleInstanceModel(name, host, port, path, https, active) {
 	this.name = ko.observable(name),
@@ -27,7 +28,7 @@ function multipleInstancesModel(data) {
 	self.removeInstance = function() {
 		self.instances.remove(this);
     	$.ajax({
-            url: frontendServiceUrl + "/switch-backend",
+            url: frontendServiceUrl + frontendServiceBackEndPath,
             type: "DELETE",
             data: ko.toJSON(this),
             contentType: 'application/json; charset=utf-8',
@@ -36,7 +37,7 @@ function multipleInstancesModel(data) {
                 window.logMessages(XMLHttpRequest.responseText);
             },
             success: function (responseData, XMLHttpRequest, textStatus) {
-                $.jGrowl("Backend instance was deleted", {sticky: false, theme: 'Notify'});
+                $.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
             }
         });
 	}
@@ -53,8 +54,8 @@ function multipleInstancesModel(data) {
             self.instances.push(instance);
 	    }
 		$.ajax({
-		    url: frontendServiceUrl + "/switch-backend",
-			type: "POST",
+		    url: frontendServiceUrl + frontendServiceBackEndPath,
+			type: "PUT",
 			data: ko.toJSON(self.instances),
 			contentType: 'application/json; charset=utf-8',
 			cache: false,
@@ -62,13 +63,21 @@ function multipleInstancesModel(data) {
 			    window.logMessages(XMLHttpRequest.responseText);
 			},
 			success: function (responseData, XMLHttpRequest, textStatus) {
-			    $(location).attr('href', frontendServiceUrl)
+				console.log("Response from IE front end back end: " + responseData.message);
+				$.getScript( "js/main.js" )
+					.done(function( script, textStatus ) {
+					updateBackEndInstanceList();
+				});
+				$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
+				$("#navbarResponsive").removeClass("show");
+				$("#selectInstances").visible();
+				$("#mainFrame").load("subscriptionpage.html");
 			}
 	    });
 	}
 }
 $.ajax({
-	url: frontendServiceUrl + "/get-instances",
+	url: frontendServiceUrl + frontendServiceBackEndPath,
 	type: "GET",
 	contentType: 'application/json; charset=utf-8',
 	cache: false,

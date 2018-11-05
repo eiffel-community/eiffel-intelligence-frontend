@@ -38,14 +38,14 @@ public class BackEndInformationController {
     @Autowired
     private BackEndInfoirmationControllerUtils backEndInfoContUtils;
 
-    @RequestMapping(value = "/get-instances", method = RequestMethod.GET)
+    @RequestMapping(value = "/backend", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request for instances.");
         ResponseEntity<String> response = backEndInfoContUtils.handleRequestForInstances(request);
         return response;
     }
 
-    @RequestMapping(value = "/switch-backend", method = RequestMethod.POST)
+    @RequestMapping(value = "/backend", method = RequestMethod.PUT)
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to switch back end.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToSwitchBackEnd(request);
@@ -53,16 +53,16 @@ public class BackEndInformationController {
 
     }
 
-    @RequestMapping(value = "/switch-backend", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/backend", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to delete back end.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToDeleteBackEnd(request);
         return response;
     }
 
-    @RequestMapping(value = "/add-instances", method = RequestMethod.POST)
+    @RequestMapping(value = "/backend", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
-        LOG.debug("Recieved request to add instance.");
+        LOG.debug("Recieved request to add back end.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToAddBackEnd(request);
         return response;
     }

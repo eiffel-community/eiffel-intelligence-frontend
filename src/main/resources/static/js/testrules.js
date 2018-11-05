@@ -24,6 +24,7 @@ jQuery(document).ready(
     function() {
 
       frontendServiceUrl = $('#frontendServiceUrl').text();
+      loadTooltip();
 
       // /Start ## Global AJAX Sender function ##################################
       var AjaxHttpSender = function() {
@@ -136,6 +137,7 @@ jQuery(document).ready(
                 doc.open();
                 doc.write(divText);
                 doc.close();
+                myWindow.focus();
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -156,7 +158,7 @@ jQuery(document).ready(
 
         // This function for adding rule
         self.addRule = function() {
-          self.rulesBindingList.push(ruleTemplate);
+          self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
         };
         // This function for adding rule
         self.addEvent = function() {
@@ -198,6 +200,7 @@ jQuery(document).ready(
 	        vm.rulesBindingList = ko.observableArray(rulesList);
 	        ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
 	        ko.applyBindings(vm, $("#submitButton")[0]);
+	        loadTooltip();
 	      };
 	    reader.readAsText(subscriptionFile);
       }
@@ -223,6 +226,7 @@ jQuery(document).ready(
             $('.eventsListDisplay > div:gt(0)').remove();
             vm.eventsBindingList = ko.observableArray(eventsList);
             ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
+            loadTooltip();
           };
           reader.readAsText(subscriptionFile);
        }
@@ -235,10 +239,10 @@ jQuery(document).ready(
         };
         
         var pomEvents = document.getElementById('uploadEventsFile');
-          pomEvents.onchange = function uploadFinished() {
+        pomEvents.onchange = function uploadFinished() {
             var subscriptionFile = pomEvents.files[0];
             validateEventsJsonAndCreateSubscriptions(subscriptionFile);
-          };
+        };
           
       //Upload events list json data
       $(".container").on("click", "button.upload_rules", function(event) {
@@ -261,15 +265,8 @@ jQuery(document).ready(
           validateRulesJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating
-        // download
-        // file window.
-        if (window.navigator.msSaveOrOpenBlob) {
-          createUploadWindowMSExplorer();
-        } else {
-          // HTML5 Download File window handling
-          createRulesUploadWindow();
-        }
+        // HTML5 Download File window handling
+        createRulesUploadWindow();
       });
 
       //Upload list of events json data
@@ -293,14 +290,9 @@ jQuery(document).ready(
           validateEventsJsonAndCreateSubscriptions(file);
         }
 
-        // If MS Internet Explorer -> special handling for creating download
-        // file window.
-        if (window.navigator.msSaveOrOpenBlob) {
-          createUploadWindowMSExplorer();
-        } else {
-          // HTML5 Download File window handling
-          createUploadWindow();
-        }
+
+        // HTML5 Download File window handling
+        createUploadWindow();
       });
 
       // Download the modified rule
@@ -353,7 +345,6 @@ jQuery(document).ready(
       
    // Start to check is backend Test Rule service status
     	var isEnabled = true;
-    	console.log('Here are my modifications');
     	$.ajax({
     		url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
     		contentType : 'application/json; charset=utf-8',
@@ -383,5 +374,9 @@ jQuery(document).ready(
           var parent = document.getElementById('testRule');
           parent.appendChild(overlay);
     	}
+
+        function loadTooltip() {
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+        }
     }
 );
