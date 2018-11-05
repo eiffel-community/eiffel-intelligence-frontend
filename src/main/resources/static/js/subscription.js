@@ -284,6 +284,7 @@ jQuery(document).ready(function () {
     var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
         "responsive": true,
+        "autoWidth": false,
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
