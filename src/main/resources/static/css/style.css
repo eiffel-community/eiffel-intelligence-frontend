@@ -65,7 +65,11 @@
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
 .cursor-pointer {
-	cursor: pointer;
+    cursor: pointer;
+}
+.tooltip-inner {
+    text-align: left;
+    max-width: 410px;
 }
 .badge-rounded {
 	display: inline-block;

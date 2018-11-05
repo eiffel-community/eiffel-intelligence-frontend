@@ -98,7 +98,6 @@
                                 </div>
                             </div>
 
-
                             <!-- ko foreach:  subscription -->
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
@@ -132,26 +131,32 @@
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used once the subscription triggers."/>
-                                <div>
-                                    <select id="notificationType" data-bind="options: $root.notificationType_in,
-                                               optionsText: 'text',
-                                               optionsValue: 'value',
-                                               value: $data.notificationType,
-                                               optionsCaption: 'Choose...'"></select>
-                                    <font class="addSubscriptionErrors" id="notificationTypeNotSet" color="red" size="2" />
+
+                                <div data-bind="foreach: $root.notificationTypeOptionsList" >
+                                    <label>
+                                        <input type="radio" name="restOrMailGroup" data-bind="
+                                                attr: {value: value}, checked: $root.selectedNotificationType" />
+                                        <span data-bind="text: label"></span>
+                                    </label>
                                 </div>
                             </div>
 
-                            <div class="form-group" data-bind="visible: notificationType() == 'REST_POST'">
+                            <div class="form-group" data-bind="if: $root.selectedNotificationType() == 'REST_POST'">
                                 <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
-                                <img class="cursor-pointer" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                    title="This decides the Content-Type of the POST body."/>
-                                <div>
-                                    <select style="width: 100%" data-bind="options: $root.restPostBodyType_in,
-                                               optionsText: 'text',
-                                               optionsValue: 'value',
-                                               value: $data.restPostBodyMediaType,
-                                               optionsCaption: 'Choose...'"></select>
+                                <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                    title=
+                                        "This decides the Content-Type of the POST body. <br>
+                                        Default is: <br>
+                                        RAW BODY: JSON (application/json) <br>
+                                        You may select: <br>
+                                        FORM/POST Parameters (application/x-www-form-urlencoded)"/>
+
+                                <div data-bind="foreach: $root.restPostBodyTypesList" >
+                                    <label>
+                                        <input type="checkbox" id="" name="checkbox" data-bind="
+                                                attr: {value: value}, checked: $root.selectedRestPostBodyMediaType" />
+                                        <span data-bind="text: label"></span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -169,17 +174,17 @@
                                 <div>
                                     <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
-                                <table width="100%">
+                                <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                                <table width="100%" data-bind="if: $root.selectedRestPostBodyMediaType() && $root.selectedNotificationType() == 'REST_POST'">
                                     <thead>
                                         <tr>
-                                            <th width="20%" data-bind="visible: $root.formpostkeyvaluepairs">Key</th>
-                                            <th width="70%">Value</th>
-                                            <th width="10%" data-bind="visible: $root.formpostkeyvaluepairs"></th>
+                                            <th width="20%">Key</th>
+                                            <th width="80%">Value</th>
                                         </tr>
                                     </thead>
                                     <tbody data-bind="foreach: notificationMessageKeyValues">
                                         <tr>
-                                            <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
+                                            <td valign="top">
                                                 <input data-bind="textInput:$data.formkey" name="formkey" placeholder="Key" class="form-control"
                                                     type="text" />
                                             </td>
@@ -187,22 +192,38 @@
                                                 <textarea data-bind="textInput:$data.formvalue" name="formvalue"
                                                     placeholder="Value" class="form-control" type="text"></textarea>
                                             </td>
-                                            <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
-                                                <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); },
-                                                    clickBubble: false, style:{visibility:($root.subscription()[0].notificationMessageKeyValues().length > 1) ? 'visible' : 'hidden'}"
-                                                    class="btn btn-danger float-right" style="visibility:hidden">
-                                                    <i class="glyphicon glyphicon-trash"></i>Delete
+                                            <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
+                                                <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}, clickBubble: false"
+                                                    class="btn btn-danger float-rightmr-1 mr-1 mt-1 d-inline-block">
+                                                    <i class="fa fa-fw fa-trash"></i>
                                                 </button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-
-                                <div data-bind="visible: $root.formpostkeyvaluepairs" class="pt-1 d-flex justify-content-end">
-                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success">
-                                        <i class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
+                                <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                                <div data-bind="if: $root.selectedRestPostBodyMediaType() && $root.selectedNotificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
+                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
+                                        Add
+                                        <i class="fa fa-fw fa-plus"></i>
                                     </button>
                                 </div>
+                                <!-- Table for RAW BODY: JSON (application/json) -->
+                                <table width="100%" data-bind="if: !$root.selectedRestPostBodyMediaType() || $root.selectedNotificationType() == 'MAIL'">
+                                    <thead>
+                                        <tr>
+                                            <th width="100%">Raw Body</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: notificationMessageKeyValues">
+                                        <tr>
+                                            <td>
+                                                <textarea data-bind="textInput:$data.formvalue" name="formvalue"
+                                                    placeholder="Raw JSON body." class="form-control" type="text"></textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                             <div class="pt-3 form-group">
@@ -233,7 +254,9 @@
 
                                 <div class="pt-1 d-flex justify-content-end">
                                     <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" class="btn btn-success">
-                                        <i class="glyphicon glyphicon-plus float-right"></i> Generate Key/Value Pair</button>
+                                        Generate Key/Value Pair
+                                        <i class="fa fa-fw fa-plus"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -296,24 +319,27 @@
                                         <div class="pt-1 d-flex justify-content-end">
 
                                             <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
-                                                class="btn btn-danger">
-                                                <i class="glyphicon glyphicon-trash"></i>Delete
+                                                class="btn btn-danger mr-1 mt-1 d-inline-block">
+                                                Delete
+                                                <i class="fa fa-fw fa-trash"></i>
                                             </button>
                                         </div>
                                     </div>
                                     <!-- /ko -->
 
                                     <div class="pt-1 d-flex justify-content-end">
-                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" class="btn btn-success">
-                                            <i class="glyphicon glyphicon-plus"></i> Add Condition
+                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
+                                            Add Condition
+                                            <i class="fa fa-fw fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <!-- /ko -->
 
-                            <button id="addRequirement" data-bind="click: $root.add_requirement, clickBubble: false" class="btn btn-success float-left">
-                                <i class="glyphicon glyphicon-plus float-right"></i> Add Requirement
+                            <button id="addRequirement" data-bind="click: $root.add_requirement, clickBubble: false" class="btn btn-success float-left mr-1 mt-1 d-inline-block">
+                                Add Requirement
+                                <i class="fa fa-fw fa-plus"></i>
                             </button>
 
                             <!-- /ko -->
@@ -324,11 +350,13 @@
                 <div class="modal-footer">
                     <font class="addSubscriptionErrors" id="errorExists" color="red" size="3" />
                     <font class="addSubscriptionErrors" id="serverError" color="red" size="3" />
-                    <button type="button" id="btnSave" class="btn btn-primary save_record">
+                    <button type="button" id="btnSave" class="btn btn-primary save_record mr-1 mt-1 d-inline-block">
                         Save
+                        <i class="fa fa-fw fa-save"></i>
                     </button>
-                    <button type="button" id="btnFormCancel" class="btn btn-danger" data-dismiss="modal">
+                    <button type="button" id="btnFormCancel" class="btn btn-danger mr-1 mt-1 d-inline-block" data-dismiss="modal">
                         Cancel
+                        <i class="fa fa-fw fa-ban"></i>
                     </button>
                 </div>
             </div>

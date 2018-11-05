@@ -103,6 +103,7 @@ jQuery(document).ready(function () {
 
     // Subscription model
     function subscription_model(data) {
+        console.log("subscription_model executed!");
 
         this.created = ko.observable(data.created);
         this.notificationMeta = ko.observable(data.notificationMeta);
@@ -119,12 +120,14 @@ jQuery(document).ready(function () {
         this.token = ko.observable(data.token);
 
         this.notificationType.subscribe(function (new_value) {
+            console.log("This is just odd!");
             vm.subscription()[0].restPostBodyMediaType(null);
             vm.formpostkeyvaluepairs(false);
 
         });
 
         this.restPostBodyMediaType.subscribe(function (new_value) {
+            console.log("restPostBodyMediaType Changed!");
             if (new_value == "application/x-www-form-urlencoded") {
                 vm.formpostkeyvaluepairs(true);
             } else {
@@ -149,10 +152,10 @@ jQuery(document).ready(function () {
 
     // ViewModel - SubscriptionViewModel
     var SubscriptionViewModel = function () {
+        console.log("SubscriptionViewModel executed!");
         var self = this;
         self.subscription = ko.observableArray([]);
-        self.subscription_templates_in = ko.observableArray(
-            [
+        self.subscription_templates_in = ko.observableArray([
                 { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
@@ -161,22 +164,23 @@ jQuery(document).ready(function () {
         self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
-        self.notificationType_in = ko.observableArray(
-            [
-                { "text": "REST_POST", value: "REST_POST" },
-                { "text": "MAIL", value: "MAIL" }
+        self.notificationTypeOptionsList = ko.observableArray([
+                {"value": "REST_POST", "label": "REST_POST"},
+                {"value": "MAIL", "label": "MAIL"}
             ]);
-        self.authenticationType_in = ko.observableArray(
-            [
-                { "text": "NO_AUTH", value: "NO_AUTH" },
-                { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
+        self.selectedNotificationType = ko.observable("REST_POST");
+        // { "value": "application/json", "label": "RAW BODY" },
+        self.restPostBodyTypesList = ko.observableArray([
+                { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters" }
             ]);
-
-
-        self.restPostBodyType_in = ko.observableArray(
-            [
+        self.selectedRestPostBodyMediaType = ko.observable(false);
+        self.restPostBodyType_in = ko.observableArray([
                 { "text": "FORM/POST Parameters (application/x-www-form-urlencoded)", value: "application/x-www-form-urlencoded" },
                 { "text": "RAW BODY: JSON (application/json)", value: "application/json" }
+            ]);
+        self.authenticationType_in = ko.observableArray([
+                { "text": "NO_AUTH", value: "NO_AUTH" },
+                { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
             ]);
 
         self.repeat_in = ko.observableArray([true, false]);
