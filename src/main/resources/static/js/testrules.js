@@ -236,12 +236,14 @@ jQuery(document).ready(
         pomRules.onchange = function uploadFinished() {
             var subscriptionFile = pomRules.files[0];
             validateRulesJsonAndCreateSubscriptions(subscriptionFile);
+            $(this).val("");
         };
         
         var pomEvents = document.getElementById('uploadEventsFile');
         pomEvents.onchange = function uploadFinished() {
             var subscriptionFile = pomEvents.files[0];
             validateEventsJsonAndCreateSubscriptions(subscriptionFile);
+            $(this).val("");
         };
           
       //Upload events list json data
