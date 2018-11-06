@@ -164,20 +164,20 @@ jQuery(document).ready(function () {
         self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
+
         self.notificationTypeOptionsList = ko.observableArray([
                 {"value": "REST_POST", "label": "REST_POST"},
                 {"value": "MAIL", "label": "MAIL"}
             ]);
+        // Default notificationTypeOptionsList value is set to:
         self.selectedNotificationType = ko.observable("REST_POST");
-        // { "value": "application/json", "label": "RAW BODY" },
-        self.restPostBodyTypesList = ko.observableArray([
+
+        self.useFormPostParameters = ko.observableArray(
                 { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters" }
-            ]);
-        self.selectedRestPostBodyMediaType = ko.observable(false);
-        self.restPostBodyType_in = ko.observableArray([
-                { "text": "FORM/POST Parameters (application/x-www-form-urlencoded)", value: "application/x-www-form-urlencoded" },
-                { "text": "RAW BODY: JSON (application/json)", value: "application/json" }
-            ]);
+            );
+        // Default useFormPostParameters value is set to:
+        self.useFormPostParametersSelected = ko.observable(false);
+
         self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },
                 { "text": "BASIC_AUTH", value: "BASIC_AUTH" }

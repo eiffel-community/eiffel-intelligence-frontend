@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
     <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
     <div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
 
@@ -26,10 +25,10 @@
         </div>
         <div class="col-md-3 col-4 d-flex justify-content-end">
             <div id="btnEIContainer">
-	            <button title="EI connection status check is refreshed continuously. Click button to force check status."
-	                type="button" id="btnEIConnection" class="btn btnEIConnectionStatus white-space-normal">
-	                <i class="glyphicon"></i>EI Backend Status
-	            </button>
+                <button title="EI connection status check is refreshed continuously. Click button to force check status."
+                    type="button" id="btnEIConnection" class="btn btnEIConnectionStatus white-space-normal">
+                    <i class="glyphicon"></i>EI Backend Status
+                </button>
             </div>
         </div>
     </div>
@@ -94,7 +93,7 @@
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: choosen_subscription_template,
-                                               optionsCaption: 'Choose...'"></select>
+                                               optionsCaption: 'Select template to fill the fields.'"></select>
                                 </div>
                             </div>
 
@@ -130,7 +129,7 @@
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                    title="This is the notification method used once the subscription triggers."/>
+                                    title="This is the notification method used when the subscription is triggered."/>
 
                                 <div data-bind="foreach: $root.notificationTypeOptionsList" >
                                     <label>
@@ -151,10 +150,10 @@
                                         You may select: <br>
                                         FORM/POST Parameters (application/x-www-form-urlencoded)"/>
 
-                                <div data-bind="foreach: $root.restPostBodyTypesList" >
+                                <div >
                                     <label>
                                         <input type="checkbox" id="" name="checkbox" data-bind="
-                                                attr: {value: value}, checked: $root.selectedRestPostBodyMediaType" />
+                                                attr: {$root.useFormPostParameters.value: $root.useFormPostParameters.value}, checked: $root.useFormPostParametersSelected" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -175,7 +174,7 @@
                                     <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
                                 <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="if: $root.selectedRestPostBodyMediaType() && $root.selectedNotificationType() == 'REST_POST'">
+                                <table width="100%" data-bind="if: $root.useFormPostParametersSelected && $root.selectedNotificationType() == 'REST_POST'">
                                     <thead>
                                         <tr>
                                             <th width="20%">Key</th>
@@ -202,14 +201,14 @@
                                     </tbody>
                                 </table>
                                 <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <div data-bind="if: $root.selectedRestPostBodyMediaType() && $root.selectedNotificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
+                                <div data-bind="if: $root.useFormPostParametersSelected && $root.selectedNotificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
                                     <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
                                         Add
                                         <i class="fa fa-fw fa-plus"></i>
                                     </button>
                                 </div>
                                 <!-- Table for RAW BODY: JSON (application/json) -->
-                                <table width="100%" data-bind="if: !$root.selectedRestPostBodyMediaType() || $root.selectedNotificationType() == 'MAIL'">
+                                <table width="100%" data-bind="if: !$root.useFormPostParametersSelected || $root.selectedNotificationType() == 'MAIL'">
                                     <thead>
                                         <tr>
                                             <th width="100%">Raw Body</th>
@@ -303,10 +302,10 @@
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
 
-										<!-- ko if: $index() !== 0 -->
-										<h5 style="display:inline">AND</h5>
-										<!-- /ko -->
-										<label class="control-label font-weight-bold">Condition</label>
+                                        <!-- ko if: $index() !== 0 -->
+                                        <h5 style="display:inline">AND</h5>
+                                        <!-- /ko -->
+                                        <label class="control-label font-weight-bold">Condition</label>
 
                                         <!-- ko ifnot: $data.jmespath() -->
                                         <div>
@@ -372,14 +371,6 @@
         </div>
     </div>
     <!-- End Bootstrap modal -->
-
-
-    <!--
-  <code class="hint mt15">DEBUG INFO</code>
-<div data-bind = "visible: subscription().length > 0" >
-    <p data-bind="text: ko.toJSON(subscription())"></p>
-</div>
--->
 
     <script type="text/javascript" src="js/subscription.js"></script>
     <script type="text/javascript" src="js/downloadFile.js"></script>
