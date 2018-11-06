@@ -103,8 +103,8 @@ jQuery(document).ready(function () {
 
     // Subscription model
     function subscription_model(data) {
-        console.log("subscription_model executed!");
-
+        console.log("___________________ START ______________________");
+        console.log("This: " + this);
         this.created = ko.observable(data.created);
         this.notificationMeta = ko.observable(data.notificationMeta);
         this.notificationType = ko.observable(data.notificationType);
@@ -116,29 +116,34 @@ jQuery(document).ready(function () {
         this.subscriptionName = ko.observable(data.subscriptionName);
         this.aggregationtype = ko.observable(data.aggregationtype);
         this.authenticationType = ko.observable(data.authenticationType);
-        this.userName = ko.observable(data.userName);
+        this.userName = ko.observable("Pelle_Svanslös"); // data.userName
         this.token = ko.observable(data.token);
 
-        this.notificationType.subscribe(function (new_value) {
-            console.log("This is just odd!");
-            vm.subscription()[0].restPostBodyMediaType(null);
+        // Default to REST_POST
+        if (this.notificationType() == "" || this.notificationType() == null) {
+            this.notificationType = ko.observable("REST_POST");
+        }
+
+        if (this.restPostBodyMediaType() == "application/x-www-form-urlencoded") {
+            this.useFormPostParametersSelected = ko.observable(true);
+            vm.formpostkeyvaluepairs(true);
+        } else {
+            this.useFormPostParametersSelected = ko.observable(false);
             vm.formpostkeyvaluepairs(false);
-
+        }
+        this.subscriptionName.subscribe(function (name_input) {
+            validateName(name_input);
         });
-
-        this.restPostBodyMediaType.subscribe(function (new_value) {
-            console.log("restPostBodyMediaType Changed!");
-            if (new_value == "application/x-www-form-urlencoded") {
-                vm.formpostkeyvaluepairs(true);
-            } else {
-                vm.formpostkeyvaluepairs(false);
-            }
-        });
+        console.log("___________________ END ______________________");
     }
 
     function formdata_model(formdata) {
+        console.log("Form data change!");
         this.formkey = ko.observable(formdata.formkey);
         this.formvalue = ko.observable(formdata.formvalue);
+        this.formvalue.subscribe(function (newText) {
+            console.log(newText);
+         });
     }
 
     function conditions_model(condition) {
@@ -152,8 +157,8 @@ jQuery(document).ready(function () {
 
     // ViewModel - SubscriptionViewModel
     var SubscriptionViewModel = function () {
-        console.log("SubscriptionViewModel executed!");
         var self = this;
+        console.log("self: " + self);
         self.subscription = ko.observableArray([]);
         self.subscription_templates_in = ko.observableArray([
                 { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
@@ -164,29 +169,24 @@ jQuery(document).ready(function () {
         self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
-
         self.notificationTypeOptionsList = ko.observableArray([
                 {"value": "REST_POST", "label": "REST_POST"},
                 {"value": "MAIL", "label": "MAIL"}
             ]);
         // Default notificationTypeOptionsList value is set to:
-        self.selectedNotificationType = ko.observable("REST_POST");
-
-        self.useFormPostParameters = ko.observableArray(
+        self.notificationType = ko.observable("REST_POST");
+        self.useFormPostParameters = ko.observableArray([
                 { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters" }
-            );
+            ]);
         // Default useFormPostParameters value is set to:
         self.useFormPostParametersSelected = ko.observable(false);
-
         self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },
                 { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
             ]);
-
         self.repeat_in = ko.observableArray([true, false]);
 
         self.add_requirement = function (data, event) {
-
             var conditions_array = [];
             conditions_array.push(new jmespath_model({ "jmespath": ko.observable("") }));
             self.subscription()[0].requirements().push(new conditions_model(conditions_array));
@@ -198,7 +198,6 @@ jQuery(document).ready(function () {
             self.subscription.valueHasMutated();
             loadTooltip();
         };
-
 
         self.choosen_subscription_template.subscribe(function (template_var) {
             if (self.choosen_subscription_template() != null) { // only execute if value exists
@@ -727,6 +726,30 @@ jQuery(document).ready(function () {
     }
     // /Stop ## pupulate JSON  ###########################################
 
+    function validateName(subscriptionName) {
+        $('#invalidLetters').hide();
+        $('#noNameGiven').hide();
+
+        // Validate SubscriptionName field
+        if (subscriptionName == "") {
+            $('#noNameGiven').text("SubscriptionName must not be empty");
+            $('#noNameGiven').show();
+            return true;
+        }
+
+        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
+        var regExpression = /(\W)/g;
+        if ((regExpression.test(subscriptionName))) {
+            var invalidLetters = subscriptionName.match(regExpression);
+            console.log("Invalid characters: [" + invalidLetters + "].")
+            $('#invalidLetters').text(
+                "Only letters, numbers and underscore allowed! "
+                + "\nInvalid characters: [" + invalidLetters + "]");
+            $('#invalidLetters').show();
+            return true;
+        }
+        return false;
+    }
 
     // /Start ## Save Subscription ##########################################
     $('div.modal-footer').on('click', 'button.save_record', function (event) {
@@ -741,26 +764,7 @@ jQuery(document).ready(function () {
         $('.addSubscriptionErrors').hide();
         //START: Make sure all datatables field has a value
         var subscriptionName = String(vm.subscription()[0].subscriptionName());
-        // Validate SubscriptionName field
-        if (subscriptionName == "") {
-            window.logMessages("Error: SubscriptionName field must have a value");
-            $('#noNameGiven').text("SubscriptionName must not be empty");
-            $('#noNameGiven').show();
-            error = true;
-        }
-
-        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var regExpression = /(\W)/g;
-        if ((regExpression.test(subscriptionName))) {
-            var invalidLetters = subscriptionName.match(regExpression);
-            console.log("Invalid characters: [" + invalidLetters + "].")
-            window.logMessages(
-                "Only numbers,letters and underscore is valid to type in subscriptionName "
-                + " field. \nInvalid letters [" + invalidLetters + "].");
-            $('#invalidLetters').text(
-                "Only letters, numbers and underscore allowed! "
-                + "\nInvalid characters: [" + invalidLetters + "]");
-            $('#invalidLetters').show();
+        if (validateName(subscriptionName)) {
             error = true;
         }
 

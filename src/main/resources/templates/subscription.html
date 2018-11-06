@@ -105,7 +105,7 @@
                                     <font class="addSubscriptionErrors" id="invalidLetters" color="red" size="2" />
                                     <font class="addSubscriptionErrors" id="noNameGiven" color="red" size="2" />
 
-                                    <input id="subscriptionNameInput" data-bind="textInput:$data.subscriptionName"
+                                    <input id="subscriptionNameInput" data-bind="textInput:$data.subscriptionName, onChange"
                                         name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
                                     <span class="help-block"></span>
                                 </div>
@@ -130,17 +130,16 @@
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used when the subscription is triggered."/>
-
                                 <div data-bind="foreach: $root.notificationTypeOptionsList" >
                                     <label>
-                                        <input type="radio" name="restOrMailGroup" data-bind="
-                                                attr: {value: value}, checked: $root.selectedNotificationType" />
+                                        <input type="radio" name="restOrMailGroup3" data-bind="
+                                                attr: {value: value}, checked: $parent.notificationType" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
                             </div>
 
-                            <div class="form-group" data-bind="if: $root.selectedNotificationType() == 'REST_POST'">
+                            <div class="form-group" data-bind="if: $data.notificationType() == 'REST_POST'">
                                 <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
                                 <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
@@ -148,12 +147,13 @@
                                         Default is: <br>
                                         RAW BODY: JSON (application/json) <br>
                                         You may select: <br>
-                                        FORM/POST Parameters (application/x-www-form-urlencoded)"/>
+                                        FORM/POST Parameters (application/x-www-form-urlencoded)" />
 
-                                <div >
+                                <!-- Form post checkbox -->
+                                <div data-bind="foreach: $root.useFormPostParameters" >
                                     <label>
-                                        <input type="checkbox" id="" name="checkbox" data-bind="
-                                                attr: {$root.useFormPostParameters.value: $root.useFormPostParameters.value}, checked: $root.useFormPostParametersSelected" />
+                                        <input type="checkbox" name="checkbox" data-bind="
+                                                attr: {value: value}, checked: $parent.useFormPostParametersSelected" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -174,7 +174,7 @@
                                     <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
                                 <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="if: $root.useFormPostParametersSelected && $root.selectedNotificationType() == 'REST_POST'">
+                                <table width="100%" data-bind="if: $data.useFormPostParametersSelected() && $data.notificationType() == 'REST_POST'">
                                     <thead>
                                         <tr>
                                             <th width="20%">Key</th>
@@ -184,11 +184,11 @@
                                     <tbody data-bind="foreach: notificationMessageKeyValues">
                                         <tr>
                                             <td valign="top">
-                                                <input data-bind="textInput:$data.formkey" name="formkey" placeholder="Key" class="form-control"
+                                                <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
                                                     type="text" />
                                             </td>
                                             <td>
-                                                <textarea data-bind="textInput:$data.formvalue" name="formvalue"
+                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
                                                     placeholder="Value" class="form-control" type="text"></textarea>
                                             </td>
                                             <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
@@ -201,14 +201,14 @@
                                     </tbody>
                                 </table>
                                 <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <div data-bind="if: $root.useFormPostParametersSelected && $root.selectedNotificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
+                                <div data-bind="if: $data.useFormPostParametersSelected() && $data.notificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
                                     <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
                                         Add
                                         <i class="fa fa-fw fa-plus"></i>
                                     </button>
                                 </div>
                                 <!-- Table for RAW BODY: JSON (application/json) -->
-                                <table width="100%" data-bind="if: !$root.useFormPostParametersSelected || $root.selectedNotificationType() == 'MAIL'">
+                                <table width="100%" data-bind="if: !$data.useFormPostParametersSelected() || $data.notificationType() == 'MAIL'">
                                     <thead>
                                         <tr>
                                             <th width="100%">Raw Body</th>
@@ -217,7 +217,7 @@
                                     <tbody data-bind="foreach: notificationMessageKeyValues">
                                         <tr>
                                             <td>
-                                                <textarea data-bind="textInput:$data.formvalue" name="formvalue"
+                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
                                                     placeholder="Raw JSON body." class="form-control" type="text"></textarea>
                                             </td>
                                         </tr>
