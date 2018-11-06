@@ -202,7 +202,10 @@ jQuery(document).ready(
             }
 
           };
-          reader.readAsText(subscriptionFile);
+          
+          if (subscriptionFile != null){
+            reader.readAsText(subscriptionFile);
+          }
        }
 
         //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
