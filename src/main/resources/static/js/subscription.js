@@ -98,7 +98,6 @@ jQuery(document).ready(function () {
     });
     // END OF EI Backend Server check #########################################
 
-
     // /Start ## Knockout ####################################################
 
     // Subscription model
@@ -146,7 +145,6 @@ jQuery(document).ready(function () {
         this.jmespath = ko.observable(jmespath.jmespath);
     }
 
-
     // ViewModel - SubscriptionViewModel
     var SubscriptionViewModel = function () {
         var self = this;
@@ -181,21 +179,6 @@ jQuery(document).ready(function () {
 
         self.repeat_in = ko.observableArray([true, false]);
 
-        self.add_requirement = function (data, event) {
-
-            var conditions_array = [];
-            conditions_array.push(new jmespath_model({ "jmespath": ko.observable("") }));
-            self.subscription()[0].requirements().push(new conditions_model(conditions_array));
-
-            // Force update
-            var data = self.subscription().slice(0);
-            self.subscription([]);
-            self.subscription(data);
-            self.subscription.valueHasMutated();
-            loadTooltip();
-        };
-
-
         self.choosen_subscription_template.subscribe(function (template_var) {
             if (self.choosen_subscription_template() != null) { // only execute if value exists
                 json_obj_clone = JSON.parse(JSON.stringify(template_vars[template_var]));
@@ -203,16 +186,8 @@ jQuery(document).ready(function () {
             }
         });
 
-
         self.addNotificationMsgKeyValuePair = function (data, event) {
             self.subscription()[0].notificationMessageKeyValues.push(new formdata_model(defaultFormKeyValuePair));
-
-            // Force update
-            var data = self.subscription().slice(0);
-            self.subscription([]);
-            self.subscription(data);
-            self.subscription.valueHasMutated();
-            loadTooltip();
         };
 
         self.addNotificationMsgKeyValuePairAuth = function (data, event) {
@@ -222,15 +197,7 @@ jQuery(document).ready(function () {
 
                 })
             });
-            //        	   ko.observable(value);
-            // Force update
-            var data = self.subscription().slice(0);
-            self.subscription([]);
-            self.subscription(data);
-            self.subscription.valueHasMutated();
-            loadTooltip();
         };
-
 
         self.getUTCDate = function (epochtime) {
             var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
@@ -238,6 +205,19 @@ jQuery(document).ready(function () {
             return d;  // Is now a date (in client time zone)
         }
 
+        self.add_requirement = function (data, event) {
+
+            var conditions_array = [];
+            conditions_array.push(new jmespath_model({ "jmespath": ko.observable("") }));
+            self.subscription()[0].requirements().push(new conditions_model(conditions_array));
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+            self.subscription.valueHasMutated();
+            closeTooltip();
+            loadTooltip();
+        };
 
         self.add_condition = function (data, event, requirement_index) {
             self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions().push(new jmespath_model({ "jmespath": ko.observable("") }));
@@ -246,9 +226,9 @@ jQuery(document).ready(function () {
             self.subscription([]);
             self.subscription(data);
             self.subscription.valueHasMutated();
+            closeTooltip();
             loadTooltip();
         };
-
 
         self.delete_condition = function (data, event, requirement_item, condition_index, requirement_index) {
             self.subscription()[0].requirements()[ko.toJSON(requirement_index)].conditions.remove(data);
@@ -257,13 +237,11 @@ jQuery(document).ready(function () {
             }
         };
 
-
         self.delete_NotificationMsgKeyValuePair = function (data, event, index) {
             if (self.subscription()[0].notificationMessageKeyValues().length > 1) {
                 self.subscription()[0].notificationMessageKeyValues.remove(self.subscription()[0].notificationMessageKeyValues()[ko.toJSON(index)]);
             }
         };
-
 
         self.delete_BulkNotificationMsgKeyValuePair = function () {
             $.each(self.subscription()[0].notificationMessageKeyValues(), function (index, value) {
@@ -273,7 +251,6 @@ jQuery(document).ready(function () {
             });
         };
     };
-
 
     // Start to check is backend secured
     var isSecured = false;
@@ -307,6 +284,7 @@ jQuery(document).ready(function () {
     var currentUser = localStorage.getItem("currentUser");
     table = $('#table').DataTable({
         "responsive": true,
+        "autoWidth": false,
         "processing": true, //Feature control the processing indicator.
         "serverSide": false, //Feature control DataTables' server-side processing mode.
         "fixedHeader": true,
@@ -415,7 +393,6 @@ jQuery(document).ready(function () {
 	});
     // /Stop ## Datatables ##################################################
 
-
     // /Start ## check all subscriptions ####################################
     $("#check-all").click(function () {
         $(".data-check").prop('checked', $(this).prop('checked'));
@@ -435,7 +412,6 @@ jQuery(document).ready(function () {
     	reload_table();
     });
     // /Stop ## Reload Table#################################################
-
 
     // /Start ## Bulk delete#################################################
     $("#bulkDelete").click(function () {
@@ -499,8 +475,6 @@ jQuery(document).ready(function () {
     });
     // /Stop ## Bulk delete##################################################
 
-
-
     function getTemplate() {
         var req = new XMLHttpRequest();
         req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
@@ -521,8 +495,6 @@ jQuery(document).ready(function () {
         getTemplate();
     });
     // /END ## get_subscription_template #################################################
-
-
 
     function validateJsonAndCreateSubscriptions(subscriptionFile) {
         var reader = new FileReader();
@@ -582,7 +554,6 @@ jQuery(document).ready(function () {
         var ajaxHttpSender = new AjaxHttpSender();
         ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
     }
-
 
     // /Start ## upload_subscriptions #################################################
     $("#uploadSubscription").click(function () {
@@ -684,7 +655,6 @@ jQuery(document).ready(function () {
                 for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
                     item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
                 }
-
 
                 return new subscription_model(item[0]);
             });
@@ -883,18 +853,11 @@ jQuery(document).ready(function () {
             }
         };
 
-
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()), callback);
-
-
-
     });
     // /Stop ## Save Subscription ###########################################
-
-
-
 
     // /Start ## Delete Subscription ########################################
     $('#table').on('click', 'tbody tr td button.delete_record', function (event) {
@@ -923,7 +886,6 @@ jQuery(document).ready(function () {
             }
         };
 
-
         $.confirm({
             title: 'Confirm!',
             content: 'Are you sure delete this subscription?',
@@ -948,5 +910,9 @@ jQuery(document).ready(function () {
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+    }
+
+    function closeTooltip() {
+    	$('.tooltip').tooltip('hide');
     }
 });

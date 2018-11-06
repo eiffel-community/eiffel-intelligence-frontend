@@ -189,7 +189,7 @@
                                             </td>
                                             <td valign="top" data-bind="visible: $root.formpostkeyvaluepairs">
                                                 <button data-bind="click: function(data, event) { $root.delete_NotificationMsgKeyValuePair(data, event, $index()); },
-                                                    clickBubble: false, style:{visibility:($root.subscription()[0].notificationMessageKeyValues().length > 1) ? 'visible' : 'hidden'}"
+                                                    style:{visibility:($root.subscription()[0].notificationMessageKeyValues().length > 1) ? 'visible' : 'hidden'}"
                                                     class="btn btn-danger float-right" style="visibility:hidden">
                                                     <i class="glyphicon glyphicon-trash"></i>Delete
                                                 </button>
@@ -199,7 +199,7 @@
                                 </table>
 
                                 <div data-bind="visible: $root.formpostkeyvaluepairs" class="pt-1 d-flex justify-content-end">
-                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success">
+                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair" class="btn btn-success">
                                         <i class="glyphicon glyphicon-plus float-right"></i> Add Key/Value Pair
                                     </button>
                                 </div>
@@ -232,7 +232,7 @@
                                 </div>
 
                                 <div class="pt-1 d-flex justify-content-end">
-                                    <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" class="btn btn-success">
+                                    <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth" class="btn btn-success">
                                         <i class="glyphicon glyphicon-plus float-right"></i> Generate Key/Value Pair</button>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@
                                             placeholder="jmespath" class="form-control" type="text"></textarea>
                                         <div class="pt-1 d-flex justify-content-end">
 
-                                            <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
+                                            <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }"
                                                 class="btn btn-danger">
                                                 <i class="glyphicon glyphicon-trash"></i>Delete
                                             </button>
@@ -304,7 +304,7 @@
                                     <!-- /ko -->
 
                                     <div class="pt-1 d-flex justify-content-end">
-                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" class="btn btn-success">
+                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }" class="btn btn-success">
                                             <i class="glyphicon glyphicon-plus"></i> Add Condition
                                         </button>
                                     </div>
@@ -312,7 +312,7 @@
                             </div>
                             <!-- /ko -->
 
-                            <button id="addRequirement" data-bind="click: $root.add_requirement, clickBubble: false" class="btn btn-success float-left">
+                            <button id="addRequirement" data-bind="click: $root.add_requirement" class="btn btn-success float-left">
                                 <i class="glyphicon glyphicon-plus float-right"></i> Add Requirement
                             </button>
 
