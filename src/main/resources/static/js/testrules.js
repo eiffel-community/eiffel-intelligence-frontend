@@ -204,8 +204,6 @@ jQuery(document).ready(
             }
 
           };
-          console.log(subscriptionFile);
-          console.log('...');
           reader.readAsText(subscriptionFile);
        }
 
