@@ -175,7 +175,7 @@ jQuery(document).ready(
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
 
-      function validateJSONAndUpload(subscriptionFile, type) {
+      function validateJSONAndUpload(subscriptionFile, isRules) {
           var reader = new FileReader();
           reader.onload = function() {
             var fileContent = reader.result;
@@ -193,14 +193,12 @@ jQuery(document).ready(
 
             var list = JSON.parse(fileContent);
 
-            if (type == true) {
+            if (isRules == true) {
                 vm.rulesBindingList([]);
                 vm.rulesBindingList(list);
-                vm.rulesBindingList.valueHasMutated();
             } else {
                 vm.eventsBindingList([]);
                 vm.eventsBindingList(list);
-                vm.eventsBindingList.valueHasMutated();
             }
 
           };
