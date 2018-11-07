@@ -101,10 +101,9 @@ jQuery(document).ready(function () {
 
     // /Start ## Knockout ####################################################
 
+    var lastPressedRestPostBodyMediaType = "";
     // Subscription model
     function subscription_model(data) {
-        console.log("___________________ START ______________________");
-        console.log("This: " + this);
         this.created = ko.observable(data.created);
         this.notificationMeta = ko.observable(data.notificationMeta);
         this.notificationType = ko.observable(data.notificationType);
@@ -113,36 +112,68 @@ jQuery(document).ready(function () {
         this.notificationMessageKeyValuesAuth = ko.observableArray(data.notificationMessageKeyValuesAuth);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
-        this.subscriptionName = ko.observable(data.subscriptionName);
+        this.subscriptionName = ko.observable(data.subscriptionName).extend({ notify: 'always' });
         this.aggregationtype = ko.observable(data.aggregationtype);
         this.authenticationType = ko.observable(data.authenticationType);
-        this.userName = ko.observable("Pelle_Svanslös"); // data.userName
+        this.userName = ko.observable(data.userName);
         this.token = ko.observable(data.token);
+
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
             this.notificationType = ko.observable("REST_POST");
         }
 
+        // Default to Repeat off
+        if (this.repeat() == "" || this.repeat() == null || this.repeat == undefined) {
+            this.repeat = ko.observable(false);
+        }
+
+        // Default to RAW BODY
         if (this.restPostBodyMediaType() == "application/x-www-form-urlencoded") {
-            this.useFormPostParametersSelected = ko.observable(true);
             vm.formpostkeyvaluepairs(true);
         } else {
-            this.useFormPostParametersSelected = ko.observable(false);
+            this.restPostBodyMediaType = ko.observable("application/json");
             vm.formpostkeyvaluepairs(false);
         }
+
+        // Subscriptions START
+        // Subscription notificationType
+        this.notificationType.subscribe(function (new_value) {
+            if (new_value == "MAIL") {
+                vm.formpostkeyvaluepairs(false);
+                this.restPostBodyMediaType = ko.observable("");
+            }
+            if (new_value == "REST_POST") {
+                vm.formpostkeyvaluepairs(true);
+                this.restPostBodyMediaType = ko.observable(lastPressedRestPostBodyMediaType);
+            }
+        });
+
+        // Subscription restPostBodyMediaType
+        this.restPostBodyMediaType.subscribe(function (new_value) {
+            // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
+            lastPressedRestPostBodyMediaType = new_value;
+            if (new_value == "application/x-www-form-urlencoded") {
+                vm.formpostkeyvaluepairs(true);
+            } else {
+                vm.formpostkeyvaluepairs(false);
+            }
+        });
+
+        // Subscription subscriptionName
         this.subscriptionName.subscribe(function (name_input) {
             validateName(name_input);
         });
-        console.log("___________________ END ______________________");
+        // Subscriptions END
+
     }
 
     function formdata_model(formdata) {
-        console.log("Form data change!");
         this.formkey = ko.observable(formdata.formkey);
         this.formvalue = ko.observable(formdata.formvalue);
         this.formvalue.subscribe(function (newText) {
-            console.log(newText);
+            // TODO implement form data check.
          });
     }
 
@@ -158,7 +189,6 @@ jQuery(document).ready(function () {
     // ViewModel - SubscriptionViewModel
     var SubscriptionViewModel = function () {
         var self = this;
-        console.log("self: " + self);
         self.subscription = ko.observableArray([]);
         self.subscription_templates_in = ko.observableArray([
                 { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
@@ -169,22 +199,21 @@ jQuery(document).ready(function () {
         self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
-        self.notificationTypeOptionsList = ko.observableArray([
+        self.notificationType_in = ko.observableArray([
                 {"value": "REST_POST", "label": "REST_POST"},
                 {"value": "MAIL", "label": "MAIL"}
             ]);
-        // Default notificationTypeOptionsList value is set to:
-        self.notificationType = ko.observable("REST_POST");
-        self.useFormPostParameters = ko.observableArray([
-                { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters" }
+        self.restPostBodyMediaType_in = ko.observableArray([
+                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters"},
+                {"value": "application/json", "label": "RAW BODY: JSON"}
             ]);
-        // Default useFormPostParameters value is set to:
-        self.useFormPostParametersSelected = ko.observable(false);
         self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },
                 { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
             ]);
-        self.repeat_in = ko.observableArray([true, false]);
+        self.repeat_in = ko.observableArray([
+            { "value": true, "label": "Activate Repeat" }
+            ]);
 
         self.add_requirement = function (data, event) {
             var conditions_array = [];
@@ -729,11 +758,13 @@ jQuery(document).ready(function () {
     function validateName(subscriptionName) {
         $('#invalidLetters').hide();
         $('#noNameGiven').hide();
+        $('#subscriptionNameInput').removeClass("is-invalid");
 
         // Validate SubscriptionName field
         if (subscriptionName == "") {
             $('#noNameGiven').text("SubscriptionName must not be empty");
             $('#noNameGiven').show();
+            $('#subscriptionNameInput').addClass("is-invalid");
             return true;
         }
 
@@ -746,6 +777,7 @@ jQuery(document).ready(function () {
                 "Only letters, numbers and underscore allowed! "
                 + "\nInvalid characters: [" + invalidLetters + "]");
             $('#invalidLetters').show();
+            $('#subscriptionNameInput').addClass("is-invalid");
             return true;
         }
         return false;
@@ -846,8 +878,6 @@ jQuery(document).ready(function () {
         }
         //END: Check of other subscription fields values
 
-        var id = ko.toJSON(vm.subscription()[0].subscriptionName).trim();
-
         var url;
         var type;
         if (save_method === 'add') {  // Add new
@@ -858,8 +888,10 @@ jQuery(document).ready(function () {
             url = frontendServiceUrl + "/subscriptions";
             type = "PUT";
         }
-
-
+        // Ensure MAIL notificationType has no restPostBodyMediaType
+        if (vm.subscription()[0].notificationType() == "MAIL") {
+            vm.subscription()[0].restPostBodyMediaType("");
+        }
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
@@ -890,7 +922,6 @@ jQuery(document).ready(function () {
                 $('#btnSave').attr('disabled', false); //set button enable
             }
         };
-
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();

@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-
     <link href="css/style.css" rel="stylesheet" />
 
     <title>Eiffel Intelligence Subscription Handling</title>
@@ -130,10 +129,12 @@
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used when the subscription is triggered."/>
-                                <div data-bind="foreach: $root.notificationTypeOptionsList" >
+
+                                <!-- Form post radio buttons -->
+                                <div data-bind="foreach: $root.notificationType_in" >
                                     <label>
-                                        <input type="radio" name="restOrMailGroup3" data-bind="
-                                                attr: {value: value}, checked: $parent.notificationType" />
+                                        <input type="radio" name="restOrMailGroup" data-bind="
+                                                attr: {value: value}, checked: $parent.notificationType, onChange" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -150,10 +151,10 @@
                                         FORM/POST Parameters (application/x-www-form-urlencoded)" />
 
                                 <!-- Form post checkbox -->
-                                <div data-bind="foreach: $root.useFormPostParameters" >
+                                <div data-bind="foreach: $root.restPostBodyMediaType_in" >
                                     <label>
-                                        <input type="checkbox" name="checkbox" data-bind="
-                                                attr: {value: value}, checked: $parent.useFormPostParametersSelected" />
+                                        <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
+                                                attr: {value: value}, checked: $parent.restPostBodyMediaType, onChange" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -174,7 +175,7 @@
                                     <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
                                 <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="if: $data.useFormPostParametersSelected() && $data.notificationType() == 'REST_POST'">
+                                <table width="100%" data-bind="if: $root.formpostkeyvaluepairs()">
                                     <thead>
                                         <tr>
                                             <th width="20%">Key</th>
@@ -201,14 +202,14 @@
                                     </tbody>
                                 </table>
                                 <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <div data-bind="if: $data.useFormPostParametersSelected() && $data.notificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
+                                <div data-bind="if: $root.formpostkeyvaluepairs() && $data.notificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
                                     <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
                                         Add
                                         <i class="fa fa-fw fa-plus"></i>
                                     </button>
                                 </div>
                                 <!-- Table for RAW BODY: JSON (application/json) -->
-                                <table width="100%" data-bind="if: !$data.useFormPostParametersSelected() || $data.notificationType() == 'MAIL'">
+                                <table width="100%" data-bind="if: !$root.formpostkeyvaluepairs() || $data.notificationType() == 'MAIL'">
                                     <thead>
                                         <tr>
                                             <th width="100%">Raw Body</th>
@@ -225,6 +226,7 @@
                                 </table>
                             </div>
 
+                            <!--  AUTHENTICATION  -->
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Authorization</label>
                                 <div>
@@ -235,7 +237,6 @@
                                                optionsCaption: 'Choose...'"></select>
                                 </div>
                             </div>
-
                             <div class="p-1 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                                 <label class="pt-1 control-label font-weight-bold">Username</label>
                                 <div>
@@ -259,21 +260,23 @@
                                 </div>
                             </div>
 
-
+                            <!--  REPEAT FLAG  -->
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Repeat</label>
                                 <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Instructs whether the subscription should be re-triggered for new additions to the aggregated object. If false only first time the conditions are fulfilled
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
-                                <div>
-                                    <select id="selectRepeat" data-bind="options: $root.repeat_in,
-                                               optionsText: $data.repeat(),
-                                               value: $data.repeat,
-                                               optionsCaption: 'Choose...'"></select>
-                                    <font class="addSubscriptionErrors" id="repeatNotSet" color="red" size="2" />
-                                    <span class="help-block"></span>
+                                <div data-bind="foreach: $root.repeat_in" >
+                                    <label class="switch">
+                                        <input type="checkbox" name="checkbox" data-bind="
+                                                attr: {value: value}, checked: $parent.repeat, onChange" />
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p class="d-inline" data-bind="text: $parent.repeat() ? 'On' : 'Off'"></p>
                                 </div>
                             </div>
+
+                            <!--  NOTIFICATION META  -->
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
                                 <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
@@ -286,7 +289,7 @@
                                 </div>
                             </div>
 
-
+                            <!--  REQUIREMENTS  -->
                             <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                             <div class="pl-0 ml-0">
                                 <!-- ko if: $index() !== 0 -->
