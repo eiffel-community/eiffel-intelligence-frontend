@@ -30,7 +30,7 @@
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-	                   <button class="btn btn-primary add_rule rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind()">
+	                   <button class="btn btn-primary add_rule rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind($data, ruleTemplate)">
                            Add Rule
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
@@ -46,7 +46,7 @@
                     <div class="elementDiv" data-bind="attr: { id: 'Rule' + $index() }">
                         <div class="d-flex flex-nowrap">
                             <div class="col-11">
-                                <textarea class="form-control formRules" rows="10" data-bind="text : $root.parsedToString($data)"></textarea>
+                                <textarea class="form-control formRules" rows="10" data-bind="textInput: data"></textarea>
                             </div>
                             <div>
                                 <h6>
@@ -71,7 +71,7 @@
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-                       <button class="btn btn-primary add_event rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind()">
+                       <button class="btn btn-primary add_event rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind($data, {})">
                            Add Event
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
@@ -87,7 +87,7 @@
                     <div class="elementDiv" data-bind="attr: { id: 'Events' + $index() }">
                         <div class="d-flex flex-nowrap">
                             <div class="col-11">
-                                <textarea class="form-control formEvents" rows="10" data-bind="text : $root.parsedToString($data)"></textarea>
+                                <textarea class="form-control formEvents" rows="10" data-bind="textInput: data"></textarea>
                             </div>
                             <div>
                                 <h6>
