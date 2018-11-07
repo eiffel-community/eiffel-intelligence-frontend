@@ -4,17 +4,17 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 	// /Start ## Knockout ####################################################
 	function loginModel() {
 		this.userState = {
-			username: ko.observable(""),
+			ldapUserName: ko.observable(""),
 			password: ko.observable("")
 		};
 		this.remember = ko.observable(false);
 
 		this.login = function(userState, remember) {
 			var dataJSON = ko.toJSON(userState);
-			if(JSON.parse(dataJSON).username == "" || JSON.parse(dataJSON).password == "") {
+			if(JSON.parse(dataJSON).ldapUserName == "" || JSON.parse(dataJSON).password == "") {
 				window.logMessages("Username and password fields cannot be empty");
 			} else {
-				var token = window.btoa(JSON.parse(dataJSON).username + ":" + JSON.parse(dataJSON).password);
+				var token = window.btoa(JSON.parse(dataJSON).ldapUserName + ":" + JSON.parse(dataJSON).password);
 				sendLoginRequest(frontendServiceUrl + "/auth/login", "GET", token);
 			}
 		}
@@ -45,7 +45,7 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 	function doIfUserLoggedIn(name) {
 		localStorage.removeItem("currentUser");
 		localStorage.setItem("currentUser", name);
-		$("#userName").text(name);
+		$("#ldapUserName").text(name);
 		$("#loginBlock").hide();
 		$("#logoutBlock").show();
 	}

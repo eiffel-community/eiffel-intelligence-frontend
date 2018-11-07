@@ -75,14 +75,14 @@ jQuery(document).ready(function () {
     function doIfUserLoggedIn() {
         var currentUser = localStorage.getItem("currentUser");
         if (currentUser != "") {
-            $("#userName").text(currentUser);
+            $("#ldapUserName").text(currentUser);
             $("#logoutBlock").show();
             $(".show_if_authorized").show();
         }
     }
     function doIfUserLoggedOut() {
         localStorage.removeItem("currentUser");
-        $("#userName").text("Guest");
+        $("#ldapUserName").text("Guest");
         $("#loginBlock").show();
         $("#logoutBlock").hide();
         $(".show_if_authorized").hide();
@@ -115,7 +115,7 @@ jQuery(document).ready(function () {
         this.aggregationtype = ko.observable(data.aggregationtype);
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
-        this.token = ko.observable(data.token);
+        this.password = ko.observable(data.password);
 
         this.notificationType.subscribe(function (new_value) {
             vm.subscription()[0].restPostBodyMediaType(null);
@@ -158,6 +158,11 @@ jQuery(document).ready(function () {
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.formpostkeyvaluepairs = ko.observable(false);
+        self.mode = ko.observable("");
+        self.showPassword = ko.observable(false);
+        self.setShowPassword = function (boolean){
+            self.showPassword(boolean);
+        }
         self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in = ko.observableArray(
             [
@@ -193,7 +198,7 @@ jQuery(document).ready(function () {
         self.addNotificationMsgKeyValuePairAuth = function (data, event) {
             data.notificationMessageKeyValues.push({
                 "formkey": "Authorization", "formvalue": ko.computed(function () {
-                    return "Basic " + btoa(data.userName() + ":" + data.token());
+                    return "Basic " + btoa(data.userName() + ":" + data.password());
 
                 })
             });
@@ -321,7 +326,7 @@ jQuery(document).ready(function () {
                 "targets": [2],
                 "orderable": true,
                 "title": "UserName",
-                "data": "userName",
+                "data": "ldapUserName",
                 "defaultContent": ""
             },
             {
@@ -370,10 +375,16 @@ jQuery(document).ready(function () {
                 "title": "Action",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    if (isSecured == false || (row.userName == currentUser && row.userName != null)) {
+
+                    if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
                         return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
                             + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
                             + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                    } else if (isSecured == false) {
+                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
+
                     } else {
                         return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
                     }
@@ -635,6 +646,13 @@ jQuery(document).ready(function () {
 
     // /Start ## populate JSON  ###########################################
     function populate_json(data, save_method_in) {
+        vm.mode(save_method_in);
+
+        if (save_method_in == "edit" || save_method_in == "view"){
+            vm.showPassword(false);
+        } else {
+            vm.showPassword(true);
+        }
         var returnData = [data];
         if (returnData.length > 0) {
             vm.subscription([]);
@@ -667,6 +685,7 @@ jQuery(document).ready(function () {
                 title_ = 'Edit Subscription';
                 addEditMode();
             } else if (save_method_in === "add") {
+
                 title_ = 'Add Subscription';
                 addEditMode();
             } else {

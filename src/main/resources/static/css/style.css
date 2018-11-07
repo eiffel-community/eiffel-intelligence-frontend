@@ -64,6 +64,7 @@
     height: 45px;
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
+<<<<<<< HEAD
 .cursor-pointer {
 	cursor: pointer;
 }
@@ -74,6 +75,13 @@
 	white-space: nowrap;
 	border-radius: .25rem;
 }
+=======
+
+.showPasswordButton{
+    margin-top: 10px;
+}
+
+>>>>>>> 9181adb... Fix default behavior of authorization in add subscription
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
