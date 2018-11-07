@@ -82,7 +82,7 @@ jQuery(document).ready(
           self.rulesBindingList.splice(context.$index(), 1);
           if (self.rulesBindingList().length == 0) {
             window.logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
-            self.rulesBindingList.push(ruleTemplate);
+            self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
           }
         };
 
@@ -169,44 +169,13 @@ jQuery(document).ready(
 
       var vm = new AppViewModel([]);
       ko.applyBindings(vm, $("#submitButton")[0]);
-      vm.rulesBindingList.push(ruleTemplate);
+      vm.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
       vm.eventsBindingList.push({});
 
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
 
-      function validateRulesJsonAndCreateSubscriptions(subscriptionFile) {
-	      var reader = new FileReader();
-	      reader.onload = function() {
-	        var fileContent = reader.result;
-	        var jsonLintResult = "";
-	        try {
-	          jsonLintResult = jsonlint.parse(fileContent);
-	        } catch (e) {
-	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	            return false;
-	        }
-	        $.jGrowl('JSON Format Check Succeeded', {
-	          sticky : false,
-	          theme : 'Notify'
-	        });
-
-	        var rulesList = JSON.parse(fileContent);
-	        ko.cleanNode($("#testRulesDOMObject")[0]);
-	        ko.cleanNode($("#submitButton")[0]);
-	        $("#testRulesDOMObject").css('min-height', $(".navbar-sidenav").height() - 180);
-	        vm.rulesBindingList.removeAll();
-	        $('.rulesListDisplay > div:gt(0)').remove();
-	        vm.rulesBindingList = ko.observableArray(rulesList);
-	        ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
-	        ko.applyBindings(vm, $("#submitButton")[0]);
-	        closeTooltip();
-	        loadTooltip();
-	      };
-	    reader.readAsText(subscriptionFile);
-      }
-
-      function validateEventsJsonAndCreateSubscriptions(subscriptionFile) {
+      function validateJSONAndUpload(subscriptionFile, isRules) {
           var reader = new FileReader();
           reader.onload = function() {
             var fileContent = reader.result;
@@ -221,30 +190,36 @@ jQuery(document).ready(
               sticky : false,
               theme : 'Notify'
             });
-            var eventsList = JSON.parse(fileContent);
-            ko.cleanNode($("#testEventsDOMObject")[0]);
-            vm.eventsBindingList.removeAll();
-            $('.eventsListDisplay > div:gt(0)').remove();
-            vm.eventsBindingList = ko.observableArray(eventsList);
-            ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
-            closeTooltip();
-            loadTooltip();
+
+            var list = JSON.parse(fileContent);
+
+            if (isRules == true) {
+                vm.rulesBindingList([]);
+                vm.rulesBindingList(list);
+            } else {
+                vm.eventsBindingList([]);
+                vm.eventsBindingList(list);
+            }
+
           };
-          reader.readAsText(subscriptionFile);
+          
+          if (subscriptionFile != null){
+            reader.readAsText(subscriptionFile);
+          }
        }
 
         //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
         var pomRules = document.getElementById('uploadRulesFile');
         pomRules.onchange = function uploadFinished() {
             var subscriptionFile = pomRules.files[0];
-            validateRulesJsonAndCreateSubscriptions(subscriptionFile);
+            validateJSONAndUpload(subscriptionFile, true);
             $(this).val("");
         };
         
         var pomEvents = document.getElementById('uploadEventsFile');
         pomEvents.onchange = function uploadFinished() {
             var subscriptionFile = pomEvents.files[0];
-            validateEventsJsonAndCreateSubscriptions(subscriptionFile);
+            validateJSONAndUpload(subscriptionFile, false);
             $(this).val("");
         };
           
@@ -266,7 +241,7 @@ jQuery(document).ready(
         function createUploadWindowMSExplorer() {
           $('#upload_rules').click();
           var file = $('#upload_rules').prop('files')[0];
-          validateRulesJsonAndCreateSubscriptions(file);
+          validateJSONAndUpload(file, true);
         }
 
         // HTML5 Download File window handling
@@ -291,7 +266,7 @@ jQuery(document).ready(
         function createUploadWindowMSExplorer() {
           $('#upload_events').click();
           var file = $('#upload_events').prop('files')[0];
-          validateEventsJsonAndCreateSubscriptions(file);
+          validateJSONAndUpload(file, false);
         }
 
 
