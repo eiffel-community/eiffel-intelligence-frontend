@@ -101,14 +101,21 @@ public class SubscriptionPage extends PageBaseClass {
         dropdown.selectByVisibleText(value);
     }
 
-    public String getValueFromSelect() {
+    public Object getValueFromRadio(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("notificationType")));
-        WebElement selectNotificationType = driver.findElement(By.id("notificationType"));
+                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement selectNotificationType = driver.findElement(By.id(id));
+        return "Hej mamma!";
+    }
+
+    public String getValueFromSelect(String id) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement selectNotificationType = driver.findElement(By.id(id));
         Select dropdown = new Select(selectNotificationType);
         return dropdown.getFirstSelectedOption().getText();
     }
-    
+
     public String getValueFromSelectRepeat() {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("selectRepeat")));
@@ -172,13 +179,13 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement viewBtn = driver.findElement(By.className("close"));
         viewBtn.click();
     }
-    
+
     public void clickAddConditionBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addCondition")));
         WebElement viewBtn = driver.findElement(By.id("addCondition"));
         viewBtn.click();
     }
-    
+
     public void clickAddRequirementBtn(){
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addRequirement")));
         WebElement viewBtn = driver.findElement(By.id("addRequirement"));
@@ -231,8 +238,9 @@ public class SubscriptionPage extends PageBaseClass {
         }
         return true;
     }
-    
+
     public int countElements(String id) {
-    	return driver.findElements(By.id(id)).size();   	
+    	return driver.findElements(By.id(id)).size();
     }
+
 }

@@ -166,7 +166,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
         assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("MAIL"))));
+                .until((webdriver) -> (subscriptionPage.getValueFromSelect("notificationTypeRadio").equals("MAIL"))));
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com"))));
 
@@ -175,7 +175,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String tempPost = "REST POST (Raw Body : JSON)";
         subscriptionPage.selectDropdown(selectID, tempPost);
         assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelect().equals("REST_POST"))));
+                .until((webdriver) -> (subscriptionPage.getValueFromSelect("notificationTypeRadio").equals("REST_POST"))));
         assert (new WebDriverWait(driver, 10).until(
                 (webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
 
@@ -183,7 +183,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // Parameterized Job Trigger" and verify
         String tempJenkins = "Jenkins Pipeline Parameterized Job Trigger";
         subscriptionPage.selectDropdown(selectID, tempJenkins);
-        assertEquals("REST_POST", subscriptionPage.getValueFromSelect());
+        assertEquals("REST_POST", subscriptionPage.getValueFromSelect("notificationTypeRadio"));
         assertEquals("http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
                 subscriptionPage.getValueFromElement());
 
@@ -207,18 +207,18 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.addFieldValue(userNameID, userName);
         subscriptionPage.addFieldValue(tokenID, token);
         String kvID = "kvID";
-        subscriptionPage.clickKVbtn(kvID);        
+        subscriptionPage.clickKVbtn(kvID);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
-        
+
         // Test "Repeat" dropdown: Select repeat value as "true" and then verify the selected value
         subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
         assert (new WebDriverWait(driver, 10)
-              .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
-        
+              .until((webdriver) -> (subscriptionPage.getValueFromSelect("repeatCheckbox").equals(repeatValue))));
+
         // Test "Add Condition" button: click add condition button and check that it adds an additional "condition" field
         subscriptionPage.clickAddConditionBtn();
         assertEquals(2, subscriptionPage.countElements(conditionFieldID));
-        
+
         // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
         subscriptionPage.clickAddRequirementBtn();
         assertEquals(2, subscriptionPage.countElements(requirementFieldID));
@@ -227,7 +227,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // the selected value
         subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
         assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelectRepeat().equals(repeatValue))));
+                .until((webdriver) -> (subscriptionPage.getValueFromSelect("repeatCheckbox").equals(repeatValue))));
 
         // Test save subscription form: add subscription name
         // as "selenium_test_subscription" and then click "save" button

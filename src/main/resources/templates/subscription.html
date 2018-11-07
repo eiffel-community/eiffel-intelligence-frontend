@@ -130,8 +130,8 @@
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used when the subscription is triggered."/>
 
-                                <!-- Form post radio buttons -->
-                                <div data-bind="foreach: $root.notificationType_in" >
+                                <!-- Rest or Mail radio buttons -->
+                                <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
                                     <label>
                                         <input type="radio" name="restOrMailGroup" data-bind="
                                                 attr: {value: value}, checked: $parent.notificationType, onChange" />
@@ -150,10 +150,10 @@
                                         You may select: <br>
                                         FORM/POST Parameters (application/x-www-form-urlencoded)" />
 
-                                <!-- Form post checkbox -->
+                                <!-- Form post  radio buttons -->
                                 <div data-bind="foreach: $root.restPostBodyMediaType_in" >
                                     <label>
-                                        <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
+                                        <input id="restPostBodyMediaTypeRadio" type="radio" name="restPostBodyMediaTypeGroup" data-bind="
                                                 attr: {value: value}, checked: $parent.restPostBodyMediaType, onChange" />
                                         <span data-bind="text: label"></span>
                                     </label>
@@ -268,7 +268,7 @@
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
                                 <div data-bind="foreach: $root.repeat_in" >
                                     <label class="switch">
-                                        <input type="checkbox" name="checkbox" data-bind="
+                                        <input id="repeatCheckbox" type="checkbox" name="repeatCheckbox" data-bind="
                                                 attr: {value: value}, checked: $parent.repeat, onChange" />
                                         <span class="slider round"></span>
                                     </label>
