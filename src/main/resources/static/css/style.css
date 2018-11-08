@@ -78,17 +78,15 @@
     max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
-.modal-width-fit {
-    max-width: -moz-max-content;
-    max-width: -webkit-max-content;
-    max-width: -o-max-content;
-    max-width: -ms-max-content;
+.modal-width-aggregated {
+    max-width: 750px;
 }
 .pre {
     display: block;
     font-family: monospace;
     white-space: pre;
-    margin: 1em 0;
+    margin: 1em;
+    font-size: medium;
 }
 /* Safari */
 @-webkit-keyframes spin {
