@@ -74,6 +74,10 @@
 	white-space: nowrap;
 	border-radius: .25rem;
 }
+.modal-height-fit {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
