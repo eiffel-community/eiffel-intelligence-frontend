@@ -130,7 +130,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
-                                <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-placement="top"
                                     title="This is the notification method used once the subscription triggers."/>
                                 <div>
                                     <select id="notificationType" data-bind="options: $root.notificationType_in,
@@ -144,7 +144,7 @@
 
                             <div class="form-group" data-bind="visible: notificationType() == 'REST_POST'">
                                 <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
-                                <img class="cursor-pointer" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                <img class="cursor-pointer" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-placement="top"
                                     title="This decides the Content-Type of the POST body."/>
                                 <div>
                                     <select style="width: 100%" data-bind="options: $root.restPostBodyType_in,
@@ -208,7 +208,7 @@
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Authorization</label>
                                 <div>
-                                    <select id="selectAuth" data-toggle="tooltip" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
+                                    <select id="selectAuth" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
                                         optionsText: 'text', optionsValue: 'value', value: authenticationType">
                                     </select>
                                 </div>
@@ -217,7 +217,7 @@
                             <div class="p-1 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                                 <label class="pt-1 control-label font-weight-bold">Username</label>
                                 <div>
-                                    <input id="userNameInput" data-toggle="tooltip" title="Enter user name" data-bind="textInput:userName" name="userName"
+                                    <input id="userNameInput" title="Enter user name" data-bind="textInput:userName" name="userName"
                                         placeholder="userName" class="form-control" type="text" />
                                     <span class="help-block"></span>
                                 </div>
@@ -225,7 +225,7 @@
                                 <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Password*</label>
                                 
                                 <div>
-                                    <input id="passwordInput" data-toggle="tooltip" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password" name="password" placeholder="password"
+                                    <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password" name="password" placeholder="password"
                                         class="form-control" type="password" />
  
 									<div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
@@ -240,7 +240,7 @@
 
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Repeat</label>
-                                <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-placement="top"
                                     title="Instructs whether the subscription should be re-triggered for new additions to the aggregated object. If false only first time the conditions are fulfilled
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
                                 <div>
@@ -254,7 +254,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
-                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-placement="top"
                                     title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
                                 <div>
                                     <font class="addSubscriptionErrors" id="noNotificationMetaGiven" color="red" size="2" />
@@ -270,7 +270,7 @@
                                 <!-- ko if: $index() !== 0 -->
                                 <h5>OR</h5>
                                 <!-- /ko -->
-                                <img class="cursor-pointer" data-toggle="tooltip" data-placement="top" alt="Requirement Information" src="assets/images/information.png"
+                                <img class="cursor-pointer" data-placement="top" alt="Requirement Information" src="assets/images/information.png"
                                     title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups."/>
                             </div>
                             <div class="p-1 border border-primary form-group">                            

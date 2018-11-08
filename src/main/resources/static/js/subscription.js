@@ -195,15 +195,6 @@ jQuery(document).ready(function () {
             self.subscription()[0].notificationMessageKeyValues.push(new formdata_model(defaultFormKeyValuePair));
         };
 
-        self.addNotificationMsgKeyValuePairAuth = function (data, event) {
-            data.notificationMessageKeyValues.push({
-                "formkey": "Authorization", "formvalue": ko.computed(function () {
-                    return "Basic " + btoa(data.userName() + ":" + data.password());
-
-                })
-            });
-        };
-
         self.getUTCDate = function (epochtime) {
             var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
             d.setUTCMilliseconds(epochtime);
@@ -380,11 +371,6 @@ jQuery(document).ready(function () {
                         return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
                             + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
                             + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else if (isSecured == false) {
-                        return '<button id="view-' + data.subscriptionName + '" data-toggle="tooltip" title="View subscription" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" data-toggle="tooltip" title="Edit subscription" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" data-toggle="tooltip" title="Delete subscription from EI" class="btn btn-sm btn-danger delete_record">Delete</button>';
-
                     } else {
                         return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
                     }
