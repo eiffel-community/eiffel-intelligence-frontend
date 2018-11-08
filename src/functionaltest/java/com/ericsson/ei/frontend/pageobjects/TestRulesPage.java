@@ -140,8 +140,8 @@ public class TestRulesPage extends PageBaseClass {
     }
 
     public String getAggregatedResultData() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("aggregatedresultData")));
-        WebElement aggregatedResultDataElement = driver.findElement(By.id("aggregatedresultData"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("aggregatedObjectContent")));
+        WebElement aggregatedResultDataElement = driver.findElement(By.id("aggregatedObjectContent"));
         return aggregatedResultDataElement.getAttribute("textContent").replaceAll("[\\n ]", "");
     }
 }
