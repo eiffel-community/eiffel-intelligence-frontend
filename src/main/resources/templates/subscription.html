@@ -193,7 +193,7 @@
                                                     placeholder="Value" class="form-control" type="text"></textarea>
                                             </td>
                                             <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
-                                                <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}, clickBubble: false"
+                                                <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}"
                                                     class="btn btn-danger float-rightmr-1 mr-1 mt-1 d-inline-block">
                                                     <i class="fa fa-fw fa-trash"></i>
                                                 </button>
@@ -203,7 +203,7 @@
                                 </table>
                                 <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
                                 <div data-bind="if: $root.formpostkeyvaluepairs() && $data.notificationType() == 'REST_POST'"  class="pt-1 d-flex justify-content-end">
-                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
+                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair" class="btn btn-success mr-1 mt-1 d-inline-block">
                                         Add
                                         <i class="fa fa-fw fa-plus"></i>
                                     </button>
@@ -253,7 +253,7 @@
                                 </div>
 
                                 <div class="pt-1 d-flex justify-content-end">
-                                    <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth, clickBubble: false" class="btn btn-success">
+                                    <button data-bind="click: $root.addNotificationMsgKeyValuePairAuth" class="btn btn-success">
                                         Generate Key/Value Pair
                                         <i class="fa fa-fw fa-plus"></i>
                                     </button>
@@ -320,7 +320,7 @@
                                             placeholder="jmespath" class="form-control" type="text"></textarea>
                                         <div class="pt-1 d-flex justify-content-end">
 
-                                            <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }, clickBubble: false"
+                                            <button data-bind="click: function(data, event) { $root.delete_condition(data, event, requirements_item , $index(), $parentContext.$index() ); }"
                                                 class="btn btn-danger mr-1 mt-1 d-inline-block">
                                                 Delete
                                                 <i class="fa fa-fw fa-trash"></i>
@@ -330,7 +330,7 @@
                                     <!-- /ko -->
 
                                     <div class="pt-1 d-flex justify-content-end">
-                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }, clickBubble: false" class="btn btn-success mr-1 mt-1 d-inline-block">
+                                        <button id="addCondition" data-bind="click: function(data, event) { $root.add_condition(data, event, $index()); }" class="btn btn-success mr-1 mt-1 d-inline-block">
                                             Add Condition
                                             <i class="fa fa-fw fa-plus"></i>
                                         </button>
@@ -339,7 +339,7 @@
                             </div>
                             <!-- /ko -->
 
-                            <button id="addRequirement" data-bind="click: $root.add_requirement, clickBubble: false" class="btn btn-success float-left mr-1 mt-1 d-inline-block">
+                            <button id="addRequirement" data-bind="click: $root.add_requirement" class="btn btn-success float-left mr-1 mt-1 d-inline-block">
                                 Add Requirement
                                 <i class="fa fa-fw fa-plus"></i>
                             </button>

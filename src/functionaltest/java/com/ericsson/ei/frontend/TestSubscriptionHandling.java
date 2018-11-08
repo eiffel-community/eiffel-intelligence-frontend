@@ -16,7 +16,7 @@ import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
-public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
+public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
@@ -37,7 +37,7 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
     private JavascriptExecutor js;
 
     @Test
-    public void testSubscription() throws Exception {
+    public void testSubscriptionHandlingWithLDAPEnabled() throws Exception {
         // Open index page.
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
