@@ -134,7 +134,7 @@
                                 <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
                                     <label>
                                         <input type="radio" name="restOrMailGroup" data-bind="
-                                                attr: {value: value}, checked: $parent.notificationType, onChange" />
+                                                attr: {value: value, id: id}, checked: $parent.notificationType, onChange" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -153,8 +153,8 @@
                                 <!-- Form post  radio buttons -->
                                 <div data-bind="foreach: $root.restPostBodyMediaType_in" >
                                     <label>
-                                        <input id="restPostBodyMediaTypeRadio" type="radio" name="restPostBodyMediaTypeGroup" data-bind="
-                                                attr: {value: value}, checked: $parent.restPostBodyMediaType, onChange" />
+                                        <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
+                                                attr: {value: value, id: id}, checked: $parent.restPostBodyMediaType, onChange" />
                                         <span data-bind="text: label"></span>
                                     </label>
                                 </div>
@@ -268,9 +268,9 @@
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
                                 <div data-bind="foreach: $root.repeat_in" >
                                     <label class="switch">
-                                        <input id="repeatCheckbox" type="checkbox" name="repeatCheckbox" data-bind="
+                                        <input id="repeatCheckbox" type="checkbox" name="repeatCheck-box" data-bind="
                                                 attr: {value: value}, checked: $parent.repeat, onChange" />
-                                        <span class="slider round"></span>
+                                        <span id="repeatCheckboxSpan" class="slider round"></span>
                                     </label>
                                     <p class="d-inline" data-bind="text: $parent.repeat() ? 'On' : 'Off'"></p>
                                 </div>

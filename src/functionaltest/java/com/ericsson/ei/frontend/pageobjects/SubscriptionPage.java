@@ -101,11 +101,35 @@ public class SubscriptionPage extends PageBaseClass {
         dropdown.selectByVisibleText(value);
     }
 
-    public Object getValueFromRadio(String id) {
+    public boolean isRadioCheckboxSelected(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id(id)));
-        WebElement selectNotificationType = driver.findElement(By.id(id));
-        return "Hej mamma!";
+        WebElement checkbox = driver.findElement(By.id(id));
+        boolean radioBtnIsSelected = checkbox.isSelected();
+        return radioBtnIsSelected;
+    }
+
+    public boolean isCheckboxSelected(String id) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        WebElement checkbox = driver.findElement(By.id(id));
+        boolean isSelected = checkbox.isSelected();
+        return isSelected;
+    }
+
+    public void clickSpanAroundCheckbox(String id, String spanId) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
+
+        WebElement checkbox = driver.findElement(By.id(id));
+        WebElement span = driver.findElement(By.id(spanId));
+
+        span.click();
+
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
     }
 
     public String getValueFromSelect(String id) {
@@ -116,17 +140,9 @@ public class SubscriptionPage extends PageBaseClass {
         return dropdown.getFirstSelectedOption().getText();
     }
 
-    public String getValueFromSelectRepeat() {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("selectRepeat")));
-        WebElement selectNotificationType = driver.findElement(By.id("selectRepeat"));
-        Select dropdown = new Select(selectNotificationType);
-        return dropdown.getFirstSelectedOption().getText();
-    }
-
-    public String getValueFromElement() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
-        WebElement metaTxt = driver.findElement(By.id("metaData"));
+    public String getValueFromElement(String id) {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement metaTxt = driver.findElement(By.id(id));
         return metaTxt.getAttribute("value");
     }
 
@@ -242,5 +258,4 @@ public class SubscriptionPage extends PageBaseClass {
     public int countElements(String id) {
     	return driver.findElements(By.id(id)).size();
     }
-
 }

@@ -200,12 +200,12 @@ jQuery(document).ready(function () {
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in = ko.observableArray([
-                {"value": "REST_POST", "label": "REST_POST"},
-                {"value": "MAIL", "label": "MAIL"}
+                {"value": "REST_POST", "label": "REST_POST", "id": "restPostRadio"},
+                {"value": "MAIL", "label": "MAIL", "id": "mailRadio"}
             ]);
         self.restPostBodyMediaType_in = ko.observableArray([
-                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters"},
-                {"value": "application/json", "label": "RAW BODY: JSON"}
+                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio"},
+                {"value": "application/json", "label": "RAW BODY: JSON",  "id": "appJsonRadio"}
             ]);
         self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },

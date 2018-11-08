@@ -163,29 +163,33 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         // On subscription form, select the template as "Mail Trigger" and
         // verify
         String selectID = "selectTemplate";
+        String mailRadio = "mailRadio";
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelect("notificationTypeRadio").equals("MAIL"))));
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromElement().equals("mymail@company.com"))));
+        assert (subscriptionPage.isRadioCheckboxSelected(mailRadio));
+        assertEquals ("mymail@company.com", subscriptionPage.getValueFromElement("metaData"));
 
         // On subscription form, select the template as "REST POST (Raw
         // Body:JSON)" and verify
         String tempPost = "REST POST (Raw Body : JSON)";
+        String restPostRadio = "restPostRadio";
+        String keyValueRadio = "keyValueRadio";
+        String appJsonRadio = "appJsonRadio";
         subscriptionPage.selectDropdown(selectID, tempPost);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelect("notificationTypeRadio").equals("REST_POST"))));
-        assert (new WebDriverWait(driver, 10).until(
-                (webdriver) -> (subscriptionPage.getValueFromElement().equals("http://<MyHost:port>/api/doit"))));
+        assert (subscriptionPage.isRadioCheckboxSelected(restPostRadio));
+        assert (subscriptionPage.isRadioCheckboxSelected(appJsonRadio));
+        assert (!subscriptionPage.isRadioCheckboxSelected(keyValueRadio));
+        assertEquals ("http://<MyHost:port>/api/doit", subscriptionPage.getValueFromElement("metaData"));
 
         // On subscription form, select the template as "Jenkins Pipeline
-        // Parameterized Job Trigger" and verify
+        // Parameterized Job Trigger" and verify RawBody unselected.
         String tempJenkins = "Jenkins Pipeline Parameterized Job Trigger";
         subscriptionPage.selectDropdown(selectID, tempJenkins);
-        assertEquals("REST_POST", subscriptionPage.getValueFromSelect("notificationTypeRadio"));
+        assert (subscriptionPage.isRadioCheckboxSelected(restPostRadio));
+        assert (subscriptionPage.isRadioCheckboxSelected(keyValueRadio));
+        assert (!subscriptionPage.isRadioCheckboxSelected(appJsonRadio));
         assertEquals("http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
-                subscriptionPage.getValueFromElement());
+                subscriptionPage.getValueFromElement("metaData"));
 
         // Choose Authorization as "Basic_AUTH" ===> input User Name as "ABCD"
         // and Token as "EFGH" ===> click "Generate Key/Value Pair", verify the
@@ -196,12 +200,6 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         String userNameID = "userNameInput";
         String token = "EFGH";
         String tokenID = "tokenInput";
-        String subName = "Selenium_test_subscription";
-        String subNameID = "subscriptionNameInput";
-        String selectRepeatID = "selectRepeat";
-        String repeatValue = "true";
-        String conditionFieldID = "conditionID";
-        String requirementFieldID = "requirementID";
 
         subscriptionPage.selectDropdown(selectAuthID, authValue);
         subscriptionPage.addFieldValue(userNameID, userName);
@@ -210,29 +208,30 @@ public class SubscriptionHandlingFunctionality extends SeleniumBaseClass {
         subscriptionPage.clickKVbtn(kvID);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
 
-        // Test "Repeat" dropdown: Select repeat value as "true" and then verify the selected value
-        subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
-        assert (new WebDriverWait(driver, 10)
-              .until((webdriver) -> (subscriptionPage.getValueFromSelect("repeatCheckbox").equals(repeatValue))));
+        // Test "Repeat" checkbox: verify unchecked, then checked.
+        // NOTE: repeat checkbox is covered by a span, we click span
+        String checkboxRepeatID = "repeatCheckbox";
+        String spanId = "repeatCheckboxSpan";
+        assert (!subscriptionPage.isCheckboxSelected(checkboxRepeatID));
+        subscriptionPage.clickSpanAroundCheckbox(checkboxRepeatID, spanId);
+        assert (subscriptionPage.isCheckboxSelected(checkboxRepeatID));
 
         // Test "Add Condition" button: click add condition button and check that it adds an additional "condition" field
+        String conditionFieldID = "conditionID";
         subscriptionPage.clickAddConditionBtn();
         assertEquals(2, subscriptionPage.countElements(conditionFieldID));
 
         // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
+        String requirementFieldID = "requirementID";
         subscriptionPage.clickAddRequirementBtn();
         assertEquals(2, subscriptionPage.countElements(requirementFieldID));
-
-        // Test "Repeat" dropdown: Select repeat value as "true" and then verify
-        // the selected value
-        subscriptionPage.selectDropdown(selectRepeatID, repeatValue);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> (subscriptionPage.getValueFromSelect("repeatCheckbox").equals(repeatValue))));
 
         // Test save subscription form: add subscription name
         // as "selenium_test_subscription" and then click "save" button
         // verification that subscription is added in the datatable (and is
         // displayed on the main page)
+        String subName = "Selenium_test_subscription";
+        String subNameID = "subscriptionNameInput";
         String responseSave = getJSONStringFromFile(SUBSCRIPTION_FOR_SAVE_TEST_FILE_PATH);
         subscriptionPage.addFieldValue(subNameID, subName);
         subscriptionPage.clickFormsSaveBtn(responseSave);
