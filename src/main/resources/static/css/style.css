@@ -78,6 +78,9 @@
     max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
+.modal-width-fit {
+    max-width: fit-content;
+}
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
