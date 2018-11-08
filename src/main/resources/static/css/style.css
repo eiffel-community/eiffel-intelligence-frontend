@@ -79,8 +79,16 @@
     overflow-y: auto;
 }
 .modal-width-fit {
-    max-width: fit-content;
-    max-width: -moz-fit-content;
+    max-width: -moz-max-content;
+    max-width: -webkit-max-content;
+    max-width: -o-max-content;
+    max-width: -ms-max-content;
+}
+.pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0;
 }
 /* Safari */
 @-webkit-keyframes spin {
