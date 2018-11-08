@@ -80,6 +80,7 @@
 }
 .modal-width-fit {
     max-width: fit-content;
+    max-width: -moz-fit-content;
 }
 /* Safari */
 @-webkit-keyframes spin {
