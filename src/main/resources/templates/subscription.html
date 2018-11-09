@@ -140,7 +140,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" data-bind="if: $data.notificationType() == 'REST_POST'">
+                            <div class="form-group" data-bind="visible: $data.notificationType() == 'REST_POST'">
                                 <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
                                 <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
@@ -175,7 +175,7 @@
                                     <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
                                 </div>
                                 <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="if: $root.formpostkeyvaluepairs()">
+                                <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
                                     <thead>
                                         <tr>
                                             <th width="20%">Key</th>
@@ -209,7 +209,7 @@
                                     </button>
                                 </div>
                                 <!-- Table for RAW BODY: JSON (application/json) -->
-                                <table width="100%" data-bind="if: !$root.formpostkeyvaluepairs() || $data.notificationType() == 'MAIL'">
+                                <table width="100%" data-bind="visible: !$root.formpostkeyvaluepairs() || $data.notificationType() == 'MAIL'">
                                     <thead>
                                         <tr>
                                             <th width="100%">Raw Body</th>

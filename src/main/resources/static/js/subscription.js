@@ -139,13 +139,13 @@ jQuery(document).ready(function () {
         // Subscriptions START
         // Subscription notificationType
         this.notificationType.subscribe(function (new_value) {
-            if (new_value == "MAIL") {
-                vm.formpostkeyvaluepairs(false);
-                this.restPostBodyMediaType = ko.observable("");
-            }
+            vm.formpostkeyvaluepairs(false);
+            this.restPostBodyMediaType = ko.observable("");
             if (new_value == "REST_POST") {
-                vm.formpostkeyvaluepairs(true);
                 this.restPostBodyMediaType = ko.observable(lastPressedRestPostBodyMediaType);
+                if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
+                    vm.formpostkeyvaluepairs(true);
+                }
             }
         });
 
