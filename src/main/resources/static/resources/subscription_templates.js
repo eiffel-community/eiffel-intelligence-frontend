@@ -48,7 +48,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     {
                         "conditions" : [
                             {
-                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && gitIdentifier==null]"
                             }
                         ]
                     }
@@ -75,7 +75,7 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
                     {
                         "conditions" : [
                             {
-                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && gitIdentifier==null]"
                             }
                         ]
                     }
@@ -102,7 +102,7 @@ template_vars["templateEmailTrigger"] =
                     {
                         "conditions" : [
                             {
-                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+                                "jmespath" : "submission.sourceChanges[?submitter.group == 'Team Gophers' && gitIdentifier==null]"
                             }
                         ]
                     }
