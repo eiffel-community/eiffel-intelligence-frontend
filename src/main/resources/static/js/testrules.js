@@ -168,33 +168,8 @@ jQuery(document).ready(
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
       vm.addRule(ruleTemplate);
       vm.addEvent({});
-      
-      function validateRulesJsonAndCreateSubscriptions(subscriptionFile) {
-	      var reader = new FileReader();
-	      reader.onload = function() {
-	        var fileContent = reader.result;
-	        var jsonLintResult = "";
-	        try {
-	          jsonLintResult = jsonlint.parse(fileContent);
-	        } catch (e) {
-	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	            return false;
-	        }
-	        $.jGrowl('JSON Format Check Succeeded', {
-	          sticky : false,
-	          theme : 'Notify'
-	        });
 
-	        var list = JSON.parse(fileContent);
-	        vm.rulesBindingList([]);
-	        list.forEach(function(element) {
-                vm.addRule(element);
-            });
-	      };
-	    reader.readAsText(subscriptionFile);
-      }
-
-      function validateEventsJsonAndCreateSubscriptions(subscriptionFile) {
+      function validateJSONAndUpload(subscriptionFile, isRules) {
           var reader = new FileReader();
           reader.onload = function() {
             var fileContent = reader.result;
@@ -211,26 +186,36 @@ jQuery(document).ready(
             });
             
             var list = JSON.parse(fileContent);
-            vm.eventsBindingList([]);
-            list.forEach(function(element) {
-                vm.addEvent(element);
-            });
+            if (isRules == true) {
+                vm.rulesBindingList([]);
+                list.forEach(function(element) {
+                    vm.addRule(element);
+                });
+            } else {
+                vm.eventsBindingList([]);
+                list.forEach(function(element) {
+                    vm.addEvent(element);
+                });
+            }
           };
-          reader.readAsText(subscriptionFile);
+          
+          if (subscriptionFile != null){
+            reader.readAsText(subscriptionFile);
+          }
        }
 
         //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
         var pomRules = document.getElementById('uploadRulesFile');
         pomRules.onchange = function uploadFinished() {
             var subscriptionFile = pomRules.files[0];
-            validateRulesJsonAndCreateSubscriptions(subscriptionFile);
+            validateJSONAndUpload(subscriptionFile, true);
             $(this).val("");
         };
         
         var pomEvents = document.getElementById('uploadEventsFile');
         pomEvents.onchange = function uploadFinished() {
             var subscriptionFile = pomEvents.files[0];
-            validateEventsJsonAndCreateSubscriptions(subscriptionFile);
+            validateJSONAndUpload(subscriptionFile, false);
             $(this).val("");
         };
           
@@ -252,7 +237,7 @@ jQuery(document).ready(
         function createUploadWindowMSExplorer() {
           $('#upload_rules').click();
           var file = $('#upload_rules').prop('files')[0];
-          validateRulesJsonAndCreateSubscriptions(file);
+          validateJSONAndUpload(file, true);
         }
 
         // HTML5 Download File window handling
@@ -277,7 +262,7 @@ jQuery(document).ready(
         function createUploadWindowMSExplorer() {
           $('#upload_events').click();
           var file = $('#upload_events').prop('files')[0];
-          validateEventsJsonAndCreateSubscriptions(file);
+          validateJSONAndUpload(file, false);
         }
 
 
