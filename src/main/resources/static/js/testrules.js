@@ -118,21 +118,14 @@ jQuery(document).ready(
             beforeSend : function() {
             },
             success : function(data, textStatus) {
-              var returnData = data;
-              if (returnData.length > 0) {
+              if (data.length > 0) {
                 $.jGrowl("Successfully aggregated object generated", {
                   sticky : false,
                   theme : 'Error'
                 });
 
-                $('#aggregatedresultData').text(JSON.stringify(data, null, 2));
-                var divText = document.getElementById("aggregatedresult").outerHTML;
-                var myWindow = window.open('', '', 'width=700,height=1000');
-                var doc = myWindow.document;
-                doc.open();
-                doc.write(divText);
-                doc.close();
-                myWindow.focus();
+                $('#aggregatedObjectContent').text(JSON.stringify(data, null, 2));
+                $('#aggregatedObjectModal').modal('show');
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
