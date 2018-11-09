@@ -64,6 +64,7 @@
     height: 45px;
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
+
 .cursor-pointer {
 	cursor: pointer;
 }
@@ -87,6 +88,9 @@
     white-space: pre;
     margin: 1em;
     font-size: medium;
+}
+.showPasswordButton{
+    margin-top: 10px;
 }
 /* Safari */
 @-webkit-keyframes spin {
