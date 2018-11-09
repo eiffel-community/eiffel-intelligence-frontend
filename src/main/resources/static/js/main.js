@@ -83,7 +83,7 @@ jQuery(document).ready(function() {
 
 	function doIfUserLoggedOut() {
 		localStorage.removeItem("currentUser");
-		$("#userName").text("Guest");
+		$("#ldapUserName").text("Guest");
 		$("#loginBlock").show();
 		$("#logoutBlock").hide();
 		localStorage.setItem('errorsStore', []);
