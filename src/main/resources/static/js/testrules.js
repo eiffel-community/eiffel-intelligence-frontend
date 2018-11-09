@@ -168,16 +168,6 @@ jQuery(document).ready(
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
       vm.addRule(ruleTemplate);
       vm.addEvent({});
-
-      function isContentModified(observableArray, check) {
-          isModified = false;
-          ko.utils.arrayForEach(observableArray, function (element) {
-              if(element.data() != vm.parsedToString(check)) {
-                  isModified = true;
-              }
-          });
-          return isModified;
-      }
       
       function validateRulesJsonAndCreateSubscriptions(subscriptionFile) {
 	      var reader = new FileReader();
@@ -196,11 +186,8 @@ jQuery(document).ready(
 	        });
 
 	        var list = JSON.parse(fileContent);
-            var isModified = isContentModified(vm.rulesBindingList(), ruleTemplate);
-            if(isModified == false) {
-                vm.rulesBindingList([]);
-            }
-            list.forEach(function(element) {
+	        vm.rulesBindingList([]);
+	        list.forEach(function(element) {
                 vm.addRule(element);
             });
 	      };
@@ -224,10 +211,7 @@ jQuery(document).ready(
             });
             
             var list = JSON.parse(fileContent);
-            var isModified = isContentModified(vm.eventsBindingList(), {});
-            if(isModified == false) {
-                vm.eventsBindingList([]);
-            }
+            vm.eventsBindingList([]);
             list.forEach(function(element) {
                 vm.addEvent(element);
             });
