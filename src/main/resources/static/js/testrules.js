@@ -69,20 +69,20 @@ jQuery(document).ready(
       }
 
       // Model for knockout(KO) binding
-      function AppViewModel(rulesList) {
-        var self = this;
-        self.rulesBindingList = ko.observableArray(rulesList);
-        self.eventsBindingList = ko.observableArray([]);
-        self.parsedToString = function(item) {
-          return JSON.stringify(item, null, 2);
-        };
+      function AppViewModel() {
+          var self = this;
+          self.rulesBindingList = ko.observableArray([]);
+          self.eventsBindingList = ko.observableArray([]);
+          self.parsedToString = function(item) {
+              return JSON.stringify(item, null, 2);
+          };
         // Removing the rule
-        self.removeRule = function(data, event) {
+          self.removeRule = function(data, event) {
           var context = ko.contextFor(event.target);
           self.rulesBindingList.splice(context.$index(), 1);
           if (self.rulesBindingList().length == 0) {
             window.logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
-            self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
+            self.addRule(ruleTemplate);
           }
         };
 
@@ -91,33 +91,28 @@ jQuery(document).ready(
           var context = ko.contextFor(event.target);
           self.eventsBindingList.splice(context.$index(), 1);
           if (self.eventsBindingList().length == 0) {
-            self.eventsBindingList.push({});
             window.logMessages("Deleted all events, but we need atleast one event.");
+            self.addEvent({});
           }
         };
 
+        self.validateJSON = function(observableArray) {
+            var array = [];
+            ko.utils.arrayForEach(observableArray, function (element) {
+                try {
+                    array.push(JSON.parse(element.data()));
+                } catch (e) {
+                    window.logMessages("Invalid json rule format :\n" + element.data());
+                    return false;
+                }
+            });
+            return array;
+        };
+        
         //This submit function for finding the aggregated object from the rules and events, This function internally call the ajax call
         self.submit = function() {
-          var events = $("#eventsListID").val();
-          var formRules = [];
-          $('.formRules').each(function() {
-            try {
-              formRules.push(JSON.parse($(this).val()));
-            } catch (e) {
-                window.logMessages("Invalid json rule format :\n" + $(this).val());
-                return false;
-            }
-          });
-          
-          var formEvents = [];
-          $('.formEvents').each(function() {
-            try {
-              formEvents.push(JSON.parse($(this).val()));
-            } catch (e) {
-                window.logMessages("Invalid json event format :\n" + $(this).val());
-                return false;
-            }
-          });
+          var rules = self.validateJSON(self.rulesBindingList());
+          var events = self.validateJSON(self.eventsBindingList());
 
           var callback = {
             beforeSend : function() {
@@ -153,27 +148,26 @@ jQuery(document).ready(
           
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", JSON.stringify(JSON.parse('{"listRulesJson":'
-                + JSON.stringify(formRules) + ',"listEventsJson":' + JSON.stringify(formEvents) + '}')), callback);
+                + JSON.stringify(rules) + ',"listEventsJson":' + JSON.stringify(events) + '}')), callback);
         };
 
         // This function for adding rule
-        self.addRule = function() {
-          self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
+        self.addRule = function(data) {
+            self.rulesBindingList.push({'data': ko.observable(self.parsedToString(data))});
         };
         // This function for adding rule
-        self.addEvent = function() {
-          self.eventsBindingList.push({});
+        self.addEvent = function(data) {
+            self.eventsBindingList.push({'data': ko.observable(self.parsedToString(data))});
         };
         return self;
       }
 
-      var vm = new AppViewModel([]);
+      var vm = new AppViewModel();
       ko.applyBindings(vm, $("#submitButton")[0]);
-      vm.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
-      vm.eventsBindingList.push({});
-
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
+      vm.addRule(ruleTemplate);
+      vm.addEvent({});
 
       function validateJSONAndUpload(subscriptionFile, isRules) {
           var reader = new FileReader();
@@ -190,17 +184,19 @@ jQuery(document).ready(
               sticky : false,
               theme : 'Notify'
             });
-
+            
             var list = JSON.parse(fileContent);
-
             if (isRules == true) {
                 vm.rulesBindingList([]);
-                vm.rulesBindingList(list);
+                list.forEach(function(element) {
+                    vm.addRule(element);
+                });
             } else {
                 vm.eventsBindingList([]);
-                vm.eventsBindingList(list);
+                list.forEach(function(element) {
+                    vm.addEvent(element);
+                });
             }
-
           };
           
           if (subscriptionFile != null){
