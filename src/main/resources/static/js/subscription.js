@@ -683,6 +683,9 @@ jQuery(document).ready(function () {
             $('#modal_form').on('shown.bs.modal', function() {
             	loadTooltip();
             });
+            $('#modal_form').on('hidden.bs.modal', function() {
+                $('.text-danger').hide();
+            });
         }
     }
 
