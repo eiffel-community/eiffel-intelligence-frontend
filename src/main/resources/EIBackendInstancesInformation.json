@@ -1,1 +1,1 @@
-[]
+[{"name":"default","host":"localhost","port":8090,"path":"","https":false,"defaultBackend":true},{"name":"test","host":"test","port":789,"path":"test","https":false,"defaultBackend":false}]

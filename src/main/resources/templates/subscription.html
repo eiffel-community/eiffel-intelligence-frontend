@@ -8,18 +8,13 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <link href="css/style.css" rel="stylesheet" />
+    <script type="text/javascript" src="resources/subscription_templates.js"></script>
 
     <title>Eiffel Intelligence Subscription Handling</title>
 </head>
 
 <body>
-
-    <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
-    <div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
-
-    <script type="text/javascript" src="resources/subscription_templates.js"></script>
-
+    <div class="d-none" id="subscriptionTemplate" th:text="${subscriptionTemplate}"></div>
     <div class="d-flex">
         <div class="col-md-9 col-8">
             <h3>Eiffel Intelligence Subscription Handling</h3>
@@ -54,7 +49,7 @@
             <button id="uploadSubscription" class="mt-1 btn btn-info upload_subscriptions show_if_authorized">
                 <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
             </button>
-            <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
+            <input class="d-none" type='file' id='upload_sub' name='file'/>
         </div>
         <div class="pb-1 col-12 loadingAnimation">
             <!-- This div is the animated loading indicator -->
@@ -64,7 +59,7 @@
 
     <!-- Datatable -->
 
-    <div class="pl-2 pr-2">
+    <div class="pl-2 pr-2 pb-3">
         <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
     </div>
 
@@ -89,7 +84,7 @@
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
                                 <div>
-                                    <select style="width: 100%" id="selectTemplate"
+                                    <select class="w-100" id="selectTemplate"
                                         data-bind="options: subscription_templates_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
@@ -147,7 +142,7 @@
                                 <img class="cursor-pointer" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png"
                                     title="This decides the Content-Type of the POST body."/>
                                 <div>
-                                    <select style="width: 100%" data-bind="options: $root.restPostBodyType_in,
+                                    <select class="w-100" data-bind="options: $root.restPostBodyType_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
                                                value: $data.restPostBodyMediaType,

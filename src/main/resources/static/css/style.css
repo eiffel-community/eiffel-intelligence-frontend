@@ -1,3 +1,21 @@
+html, body {
+    height: 100%;
+}
+body {
+    overflow: hidden;
+    padding-top: 60px;
+}
+@media (max-width: 576px) {
+    body {
+        padding-top: 80px;
+    }
+}
+.content-wrapper {
+    height: 100%;
+}
+#table {
+    cellspacing: 0px;
+}
 .modal-subscription {
     max-width: 650px;
 }
@@ -104,14 +122,5 @@
 @media (max-width: 576px) {
     .container {
         max-width: 480px;
-    }
-}
-body {
-    padding-top: 60px;
-    overflow: scroll !important;
-}
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
     }
 }
