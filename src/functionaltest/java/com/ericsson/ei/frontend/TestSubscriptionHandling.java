@@ -163,11 +163,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // On subscription form, select the template as "Mail Trigger" and
         // verify
         String selectID = "selectTemplate";
-        String mailRadio = "mailRadio";
+        String mailRadioID = "mailRadio";
+        String notificationMetaInputID = "notificationMeta";
         String tempMail = "Mail Trigger";
         subscriptionPage.selectDropdown(selectID, tempMail);
-        assert (subscriptionPage.isRadioCheckboxSelected(mailRadio));
-        assertEquals ("mymail@company.com", subscriptionPage.getValueFromElement("metaData"));
+        assert (subscriptionPage.isRadioCheckboxSelected(mailRadioID));
+        assertEquals ("mymail@company.com", subscriptionPage.getValueFromElement(notificationMetaInputID));
 
         // On subscription form, select the template as "REST POST (Raw
         // Body:JSON)" and verify
@@ -179,7 +180,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.isRadioCheckboxSelected(restPostRadio));
         assert (subscriptionPage.isRadioCheckboxSelected(appJsonRadio));
         assert (!subscriptionPage.isRadioCheckboxSelected(keyValueRadio));
-        assertEquals ("http://<MyHost:port>/api/doit", subscriptionPage.getValueFromElement("metaData"));
+        assertEquals ("http://<MyHost:port>/api/doit", subscriptionPage.getValueFromElement(notificationMetaInputID));
 
         // On subscription form, select the template as "Jenkins Pipeline
         // Parameterized Job Trigger" and verify RawBody unselected.
@@ -189,7 +190,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.isRadioCheckboxSelected(keyValueRadio));
         assert (!subscriptionPage.isRadioCheckboxSelected(appJsonRadio));
         assertEquals("http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
-                subscriptionPage.getValueFromElement("metaData"));
+                subscriptionPage.getValueFromElement(notificationMetaInputID));
 
         // Choose Authorization as "Basic_AUTH" ===> input User Name as "ABCD"
         // and Token as "EFGH" ===> click "Generate Key/Value Pair", verify the
