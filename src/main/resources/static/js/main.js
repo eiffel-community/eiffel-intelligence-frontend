@@ -128,7 +128,7 @@ jQuery(document).ready(function() {
     function viewModel(data) {
         var self = this;
         var currentName;
-        self.instances = ko.observableArray();
+		self.instances = ko.observableArray();
         var json = JSON.parse(ko.toJSON(data));
         for(var i = 0; i < json.length; i++) {
             var obj = json[i];
@@ -163,6 +163,7 @@ jQuery(document).ready(function() {
               }
         }
 	}
+
 	function updateBackEndInstanceList() {
 		$.ajax({
 			url: frontendServiceUrl + frontendServiceBackEndPath,

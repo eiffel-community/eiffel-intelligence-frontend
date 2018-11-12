@@ -40,6 +40,14 @@ jQuery(document).ready(function () {
     }
     // /Stop ## Global AJAX Sender function ##################################
 
+
+    //updateBackEndInstanceList();
+    //$.getScript( "js/main.js" )
+    //    .done(function( script, textStatus ) {
+    //    console.log("should update!");
+    //    updateBackEndInstanceList();
+    //});
+
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
     function checkBackendStatus() {
