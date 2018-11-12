@@ -144,6 +144,7 @@ jQuery(document).ready(function () {
         // Subscribe START
         // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
+            $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
             this.restPostBodyMediaType = ko.observable("");
             if (new_value == "REST_POST") {
