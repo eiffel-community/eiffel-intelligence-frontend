@@ -709,7 +709,7 @@ jQuery(document).ready(function () {
             notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
-        $('.addSubscriptionErrors').hide();
+        $('.text-danger').hide();
         //START: Make sure all datatables field has a value
         var subscriptionName = String(vm.subscription()[0].subscriptionName());
         // Validate SubscriptionName field
@@ -799,8 +799,8 @@ jQuery(document).ready(function () {
                 var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
                 if (conditionToTest === '""') {
                     window.logMessages("Error: JMESPath field must have a value");
-                    $('.emptyCondition').text("Condition must not be empty");
-                    $('.emptyCondition').show();
+                    $('#emptyCondition').text("Condition must not be empty");
+                    $('#emptyCondition').show();
                     error = true;
                 }
             }
