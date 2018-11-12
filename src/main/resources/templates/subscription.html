@@ -101,9 +101,7 @@
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
                                     <!-- text injected from subscription.js -->
-                                    <font class="addSubscriptionErrors" id="invalidLetters" color="red" size="2" />
-                                    <font class="addSubscriptionErrors" id="noNameGiven" color="red" size="2" />
-
+                                    <font class="addSubscriptionErrors" id="invalidSubscriptionName" color="red" size="2" />
                                     <input id="subscriptionNameInput" data-bind="textInput:$data.subscriptionName, onChange"
                                         name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
                                     <span class="help-block"></span>
@@ -282,8 +280,8 @@
                                 <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="noNotificationMetaGiven" color="red" size="2" />
-                                    <textarea id="metaData" data-bind="textInput:$data.notificationMeta"
+                                    <font class="addSubscriptionErrors" id="invalidNotificationMeta" color="red" size="2" />
+                                    <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
                                 </div>

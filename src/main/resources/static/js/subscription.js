@@ -104,7 +104,7 @@ jQuery(document).ready(function () {
     // Subscription model
     function subscription_model(data) {
         this.created = ko.observable(data.created);
-        this.notificationMeta = ko.observable(data.notificationMeta);
+        this.notificationMeta = ko.observable(data.notificationMeta).extend({ notify: 'always' });
         this.notificationType = ko.observable(data.notificationType);
         this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
         this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
@@ -117,10 +117,15 @@ jQuery(document).ready(function () {
         this.userName = ko.observable(data.userName);
         this.token = ko.observable(data.token);
 
-
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
             this.notificationType = ko.observable("REST_POST");
+        }
+
+        if (this.notificationType() == "REST_POST") {
+            vm.restPost(true);
+        } else {
+            vm.restPost(false);
         }
 
         // Default to Repeat off
@@ -136,20 +141,23 @@ jQuery(document).ready(function () {
             vm.formpostkeyvaluepairs(false);
         }
 
-        // Subscriptions START
-        // Subscription notificationType
+        // Subscribe START
+        // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
             vm.formpostkeyvaluepairs(false);
             this.restPostBodyMediaType = ko.observable("");
             if (new_value == "REST_POST") {
+                vm.restPost(true);
                 this.restPostBodyMediaType = ko.observable(lastPressedRestPostBodyMediaType);
                 if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
                     vm.formpostkeyvaluepairs(true);
                 }
+            } else {
+                vm.restPost(false);
             }
         });
 
-        // Subscription restPostBodyMediaType
+        // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
             // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
             lastPressedRestPostBodyMediaType = new_value;
@@ -160,12 +168,15 @@ jQuery(document).ready(function () {
             }
         });
 
-        // Subscription subscriptionName
+        // Subscribe subscriptionName
         this.subscriptionName.subscribe(function (name_input) {
             validateName(name_input);
         });
-        // Subscriptions END
 
+        this.notificationMeta.subscribe(function (notificationMeta) {
+            validateNotificationMeta(notificationMeta);
+        });
+        // Subscribe END
     }
 
     function formdata_model(formdata) {
@@ -195,6 +206,7 @@ jQuery(document).ready(function () {
             ]);
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
+        self.restPost = ko.observable(false);
         self.formpostkeyvaluepairs = ko.observable(false);
         self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in = ko.observableArray([
@@ -709,6 +721,7 @@ jQuery(document).ready(function () {
             vm.subscription(mappedPackageInfo);
             // Force update
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
+            loadTooltip();
             $('#modal_form').modal('show');
             if (save_method_in === "edit") {
                 title_ = 'Edit Subscription';
@@ -722,9 +735,6 @@ jQuery(document).ready(function () {
             }
             $('.modal-title').text(title_);
             save_method = save_method_in;
-            $('#modal_form').on('shown.bs.modal', function() {
-            	loadTooltip();
-            });
         }
     }
 
@@ -741,16 +751,15 @@ jQuery(document).ready(function () {
     // /Stop ## pupulate JSON  ###########################################
 
     function validateName(subscriptionName) {
-        $('#invalidLetters').hide();
-        $('#noNameGiven').hide();
+        var error = false;
+        $('#invalidSubscriptionName').hide();
         $('#subscriptionNameInput').removeClass("is-invalid");
 
         // Validate SubscriptionName field
         if (subscriptionName == "") {
-            $('#noNameGiven').text("SubscriptionName must not be empty");
-            $('#noNameGiven').show();
+            $('#invalidSubscriptionName').text("SubscriptionName must not be empty");
             $('#subscriptionNameInput').addClass("is-invalid");
-            return true;
+            error = true;
         }
 
         // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
@@ -758,14 +767,43 @@ jQuery(document).ready(function () {
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             console.log("Invalid characters: [" + invalidLetters + "].")
-            $('#invalidLetters').text(
+            $('#invalidSubscriptionName').text(
                 "Only letters, numbers and underscore allowed! "
-                + "\nInvalid characters: [" + invalidLetters + "]");
-            $('#invalidLetters').show();
+                + "Invalid characters: [" + invalidLetters + "]");
             $('#subscriptionNameInput').addClass("is-invalid");
-            return true;
+            error = true;
         }
-        return false;
+        if (error) {
+            $('#invalidSubscriptionName').show();
+        }
+        return error;
+    }
+
+    function validateNotificationMeta(notificationMeta) {
+        var error = false;
+        $('#invalidNotificationMeta').hide();
+        $('#notificationMeta').removeClass("is-invalid");
+
+        if (notificationMeta == "") {
+            $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
+            error = true;
+        } else if (vm.restPost()) {
+            //validate url not implemented yet.
+        } else if (!vm.restPost()) {
+            // Validate email
+            var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if ((regExpression.test(notificationMeta))) {
+                console.log("Is email!")
+            } else {
+                $('#invalidNotificationMeta').text("Not a valid email adress.");
+                $('#notificationMeta').addClass("is-invalid");
+                error = true;
+            }
+        }
+        if (error) {
+            $('#invalidNotificationMeta').show();
+        }
+        return error;
     }
 
     // /Start ## Save Subscription ##########################################
@@ -779,34 +817,16 @@ jQuery(document).ready(function () {
         }
 
         $('.addSubscriptionErrors').hide();
-        //START: Make sure all datatables field has a value
-        var subscriptionName = String(vm.subscription()[0].subscriptionName());
-        if (validateName(subscriptionName)) {
+
+        // Validate subscription name field
+        if (validateName(String(vm.subscription()[0].subscriptionName()))) {
             error = true;
         }
 
-        // Validate notificationType field
-        if (vm.subscription()[0].notificationType() == null) {
-            window.logMessages("Error: notificationType value needs to be set");
-            $('#notificationTypeNotSet').text("> NotificationType must be set");
-            $('#notificationTypeNotSet').show();
-            error = true;
-        }
         // Validate notificationMeta field
-        if (vm.subscription()[0].notificationMeta() == "") {
-            window.logMessages("Error: notificationMeta field must have a value");
-            $('#noNotificationMetaGiven').text("NotificationMeta must not be empty");
-            $('#noNotificationMetaGiven').show();
+        if (validateNotificationMeta(String(vm.subscription()[0].notificationMeta()))) {
             error = true;
         }
-        // Validate repeat field
-        if (vm.subscription()[0].repeat() == null) {
-            window.logMessages("Error: repeat field must be selected true or false");
-            $('#repeatNotSet').text("> Repeat must be set");
-            $('#repeatNotSet').show();
-            error = true;
-        }
-        //END OF: Make sure all datatables field has a value
 
         //START: Check of other subscription fields values
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
@@ -814,7 +834,6 @@ jQuery(document).ready(function () {
             var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
             if (vm.formpostkeyvaluepairs()) {
                 if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
-                    window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
                     $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
                     $('#noNotificationKeyOrValue').show();
                     error = true;
@@ -822,19 +841,16 @@ jQuery(document).ready(function () {
             }
             else {
                 if (notificationMessageKeyValuesArray.length !== 1) {
-                    window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
                     $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
                     $('#notificationMessageKeyValuesArrayToLarge').show();
                     error = true;
                 }
                 else if (test_key !== '""') {
-                    window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
                     $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
                     $('#keyInNotificationMessage').show();
                     error = true;
                 }
                 else if (test_value.replace(/\s/g, "") === '""') {
-                    window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
                     $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
                     $('#noNotificationMessage').show();
                     error = true;
@@ -848,7 +864,6 @@ jQuery(document).ready(function () {
             for (k = 0; k < conditionsArray.length; k++) {
                 var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
                 if (conditionToTest === '""') {
-                    window.logMessages("Error: JMESPath field must have a value");
                     $('.emptyCondition').text("Condition must not be empty");
                     $('.emptyCondition').show();
                     error = true;
