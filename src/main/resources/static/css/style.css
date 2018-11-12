@@ -110,6 +110,10 @@ body {
 .showPasswordButton{
     margin-top: 10px;
 }
+.hide {
+	position: absolute;
+	left: -999em;
+}
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
