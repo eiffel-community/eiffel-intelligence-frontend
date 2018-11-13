@@ -802,8 +802,8 @@ jQuery(document).ready(function () {
                 var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
                 if (conditionToTest === '""') {
                     window.logMessages("Error: JMESPath field must have a value");
-                    $('#emptyCondition').text("Condition must not be empty");
-                    $('#emptyCondition').show();
+                    $('.emptyCondition').text("Condition must not be empty");
+                    $('.emptyCondition').show();
                     error = true;
                 }
             }

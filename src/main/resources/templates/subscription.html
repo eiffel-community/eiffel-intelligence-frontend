@@ -275,13 +275,13 @@
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
 										<!-- ko if: $index() !== 0 -->
-										<h5 style="display:inline">AND</h5>
+										<h5 class="d-inline">AND</h5>
 										<!-- /ko -->
 										<label class="control-label font-weight-bold">Condition</label>
 
                                         <!-- ko ifnot: $data.jmespath() -->
-                                        <div>
-                                            <span class="text-danger font-small" id="emptyCondition"></span>
+                                        <div >
+                                            <span class="text-danger font-small emptyCondition"></span>
                                         </div>
                                         <!-- /ko -->
 
