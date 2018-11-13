@@ -89,7 +89,6 @@ public class BackEndInfoirmationControllerUtils {
                     "{\"message\": \"Backend instance with name '" + selectedInstanceName + "' was selected.\"}",
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Exception!");
             return new ResponseEntity<>(
                     "Internal error" + e.getMessage(),
                     getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
