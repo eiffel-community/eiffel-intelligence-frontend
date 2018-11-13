@@ -798,9 +798,7 @@ jQuery(document).ready(function () {
         } else if (!vm.restPost()) {
             // Validate email
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if ((regExpression.test(notificationMeta))) {
-                console.log("Is email!")
-            } else {
+            if (!regExpression.test(notificationMeta)) {
                 $('#invalidNotificationMeta').text("Not a valid email adress.");
                 $('#notificationMeta').addClass("is-invalid");
                 error = true;
