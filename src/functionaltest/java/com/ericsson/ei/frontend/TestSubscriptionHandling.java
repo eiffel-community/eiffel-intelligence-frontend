@@ -199,15 +199,14 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String authValue = "BASIC_AUTH";
         String userName = "ABCD";
         String userNameID = "userNameInput";
-        String token = "EFGH";
-        String tokenID = "tokenInput";
-
+        String password = "password";
+        String passwordID = "passwordInput";
         subscriptionPage.selectDropdown(selectAuthID, authValue);
         subscriptionPage.addFieldValue(userNameID, userName);
-        subscriptionPage.addFieldValue(tokenID, token);
-        String kvID = "kvID";
-        subscriptionPage.clickKVbtn(kvID);
-        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("Authorization")));
+        subscriptionPage.addFieldValue(passwordID, password);
+
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("ABCD")));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("password")));
 
         // Test "Repeat" checkbox: verify unchecked, then checked.
         // NOTE: repeat checkbox is covered by a span, we click span

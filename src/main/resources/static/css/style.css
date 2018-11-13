@@ -64,6 +64,7 @@
     height: 45px;
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
+
 .cursor-pointer {
     cursor: pointer;
 }
@@ -77,6 +78,23 @@
 	text-align: center;
 	white-space: nowrap;
 	border-radius: .25rem;
+}
+.modal-height-fit {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+.modal-width-aggregated {
+    max-width: 750px;
+}
+.pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em;
+    font-size: medium;
+}
+.showPasswordButton{
+    margin-top: 10px;
 }
 /* Safari */
 @-webkit-keyframes spin {
