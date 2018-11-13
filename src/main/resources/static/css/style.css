@@ -5,11 +5,6 @@ body {
     overflow: hidden;
     padding-top: 60px;
 }
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
-    }
-}
 .content-wrapper {
     height: 100%;
 }
@@ -130,6 +125,9 @@ body {
     100% { transform: rotate(360deg); }
 }
 @media (max-width: 576px) {
+	body {
+        padding-top: 80px;
+    }
     .container {
         max-width: 480px;
     }
