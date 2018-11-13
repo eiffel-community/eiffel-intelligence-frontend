@@ -152,10 +152,7 @@ jQuery(document).ready(function() {
                     },
                     success: function (responseData, XMLHttpRequest, textStatus) {
                         console.log("Response from IE front end back end: " + responseData.message);
-                        $.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
-                        $("#navbarResponsive").removeClass("show");
-                        $("#selectInstances").visible();
-                        $("#mainFrame").load("subscriptionpage.html");
+                        location.reload();
                     }
                 });
             } else {

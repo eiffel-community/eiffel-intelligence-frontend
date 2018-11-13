@@ -376,7 +376,7 @@ jQuery(document).ready(function () {
             {
                 "targets": [2],
                 "orderable": true,
-                "title": "UserName",
+                "title": "Owner",
                 "data": "ldapUserName",
                 "defaultContent": ""
             },
@@ -389,12 +389,6 @@ jQuery(document).ready(function () {
             {
                 "targets": [4],
                 "orderable": true,
-                "title": "Type",
-                "data": "aggregationtype"
-            },
-            {
-                "targets": [5],
-                "orderable": true,
                 "title": "Date",
                 "data": "created",
                 "mRender": function (data, type, row, meta) {
@@ -402,25 +396,25 @@ jQuery(document).ready(function () {
                 }
             },
             {
-                "targets": [6],
+                "targets": [5],
                 "orderable": true,
                 "title": "NotificationType",
                 "data": "notificationType"
             },
             {
-                "targets": [7],
+                "targets": [6],
                 "orderable": true,
                 "title": "NotificationMeta",
                 "data": "notificationMeta"
             },
             {
-                "targets": [8],
+                "targets": [7],
                 "orderable": true,
                 "title": "Repeat",
                 "data": "repeat"
             },
             {
-                "targets": [9],
+                "targets": [8],
                 "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
@@ -896,6 +890,7 @@ jQuery(document).ready(function () {
         if (vm.subscription()[0].notificationType() == "MAIL") {
             vm.subscription()[0].restPostBodyMediaType("");
         }
+
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {

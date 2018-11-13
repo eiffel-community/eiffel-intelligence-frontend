@@ -115,6 +115,7 @@
                                     <span class="help-block"></span>
                                 </div>
                             </div>
+                            <!-- Type should be removed?
                             <div class="form-group" data-bind="visible: $data.aggregationtype()">
                                 <label class="pl-1 control-label font-weight-bold">Type</label>
                                 <div>
@@ -123,6 +124,7 @@
                                     <span class="help-block"></span>
                                 </div>
                             </div>
+                            -->
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationType</label>
                                 <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
@@ -259,7 +261,7 @@
 
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Repeat</label>
-                                <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png"
+                                <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Instructs whether the subscription should be re-triggered for new additions to the aggregated object. If false only first time the conditions are fulfilled
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
                                 <div data-bind="foreach: $root.repeat_in" >
@@ -275,7 +277,7 @@
                             <!--  NOTIFICATION META  -->
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
-                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png"
+                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
                                 <div>
                                     <font class="addSubscriptionErrors" id="invalidNotificationMeta" color="red" size="2" />
@@ -291,7 +293,7 @@
                                 <!-- ko if: $index() !== 0 -->
                                 <h5>OR</h5>
                                 <!-- /ko -->
-                                <img class="cursor-pointer" alt="Requirement Information" src="assets/images/information.png"
+                                <img class="cursor-pointer" alt="Requirement Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups."/>
                             </div>
                             <div class="p-1 border border-primary form-group">
