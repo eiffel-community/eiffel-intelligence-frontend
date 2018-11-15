@@ -22,16 +22,34 @@ import lombok.Setter;
 public class BackEndInstanceFileUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstanceFileUtils.class);
-    private static final String PATH_TO_WRITE = "src/main/resources/EIBackendInstancesInformation.json";
+
+    private static final String BACKEND_INSTANCES_FILENAME = "EIBackendInstancesInformation.json";
+    private static final String EI_HOME_DEFAULT_NAME = ".eiffel";
 
     @Value("${ei.backendInstancesPath:#{null}}")
     private String eiInstancesPath;
 
+    @Value("${ei.home}")
+    private String eiHome;
+
     @PostConstruct
-    public void init() {
+    public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
-        if (eiInstancesPath == null || eiInstancesPath.isEmpty()) {
-            setEiInstancesPath(PATH_TO_WRITE);
+
+        // If user did not choose ei home folder, set EI home folder to default
+        if(eiHome == null || eiHome.isEmpty()) {
+            String homeFolder = System.getProperty("user.home");
+            eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
+        }
+
+        Boolean eiHomeExists = Files.isDirectory(Paths.get(eiHome));
+        if (!eiHomeExists) {
+            createEiHomeFolder();
+        }
+
+        // If user did not choose eiInstancesPath, use EI home folder.
+        if(eiInstancesPath == null || eiInstancesPath.isEmpty()) {
+            setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_FILENAME).toString());
         }
     }
 
@@ -89,6 +107,15 @@ public class BackEndInstanceFileUtils {
         } catch (Exception e) {
             LOG.error("Failure when try to parse json file" + e.getMessage());
             return false;
+        }
+    }
+
+    private void createEiHomeFolder() {
+        Boolean success = (new File(eiHome)).mkdirs();
+
+        if (!success) {
+           LOG.error("Failed to create eiffel intelligence home folder in {}. Please check access rights or change default folder in application.properties.".format(eiHome));
+           System.exit(-1);
         }
     }
 
