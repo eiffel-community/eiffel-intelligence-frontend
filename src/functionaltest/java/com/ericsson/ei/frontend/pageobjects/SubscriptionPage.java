@@ -215,9 +215,9 @@ public class SubscriptionPage extends PageBaseClass {
         return subscriptionNameElement.getText();
     }
 
-    public boolean buttonExist(String ID) {
+    public boolean expandButtonExist(String XPath) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(ID)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
         } catch (Exception e) {
             return false;
         }
@@ -225,12 +225,22 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public boolean buttonExistByXPath(String XPath) {
+        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // next row.
+        String findInRow;
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
+            findInRow = "[2]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            return true;
         } catch (Exception e) {
-            return false;
         }
-        return true;
+        try {
+            findInRow = "[1]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     public void clickReloadLDAP(String response, String responseAuth) throws IOException {
@@ -254,9 +264,9 @@ public class SubscriptionPage extends PageBaseClass {
         return true;
     }
 
-    public boolean clickElementByXPath(String loc) {
+    public boolean clickExpandButtonByXPath(String loc) {
         try {
-            if (buttonExistByXPath(loc)) {
+            if (expandButtonExist(loc)) {
                 new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
                 driver.findElement(By.xpath(loc)).click();
             } else {
@@ -270,6 +280,25 @@ public class SubscriptionPage extends PageBaseClass {
 
     public int countElements(String id) {
     	return driver.findElements(By.id(id)).size();
+    }
+
+    public void clickViewButtonByXPath(String XPath) {
+        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // next row.
+        try {
+            String Xpath2 = XPath + "[2]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath2)));
+            driver.findElement(By.xpath(Xpath2)).click();
+            return;
+        } catch (Exception e) {
+        }
+        try {
+            String Xpath1 = XPath + "[1]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath1)));
+            driver.findElement(By.xpath(Xpath1)).click();
+            return;
+        } catch (Exception e) {
+        }
     }
 
 }

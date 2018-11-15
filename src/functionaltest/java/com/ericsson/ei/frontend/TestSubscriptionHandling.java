@@ -57,21 +57,10 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         subscriptionPage.clickReload(response);
 
         String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
-        boolean useXPath = subscriptionPage.buttonExistByXPath(expandButtonXPath);
-
-        // The level indicates weather or not the del / view and edit buttons has moved down to
-        // next line.
-        String level;
-        if (useXPath) {
-            subscriptionPage.clickElementByXPath(expandButtonXPath);
-            level = "2";
-        } else {
-            level = "1";
-        }
-
-        String viewButtonXPath = "(//button[@id='view-Subscription1'])[" + level + "]";
-        String editButtonXPath = "(//button[@id='edit-Subscription1'])[" + level + "]";
-        String deleteButtonXPath = "(//button[@id='delete-Subscription1'])[" + level + "]";
+        String viewButtonXPath = "(//button[@id='view-Subscription1'])";
+        String editButtonXPath = "(//button[@id='edit-Subscription1'])";
+        String deleteButtonXPath = "(//button[@id='delete-Subscription1'])";
+        assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(deleteButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
@@ -85,7 +74,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
         indexPageObject.clickSubscriptionPage();
 
-        assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
+        assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
         assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath));
         assert (!subscriptionPage.buttonExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
@@ -104,25 +93,26 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         indexPageObject.clickSubscriptionPage();
 
         assert (subscriptionPage.textExistsInTable("Subscription1"));
-        assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
+        assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(deleteButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
         // Now, path for "subscriptions2" with user name "DEF", so user "ABCD"
         // is unauthorized for this subscription
-        String viewButtonXPath2 = "(//button[@id='view-Subscription2'])[" + level + "]";
-        String editButtonXPath2 = "(//button[@id='edit-Subscription2'])[" + level + "]";
-        String deleteButtonXPath2 = "(//button[@id='delete-Subscription2'])[" + level + "]";
+        String viewButtonXPath2 = "(//button[@id='view-Subscription2'])";
+        String editButtonXPath2 = "(//button[@id='edit-Subscription2'])";
+        String deleteButtonXPath2 = "(//button[@id='delete-Subscription2'])";
         String expandButtonXPath2 = "//tr[contains(.,'Subscription2')]/td[1]";
 
-        assert (subscriptionPage.clickElementByXPath(expandButtonXPath2));
+        assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath2));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath2));
+        subscriptionPage.clickViewButtonByXPath(viewButtonXPath2);
         assert (!subscriptionPage.buttonExistByXPath(editButtonXPath2));
         assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath2));
 
         // Test view button
-        subscriptionPage.clickElementByXPath(viewButtonXPath2);
+        subscriptionPage.clickViewButtonByXPath(viewButtonXPath2);
         assert (new WebDriverWait(driver, 10)
                 .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
         subscriptionPage.clickFormCloseBtn();
