@@ -247,8 +247,12 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean clickElementByXPath(String loc) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
-            driver.findElement(By.xpath(loc)).click();
+            if (buttonExist(loc)) {
+                new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+                driver.findElement(By.xpath(loc)).click();
+            } else {
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }
