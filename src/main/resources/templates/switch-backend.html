@@ -34,7 +34,8 @@
                     <td data-bind="text: port"></td>
                     <td data-bind="text: path"></td>
                     <td class="text-center"><input type="checkbox" disabled="disabled" data-bind="checked: https"/></td>
-                    <td class="text-center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()}">Remove</a></td>
+                    <td class="text-center"><a href="#" data-bind="click: $parent.removeInstance, attr: { id: 'removeBtn' + $index()},
+                                                    style:{visibility:($index() === 0) ? 'hidden' : 'visible'}">Remove</a></td>
                 </tr>
                 </tbody>
             </table>
