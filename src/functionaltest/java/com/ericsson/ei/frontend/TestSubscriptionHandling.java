@@ -62,9 +62,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         assert (subscriptionPage.textExistsInTable("Subscription1"));
         assert (subscriptionPage.textExistsInTable("Subscription2"));
-        if (subscriptionPage.buttonExist(expandButtonXPath)) {
-            assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
-        }
+        assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
         assert (subscriptionPage.buttonExist(deleteButtonXPath));
         assert (subscriptionPage.buttonExist(editButtonXPath));
         assert (subscriptionPage.buttonExist(viewButtonXPath));
