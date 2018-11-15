@@ -282,6 +282,25 @@ jQuery(document).ready(
           }
       });
 
+      // Download the modified events
+      $('.container').on('click', 'button.download_events', function() {
+        var formEvents = [];
+        $('.formEvents').each(function() {
+          try {
+            formEvents.push(JSON.parse($(this).val()));
+          } catch (e) {
+            window.logMessages("Invalid json format :\n" + $(this).val());
+            return false;
+          }
+        });
+        if (formEvents.length !== 0) {
+          var jsonData = JSON.stringify(formEvents, null, 2);
+          downloadFile(jsonData, "application/json;charset=utf-8", "events.json");
+        } else {
+            window.logMessages("Data not available for download!");
+          }
+      });
+
       function getTemplate(name) {
         var request = new XMLHttpRequest();
         request.open("GET", frontendServiceUrl + '/download/' + name, true);
