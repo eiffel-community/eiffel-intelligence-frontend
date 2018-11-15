@@ -215,9 +215,18 @@ public class SubscriptionPage extends PageBaseClass {
         return subscriptionNameElement.getText();
     }
 
-    public boolean buttonExist(String loc) {
+    public boolean buttonExist(String ID) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(ID)));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean buttonExistByXPath(String XPath) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
         } catch (Exception e) {
             return false;
         }
@@ -247,7 +256,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean clickElementByXPath(String loc) {
         try {
-            if (buttonExist(loc)) {
+            if (buttonExistByXPath(loc)) {
                 new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
                 driver.findElement(By.xpath(loc)).click();
             } else {
@@ -262,4 +271,5 @@ public class SubscriptionPage extends PageBaseClass {
     public int countElements(String id) {
     	return driver.findElements(By.id(id)).size();
     }
+
 }

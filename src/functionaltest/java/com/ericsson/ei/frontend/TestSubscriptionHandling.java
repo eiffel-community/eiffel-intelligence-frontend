@@ -1,16 +1,22 @@
 package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.junit.MockServerRule;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
@@ -53,19 +59,33 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // present AND there exists "edit" and" delete buttons" for unauthorized
         // user "ABCD"
         String response = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
-        String viewButtonXPath = "(//button[@id='view-Subscription1'])[2]";
-        String editButtonXPath = "(//button[@id='edit-Subscription1'])[2]";
-        String deleteButtonXPath = "(//button[@id='delete-Subscription1'])[2]";
-        String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
+
+        String viewButtonID = "view-Subscription1";
+        String editButtonID = "view-Subscription1";
+        String deleteButtonID = "view-Subscription1";
 
         subscriptionPage.clickReload(response);
 
-        assert (subscriptionPage.textExistsInTable("Subscription1"));
-        assert (subscriptionPage.textExistsInTable("Subscription2"));
-        assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
-        assert (subscriptionPage.buttonExist(deleteButtonXPath));
-        assert (subscriptionPage.buttonExist(editButtonXPath));
-        assert (subscriptionPage.buttonExist(viewButtonXPath));
+        String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
+        while(subscriptionPage.buttonExistByXPath(expandButtonXPath)) {}
+        boolean useXPath = subscriptionPage.buttonExistByXPath(expandButtonXPath);
+
+        // The level indicates weather or not the del / view and edit buttons has moved down to
+        // next line.
+        String level;
+        if (useXPath) {
+            subscriptionPage.clickElementByXPath(expandButtonXPath);
+            level = "2";
+        } else {
+            level = "1";
+        }
+
+        String viewButtonXPath = "(//button[@id='view-Subscription1'])[" + level + "]";
+        String editButtonXPath = "(//button[@id='edit-Subscription1'])[" + level + "]";
+        String deleteButtonXPath = "(//button[@id='delete-Subscription1'])[" + level + "]";
+        assert (subscriptionPage.buttonExistByXPath(deleteButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(editButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
         // Given LDAP is enabled, "Reload" subscriptions and then click
         // subscription page with LDAP enabled with unauthorized user names
@@ -77,9 +97,9 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         indexPageObject.clickSubscriptionPage();
 
         assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
-        assert (!subscriptionPage.buttonExist(deleteButtonXPath));
-        assert (!subscriptionPage.buttonExist(editButtonXPath));
-        assert (subscriptionPage.buttonExist(viewButtonXPath));
+        assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath));
+        assert (!subscriptionPage.buttonExistByXPath(editButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
         // Given LDAP is enabled, "Reload" subscriptions and then click
         // subscription page with LDAP enabled with both unauthorized and
@@ -96,21 +116,21 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         assert (subscriptionPage.textExistsInTable("Subscription1"));
         assert (subscriptionPage.clickElementByXPath(expandButtonXPath));
-        assert (subscriptionPage.buttonExist(deleteButtonXPath));
-        assert (subscriptionPage.buttonExist(editButtonXPath));
-        assert (subscriptionPage.buttonExist(viewButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(deleteButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(editButtonXPath));
+        assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
         // Now, path for "subscriptions2" with user name "DEF", so user "ABCD"
         // is unauthorized for this subscription
-        String viewButtonXPath2 = "(//button[@id='view-Subscription2'])[2]";
-        String editButtonXPath2 = "(//button[@id='edit-Subscription2'])[2]";
-        String deleteButtonXPath2 = "(//button[@id='delete-Subscription2'])[2]";
+        String viewButtonXPath2 = "(//button[@id='view-Subscription2'])[" + level + "]";
+        String editButtonXPath2 = "(//button[@id='edit-Subscription2'])[" + level + "]";
+        String deleteButtonXPath2 = "(//button[@id='delete-Subscription2'])[" + level + "]";
         String expandButtonXPath2 = "//tr[contains(.,'Subscription2')]/td[1]";
 
         assert (subscriptionPage.clickElementByXPath(expandButtonXPath2));
-        assert (subscriptionPage.buttonExist(viewButtonXPath2));
-        assert (!subscriptionPage.buttonExist(editButtonXPath2));
-        assert (!subscriptionPage.buttonExist(deleteButtonXPath2));
+        assert (subscriptionPage.buttonExistByXPath(viewButtonXPath2));
+        assert (!subscriptionPage.buttonExistByXPath(editButtonXPath2));
+        assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath2));
 
         // Test view button
         subscriptionPage.clickElementByXPath(viewButtonXPath2);
