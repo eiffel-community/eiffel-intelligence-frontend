@@ -1,22 +1,16 @@
 package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.junit.MockServerRule;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
@@ -60,14 +54,9 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // user "ABCD"
         String response = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
 
-        String viewButtonID = "view-Subscription1";
-        String editButtonID = "view-Subscription1";
-        String deleteButtonID = "view-Subscription1";
-
         subscriptionPage.clickReload(response);
 
         String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
-        while(subscriptionPage.buttonExistByXPath(expandButtonXPath)) {}
         boolean useXPath = subscriptionPage.buttonExistByXPath(expandButtonXPath);
 
         // The level indicates weather or not the del / view and edit buttons has moved down to
