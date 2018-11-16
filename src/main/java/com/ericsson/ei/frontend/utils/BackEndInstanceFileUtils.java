@@ -23,11 +23,13 @@ public class BackEndInstanceFileUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstanceFileUtils.class);
 
-    private static final String BACKEND_INSTANCES_FILENAME = "EIBackendInstancesInformation.json";
+    private static final String BACKEND_INSTANCES_DEFAULT_FILENAME = "EIBackendInstancesInformation.json";
     private static final String EI_HOME_DEFAULT_NAME = ".eiffel";
 
-    @Value("${ei.backendInstancesPath:#{null}}")
     private String eiInstancesPath;
+
+    @Value("${ei.backendInstancesFileName:#{null}}")
+    private String eiInstancesFileName;
 
     @Value("${ei.home}")
     private String eiHome;
@@ -48,9 +50,12 @@ public class BackEndInstanceFileUtils {
         }
 
         // If user did not choose eiInstancesPath, use EI home folder.
-        if(eiInstancesPath == null || eiInstancesPath.isEmpty()) {
-            setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_FILENAME).toString());
+        if(eiInstancesFileName == null || eiInstancesFileName.isEmpty()) {
+            setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
+        } else {
+            setEiInstancesPath(Paths.get(eiHome, eiInstancesFileName).toString());
         }
+
     }
 
     /**
