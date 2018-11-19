@@ -146,17 +146,17 @@ jQuery(document).ready(function () {
         this.notificationType.subscribe(function (new_value) {
             $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
-            this.restPostBodyMediaType = ko.observable("");
             if (new_value == "REST_POST") {
                 vm.restPost(true);
-                this.restPostBodyMediaType = ko.observable(lastPressedRestPostBodyMediaType);
                 if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
                     vm.formpostkeyvaluepairs(true);
                 }
             } else {
                 vm.restPost(false);
             }
-        });
+            var allowEmpty = true;
+            validateNotificationMeta(this.notificationMeta(), allowEmpty);
+        }, this);
 
         // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
@@ -167,7 +167,7 @@ jQuery(document).ready(function () {
             } else {
                 vm.formpostkeyvaluepairs(false);
             }
-        });
+        }, this);
 
         // Subscribe subscriptionName
         this.subscriptionName.subscribe(function (name_input) {
@@ -175,7 +175,8 @@ jQuery(document).ready(function () {
         });
 
         this.notificationMeta.subscribe(function (notificationMeta) {
-            validateNotificationMeta(notificationMeta);
+            var allowEmpty = false;
+            validateNotificationMeta(notificationMeta, allowEmpty);
         });
         // Subscribe END
     }
@@ -782,12 +783,12 @@ jQuery(document).ready(function () {
         return error;
     }
 
-    function validateNotificationMeta(notificationMeta) {
+    function validateNotificationMeta(notificationMeta, allowEmpty) {
         var error = false;
         $('#invalidNotificationMeta').hide();
         $('#notificationMeta').removeClass("is-invalid");
 
-        if (notificationMeta == "") {
+        if (!allowEmpty && notificationMeta == "") {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
             error = true;
         } else if (vm.restPost()) {
@@ -795,7 +796,7 @@ jQuery(document).ready(function () {
         } else if (!vm.restPost()) {
             // Validate email
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!regExpression.test(notificationMeta)) {
+            if (!regExpression.test(notificationMeta) && notificationMeta != "") {
                 $('#invalidNotificationMeta').text("Not a valid email.");
                 $('#notificationMeta').addClass("is-invalid");
                 error = true;
