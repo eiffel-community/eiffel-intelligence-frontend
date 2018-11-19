@@ -49,7 +49,7 @@ public class BackEndInstanceFileUtils {
             createEiHomeFolder();
         }
 
-        // If user did not choose eiInstancesPath, use EI home folder.
+        // If user did not choose eiInstancesName, use default name.
         if(eiInstancesFileName == null || eiInstancesFileName.isEmpty()) {
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
         } else {
@@ -115,12 +115,12 @@ public class BackEndInstanceFileUtils {
         }
     }
 
-    private void createEiHomeFolder() {
+    private void createEiHomeFolder() throws IOException {
         Boolean success = (new File(eiHome)).mkdirs();
 
         if (!success) {
            LOG.error("Failed to create eiffel intelligence home folder in {}. Please check access rights or change default folder in application.properties.".format(eiHome));
-           System.exit(-1);
+           throw new IOException("Failed to create eiffel intelligence home folder in {}. Please check access rights or change default folder in application.properties.");
         }
     }
 
