@@ -130,6 +130,7 @@ jQuery(document).ready(function() {
         var currentName;
         self.instances = ko.observableArray();
         var json = JSON.parse(ko.toJSON(data));
+        var oldSelectedActive = self.selectedActive;
         for(var i = 0; i < json.length; i++) {
             var obj = json[i];
             var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
@@ -148,6 +149,8 @@ jQuery(document).ready(function() {
                     contentType: 'application/json; charset=utf-8',
                     cache: false,
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        self.selectedActive = oldSelectedActive;
+                        updateBackEndInstanceList();
                         window.logMessages(XMLHttpRequest.responseText);
                     },
                     success: function (responseData, XMLHttpRequest, textStatus) {
