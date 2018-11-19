@@ -12,12 +12,11 @@
 </head>
 
 <body>
-    <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
-    <div class="container pull-left" id="testRule" style="max-width: 100%; max-height: 100%">
-        <div align="center">
+    <div class="container mw-100 pb-3" id="testRule">
+        <div class="text-center">
             <h1 id="test_rules_header">Test Rules</h1>
         </div>
-        <div class="row" style="max-height: 950; padding: 10px">
+        <div class="row px-3">
             <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testRulesDOMObject">
                 <div class="d-flex flex-wrap">
 	                <div class="col-11">
@@ -25,7 +24,7 @@
                            Upload Rules
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
-                       <input class="hidden" type='file' id='uploadRulesFile' name='file' style="position: absolute; left: -999em;" />
+                       <input class="hide" type='file' id='uploadRulesFile' name='file'/>
 	                   <button class="btn btn-primary download_rules_template rule-button mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
@@ -66,7 +65,7 @@
                            Upload Events
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
-                       <input class="hidden" type='file' id='uploadEventsFile' name='file' style="position: absolute; left: -999em;" />
+                       <input class="hide" type='file' id='uploadEventsFile' name='file'/>
                        <button class="btn btn-primary download_events_template rule-button mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>

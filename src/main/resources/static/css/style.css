@@ -1,3 +1,16 @@
+html, body {
+    height: 100%;
+}
+body {
+    overflow: hidden;
+    padding-top: 60px;
+}
+.content-wrapper {
+    height: 100%;
+}
+#table {
+    cellspacing: 0px;
+}
 .modal-subscription {
     max-width: 650px;
 }
@@ -92,6 +105,16 @@
 .showPasswordButton{
     margin-top: 10px;
 }
+.font-small {
+    font-size: small;
+}
+.font-medium {
+    font-size: medium;
+}
+.hide {
+	position: absolute;
+	left: -999em;
+}
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -102,16 +125,10 @@
     100% { transform: rotate(360deg); }
 }
 @media (max-width: 576px) {
+	body {
+        padding-top: 80px;
+    }
     .container {
         max-width: 480px;
-    }
-}
-body {
-    padding-top: 60px;
-    overflow: scroll !important;
-}
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
     }
 }

@@ -683,6 +683,9 @@ jQuery(document).ready(function () {
             $('#modal_form').on('shown.bs.modal', function() {
             	loadTooltip();
             });
+            $('#modal_form').on('hidden.bs.modal', function() {
+                $('.text-danger').hide();
+            });
         }
     }
 
@@ -709,7 +712,7 @@ jQuery(document).ready(function () {
             notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
-        $('.addSubscriptionErrors').hide();
+        $('.text-danger').hide();
         //START: Make sure all datatables field has a value
         var subscriptionName = String(vm.subscription()[0].subscriptionName());
         // Validate SubscriptionName field
