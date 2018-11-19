@@ -7,17 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link href="css/style.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="resources/subscription_templates.js"></script>
 
     <title>Eiffel Intelligence Subscription Handling</title>
 </head>
 
 <body>
-    <div class="hidden" id="frontendServiceUrl" style="display: none" th:text="${frontendServiceUrl}"></div>
-    <div class="hidden" id="subscriptionTemplate" style="display: none" th:text="${subscriptionTemplate}"></div>
-
-    <script type="text/javascript" src="resources/subscription_templates.js"></script>
-
+    <div class="d-none" id="subscriptionTemplate" th:text="${subscriptionTemplate}"></div>
     <div class="d-flex">
         <div class="col-md-9 col-8">
             <h3>Eiffel Intelligence Subscription Handling</h3>
@@ -52,7 +49,7 @@
             <button id="uploadSubscription" class="mt-1 btn btn-info upload_subscriptions show_if_authorized">
                 <i class="glyphicon glyphicon-upload"></i>Upload Subscriptions
             </button>
-            <input class="hidden" type='file' id='upload_sub' name='file' style="position: absolute; left: -999em;" />
+            <input class="hide" type='file' id='upload_sub' name='file'/>
         </div>
         <div class="pb-1 col-12 loadingAnimation">
             <!-- This div is the animated loading indicator -->
@@ -62,7 +59,7 @@
 
     <!-- Datatable -->
 
-    <div class="pl-2 pr-2">
+    <div class="pl-2 pr-2 pb-3">
         <table id="table" class="table table-bordered" width="100%" cellspacing="0"></table>
     </div>
 
@@ -87,7 +84,7 @@
                             <div class="form-group">
                                 <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
                                 <div>
-                                    <select style="width: 100%" id="selectTemplate"
+                                    <select class="w-100" id="selectTemplate"
                                         data-bind="options: subscription_templates_in,
                                                optionsText: 'text',
                                                optionsValue: 'value',
@@ -101,7 +98,7 @@
                                 <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
                                     <!-- text injected from subscription.js -->
-                                    <font class="addSubscriptionErrors" id="invalidSubscriptionName" color="red" size="2" />
+                                    <span class="text-danger font-small" id="invalidSubscriptionName"></span>
                                     <input id="subscriptionNameInput" data-bind="textInput:$data.subscriptionName, onChange"
                                         name="subscriptionName" placeholder="subscriptionName" class="form-control display-inline-table" type="text"/>
                                     <span class="help-block"></span>
@@ -163,16 +160,16 @@
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="noNotificationKeyOrValue" color="red" size="2" />
+                                    <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
                                 </div>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="notificationMessageKeyValuesArrayToLarge" color="red" size="2" />
+                                    <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
                                 </div>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="keyInNotificationMessage" color="red" size="2" />
+                                    <span class="text-danger font-small" id="keyInNotificationMessage"></span>
                                 </div>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="noNotificationMessage" color="red" size="2" />
+                                    <span class="text-danger font-small" id="noNotificationMessage"></span>
                                 </div>
                                 <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
                                 <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
@@ -280,7 +277,7 @@
                                 <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
                                 <div>
-                                    <font class="addSubscriptionErrors" id="invalidNotificationMeta" color="red" size="2" />
+                                    <span class="text-danger font-small" id="noNotificationMetaGiven"></span>
                                     <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
@@ -302,15 +299,14 @@
 
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
-
-                                        <!-- ko if: $index() !== 0 -->
-                                        <h5 style="display:inline">AND</h5>
-                                        <!-- /ko -->
-                                        <label class="control-label font-weight-bold">Condition</label>
+										<!-- ko if: $index() !== 0 -->
+										<h5 class="d-inline">AND</h5>
+										<!-- /ko -->
+										<label class="control-label font-weight-bold">Condition</label>
 
                                         <!-- ko ifnot: $data.jmespath() -->
-                                        <div>
-                                            <font class="addSubscriptionErrors emptyCondition" color="red" size="2" />
+                                        <div >
+                                            <span class="text-danger font-small emptyCondition"></span>
                                         </div>
                                         <!-- /ko -->
 
@@ -348,8 +344,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <font class="addSubscriptionErrors" id="errorExists" color="red" size="3" />
-                    <font class="addSubscriptionErrors" id="serverError" color="red" size="3" />
+                    <span class="text-danger font-medium" id="errorExists"></span>
+                    <span class="text-danger font-medium" id="serverError"></span>
                     <button type="button" id="btnSave" class="btn btn-primary save_record mr-1 mt-1 d-inline-block">
                         Save
                         <i class="fa fa-fw fa-save"></i>

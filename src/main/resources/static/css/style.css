@@ -1,3 +1,16 @@
+html, body {
+    height: 100%;
+}
+body {
+    overflow: hidden;
+    padding-top: 60px;
+}
+.content-wrapper {
+    height: 100%;
+}
+#table {
+    border-spacing: 0px;
+}
 .modal-subscription {
     max-width: 650px;
 }
@@ -18,12 +31,6 @@
 }
 .split {
 	max-width: 50%;
-}
-@media (max-width: 576px) {
-    .split {
-        max-width: 100%;
-        width: 100%;
-    }
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -96,28 +103,15 @@
 .showPasswordButton{
     margin-top: 10px;
 }
-/* Safari */
-@-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+.font-small {
+    font-size: small;
 }
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.font-medium {
+    font-size: medium;
 }
-@media (max-width: 576px) {
-    .container {
-        max-width: 480px;
-    }
-}
-body {
-    padding-top: 60px;
-    overflow: scroll !important;
-}
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
-    }
+.hide {
+	position: absolute;
+	left: -999em;
 }
 
 /* The switch - the box around the slider */
@@ -174,4 +168,27 @@ input:checked + .slider:before {
 }
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 576px) {
+	body {
+        padding-top: 80px;
+    }
+    .container {
+        max-width: 480px;
+    }
+    .split {
+        max-width: 100%;
+        width: 100%;
+    }
 }

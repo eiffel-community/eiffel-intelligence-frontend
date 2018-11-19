@@ -735,6 +735,9 @@ jQuery(document).ready(function () {
             }
             $('.modal-title').text(title_);
             save_method = save_method_in;
+            $('#modal_form').on('hidden.bs.modal', function() {
+                $('.text-danger').hide();
+            });
         }
     }
 
@@ -814,7 +817,7 @@ jQuery(document).ready(function () {
             notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
         }
 
-        $('.addSubscriptionErrors').hide();
+        $('.text-danger').hide();
 
         // Validate subscription name field
         if (validateName(String(vm.subscription()[0].subscriptionName()))) {
