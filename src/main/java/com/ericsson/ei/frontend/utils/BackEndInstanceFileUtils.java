@@ -24,38 +24,31 @@ public class BackEndInstanceFileUtils {
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstanceFileUtils.class);
 
     private static final String BACKEND_INSTANCES_DEFAULT_FILENAME = "EIBackendInstancesInformation.json";
-    private static final String EI_HOME_DEFAULT_NAME = ".eiffel";
+    private static final String EI_HOME_DEFAULT_NAME = ".eiffel-intelligence-frontend";
 
     private String eiInstancesPath;
-
-    @Value("${ei.backendInstancesFileName:#{null}}")
-    private String eiInstancesFileName;
-
-    @Value("${ei.home}")
     private String eiHome;
+
+    @Value("${ei.backendInstancesFilePath:#{null}}")
+    private String backendInstancesFilePath;
 
     @PostConstruct
     public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
-        // If user did not choose ei home folder, set EI home folder to default
-        if(eiHome == null || eiHome.isEmpty()) {
+        // Use home folder if a specific backendInstancesFilePath isn't provided
+        if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
             String homeFolder = System.getProperty("user.home");
             eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
-        }
+            Boolean eiHomeExists = Files.isDirectory(Paths.get(eiHome));
+            if (!eiHomeExists) {
+                createEiHomeFolder();
+            }
 
-        Boolean eiHomeExists = Files.isDirectory(Paths.get(eiHome));
-        if (!eiHomeExists) {
-            createEiHomeFolder();
-        }
-
-        // If user did not choose eiInstancesName, use default name.
-        if(eiInstancesFileName == null || eiInstancesFileName.isEmpty()) {
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
         } else {
-            setEiInstancesPath(Paths.get(eiHome, eiInstancesFileName).toString());
+            setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
         }
-
     }
 
     /**
@@ -93,15 +86,28 @@ public class BackEndInstanceFileUtils {
     }
 
     private void ensureValidFile() throws IOException {
-        if (!(new File(eiInstancesPath).isFile())) {
-            LOG.error("File does not exist! Trying to creat file.");
-            Files.createFile(Paths.get(eiInstancesPath));
-            Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
-            return;
-        }
+        try {
+            File eiInstancesParentFolder = Paths.get(eiInstancesPath).getParent().toFile();
 
-        if (!fileContainsJsonArray()) {
-            LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
+            if (!(eiInstancesParentFolder.isDirectory())){
+                eiInstancesParentFolder.mkdirs();
+            }
+
+            if (!(new File(eiInstancesPath).isFile())) {
+                LOG.info("File does not exist! Trying to create file.");
+                Files.createFile(Paths.get(eiInstancesPath));
+                Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
+                return;
+            }
+
+            if (!fileContainsJsonArray()) {
+                LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
+            }
+        } catch(Exception e) {
+            String message = String.format(
+                    "Failed to read backendInstancesFilePath %s. Please check access rights or choose another backendInstancesFilePath in application.properties.", eiInstancesPath);
+            LOG.error(message);
+            System.exit(-1);
         }
     }
 
@@ -119,8 +125,10 @@ public class BackEndInstanceFileUtils {
         Boolean success = (new File(eiHome)).mkdirs();
 
         if (!success) {
-           LOG.error("Failed to create eiffel intelligence home folder in {}. Please check access rights or change default folder in application.properties.".format(eiHome));
-           throw new IOException("Failed to create eiffel intelligence home folder in {}. Please check access rights or change default folder in application.properties.");
+            String message = String.format(
+                    "Failed to create eiffel intelligence home folder in %s. Please check access rights or choose a specific backendInstancesFilePath in application.properties.", eiHome);
+            LOG.error(message);
+            System.exit(-1);
         }
     }
 
