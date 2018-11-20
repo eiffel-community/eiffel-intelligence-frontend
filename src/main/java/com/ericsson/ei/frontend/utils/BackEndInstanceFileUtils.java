@@ -27,7 +27,6 @@ public class BackEndInstanceFileUtils {
     private static final String EI_HOME_DEFAULT_NAME = ".eiffel-intelligence-frontend";
 
     private String eiInstancesPath;
-    private String eiHome;
 
     @Value("${ei.backendInstancesFilePath:#{null}}")
     private String backendInstancesFilePath;
@@ -39,10 +38,11 @@ public class BackEndInstanceFileUtils {
         // Use home folder if a specific backendInstancesFilePath isn't provided
         if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
             String homeFolder = System.getProperty("user.home");
-            eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
+            String eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
+
             Boolean eiHomeExists = Files.isDirectory(Paths.get(eiHome));
             if (!eiHomeExists) {
-                createEiHomeFolder();
+                createEiHomeFolder(eiHome);
             }
 
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
@@ -121,7 +121,7 @@ public class BackEndInstanceFileUtils {
         }
     }
 
-    private void createEiHomeFolder() throws IOException {
+    private void createEiHomeFolder(String eiHome) throws IOException {
         Boolean success = (new File(eiHome)).mkdirs();
 
         if (!success) {
