@@ -94,6 +94,7 @@ public class BackEndInstanceFileUtils {
 
             if (!fileContainsJsonArray()) {
                 LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
+                System.exit(-1);
             }
         } catch(Exception e) {
             String message = String.format(
