@@ -87,16 +87,8 @@ public class BackEndInstanceFileUtils {
 
     private void ensureValidFile() throws IOException {
         try {
-            File eiInstancesParentFolder = Paths.get(eiInstancesPath).getParent().toFile();
-
-            if (!(eiInstancesParentFolder.isDirectory())){
-                eiInstancesParentFolder.mkdirs();
-            }
-
             if (!(new File(eiInstancesPath).isFile())) {
-                LOG.info("File does not exist! Trying to create file.");
-                Files.createFile(Paths.get(eiInstancesPath));
-                Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
+                createFileWithDirs();
                 return;
             }
 
@@ -109,6 +101,19 @@ public class BackEndInstanceFileUtils {
             LOG.error(message);
             System.exit(-1);
         }
+    }
+
+    private void createFileWithDirs() throws IOException {
+        File eiInstancesParentFolder = Paths.get(eiInstancesPath).getParent().toFile();
+
+        if (!(eiInstancesParentFolder.isDirectory())){
+            LOG.info(String.format("Parentdir(s) for %s does not exist! Trying to create necessary parent dirs.", backendInstancesFilePath));
+            eiInstancesParentFolder.mkdirs();
+        }
+
+        LOG.info("File does not exist! Trying to create file.");
+        Files.createFile(Paths.get(eiInstancesPath));
+        Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
     }
 
     private boolean fileContainsJsonArray() {
