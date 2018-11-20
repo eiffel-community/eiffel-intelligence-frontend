@@ -16,9 +16,7 @@
 */
 package com.ericsson.ei.frontend.utils;
 
-import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -84,7 +82,7 @@ public class BackEndInfoirmationControllerUtils {
      */
     public ResponseEntity<String> handleRequestToSwitchBackEnd(HttpServletRequest request) {
         try {
-            String selectedInstanceName = getSelectedInstanceName(request);
+            String selectedInstanceName = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             request.getSession().setAttribute("backEndInstanceName", selectedInstanceName);
 
             return new ResponseEntity<>(
@@ -169,34 +167,6 @@ public class BackEndInfoirmationControllerUtils {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setLocation(URI.create("/"));
         return httpHeaders;
-    }
-
-    private String getSelectedInstanceName(HttpServletRequest request) throws IOException {
-        String selectedInstanceName = null;
-        String inputPostDataAsString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        if (isJsonFormatted(inputPostDataAsString)) {
-            JsonArray listofInstances = new JsonParser().parse(inputPostDataAsString).getAsJsonArray();
-
-            for (JsonElement element : listofInstances) {
-                if (element.getAsJsonObject().get("active").getAsBoolean() == true) {
-                    selectedInstanceName = element.getAsJsonObject().get("name").getAsString();
-                    break;
-                }
-            }
-        } else {
-            selectedInstanceName = inputPostDataAsString;
-        }
-
-        return selectedInstanceName;
-    }
-
-    private boolean isJsonFormatted(String listOfInstances) {
-        try {
-            new JsonParser().parse(listOfInstances).getAsJsonArray();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     private JsonArray setActiveInstance(JsonArray allAvailableInstances, String activeInstance) {

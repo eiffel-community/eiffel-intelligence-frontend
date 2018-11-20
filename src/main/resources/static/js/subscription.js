@@ -100,41 +100,93 @@ jQuery(document).ready(function () {
 
     // /Start ## Knockout ####################################################
 
+    var lastPressedRestPostBodyMediaType = "";
     // Subscription model
     function subscription_model(data) {
-
         this.created = ko.observable(data.created);
-        this.notificationMeta = ko.observable(data.notificationMeta);
+        this.notificationMeta = ko.observable(data.notificationMeta).extend({ notify: 'always' });
         this.notificationType = ko.observable(data.notificationType);
         this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
         this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
         this.notificationMessageKeyValuesAuth = ko.observableArray(data.notificationMessageKeyValuesAuth);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
-        this.subscriptionName = ko.observable(data.subscriptionName);
+        this.subscriptionName = ko.observable(data.subscriptionName).extend({ notify: 'always' });
         this.aggregationtype = ko.observable(data.aggregationtype);
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
 
-        this.notificationType.subscribe(function (new_value) {
-            vm.subscription()[0].restPostBodyMediaType(null);
+        // Default to REST_POST
+        if (this.notificationType() == "" || this.notificationType() == null) {
+            this.notificationType = ko.observable("REST_POST");
+        }
+
+        if (this.notificationType() == "REST_POST") {
+            vm.restPost(true);
+        } else {
+            vm.restPost(false);
+        }
+
+        // Default to Repeat off
+        if (this.repeat() == "" || this.repeat() == null || this.repeat == undefined) {
+            this.repeat = ko.observable(false);
+        }
+
+        // Default to RAW BODY
+        if (this.restPostBodyMediaType() == "application/x-www-form-urlencoded") {
+            vm.formpostkeyvaluepairs(true);
+        } else {
+            this.restPostBodyMediaType = ko.observable("application/json");
             vm.formpostkeyvaluepairs(false);
+        }
 
-        });
+        // Subscribe START
+        // Subscribe notificationType
+        this.notificationType.subscribe(function (new_value) {
+            $('#invalidNotificationMeta').hide();
+            vm.formpostkeyvaluepairs(false);
+            if (new_value == "REST_POST") {
+                vm.restPost(true);
+                if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
+                    vm.formpostkeyvaluepairs(true);
+                }
+            } else {
+                vm.restPost(false);
+            }
+            var allowEmpty = true;
+            validateNotificationMeta(this.notificationMeta(), allowEmpty);
+        }, this);
 
+        // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
+            // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
+            lastPressedRestPostBodyMediaType = new_value;
             if (new_value == "application/x-www-form-urlencoded") {
                 vm.formpostkeyvaluepairs(true);
             } else {
                 vm.formpostkeyvaluepairs(false);
             }
+        }, this);
+
+        // Subscribe subscriptionName
+        this.subscriptionName.subscribe(function (name_input) {
+            validateName(name_input);
         });
+
+        this.notificationMeta.subscribe(function (notificationMeta) {
+            var allowEmpty = false;
+            validateNotificationMeta(notificationMeta, allowEmpty);
+        });
+        // Subscribe END
     }
 
     function formdata_model(formdata) {
         this.formkey = ko.observable(formdata.formkey);
         this.formvalue = ko.observable(formdata.formvalue);
+        this.formvalue.subscribe(function (newText) {
+            // TODO implement form data check.
+         });
     }
 
     function conditions_model(condition) {
@@ -149,14 +201,14 @@ jQuery(document).ready(function () {
     var SubscriptionViewModel = function () {
         var self = this;
         self.subscription = ko.observableArray([]);
-        self.subscription_templates_in = ko.observableArray(
-            [
+        self.subscription_templates_in = ko.observableArray([
                 { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
+        self.restPost = ko.observable(false);
         self.formpostkeyvaluepairs = ko.observable(false);
         self.mode = ko.observable("");
         self.showPassword = ko.observable(false);
@@ -164,25 +216,34 @@ jQuery(document).ready(function () {
             self.showPassword(boolean);
         }
         self.formpostkeyvaluepairsAuth = ko.observable(false);
-        self.notificationType_in = ko.observableArray(
-            [
-                { "text": "REST_POST", value: "REST_POST" },
-                { "text": "MAIL", value: "MAIL" }
+        self.notificationType_in = ko.observableArray([
+                {"value": "REST_POST", "label": "REST_POST", "id": "restPostRadio"},
+                {"value": "MAIL", "label": "MAIL", "id": "mailRadio"}
             ]);
-        self.authenticationType_in = ko.observableArray(
-            [
+        self.restPostBodyMediaType_in = ko.observableArray([
+                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio"},
+                {"value": "application/json", "label": "RAW BODY: JSON",  "id": "appJsonRadio"}
+            ]);
+        self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },
                 { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
             ]);
-
-
-        self.restPostBodyType_in = ko.observableArray(
-            [
-                { "text": "FORM/POST Parameters (application/x-www-form-urlencoded)", value: "application/x-www-form-urlencoded" },
-                { "text": "RAW BODY: JSON (application/json)", value: "application/json" }
+        self.repeat_in = ko.observableArray([
+                { "value": true, "label": "Activate Repeat" }
             ]);
 
-        self.repeat_in = ko.observableArray([true, false]);
+        self.add_requirement = function (data, event) {
+            var conditions_array = [];
+            conditions_array.push(new jmespath_model({ "jmespath": ko.observable("") }));
+            self.subscription()[0].requirements().push(new conditions_model(conditions_array));
+
+            // Force update
+            var data = self.subscription().slice(0);
+            self.subscription([]);
+            self.subscription(data);
+            self.subscription.valueHasMutated();
+            loadTooltip();
+        };
 
         self.choosen_subscription_template.subscribe(function (template_var) {
             if (self.choosen_subscription_template() != null) { // only execute if value exists
@@ -316,7 +377,7 @@ jQuery(document).ready(function () {
             {
                 "targets": [2],
                 "orderable": true,
-                "title": "UserName",
+                "title": "Owner",
                 "data": "ldapUserName",
                 "defaultContent": ""
             },
@@ -329,12 +390,6 @@ jQuery(document).ready(function () {
             {
                 "targets": [4],
                 "orderable": true,
-                "title": "Type",
-                "data": "aggregationtype"
-            },
-            {
-                "targets": [5],
-                "orderable": true,
                 "title": "Date",
                 "data": "created",
                 "mRender": function (data, type, row, meta) {
@@ -342,25 +397,25 @@ jQuery(document).ready(function () {
                 }
             },
             {
-                "targets": [6],
+                "targets": [5],
                 "orderable": true,
                 "title": "NotificationType",
                 "data": "notificationType"
             },
             {
-                "targets": [7],
+                "targets": [6],
                 "orderable": true,
                 "title": "NotificationMeta",
                 "data": "notificationMeta"
             },
             {
-                "targets": [8],
+                "targets": [7],
                 "orderable": true,
                 "title": "Repeat",
                 "data": "repeat"
             },
             {
-                "targets": [9],
+                "targets": [8],
                 "className": "sub-action-column",
                 "orderable": false,
                 "title": "Action",
@@ -385,9 +440,9 @@ jQuery(document).ready(function () {
     });
 
     $("#sidenavCollapse").click(function() {
-		table.responsive.rebuild();
+        table.responsive.rebuild();
         table.responsive.recalc();
-	});
+    });
     // /Stop ## Datatables ##################################################
 
     // /Start ## check all subscriptions ####################################
@@ -406,7 +461,7 @@ jQuery(document).ready(function () {
 
     // /Start ## Reload Table################################################
     $("#reloadButton").click(function () {
-    	reload_table();
+        reload_table();
     });
     // /Stop ## Reload Table#################################################
 
@@ -666,6 +721,7 @@ jQuery(document).ready(function () {
             vm.subscription(mappedPackageInfo);
             // Force update
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
+            loadTooltip();
             $('#modal_form').modal('show');
             if (save_method_in === "edit") {
                 title_ = 'Edit Subscription';
@@ -680,9 +736,6 @@ jQuery(document).ready(function () {
             }
             $('.modal-title').text(title_);
             save_method = save_method_in;
-            $('#modal_form').on('shown.bs.modal', function() {
-            	loadTooltip();
-            });
             $('#modal_form').on('hidden.bs.modal', function() {
                 $('.text-danger').hide();
             });
@@ -701,6 +754,59 @@ jQuery(document).ready(function () {
     }
     // /Stop ## pupulate JSON  ###########################################
 
+    function validateName(subscriptionName) {
+        var error = false;
+        $('#invalidSubscriptionName').hide();
+        $('#subscriptionNameInput').removeClass("is-invalid");
+
+        // Validate SubscriptionName field
+        if (subscriptionName == "") {
+            $('#invalidSubscriptionName').text("SubscriptionName must not be empty");
+            $('#subscriptionNameInput').addClass("is-invalid");
+            error = true;
+        }
+
+        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
+        var regExpression = /(\W)/g;
+        if ((regExpression.test(subscriptionName))) {
+            var invalidLetters = subscriptionName.match(regExpression);
+            console.log("Invalid characters: [" + invalidLetters + "].")
+            $('#invalidSubscriptionName').text(
+                "Only letters, numbers and underscore allowed! "
+                + "Invalid characters: [" + invalidLetters + "]");
+            $('#subscriptionNameInput').addClass("is-invalid");
+            error = true;
+        }
+        if (error) {
+            $('#invalidSubscriptionName').show();
+        }
+        return error;
+    }
+
+    function validateNotificationMeta(notificationMeta, allowEmpty) {
+        var error = false;
+        $('#invalidNotificationMeta').hide();
+        $('#notificationMeta').removeClass("is-invalid");
+
+        if (!allowEmpty && notificationMeta == "") {
+            $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
+            error = true;
+        } else if (vm.restPost()) {
+            //validate url not implemented yet.
+        } else if (!vm.restPost()) {
+            // Validate email
+            var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (!regExpression.test(notificationMeta) && notificationMeta != "") {
+                $('#invalidNotificationMeta').text("Not a valid email.");
+                $('#notificationMeta').addClass("is-invalid");
+                error = true;
+            }
+        }
+        if (error) {
+            $('#invalidNotificationMeta').show();
+        }
+        return error;
+    }
 
     // /Start ## Save Subscription ##########################################
     $('div.modal-footer').on('click', 'button.save_record', function (event) {
@@ -713,53 +819,16 @@ jQuery(document).ready(function () {
         }
 
         $('.text-danger').hide();
-        //START: Make sure all datatables field has a value
-        var subscriptionName = String(vm.subscription()[0].subscriptionName());
-        // Validate SubscriptionName field
-        if (subscriptionName == "") {
-            window.logMessages("Error: SubscriptionName field must have a value");
-            $('#noNameGiven').text("SubscriptionName must not be empty");
-            $('#noNameGiven').show();
+
+        // Validate subscription name field
+        if (validateName(String(vm.subscription()[0].subscriptionName()))) {
             error = true;
         }
 
-        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var regExpression = /(\W)/g;
-        if ((regExpression.test(subscriptionName))) {
-            var invalidLetters = subscriptionName.match(regExpression);
-            console.log("Invalid characters: [" + invalidLetters + "].")
-            window.logMessages(
-                "Only numbers,letters and underscore is valid to type in subscriptionName "
-                + " field. \nInvalid letters [" + invalidLetters + "].");
-            $('#invalidLetters').text(
-                "Only letters, numbers and underscore allowed! "
-                + "\nInvalid characters: [" + invalidLetters + "]");
-            $('#invalidLetters').show();
-            error = true;
-        }
-
-        // Validate notificationType field
-        if (vm.subscription()[0].notificationType() == null) {
-            window.logMessages("Error: notificationType value needs to be set");
-            $('#notificationTypeNotSet').text("> NotificationType must be set");
-            $('#notificationTypeNotSet').show();
-            error = true;
-        }
         // Validate notificationMeta field
-        if (vm.subscription()[0].notificationMeta() == "") {
-            window.logMessages("Error: notificationMeta field must have a value");
-            $('#noNotificationMetaGiven').text("NotificationMeta must not be empty");
-            $('#noNotificationMetaGiven').show();
+        if (validateNotificationMeta(String(vm.subscription()[0].notificationMeta()))) {
             error = true;
         }
-        // Validate repeat field
-        if (vm.subscription()[0].repeat() == null) {
-            window.logMessages("Error: repeat field must be selected true or false");
-            $('#repeatNotSet').text("> Repeat must be set");
-            $('#repeatNotSet').show();
-            error = true;
-        }
-        //END OF: Make sure all datatables field has a value
 
         //START: Check of other subscription fields values
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
@@ -767,7 +836,6 @@ jQuery(document).ready(function () {
             var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
             if (vm.formpostkeyvaluepairs()) {
                 if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
-                    window.logMessages("Error: Value & Key  in notificationMessage must have a values!");
                     $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
                     $('#noNotificationKeyOrValue').show();
                     error = true;
@@ -775,19 +843,16 @@ jQuery(document).ready(function () {
             }
             else {
                 if (notificationMessageKeyValuesArray.length !== 1) {
-                    window.logMessages("Error: Only one array is allowed for notificationMessage when NOT using key/value pairs!");
                     $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
                     $('#notificationMessageKeyValuesArrayToLarge').show();
                     error = true;
                 }
                 else if (test_key !== '""') {
-                    window.logMessages("Error: Key in notificationMessage must be empty when NOT using key/value pairs!");
                     $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
                     $('#keyInNotificationMessage').show();
                     error = true;
                 }
                 else if (test_value.replace(/\s/g, "") === '""') {
-                    window.logMessages("Error: Value in notificationMessage must have a value when NOT using key/value pairs!");
                     $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
                     $('#noNotificationMessage').show();
                     error = true;
@@ -801,7 +866,6 @@ jQuery(document).ready(function () {
             for (k = 0; k < conditionsArray.length; k++) {
                 var conditionToTest = ko.toJSON(conditionsArray[k].jmespath());
                 if (conditionToTest === '""') {
-                    window.logMessages("Error: JMESPath field must have a value");
                     $('.emptyCondition').text("Condition must not be empty");
                     $('.emptyCondition').show();
                     error = true;
@@ -816,8 +880,6 @@ jQuery(document).ready(function () {
         }
         //END: Check of other subscription fields values
 
-        var id = ko.toJSON(vm.subscription()[0].subscriptionName).trim();
-
         var url;
         var type;
         if (save_method === 'add') {  // Add new
@@ -828,7 +890,10 @@ jQuery(document).ready(function () {
             url = frontendServiceUrl + "/subscriptions";
             type = "PUT";
         }
-
+        // Ensure MAIL notificationType has no restPostBodyMediaType
+        if (vm.subscription()[0].notificationType() == "MAIL") {
+            vm.subscription()[0].restPostBodyMediaType("");
+        }
 
         // AJAX Callback handling
         var callback = {
@@ -921,6 +986,6 @@ jQuery(document).ready(function () {
     }
 
     function closeTooltip() {
-    	$('.tooltip').tooltip('hide');
+        $('.tooltip').tooltip('hide');
     }
 });

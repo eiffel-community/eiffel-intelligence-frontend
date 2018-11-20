@@ -101,25 +101,48 @@ public class SubscriptionPage extends PageBaseClass {
         dropdown.selectByVisibleText(value);
     }
 
-    public String getValueFromSelect() {
+    public boolean isRadioCheckboxSelected(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("notificationType")));
-        WebElement selectNotificationType = driver.findElement(By.id("notificationType"));
-        Select dropdown = new Select(selectNotificationType);
-        return dropdown.getFirstSelectedOption().getText();
+                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement checkbox = driver.findElement(By.id(id));
+        boolean radioBtnIsSelected = checkbox.isSelected();
+        return radioBtnIsSelected;
     }
-    
-    public String getValueFromSelectRepeat() {
+
+    public boolean isCheckboxSelected(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("selectRepeat")));
-        WebElement selectNotificationType = driver.findElement(By.id("selectRepeat"));
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        WebElement checkbox = driver.findElement(By.id(id));
+        boolean isSelected = checkbox.isSelected();
+        return isSelected;
+    }
+
+    public void clickSpanAroundCheckbox(String id, String spanId) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
+
+        WebElement checkbox = driver.findElement(By.id(id));
+        WebElement span = driver.findElement(By.id(spanId));
+
+        span.click();
+
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
+    }
+
+    public String getValueFromSelect(String id) {
+        new WebDriverWait(driver, TIMEOUT_TIMER)
+                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement selectNotificationType = driver.findElement(By.id(id));
         Select dropdown = new Select(selectNotificationType);
         return dropdown.getFirstSelectedOption().getText();
     }
 
-    public String getValueFromElement() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("metaData")));
-        WebElement metaTxt = driver.findElement(By.id("metaData"));
+    public String getValueFromElement(String id) {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        WebElement metaTxt = driver.findElement(By.id(id));
         return metaTxt.getAttribute("value");
     }
 
@@ -172,13 +195,13 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement viewBtn = driver.findElement(By.className("close"));
         viewBtn.click();
     }
-    
+
     public void clickAddConditionBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addCondition")));
         WebElement viewBtn = driver.findElement(By.id("addCondition"));
         viewBtn.click();
     }
-    
+
     public void clickAddRequirementBtn(){
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addRequirement")));
         WebElement viewBtn = driver.findElement(By.id("addRequirement"));
@@ -192,13 +215,32 @@ public class SubscriptionPage extends PageBaseClass {
         return subscriptionNameElement.getText();
     }
 
-    public boolean buttonExist(String loc) {
+    public boolean expandButtonExist(String XPath) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
         } catch (Exception e) {
             return false;
         }
         return true;
+    }
+
+    public boolean buttonExistByXPath(String XPath) {
+        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // next row.
+        String findInRow;
+        try {
+            findInRow = "[2]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            return true;
+        } catch (Exception e) {
+        }
+        try {
+            findInRow = "[1]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     public void clickReloadLDAP(String response, String responseAuth) throws IOException {
@@ -222,17 +264,41 @@ public class SubscriptionPage extends PageBaseClass {
         return true;
     }
 
-    public boolean clickElementByXPath(String loc) {
+    public boolean clickExpandButtonByXPath(String loc) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
-            driver.findElement(By.xpath(loc)).click();
+            if (expandButtonExist(loc)) {
+                new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+                driver.findElement(By.xpath(loc)).click();
+            } else {
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }
         return true;
     }
-    
+
     public int countElements(String id) {
-    	return driver.findElements(By.id(id)).size();   	
+    	return driver.findElements(By.id(id)).size();
     }
+
+    public void clickViewButtonByXPath(String XPath) {
+        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // next row.
+        try {
+            String Xpath2 = XPath + "[2]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath2)));
+            driver.findElement(By.xpath(Xpath2)).click();
+            return;
+        } catch (Exception e) {
+        }
+        try {
+            String Xpath1 = XPath + "[1]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath1)));
+            driver.findElement(By.xpath(Xpath1)).click();
+            return;
+        } catch (Exception e) {
+        }
+    }
+
 }

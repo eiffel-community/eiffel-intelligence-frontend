@@ -9,7 +9,7 @@ body {
     height: 100%;
 }
 #table {
-    cellspacing: 0px;
+    border-spacing: 0px;
 }
 .modal-subscription {
     max-width: 650px;
@@ -31,12 +31,6 @@ body {
 }
 .split {
 	max-width: 50%;
-}
-@media (max-width: 576px) {
-    .split {
-        max-width: 100%;
-        width: 100%;
-    }
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -79,7 +73,11 @@ body {
 }
 
 .cursor-pointer {
-	cursor: pointer;
+    cursor: pointer;
+}
+.tooltip-inner {
+    text-align: left;
+    max-width: 410px;
 }
 .badge-rounded {
 	display: inline-block;
@@ -115,6 +113,63 @@ body {
 	position: absolute;
 	left: -999em;
 }
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 43px;
+    height: 23px;
+    margin-left: 5px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+/* Rounded sliders */
+.slider.round {
+    border-radius: 25px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -124,11 +179,16 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 @media (max-width: 576px) {
 	body {
         padding-top: 80px;
     }
     .container {
         max-width: 480px;
+    }
+    .split {
+        max-width: 100%;
+        width: 100%;
     }
 }
