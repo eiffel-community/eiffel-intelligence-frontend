@@ -196,9 +196,20 @@ jQuery(document).ready(function () {
         };
 
         self.getUTCDate = function (epochtime) {
-            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-            d.setUTCMilliseconds(epochtime);
-            return d;  // Is now a date (in client time zone)
+            var date = new Date(epochtime);
+            var resolvedOptions = Intl.DateTimeFormat().resolvedOptions();
+            var options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: false,
+                    timeZone: resolvedOptions.timeZone,
+                    timeZoneName: 'short'
+            };
+            return date.toLocaleDateString(resolvedOptions.locale, options);  // Is now a date (in client time zone)
         }
 
         self.add_requirement = function (data, event) {
