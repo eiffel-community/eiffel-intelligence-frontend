@@ -22,16 +22,32 @@ import lombok.Setter;
 public class BackEndInstanceFileUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstanceFileUtils.class);
-    private static final String PATH_TO_WRITE = "src/main/resources/EIBackendInstancesInformation.json";
 
-    @Value("${ei.backendInstancesPath:#{null}}")
+    private static final String BACKEND_INSTANCES_DEFAULT_FILENAME = "EIBackendInstancesInformation.json";
+    private static final String EI_HOME_DEFAULT_NAME = ".eiffel-intelligence-frontend";
+
     private String eiInstancesPath;
 
+    @Value("${ei.backendInstancesFilePath:#{null}}")
+    private String backendInstancesFilePath;
+
     @PostConstruct
-    public void init() {
+    public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
-        if (eiInstancesPath == null || eiInstancesPath.isEmpty()) {
-            setEiInstancesPath(PATH_TO_WRITE);
+
+        // Use home folder if a specific backendInstancesFilePath isn't provided
+        if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
+            String homeFolder = System.getProperty("user.home");
+            String eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
+
+            Boolean eiHomeExists = Files.isDirectory(Paths.get(eiHome));
+            if (!eiHomeExists) {
+                createEiHomeFolder(eiHome);
+            }
+
+            setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
+        } else {
+            setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
         }
     }
 
@@ -70,16 +86,35 @@ public class BackEndInstanceFileUtils {
     }
 
     private void ensureValidFile() throws IOException {
-        if (!(new File(eiInstancesPath).isFile())) {
-            LOG.error("File does not exist! Trying to creat file.");
-            Files.createFile(Paths.get(eiInstancesPath));
-            Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
-            return;
+        try {
+            if (!(new File(eiInstancesPath).isFile())) {
+                createFileWithDirs();
+                return;
+            }
+
+            if (!fileContainsJsonArray()) {
+                LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
+                System.exit(-1);
+            }
+        } catch(Exception e) {
+            String message = String.format(
+                    "Failed to read backendInstancesFilePath %s. Please check access rights or choose another backendInstancesFilePath in application.properties.", eiInstancesPath);
+            LOG.error(message);
+            System.exit(-1);
+        }
+    }
+
+    private void createFileWithDirs() throws IOException {
+        File eiInstancesParentFolder = Paths.get(eiInstancesPath).getParent().toFile();
+
+        if (!(eiInstancesParentFolder.isDirectory())){
+            LOG.info(String.format("Parentdir(s) for %s does not exist! Trying to create necessary parent dirs.", backendInstancesFilePath));
+            eiInstancesParentFolder.mkdirs();
         }
 
-        if (!fileContainsJsonArray()) {
-            LOG.error("File does not contain valid json! JSON:'" + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
-        }
+        LOG.info("File does not exist! Trying to create file.");
+        Files.createFile(Paths.get(eiInstancesPath));
+        Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
     }
 
     private boolean fileContainsJsonArray() {
@@ -89,6 +124,17 @@ public class BackEndInstanceFileUtils {
         } catch (Exception e) {
             LOG.error("Failure when try to parse json file" + e.getMessage());
             return false;
+        }
+    }
+
+    private void createEiHomeFolder(String eiHome) throws IOException {
+        Boolean success = (new File(eiHome)).mkdirs();
+
+        if (!success) {
+            String message = String.format(
+                    "Failed to create eiffel intelligence home folder in %s. Please check access rights or choose a specific backendInstancesFilePath in application.properties.", eiHome);
+            LOG.error(message);
+            System.exit(-1);
         }
     }
 
