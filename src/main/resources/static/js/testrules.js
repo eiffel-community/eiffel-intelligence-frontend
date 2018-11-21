@@ -195,25 +195,17 @@ jQuery(document).ready(
             if (isRules) {
                 if (isReplacing) {
                     vm.rulesBindingList([]);
-                    list.forEach(function(element) {
-                        vm.addRule(element);
-                    });
-                } else {
-                    list.forEach(function(element) {
-                        vm.addRule(element);
-                    });
                 }
+                list.forEach(function(element) {
+                    vm.addRule(element);
+                });
             } else {
                 if (isReplacing) {
                     vm.eventsBindingList([]);
-                    list.forEach(function(element) {
-                        vm.addEvent(element);
-                    });
-                } else {
-                    list.forEach(function(element) {
-                        vm.addEvent(element);
-                    });
                 }
+                list.forEach(function(element) {
+                    vm.addEvent(element);
+                });
             }
           };
 
@@ -259,22 +251,20 @@ jQuery(document).ready(
 
         document.getElementById('replaceButton').onclick = function(){
             $('#AppendReplaceModal').modal('hide');
+            isReplacing = true;
             if(isRules){
-                isReplacing = true;
                 createRulesUploadWindow();
             }else{
-                isReplacing = true;
                 createUploadWindow();
             }
         };
 
         document.getElementById('appendButton').onclick = function(){
             $('#AppendReplaceModal').modal('hide');
+            isReplacing = false;
             if(isRules){
-                isReplacing = false;
                 createRulesUploadWindow();
             }else{
-                isReplacing = false;
                 createUploadWindow();
             }
         };
