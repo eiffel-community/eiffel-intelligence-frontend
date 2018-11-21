@@ -33,6 +33,10 @@
                            Add Rule
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
+                       <button class="btn btn-danger clear_all_rules rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllRules.bind()">
+                           Clear All Rules
+                           <i class="fa fa-fw  fa-trash"></i>
+                       </button>
 	                </div>
                     <div>
 	                    <img class="cursor-pointer" id="uploadRulesInfo" alt="Upload Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top" title="Upload rules must be in a json list, Ex: [{},{}]"/>
