@@ -11,49 +11,49 @@ jQuery(document).ready(function() {
             });
         };
     }(jQuery));
-    $("#selectInstances").visible();
+    var router = new Navigo(null, true, '#!');
     // Fetch injected URL from DOM
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var frontendServiceBackEndPath = "/backend";
 
-    function loadMainPage() {
+    $("#subscriptionBtn").click(function() {
         updateBackEndInstanceList();
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").visible();
-        $("#mainFrame").load("subscriptionpage.html");
-    }
+        router.navigate('subscriptions');
+    });
 
     $("#testRulesBtn").click(function() {
         updateBackEndInstanceList();
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").visible();
-        $("#mainFrame").load("testRules.html");
+        router.navigate('test-rules');
     });
 
     $("#eiInfoBtn").click(function() {
         updateBackEndInstanceList();
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").visible();
-        $("#mainFrame").load("eiInfo.html");
+        router.navigate('ei-info');
     });
 
     $("#loginBtn").click(function() {
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").visible();
-        $("#mainFrame").load("login.html");
+        router.navigate('login');
     });
 
     $("#addInstanceBtn").click(function() {
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").invisible();
-          $("#mainFrame").load("add-instances.html");
+        router.navigate('add-backend');
     });
 
     $("#switcherBtn").click(function() {
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").invisible();
-          $("#mainFrame").load("switch-backend.html");
+        router.navigate('switch-backend');
     });
 
     $("#logoutBtn").click(function() {
@@ -69,16 +69,6 @@ jQuery(document).ready(function() {
                 loadMainPage();
             }
         });
-    });
-
-    $("#subscriptionBtn").click(function() {
-        loadMainPage();
-    });
-
-    $("#jmesPathRulesSetUpBtn").click(function() {
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        $("#mainFrame").load("jmesPathRulesSetUp.html");
     });
 
     function doIfUserLoggedOut() {
@@ -107,13 +97,14 @@ jQuery(document).ready(function() {
         });
     }
 
-    var initOneTime = function(){
-        initOneTime = function(){}; // kill it as soon as it was called
+    function init() {
+        updateBackEndInstanceList();
+        $("#navbarResponsive").removeClass("show");
+        $("#selectInstances").visible();
         loadDocumentLinks();
-        loadMainPage();
-    };
+    }
 
-    initOneTime();
+    init();
 
     function singleInstanceModel(name, host, port, path, https, active) {
         this.name = ko.observable(name),

@@ -64,12 +64,6 @@ public class WebController {
         return "login";
     }
 
-    // Added documentation for JMESPath rules usage
-    @RequestMapping("/jmesPathRulesSetUp.html")
-    public String jmesPathRulesSetUp(Model model) {
-        return "jmesPathRulesSetUp";
-    }
-
     @RequestMapping("/add-instances.html")
     public String addInstance(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());

@@ -1,6 +1,7 @@
 
 jQuery(document).ready(function() {
-var frontendServiceUrl = $('#frontendServiceUrl').text();
+    var router = new Navigo(null, true, '#!');
+    var frontendServiceUrl = $('#frontendServiceUrl').text();
 	// /Start ## Knockout ####################################################
 	function loginModel() {
 		this.userState = {
@@ -36,7 +37,7 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 				var currentUser = JSON.parse(ko.toJSON(responseData)).user;
 				$.jGrowl("Welcome " + currentUser, { sticky : false, theme : 'Notify' });
 				doIfUserLoggedIn(currentUser);
-				$("#mainFrame").load("subscriptionpage.html");
+				router.navigate('subscriptions');
 			},
 			complete : function (request, textStatus) { }
 		});
