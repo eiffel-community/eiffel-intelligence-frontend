@@ -1,7 +1,7 @@
 // Global vars
 var frontendServiceUrl;
 var i = 0;
-var isReplacing = false;
+var isReplacing = true;
 var ruleTemplate = {
   "TemplateName" : "",
   "Type" : "",
