@@ -72,7 +72,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String responseAuth = "{\"security\":true}";
 
         subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
-        indexPageObject.clickSubscriptionPage();
+        subscriptionPage.refreshPage();
 
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
         assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath));
@@ -90,7 +90,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         js = (driver);
         js.executeScript(String.format("window.localStorage.setItem('%s','%s');", keyForUser, valueForUser));
-        indexPageObject.clickSubscriptionPage();
+        subscriptionPage.refreshPage();
 
         assert (subscriptionPage.textExistsInTable("Subscription1"));
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));

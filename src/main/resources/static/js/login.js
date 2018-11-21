@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function() {
-    var router = new Navigo(null, true, '#!');
+    var router = new Navigo(null, true, '#');
     var frontendServiceUrl = $('#frontendServiceUrl').text();
 	// /Start ## Knockout ####################################################
 	function loginModel() {

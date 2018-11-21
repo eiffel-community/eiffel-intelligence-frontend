@@ -2,7 +2,7 @@ jQuery(document).ready(function() {
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServicePath = "/backend";
 function instanceModel() {
-    var router = new Navigo(null, true, '#!');
+    var router = new Navigo(null, true, '#');
 
     var self = this;
 	self.instance = {

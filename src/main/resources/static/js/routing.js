@@ -1,4 +1,4 @@
-var router = new Navigo(null, true, '#!');
+var router = new Navigo(null, true, '#');
 
 router.on({
     'subscriptions': function () {

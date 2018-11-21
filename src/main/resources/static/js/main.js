@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
             });
         };
     }(jQuery));
-    var router = new Navigo(null, true, '#!');
+    var router = new Navigo(null, true, '#');
     // Fetch injected URL from DOM
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
     var frontendServiceUrl = $('#frontendServiceUrl').text();
