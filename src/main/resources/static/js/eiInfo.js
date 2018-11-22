@@ -146,7 +146,12 @@ jQuery(document).ready(function() {
                   if (XMLHttpRequest.responseText == "") {
                       document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">There is no response from backend</h3>";
                   } else {
-                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">" + XMLHttpRequest.responseText + "</h3>";
+                      var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                      var errors = "";
+                      for (var i = 0; i < responseJSON.length; i++) {
+                          errors = errors + "\n" + responseJSON[i].reason;
+                      }
+                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">" + errors + "</h3>";
                   }
               },
               success : function (data, textStatus, xhr) {

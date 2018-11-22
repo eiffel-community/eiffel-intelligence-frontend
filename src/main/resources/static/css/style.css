@@ -35,6 +35,9 @@ body {
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
 }
+.flex-non-important {
+    display: flex;
+}
 .testRulePage {
     position: fixed;
     top: 0px;

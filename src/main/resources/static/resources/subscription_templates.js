@@ -10,6 +10,7 @@ var template_vars = {};
             "notificationMeta" : "",
             "notificationType" : "",
             "restPostBodyMediaType" : "",
+            "notificationMessageRawJson" : "",
             "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
@@ -37,6 +38,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     "notificationMeta" : "http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
                     "notificationType" : "REST_POST",
                     "restPostBodyMediaType" : "application/x-www-form-urlencoded",
+                    "notificationMessageRawJson" : "",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "json",
@@ -53,7 +55,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Jenkins_Pipline_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Jenkins_Pipline_Trigger"
                 }];
 
 
@@ -64,10 +66,11 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
                     "notificationMeta" : "http://<MyHost:port>/api/doit",
                     "notificationType" : "REST_POST",
                     "restPostBodyMediaType" : "application/json",
+                    "notificationMessageRawJson" : "{mydata: [{ fullaggregation : to_string(@) }]}",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
-                        "formvalue" : "{mydata: [{ fullaggregation : to_string(@) }]}"
+                        "formvalue" : ""
                     }
                 ],
                     "repeat" : false,
@@ -80,7 +83,7 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Rest_Post_Raw_Body_Json_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Rest_Post_Raw_Body_Json_Trigger"
                 }];
 
 
@@ -91,10 +94,11 @@ template_vars["templateEmailTrigger"] =
                     "notificationMeta" : "mymail@company.com",
                     "notificationType" : "MAIL",
                     "restPostBodyMediaType" : "",
+                    "notificationMessageRawJson" : "{mydata: [{ fullaggregation : to_string(@) }]}",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
-                        "formvalue" : "{mydata: [{ fullaggregation : to_string(@) }]}"
+                        "formvalue" : ""
                     }
                 ],
                     "repeat" : false,
@@ -107,5 +111,5 @@ template_vars["templateEmailTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Mail_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Mail_Trigger"
                 }];

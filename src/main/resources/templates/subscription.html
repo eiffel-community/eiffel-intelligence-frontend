@@ -137,7 +137,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" data-bind="visible: $data.notificationType() == 'REST_POST'">
+                            <div class="form-group" data-bind="visible: $root.restPost()">
                                 <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
                                 <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
@@ -160,7 +160,6 @@
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
                                 <div>
-                                    <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
                                 </div>
                                 <div>
                                     <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
@@ -180,13 +179,16 @@
                                         </tr>
                                     </thead>
                                     <tbody data-bind="foreach: notificationMessageKeyValues">
+                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageKeyError"></span>
+                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageValuesError"></span>
+                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageValuesJsonError"></span>
                                         <tr>
                                             <td valign="top">
-                                                <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
+                                                <input data-bind="attr: {'id': 'formkey_' + $index()}, textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
                                                     type="text" />
                                             </td>
                                             <td>
-                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
+                                                <textarea data-bind="attr: {'id': 'formvalue_' + $index()}, textInput:$data.formvalue, onChange" name="formvalue"
                                                     placeholder="Value" class="form-control" type="text"></textarea>
                                             </td>
                                             <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
@@ -212,11 +214,12 @@
                                             <th width="100%">Raw Body</th>
                                         </tr>
                                     </thead>
-                                    <tbody data-bind="foreach: notificationMessageKeyValues">
+                                    <tbody>
+                                        <span data-bind="visible: !$root.formpostkeyvaluepairs()" class="text-danger font-small" id="invalidNotificationMessageRawJson"></span>
                                         <tr>
                                             <td>
-                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
-                                                    placeholder="Raw JSON body." class="form-control" type="text"></textarea>
+                                                <textarea id="notificationMessageRawJson" data-bind="textInput: $data.notificationMessageRawJson, onChange"
+                                                    name="notificationMessageRawJson" placeholder="Raw JSON body." class="form-control" type="text"></textarea>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -256,6 +259,7 @@
                                 </div>
                             </div>
 
+                            <!--  REPEAT  -->
                             <div class="pt-3 form-group">
                                 <label class="pl-1 control-label font-weight-bold">Repeat</label>
                                 <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
@@ -278,7 +282,7 @@
                                     title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
                                 <div>
                                     <span class="text-danger font-small" id="invalidNotificationMeta"></span>
-                                    <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
+                                    <textarea id="notificationMeta" data-bind="textInput: $data.notificationMeta, onChange"
                                         name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
                                     <span class="help-block"></span>
                                 </div>

@@ -107,7 +107,8 @@ jQuery(document).ready(function () {
         this.notificationMeta = ko.observable(data.notificationMeta).extend({ notify: 'always' });
         this.notificationType = ko.observable(data.notificationType);
         this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
-        this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
+        this.notificationMessageRawJson = ko.observable(data.notificationMessageRawJson).extend({ notify: 'always' });
+        this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues).extend({ notify: 'always' });
         this.notificationMessageKeyValuesAuth = ko.observableArray(data.notificationMessageKeyValuesAuth);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
@@ -144,6 +145,7 @@ jQuery(document).ready(function () {
         // Subscribe START
         // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
+            var allowEmpty = true;
             $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
             if (new_value == "REST_POST") {
@@ -154,7 +156,6 @@ jQuery(document).ready(function () {
             } else {
                 vm.restPost(false);
             }
-            var allowEmpty = true;
             validateNotificationMeta(this.notificationMeta(), allowEmpty);
         }, this);
 
@@ -166,6 +167,8 @@ jQuery(document).ready(function () {
                 vm.formpostkeyvaluepairs(true);
             } else {
                 vm.formpostkeyvaluepairs(false);
+                var allowEmpty = true;
+                validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
             }
         }, this);
 
@@ -178,15 +181,25 @@ jQuery(document).ready(function () {
             var allowEmpty = false;
             validateNotificationMeta(notificationMeta, allowEmpty);
         });
+
+        this.notificationMessageRawJson.subscribe(function (jsonData) {
+            validateMessageRawJson(jsonData)
+        });
         // Subscribe END
     }
 
     function formdata_model(formdata) {
         this.formkey = ko.observable(formdata.formkey);
         this.formvalue = ko.observable(formdata.formvalue);
+
+        this.formkey.subscribe(function (newText) {
+            var keyOnly = true;
+            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly)
+        });
+
         this.formvalue.subscribe(function (newText) {
-            // TODO implement form data check.
-         });
+            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues())
+        });
     }
 
     function conditions_model(condition) {
@@ -563,11 +576,8 @@ jQuery(document).ready(function () {
         var reader = new FileReader();
         reader.onload = function () {
             var fileContent = reader.result;
-            var jsonLintResult = "";
-            try {
-                jsonLintResult = jsonlint.parse(fileContent);
-            } catch (e) {
-                window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+            var isValid = validateJsonString(fileContent, true);
+            if (!isValid) {
                 return false;
             }
             $.jGrowl('JSON Format Check Succeeded', {
@@ -578,6 +588,18 @@ jQuery(document).ready(function () {
             tryToCreateSubscription(subscriptionJsonList);
         };
         reader.readAsText(subscriptionFile);
+    }
+
+    function validateJsonString(jsonString, logError) {
+        try {
+            var jsonLintResult = jsonlint.parse(jsonString);
+            return true;
+        } catch (e) {
+            if (logError) {
+                window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+            }
+            return false;
+        }
     }
 
     var pom = document.getElementById('upload_sub');
@@ -722,8 +744,14 @@ jQuery(document).ready(function () {
                     }
                     item[0].requirements[i] = new conditions_model(conditions_array);
                 }
-                for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
-                    item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
+                if (item[0].notificationMessageKeyValues.length == 1 && item[0].notificationMessageKeyValues[0].formkey == "") {
+                    item[0].notificationMessageRawJson = item[0].notificationMessageKeyValues[0].formvalue;
+                    item[0].notificationMessageKeyValues[0] = new formdata_model({"formkey":"","formvalue":""});
+                } else {
+                    item[0].notificationMessageRawJson = "";
+                    for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
+                        item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
+                    }
                 }
 
                 return new subscription_model(item[0]);
@@ -781,7 +809,6 @@ jQuery(document).ready(function () {
         var regExpression = /(\W)/g;
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
-            console.log("Invalid characters: [" + invalidLetters + "].")
             $('#invalidSubscriptionName').text(
                 "Only letters, numbers and underscore allowed! "
                 + "Invalid characters: [" + invalidLetters + "]");
@@ -799,7 +826,7 @@ jQuery(document).ready(function () {
         $('#invalidNotificationMeta').hide();
         $('#notificationMeta').removeClass("is-invalid");
 
-        if (!allowEmpty && notificationMeta == "") {
+        if (!allowEmpty && notificationMeta == "" || !allowEmpty && notificationMeta.replace(/\s/g, "") == '""') {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
             error = true;
         } else if (vm.restPost()) {
@@ -809,12 +836,77 @@ jQuery(document).ready(function () {
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!regExpression.test(notificationMeta) && notificationMeta != "") {
                 $('#invalidNotificationMeta').text("Not a valid email.");
-                $('#notificationMeta').addClass("is-invalid");
                 error = true;
             }
         }
         if (error) {
+            $('#notificationMeta').addClass("is-invalid");
             $('#invalidNotificationMeta').show();
+        }
+        return error;
+    }
+
+    function validateMessageRawJson(jsonData, allowEmpty) {
+        var error = false;
+        $('#invalidNotificationMessageRawJson').hide();
+        $('#notificationMessageRawJson').removeClass("is-invalid");
+
+        if (!allowEmpty && jsonData == "") {
+            $('#invalidNotificationMessageRawJson').text("NotificationMeta must not be empty");
+            error = true;
+        }
+
+        if (jsonData != "" && !validateJsonString(jsonData)) {
+            $('#invalidNotificationMessageRawJson').text("Input is not valid JSON string.");
+            error = true;
+        }
+
+        if (error) {
+            $('#invalidNotificationMessageRawJson').show();
+            $('#notificationMessageRawJson').addClass("is-invalid");
+        }
+
+        return error;
+    }
+
+    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, keyOnly) {
+        var error = false;
+        $('#notificationMessageKeyError').hide();
+        $('#notificationMessageValuesError').hide();
+        $('#notificationMessageValuesJsonError').hide();
+
+        for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
+            var test_key = notificationMessageKeyValuesArray[i].formkey();
+            var test_value = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
+
+            $('#formvalue_' + i).removeClass("is-invalid");
+            $('#formkey_' + i).removeClass("is-invalid");
+
+            if (String(test_key).toLowerCase().replace(/"/g, "") == "json" && test_value != "") {
+
+                // check value field for valid JSON
+                if (!validateJsonString(test_value)) {
+                    $('#formvalue_' + i).addClass("is-invalid");
+                    $('#formkey_' + i).addClass("is-invalid");
+                    $('#notificationMessageValuesJsonError').text("A key indicates JSON but value is not valid JSON!");
+                    $('#notificationMessageValuesJsonError').show();
+                    error = true;
+                }
+            }
+
+            if (test_key == "") {
+                $('#formkey_' + i).addClass("is-invalid");
+                $('#notificationMessageKeyError').text("One or more keys are not set!");
+                $('#notificationMessageKeyError').show();
+                error = true;
+            }
+
+            if (!keyOnly && test_value == "") {
+                $('#formvalue_' + i).addClass("is-invalid");
+                $('#notificationMessageValuesError').text("One or more values are not set!");
+                $('#notificationMessageValuesError').show();
+                error = true;
+            }
         }
         return error;
     }
@@ -824,13 +916,9 @@ jQuery(document).ready(function () {
         var error = false;
         event.stopPropagation();
         event.preventDefault();
-        var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
-        if (!vm.formpostkeyvaluepairs()) {
-            notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
-        }
 
+        // Validations start
         $('.text-danger').hide();
-
         // Validate subscription name field
         if (validateName(String(vm.subscription()[0].subscriptionName()))) {
             error = true;
@@ -841,33 +929,16 @@ jQuery(document).ready(function () {
             error = true;
         }
 
-        //START: Check of other subscription fields values
-        for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var test_key = ko.toJSON(notificationMessageKeyValuesArray[i].formkey);
-            var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
-            if (vm.formpostkeyvaluepairs()) {
-                if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
-                    $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
-                    $('#noNotificationKeyOrValue').show();
-                    error = true;
-                }
+        // Validate notification message(s)
+        if (vm.formpostkeyvaluepairs()) {
+            // Validate notificationMessageKeyValues field
+            if (validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues())) {
+                error = true;
             }
-            else {
-                if (notificationMessageKeyValuesArray.length !== 1) {
-                    $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
-                    $('#notificationMessageKeyValuesArrayToLarge').show();
-                    error = true;
-                }
-                else if (test_key !== '""') {
-                    $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
-                    $('#keyInNotificationMessage').show();
-                    error = true;
-                }
-                else if (test_value.replace(/\s/g, "") === '""') {
-                    $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
-                    $('#noNotificationMessage').show();
-                    error = true;
-                }
+        } else {
+            // Validate notificationMessageRawJson field
+            if (validateMessageRawJson(String(vm.subscription()[0].notificationMessageRawJson()))) {
+                error = true;
             }
         }
 
@@ -891,25 +962,33 @@ jQuery(document).ready(function () {
         }
         //END: Check of other subscription fields values
 
-        var url;
-        var type;
-        if (save_method === 'add') {  // Add new
-            url = frontendServiceUrl + "/subscriptions";
-            type = "POST";
-
-        } else if (save_method === 'edit') {  // Update existing
-            url = frontendServiceUrl + "/subscriptions";
-            type = "PUT";
-        }
+        // Data preperations
         // Ensure MAIL notificationType has no restPostBodyMediaType
         if (vm.subscription()[0].notificationType() == "MAIL") {
             vm.subscription()[0].restPostBodyMediaType("");
         }
 
+        if (!vm.formpostkeyvaluepairs()) {
+            // since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
+            var formKeyValuePair = { "formkey": "", "formvalue": vm.subscription()[0].notificationMessageRawJson() };
+            vm.subscription()[0].notificationMessageKeyValues([new formdata_model(formKeyValuePair)]);
+        }
+        // Delete notificationMessageRawJson since it is not used in back end.
+        //delete vm.subscription()[0].notificationMessageRawJson;
+
+        var url = frontendServiceUrl + "/subscriptions";
+        var type;
+        if (save_method === 'add') {  // Add new
+            type = "POST";
+
+        } else if (save_method === 'edit') {  // Update existing
+            type = "PUT";
+        }
+
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
-                $('#btnSave').text('saving...'); //change button text
+                $('#btnSave').text('Saving...'); //change button text
                 $('#btnSave').attr('disabled', true); //set button disable
             },
             success: function (data, textStatus) {
@@ -932,7 +1011,7 @@ jQuery(document).ready(function () {
                 $('#serverError').show();
             },
             complete: function () {
-                $('#btnSave').text('save'); //change button text
+                $('#btnSave').text('Save'); //change button text
                 $('#btnSave').attr('disabled', false); //set button enable
             }
         };
