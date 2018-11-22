@@ -17,4 +17,4 @@ This button indicates, through its colour, whether a backend instance is connect
 #### _Search_
 To search subscriptions with matching names in the database (displayed in the table).
 
-**_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/wiki/Subscription-API) and [here](https://github.com/eiffel-community/eiffel-intelligence/wiki/Subscriptions)_**
+**_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/Subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/Subscriptions.md)_**

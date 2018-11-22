@@ -37,16 +37,15 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 
 # Documentation
 
-[**GUI Overview**](./wiki/GUI-Overview.md)
-
-* [**Subscription Handling**](./wiki/Subscription-Handling.md)
-
-   * [**Add Subscription**](./wiki/Add-Subscription.md)
-
-* [**Test Rules**](./wiki/Test-Rules.md)
-
-* [**Eiffel Intelligence Information**](./wiki/Eiffel-Intelligence-Information.md)
-
-* [**Documentation Links**](./wiki/Documentation-Links.md)
-
-* [**Administration Backend Instances**](./wiki/Administration-backend-instances.md)
+1. [**GUI Overview**](./wiki/GUI-Overview.md)
+1. [**Subscription Handling**](./wiki/Subscription-Handling.md)
+    -  [**Add Subscription**](./wiki/Add-Subscription.md)
+1. [**Test Rules**](./wiki/Test-Rules.md)
+    - [**Rule testing mechanism via "Test Rules" GUI interface**](./wiki/Test-Rules.md#Rule-testing-mechanism-via-"Test-Rules"-GUI-interface)
+    - [**Introduction**](./wiki/Test-Rules.md#Introduction)
+    - [**Aggregated object**](./wiki/Test-Rules.md#Aggregated-object)
+    - [**Rule set up**](./wiki/Test-Rules.md#Rule-set-up)
+    - [**The most common operation you would do**](./wiki/Test-Rules.md#The-most-common-operation-you-would-do)
+1. [**Eiffel Intelligence Information**](./wiki/Eiffel-Intelligence-Information.md)
+1. [**Documentation Links**](./wiki/Documentation-Links.md)
+1. [**Administration Backend Instances**](./wiki/Administration-backend-instances.md)
