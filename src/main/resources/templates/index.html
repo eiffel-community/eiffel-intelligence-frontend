@@ -38,19 +38,19 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li id="subscriptionBtn" class="nav-item">
-          <a class="nav-link">
+          <a class="nav-link" href="#subscriptions" data-navigo>
             <i class="fa fa-fw fa-table"></i>
             <span class="nav-link-text">Subscriptions</span>
           </a>
         </li>
         <li id="testRulesBtn" class="nav-item">
-          <a class="nav-link">
+          <a class="nav-link" href="#test-rules" data-navigo>
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Test Rules</span>
           </a>
         </li>
         <li id="eiInfoBtn" class="nav-item">
-          <a class="nav-link">
+          <a class="nav-link" href="#ei-info" data-navigo>
             <i class="fa fa-fw fa-info"></i>
             <span class="nav-link-text">Eiffel Intelligence Info</span>
           </a>
@@ -65,16 +65,16 @@
           </ul>
         </li>
         <li id="adminBackendInstancesBtn" class="nav-item">
-          <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseBackEndPages" data-parent="#exampleAccordion">
+          <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseBackEndPages" data-parent="#exampleAccordion" id="collapseBackEndPagesParent">
             <i class="fa fa-fw fa-file"></i>
             <span class="nav-link-text">Administration backend instances</span>
           </a>
           <ul class="sidenav-second-level collapse" id="collapseBackEndPages">
             <li>
-              <a id="addInstanceBtn" class="cursor-pointer">Add backend instance</a>
+              <a id="addInstanceBtn" href="#add-backend" data-navigo>Add backend instance</a>
             </li>
             <li>
-              <a id="switcherBtn" class="cursor-pointer">Switch backend instance</a>
+              <a id="switcherBtn" href="#switch-backend" data-navigo>Switch backend instance</a>
             </li>
           </ul>
         </li>
@@ -108,7 +108,7 @@
           <a class="nav-link" id="ldapUserName"></a>
         </li>
         <li class="nav-item" id="loginBlock" style="display: none">
-          <a class="nav-link" id="loginBtn" href="#">
+          <a class="nav-link" id="loginBtn">
             <i class="fa fa-fw fa-sign-in"></i>Login</a>
         </li>
         <li class="nav-item" id="logoutBlock" style="display: none">
@@ -167,7 +167,6 @@
   <script type="text/javascript" src="assets/js/sb-admin.min.js"></script>
   <script type="text/javascript" src="assets/js/sb-admin-datatables.min.js"></script>
   <script type="text/javascript" src="assets/navigo/7.1.2/navigo.min.js"></script>
-  <script type="text/javascript" src="js/routing.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/errorMessages.js"></script>
 </body>

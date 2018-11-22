@@ -11,6 +11,7 @@ function singleInstanceModel(name, host, port, path, https, active) {
     this.active = ko.observable(active)
 }
 function multipleInstancesModel(data) {
+    var router = new Navigo(null, true, '#');
     var self = this;
     var selected;
     self.instances = ko.observableArray();
@@ -53,7 +54,7 @@ function multipleInstancesModel(data) {
             },
             success: function (responseData, XMLHttpRequest, textStatus) {
                 console.log("Response from IE front end back end: " + responseData.message);
-                location.reload();
+                router.navigate('subscriptions');
             }
         });
     }

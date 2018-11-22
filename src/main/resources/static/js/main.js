@@ -12,53 +12,66 @@ jQuery(document).ready(function() {
         };
     }(jQuery));
     var router = new Navigo(null, true, '#');
-    // Fetch injected URL from DOM
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var frontendServiceBackEndPath = "/backend";
 
-    $("#subscriptionBtn").click(function() {
-        updateBackEndInstanceList();
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        router.navigate('subscriptions');
-    });
-
-    $("#testRulesBtn").click(function() {
-        updateBackEndInstanceList();
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        router.navigate('test-rules');
-    });
-
-    $("#eiInfoBtn").click(function() {
-        updateBackEndInstanceList();
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        router.navigate('ei-info');
-    });
+    router.on({
+        'subscriptions': function () {
+            checkBackendStatus();
+            updateBackEndInstanceList();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").visible();
+            $("#mainFrame").load("subscriptionpage.html");
+        },
+        'test-rules': function () {
+            checkBackendStatus();
+            updateBackEndInstanceList();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").visible();
+            $("#mainFrame").load("testRules.html");
+        },
+        'ei-info': function () {
+            checkBackendStatus();
+            updateBackEndInstanceList();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").visible();
+            $("#mainFrame").load("eiInfo.html");
+        },
+        'switch-backend': function () {
+            checkBackendStatus();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").invisible();
+            $("#mainFrame").load("switch-backend.html");
+            if(!$("#collapseBackEndPagesParent").attr("aria-expanded")) {
+                $("#collapseBackEndPagesParent").click();
+            }
+        },
+        'add-backend': function () {
+            checkBackendStatus();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").invisible();
+            $("#mainFrame").load("add-instances.html");
+            if(!$("#collapseBackEndPagesParent").attr("aria-expanded")) {
+                $("#collapseBackEndPagesParent").click();
+            }
+        },
+        '*': function () {
+            checkBackendStatus();
+            updateBackEndInstanceList();
+            $("#navbarResponsive").removeClass("show");
+            $("#selectInstances").visible();
+            $("#mainFrame").load("subscriptionpage.html");
+        }
+    }).resolve();
 
     $("#loginBtn").click(function() {
         $("#navbarResponsive").removeClass("show");
         $("#selectInstances").visible();
-        router.navigate('login');
-    });
-
-    $("#addInstanceBtn").click(function() {
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").invisible();
-        router.navigate('add-backend');
-    });
-
-    $("#switcherBtn").click(function() {
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").invisible();
-        router.navigate('switch-backend');
+        $("#mainFrame").load("login.html");
     });
 
     $("#logoutBtn").click(function() {
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
         $.ajax({
             url : frontendServiceUrl + "/auth/logout",
             type : "GET",
@@ -66,7 +79,7 @@ jQuery(document).ready(function() {
             cache: false,
             complete : function (XMLHttpRequest, textStatus) {
                 doIfUserLoggedOut();
-                loadMainPage();
+                router.navigate('subscriptions');
             }
         });
     });
@@ -97,14 +110,7 @@ jQuery(document).ready(function() {
         });
     }
 
-    function init() {
-        updateBackEndInstanceList();
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        loadDocumentLinks();
-    }
-
-    init();
+    loadDocumentLinks();
 
     function singleInstanceModel(name, host, port, path, https, active) {
         this.name = ko.observable(name),
@@ -169,6 +175,22 @@ jQuery(document).ready(function() {
                 ko.cleanNode(observableObject);
                 ko.applyBindings(new viewModel(responseData),observableObject);
             }
+        });
+    }
+
+    function checkBackendStatus() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth/checkStatus",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            dataType: "text",
+            cache: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
+                }
+            },
+            success: function () {}
         });
     }
 
