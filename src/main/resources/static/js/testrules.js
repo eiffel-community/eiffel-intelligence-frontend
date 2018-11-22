@@ -158,6 +158,12 @@ jQuery(document).ready(
             self.rulesBindingList([]);
             self.addRule(ruleTemplate);
         }
+
+	// This function is used to remove all events
+        self.clearAllEvents = function(){
+            self.eventsBindingList([]);
+            self.addEvent({});
+        }
         return self;
       }
 

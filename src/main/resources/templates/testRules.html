@@ -78,6 +78,10 @@
                            Add Event
                            <i class="fa fa-fw  fa-plus"></i>
                        </button>
+                       <button class="btn btn-danger clear_all_events rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllEvents.bind()">
+                           Clear All Events
+                           <i class="fa fa-fw  fa-trash"></i>
+                       </button>
                     </div>
                     <div>
                         <img class="cursor-pointer" id="uploadEventsInfo" alt="Upload Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top" title="Upload events must be in a json list, Ex: [{},{}]"/>
