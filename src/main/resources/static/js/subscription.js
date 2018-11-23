@@ -852,7 +852,7 @@ jQuery(document).ready(function () {
         $('#notificationMessageRawJson').removeClass("is-invalid");
 
         if (!allowEmpty && jsonData == "") {
-            $('#invalidNotificationMessageRawJson').text("NotificationMeta must not be empty");
+            $('#invalidNotificationMessageRawJson').text("The raw body field must not be empty.);
             error = true;
         }
 
