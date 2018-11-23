@@ -16,12 +16,10 @@
 */
 package com.ericsson.ei.frontend.utils;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
