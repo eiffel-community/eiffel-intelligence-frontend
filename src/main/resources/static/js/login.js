@@ -2,6 +2,21 @@
 jQuery(document).ready(function() {
     var router = new Navigo(null, true, '#');
     var frontendServiceUrl = $('#frontendServiceUrl').text();
+
+    function checkBackendSecured() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            error: function (data) {
+                router.navigate('subscriptions');
+            },
+            success: function (data) {}
+        });
+    }
+
+    checkBackendSecured();
+
 	// /Start ## Knockout ####################################################
 	function loginModel() {
 		this.userState = {
@@ -38,14 +53,11 @@ jQuery(document).ready(function() {
 				$.jGrowl("Welcome " + currentUser, { sticky : false, theme : 'Notify' });
 				doIfUserLoggedIn(currentUser);
 				router.navigate('subscriptions');
-			},
-			complete : function (request, textStatus) { }
+			}
 		});
 	}
 
 	function doIfUserLoggedIn(name) {
-		localStorage.removeItem("currentUser");
-		localStorage.setItem("currentUser", name);
 		$("#ldapUserName").text(name);
 		$("#loginBlock").hide();
 		$("#logoutBlock").show();

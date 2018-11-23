@@ -18,58 +18,43 @@ jQuery(document).ready(function() {
 
     router.on({
         'subscriptions': function () {
-            checkBackendStatus();
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
             $("#mainFrame").load("subscriptionpage.html");
         },
         'test-rules': function () {
-            checkBackendStatus();
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
             $("#mainFrame").load("testRules.html");
         },
         'ei-info': function () {
-            checkBackendStatus();
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
             $("#mainFrame").load("eiInfo.html");
         },
         'switch-backend': function () {
-            checkBackendStatus();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").invisible();
             $("#mainFrame").load("switch-backend.html");
-            if(!$("#collapseBackEndPagesParent").attr("aria-expanded")) {
-                $("#collapseBackEndPagesParent").click();
-            }
         },
         'add-backend': function () {
-            checkBackendStatus();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").invisible();
             $("#mainFrame").load("add-instances.html");
-            if(!$("#collapseBackEndPagesParent").attr("aria-expanded")) {
-                $("#collapseBackEndPagesParent").click();
-            }
         },
-        '*': function () {
-            checkBackendStatus();
+        'login': function () {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("subscriptionpage.html");
+            $("#mainFrame").load("login.html");
+        },
+        '*': function () {
+            router.navigate('subscriptions');
         }
     }).resolve();
-
-    $("#loginBtn").click(function() {
-        $("#navbarResponsive").removeClass("show");
-        $("#selectInstances").visible();
-        $("#mainFrame").load("login.html");
-    });
 
     $("#logoutBtn").click(function() {
         $.ajax({
@@ -79,17 +64,72 @@ jQuery(document).ready(function() {
             cache: false,
             complete : function (XMLHttpRequest, textStatus) {
                 doIfUserLoggedOut();
-                router.navigate('subscriptions');
+                router.navigate('*');
             }
         });
     });
 
+    function doIfUserLoggedIn(currentUser) {
+        if (currentUser != "") {
+            $("#ldapUserName").text(currentUser);
+            $("#logoutBlock").show();
+            $(".show_if_authorized").show();
+        }
+    }
+
     function doIfUserLoggedOut() {
-        localStorage.removeItem("currentUser");
         $("#ldapUserName").text("Guest");
         $("#loginBlock").show();
         $("#logoutBlock").hide();
-        localStorage.setItem('errorsStore', []);
+        $(".show_if_authorized").hide();
+    }
+
+    function updateBackEndInstanceList() {
+        $.ajax({
+            url: frontendServiceUrl + frontendServiceBackEndPath,
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.logMessages("Failure when trying to load backend instances");
+            },
+            success: function (responseData, XMLHttpRequest, textStatus) {
+                var observableObject = $("#selectInstances")[0];
+                ko.cleanNode(observableObject);
+                ko.applyBindings(new viewModel(responseData),observableObject);
+            }
+        });
+    }
+
+    function checkBackendSecured() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            error: function (data) {},
+            success: function (data) {
+                isSecured = JSON.parse(ko.toJSON(data)).security;
+                if (isSecured == true) {
+                    checkLoggedInUser();
+                }
+            }
+        });
+    }
+
+    function checkLoggedInUser() {
+        $.ajax({
+            url : frontendServiceUrl + "/auth/login",
+            type : "GET",
+            contentType : 'application/json; charset=utf-8',
+            cache: false,
+            error : function (request, textStatus, errorThrown) {
+                doIfUserLoggedOut();
+            },
+            success : function (responseData, textStatus) {
+                var user = JSON.parse(ko.toJSON(responseData)).user;
+                doIfUserLoggedIn(user);
+            }
+        });
     }
 
     function loadDocumentLinks(){
@@ -110,7 +150,12 @@ jQuery(document).ready(function() {
         });
     }
 
-    loadDocumentLinks();
+    function init() {
+        checkBackendSecured();
+        loadDocumentLinks();
+    }
+
+    init();
 
     function singleInstanceModel(name, host, port, path, https, active) {
         this.name = ko.observable(name),
@@ -159,39 +204,6 @@ jQuery(document).ready(function() {
                 $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
               }
         }
-    }
-
-    function updateBackEndInstanceList() {
-        $.ajax({
-            url: frontendServiceUrl + frontendServiceBackEndPath,
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failure when trying to load backend instances");
-            },
-            success: function (responseData, XMLHttpRequest, textStatus) {
-                var observableObject = $("#selectInstances")[0];
-                ko.cleanNode(observableObject);
-                ko.applyBindings(new viewModel(responseData),observableObject);
-            }
-        });
-    }
-
-    function checkBackendStatus() {
-        $.ajax({
-            url: frontendServiceUrl + "/auth/checkStatus",
-            type: "GET",
-            contentType: "application/string; charset=utf-8",
-            dataType: "text",
-            cache: false,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (XMLHttpRequest.status == 401) {
-                    doIfUserLoggedOut();
-                }
-            },
-            success: function () {}
-        });
     }
 
     $('body').on('click', function (e) {
