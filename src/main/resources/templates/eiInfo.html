@@ -2,23 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <mvc:resources mapping="/resources/**" location="/resources/" />
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Eiffel Intelligence Subscription Handling</title>
-
-
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Eiffel Intelligence Subscription Handling</title>
 </head>
 
 <body class="nav-link">
-	<div class="hidden" id="frontendServiceUrl" style="display: none"
+	<div class="d-none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
+	<div class="d-none" id="frontendServiceVersion" th:text="${frontendServiceVersion}"></div>
+	<div class="d-none" id="backendServerUrl" th:text="${backendServerUrl}"></div>
+	<!--<div class="hidden" id="frontendServiceUrl" style="display: none"
 		th:text="${frontendServiceUrl}"></div>
 	<div class="hidden" id="backendServerUrl" style="display: none"
 		th:text="${backendServerUrl}"></div>
-		
-	<div class="col-12" id="eiPageFrame"></div>
+	-->
+
+	<div class="col-12" id="eiPageFrame">
+		<p class="section-p-text table-text-setting">General Eiffel Intelligence Front End Information</p>
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped dataTable table-text-setting">
+				<tbody>
+					<tr>
+						<td class="left-table-pane">
+							Application Name
+						</td>
+						<td>
+							<span th:text="${frontendAppName}"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="left-table-pane">
+							Application Version
+						</td>
+						<td>
+							<span th:text="${frontendServiceVersion}"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="left-table-pane">
+							Application URL
+						</td>
+						<td>
+							<span th:text="${frontendServiceUrl}"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 	<script type="text/javascript" src="js/eiInfo.js"></script>
-	
+
 </body>
 </html>

@@ -16,10 +16,12 @@
 */
 package com.ericsson.ei.frontend.utils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
@@ -51,6 +53,14 @@ public class WebControllerUtils {
 
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
+
+    @Getter
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    @Getter
+    @Value("${build.version}")
+    private String version;
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
