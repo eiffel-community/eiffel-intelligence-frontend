@@ -61,7 +61,8 @@ public class BackEndInstanceFileUtils {
             }
 
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
-            
+            LOG.info("EI Instances List file path is not provided! " +
+                     "Will create a default EI Instances List file at file path: " + eiInstancesPath);
             dumpJsonArray(backendInstancesListJsonArray);
             ensureValidFile();
             setDefaultEiBackendInstance(backendInstancesListJsonArray);
@@ -69,6 +70,8 @@ public class BackEndInstanceFileUtils {
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
             if (!(new File(eiInstancesPath).isFile())) {
+            	LOG.info("EI Instances List file don' exist! Creating file with given or " +
+                         "default EI instances list content. File path: " + eiInstancesPath);
                 createFileWithDirs();
                 dumpJsonArray(backendInstancesListJsonArray);
                 ensureValidFile();
