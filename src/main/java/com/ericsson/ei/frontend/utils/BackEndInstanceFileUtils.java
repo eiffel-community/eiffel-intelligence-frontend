@@ -46,6 +46,8 @@ public class BackEndInstanceFileUtils {
     public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
+        JsonArray backendInstancesListJsonArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
+
 
         // Use home folder if a specific backendInstancesFilePath isn't provided
         if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
@@ -59,21 +61,24 @@ public class BackEndInstanceFileUtils {
             }
 
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
-            System.out.println("FILE_CONTENT: " +  backendInstancesListJsonContent);
-            JsonArray jArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
             
-            dumpJsonArray(jArray);
+            dumpJsonArray(backendInstancesListJsonArray);
             ensureValidFile();
-            setDefaultEiBackendInstance(jArray);
+            setDefaultEiBackendInstance(backendInstancesListJsonArray);
             
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
+            if (!(new File(eiInstancesPath).isFile())) {
+                createFileWithDirs();
+                dumpJsonArray(backendInstancesListJsonArray);
+                ensureValidFile();
+            }
+            
         }
     }
     
     private void setDefaultEiBackendInstance(JsonArray jArray) {
     	for (JsonElement instanceJsonObj : jArray) {
-    		System.out.println("KALLE: " + instanceJsonObj);
     		JsonObject jObject = instanceJsonObj.getAsJsonObject();
     		if (Boolean.getBoolean(jObject.get("defaultBackend").toString())) {
     			backendInstancesUtils.setDefaultBackEndInstance(jObject.get("name").toString(),
