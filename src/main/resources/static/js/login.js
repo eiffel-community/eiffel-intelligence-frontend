@@ -11,7 +11,12 @@ jQuery(document).ready(function() {
             error: function (data) {
                 router.navigate('subscriptions');
             },
-            success: function (data) {}
+            success: function (data) {
+                isSecured = JSON.parse(ko.toJSON(data)).security;
+                if (isSecured == false) {
+                    router.navigate('subscriptions');
+                }
+            }
         });
     }
 
