@@ -47,8 +47,8 @@ public class BackEndInstancesUtils {
     private static final String PATH = "path";
     private static final String HTTPS = "https";
     private static final long SECONDS_BETWEEN_PARSING = 20;
+    
 
-    @Value("${ei.backendServerName:#{null}}")
     private String defaultBackEndInstanceName;
 
     @Autowired

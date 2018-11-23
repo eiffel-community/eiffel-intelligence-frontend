@@ -43,19 +43,11 @@ public class BackEndInformation {
     private static final String HTTPS = "https";
     private static final String DEFAULT = "defaultBackend";
 
-    @Value("${ei.backendServerName:#{null}}")
     private String name;
-
-    @Value("${ei.backendServerHost:#{null}}")
     private String host;
-
-    @Value("${ei.backendServerPort:#{null}}")
     private String port;
-
-    @Value("${ei.backendContextPath:#{\"\"}}")
     private String path;
 
-    @Value("${ei.useSecureHttpBackend:#{false}}")
     @JsonProperty("https")
     @SerializedName("https")
     private boolean useSecureHttpBackend;

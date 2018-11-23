@@ -7,12 +7,17 @@ import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lombok.Setter;
@@ -28,15 +33,23 @@ public class BackEndInstanceFileUtils {
 
     private String eiInstancesPath;
 
+    @Autowired
+    BackEndInstancesUtils backendInstancesUtils;
+    
     @Value("${ei.backendInstancesFilePath:#{null}}")
     private String backendInstancesFilePath;
+    
+    @Value("${ei.backendInstancesListJsonContent:#{null}}")
+    private String backendInstancesListJsonContent;
 
     @PostConstruct
     public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
+
         // Use home folder if a specific backendInstancesFilePath isn't provided
         if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
+
             String homeFolder = System.getProperty("user.home");
             String eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
 
@@ -46,9 +59,30 @@ public class BackEndInstanceFileUtils {
             }
 
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
+            System.out.println("FILE_CONTENT: " +  backendInstancesListJsonContent);
+            JsonArray jArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
+            
+            dumpJsonArray(jArray);
+            ensureValidFile();
+            setDefaultEiBackendInstance(jArray);
+            
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
         }
+    }
+    
+    private void setDefaultEiBackendInstance(JsonArray jArray) {
+    	for (JsonElement instanceJsonObj : jArray) {
+    		System.out.println("KALLE: " + instanceJsonObj);
+    		JsonObject jObject = instanceJsonObj.getAsJsonObject();
+    		if (Boolean.getBoolean(jObject.get("defaultBackend").toString())) {
+    			backendInstancesUtils.setDefaultBackEndInstance(jObject.get("name").toString(),
+    					jObject.get("host").toString(),
+    					Integer.parseInt(jObject.get("port").toString()),
+    					jObject.get("path").toString(),
+    					Boolean.getBoolean(jObject.get("defaultBackend").toString()));
+    		}
+    	}
     }
 
     /**
