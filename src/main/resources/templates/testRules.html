@@ -38,7 +38,7 @@
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-                       <button class="btn btn-danger clear_all_rules rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllRules.bind()">
+                       <button class="btn btn-danger clear_all_rules rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'rules')">
                            Clear All
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
@@ -84,7 +84,7 @@
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-                       <button class="btn btn-danger clear_all_events rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllEvents.bind()">
+                       <button class="btn btn-danger clear_all_events rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'events')">
                            Clear All
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
@@ -174,5 +174,39 @@
 	    </div>
 	  </div>
 	</div>
+ 
+    <!-- /. Clear all events -->
+    <div class="modal delete-warning-modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title">WARNING!</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <!-- ko if: $root.clearType()=="rules" -->
+	                    <p id="delete-warning-modal-text" >Do you really want to remove all rules?</p>
+	                <!-- /ko-->
+
+	                <!-- ko if: $root.clearType()=="events" -->
+	                    <p id="delete-warning-modal-text" >Do you really want to remove all events?</p>
+	                <!-- /ko-->
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+	                <!-- ko if: $root.clearType()=="rules" -->
+	                    <button data-bind="click: $root.clearAllRules" type="button" class="btn btn-danger">Clear all rules</button>
+	                <!-- /ko-->
+
+	                <!-- ko if: $root.clearType()=="events" -->
+	                    <button data-bind="click: $root.clearAllEvents" type="button" class="btn btn-danger">Clear all events</button>
+	                <!-- /ko-->
+	            </div>
+	        </div>
+        </div>
+    </div>
 </body>
 </html>
