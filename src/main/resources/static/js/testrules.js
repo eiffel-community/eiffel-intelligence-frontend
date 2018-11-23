@@ -152,6 +152,18 @@ jQuery(document).ready(
         self.addEvent = function(data) {
             self.eventsBindingList.push({'data': ko.observable(self.parsedToString(data))});
         };
+
+        // This function is used to remove all rules
+        self.clearAllRules = function(){
+            self.rulesBindingList([]);
+            self.addRule(ruleTemplate);
+        }
+
+	// This function is used to remove all events
+        self.clearAllEvents = function(){
+            self.eventsBindingList([]);
+            self.addEvent({});
+        }
         return self;
       }
 

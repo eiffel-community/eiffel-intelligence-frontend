@@ -21,7 +21,8 @@ body {
 	width: 25rem;
 }
 .rule-button {
-    width: 150px;
+    width: auto;
+    min-width: 150px;
 }
 .display-inline-table {
     display: inline-table;
