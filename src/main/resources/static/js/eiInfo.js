@@ -18,6 +18,13 @@ jQuery(document).ready(function() {
         return label;
     }
 
+    function createErrorMessage(inputText) {
+        var element = document.createElement('h4');
+        element.innerHTML = inputText;
+        element.setAttribute('class', 'table-text-setting alert-danger text-center');
+        return element;
+    }
+
     function generateGeneralEiInfo(data) {
         var tbdy = document.createElement('tbody');
 
@@ -93,10 +100,14 @@ jQuery(document).ready(function() {
             contentType : 'application/json;charset=UTF-8',
             type: 'GET',
             error : function (XMLHttpRequest, textStatus, errorThrown) {
+                var label = createLabel('General Eiffel Intelligence Information');
+                body.appendChild(label);
                 if (XMLHttpRequest.responseText == "") {
-                    document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">There is no response from backend</h3>";
+                    var element = createErrorMessage('<strong>Error</strong> There is no response from backend!');
+                    body.appendChild(element);
                 } else {
-                    document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">" + XMLHttpRequest.responseText + "</h3>";
+                    var element = createErrorMessage('Error: ' + XMLHttpRequest.responseText + '!');
+                    body.appendChild(element);
                 }
             },
             success : function (data, textStatus, xhr) {
