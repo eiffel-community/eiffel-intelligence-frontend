@@ -40,7 +40,7 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         // Set up
         int portServer1 = mockServer1.getLocalPort();
         int portServer2 = mockServer2.getLocalPort();
-        
+
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "", true);
 
@@ -58,9 +58,6 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
         // Test switch to the newly added instance
         switchBackendPage.switchToBackendInstance(1);
-
-        InfoPage infoPage = indexPageObject.clickEiInfoBtn();
-        assertEquals("http://localhost:" + portServer2, infoPage.getConnectedBackend());
 
         // Test that different set of subscriptions are available for each
         // instance
