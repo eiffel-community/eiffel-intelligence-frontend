@@ -40,12 +40,15 @@ import lombok.Setter;
 @Component
 public class BackEndInstancesUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
-    private static final String NAME = "name";
-    private static final String HOST = "host";
-    private static final String PORT = "port";
-    private static final String PATH = "path";
-    private static final String HTTPS = "https";
+	private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
+    
+	public static final String NAME = "name";
+    public static final String HOST = "host";
+    public static final String PORT = "port";
+    public static final String CONTEXT_PATH = "contextPath";
+    public static final String HTTPS = "https";
+    public static final String DEFAULT = "defaultBackend";
+    
     private static final long SECONDS_BETWEEN_PARSING = 20;
     
 
@@ -64,7 +67,7 @@ public class BackEndInstancesUtils {
     private boolean savedSinceLastParsing = false;
 
     /**
-     * Function to check weather an instance host, port, path and https is
+     * Function to check weather an instance host, port, context path and https is
      * unique.
      *
      * @param JsonObject
@@ -77,7 +80,7 @@ public class BackEndInstancesUtils {
             // Ensure unique host, port and context paths
             if (backendInformation.getHost().equals(instance.get(HOST).getAsString())
                     && Integer.valueOf(backendInformation.getPort()) == instance.get(PORT).getAsInt()
-                    && backendInformation.getPath().equals(instance.get(PATH).getAsString())
+                    && backendInformation.getContextPath().equals(instance.get(CONTEXT_PATH).getAsString())
                     && backendInformation.isUseSecureHttpBackend() == instance.get(HTTPS).getAsBoolean()) {
                 return true;
             }
@@ -164,7 +167,7 @@ public class BackEndInstancesUtils {
             if (backendInformation.getName().equals(objectToDelete.get(NAME).getAsString())
                     && backendInformation.getHost().equals(objectToDelete.get(HOST).getAsString())
                     && backendInformation.getPort().equals(objectToDelete.get(PORT).getAsString())
-                    && backendInformation.getPath().equals(objectToDelete.get(PATH).getAsString())
+                    && backendInformation.getContextPath().equals(objectToDelete.get(CONTEXT_PATH).getAsString())
                     && backendInformation.isUseSecureHttpBackend() == objectToDelete.get(HTTPS).getAsBoolean()
                     && !backendInformation.isDefaultBackend()) {
                 backEndInformationList.remove(backendInformation);
@@ -197,14 +200,14 @@ public class BackEndInstancesUtils {
      * @param name
      * @param host
      * @param port
-     * @param path
+     * @param contextPath
      * @param def
      */
-    public void setDefaultBackEndInstance(String name, String host, int port, String path, boolean def) {
+    public void setDefaultBackEndInstance(String name, String host, int port, String contextPath, boolean def) {
         getDefaultBackendInformation().setName(name);
         getDefaultBackendInformation().setHost(host);
         getDefaultBackendInformation().setPort(String.valueOf(port));
-        getDefaultBackendInformation().setPath(path);
+        getDefaultBackendInformation().setContextPath(contextPath);
         getDefaultBackendInformation().setUseSecureHttpBackend(false);
         getDefaultBackendInformation().setDefaultBackend(def);
     }

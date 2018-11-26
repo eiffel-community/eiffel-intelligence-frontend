@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -83,11 +84,11 @@ public class BackEndInstanceFileUtils {
     	for (JsonElement instanceJsonObj : jArray) {
     		JsonObject jObject = instanceJsonObj.getAsJsonObject();
     		if (Boolean.getBoolean(jObject.get("defaultBackend").toString())) {
-    			backendInstancesUtils.setDefaultBackEndInstance(jObject.get("name").toString(),
-    					jObject.get("host").toString(),
-    					Integer.parseInt(jObject.get("port").toString()),
-    					jObject.get("path").toString(),
-    					Boolean.getBoolean(jObject.get("defaultBackend").toString()));
+    			backendInstancesUtils.setDefaultBackEndInstance(jObject.get(BackEndInstancesUtils.NAME).toString(),
+    					jObject.get(BackEndInstancesUtils.HOST).toString(),
+    					Integer.parseInt(jObject.get(BackEndInstancesUtils.PORT).toString()),
+    					jObject.get(BackEndInstancesUtils.CONTEXT_PATH).toString(),
+    					Boolean.getBoolean(jObject.get(BackEndInstancesUtils.DEFAULT).toString()));
     		}
     	}
     }

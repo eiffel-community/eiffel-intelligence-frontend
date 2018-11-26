@@ -35,7 +35,7 @@ public class BackEndInformationTest {
     private static final String NAME = "name";
     private static final String HOST = "host";
     private static final String PORT = "port";
-    private static final String PATH = "path";
+    private static final String CONTEXT_PATH = "contextPath";
     private static final String HTTPS = "https";
     private static final String DEFAULT = "defaultBackend";
 
@@ -58,7 +58,7 @@ public class BackEndInformationTest {
         instance.addProperty(NAME, BACK_END_NAME);
         instance.addProperty(HOST, BACK_END_HOST);
         instance.addProperty(PORT, Integer.valueOf(BACK_END_PORT));
-        instance.addProperty(PATH, "");
+        instance.addProperty(CONTEXT_PATH, "");
         instance.addProperty(HTTPS, true);
         instance.addProperty(DEFAULT, false);
 
@@ -79,7 +79,7 @@ public class BackEndInformationTest {
         backEndInformation.setUseSecureHttpBackend(false);
         assertEquals(urlWithHttp, backEndInformation.getUrlAsString());
 
-        backEndInformation.setPath("/path/");
+        backEndInformation.setContextPath("/path/");
         LOG.error("backEndInformation = " + backEndInformation.getUrlAsString());
         assertEquals(urlWithHttpwothPath, backEndInformation.getUrlAsString());
 
