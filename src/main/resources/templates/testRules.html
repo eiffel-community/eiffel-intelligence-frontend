@@ -20,8 +20,8 @@
             <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testRulesDOMObject">
                 <div class="d-flex flex-wrap">
 	                <div class="col-11">
-	                   <button class="btn btn-primary upload_rules rule-button mr-1 mt-1 d-inline-block">
-                           Upload Rules
+	                   <button class="btn btn-primary upload_rules mr-1 mt-1 d-inline-block">
+                           Load Rules from file
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hide" type='file' id='uploadRulesFile' name='file'/>
@@ -65,8 +65,8 @@
             <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testEventsDOMObject">
                 <div class="d-flex flex-wrap">
                     <div class="col-11">
-                       <button class="btn btn-primary upload_events rule-button mr-1 mt-1 d-inline-block">
-                           Upload Events
+                       <button class="btn btn-primary upload_events mr-1 mt-1 d-inline-block">
+                           Load Events from file
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hide" type='file' id='uploadEventsFile' name='file'/>
@@ -128,6 +128,19 @@
             </div>
         </div>
     </div>
+    <div id="AppendReplaceModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header justify-content-center">
+	        <h5 class="modal-title">Do you want to replace or append?</h5>
+	      </div>
+	      <div class="modal-footer justify-content-center">
+            <button id="replaceButton" type="button" class="btn btn-primary">Replace</button>
+            <button id="appendButton" type="button" class="btn btn-info">Append</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
     <div id="aggregatedObjectModal" class="modal fade" role="dialog">
 	  <div class="modal-dialog modal-width-aggregated" role="document">
 	    <div class="modal-content">
