@@ -79,8 +79,13 @@ public class BackEndInstanceFileUtils {
             
         }
     }
-    
-    
+
+
+    /**
+     * Parses Ei Instances list from backendInstancesListJsonContent property
+     * and sets default EI-Backend instance.
+     * 
+     */
     private void parseAndSetEiInstancesList() {
         JsonArray parsedBackendInstancesListJsonArray = null;
         parsedBackendInstancesListJsonArray = parseEiInstancesListJsonObject();
@@ -94,7 +99,14 @@ public class BackEndInstanceFileUtils {
 		}
         setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
     }
-    
+
+
+    /**
+     * Parses Ei Instances list from backendInstancesListJsonContent property.
+     * 
+     * @return
+     *      JsonArray
+     */
     private JsonArray parseEiInstancesListJsonObject() {
         JsonArray backendInstancesListJsonArray = null;
         
@@ -117,7 +129,12 @@ public class BackEndInstanceFileUtils {
         }
         return backendInstancesListJsonArray;
     }
-    
+
+
+    /**
+     * Sets default EI Backend instance.
+     *
+     */
     private void setDefaultEiBackendInstance(JsonArray jArray) {
     	for (JsonElement instanceJsonObj : jArray) {
     		JsonObject jObject = instanceJsonObj.getAsJsonObject();
