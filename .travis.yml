@@ -4,6 +4,9 @@ language: java
 
 services: 
 
+dist:
+  - xenial
+
 jdk:
   - oraclejdk8
   
