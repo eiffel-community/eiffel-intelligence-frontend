@@ -146,14 +146,19 @@ jQuery(document).ready(function () {
         // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
             var allowEmpty = true;
+            var keyOnly = false;
             $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
             if (new_value == "REST_POST") {
                 vm.restPost(true);
                 if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
                     vm.formpostkeyvaluepairs(true);
+                    validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly, allowEmpty)
+                } else {
+                    validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
                 }
             } else {
+                validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
                 vm.restPost(false);
             }
             validateNotificationMeta(this.notificationMeta(), allowEmpty);
@@ -161,13 +166,15 @@ jQuery(document).ready(function () {
 
         // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
+            var keyOnly = false;
+            var allowEmpty = true;
             // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
             lastPressedRestPostBodyMediaType = new_value;
             if (new_value == "application/x-www-form-urlencoded") {
+                validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly, allowEmpty)
                 vm.formpostkeyvaluepairs(true);
             } else {
                 vm.formpostkeyvaluepairs(false);
-                var allowEmpty = true;
                 validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
             }
         }, this);
@@ -848,6 +855,9 @@ jQuery(document).ready(function () {
 
     function validateMessageRawJson(jsonData, allowEmpty) {
         var error = false;
+        $('#notificationMessageKeyError').hide();
+        $('#notificationMessageValuesError').hide();
+        $('#notificationMessageValuesJsonError').hide();
         $('#invalidNotificationMessageRawJson').hide();
         $('#notificationMessageRawJson').removeClass("is-invalid");
 
@@ -869,14 +879,15 @@ jQuery(document).ready(function () {
         return error;
     }
 
-    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, keyOnly) {
+    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, keyOnly, allowEmpty) {
         var error = false;
         $('#notificationMessageKeyError').hide();
         $('#notificationMessageValuesError').hide();
         $('#notificationMessageValuesJsonError').hide();
+        $('#invalidNotificationMessageRawJson').hide();
 
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var test_key = notificationMessageKeyValuesArray[i].formkey();
+            var test_key = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
             var test_value = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
 
             $('#formvalue_' + i).removeClass("is-invalid");
@@ -894,14 +905,14 @@ jQuery(document).ready(function () {
                 }
             }
 
-            if (test_key == "") {
+            if (test_key == "" && !allowEmpty) {
                 $('#formkey_' + i).addClass("is-invalid");
                 $('#notificationMessageKeyError').text("One or more keys are not set!");
                 $('#notificationMessageKeyError').show();
                 error = true;
             }
 
-            if (!keyOnly && test_value == "") {
+            if (!keyOnly && !allowEmpty && test_value == "") {
                 $('#formvalue_' + i).addClass("is-invalid");
                 $('#notificationMessageValuesError').text("One or more values are not set!");
                 $('#notificationMessageValuesError').show();

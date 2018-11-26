@@ -179,9 +179,9 @@
                                         </tr>
                                     </thead>
                                     <tbody data-bind="foreach: notificationMessageKeyValues">
-                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageKeyError"></span>
-                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageValuesError"></span>
-                                            <span data-bind="visible: $root.formpostkeyvaluepairs()" class="flex-non-important text-danger font-small" id="notificationMessageValuesJsonError"></span>
+                                            <span class="flex-non-important text-danger font-small" id="notificationMessageKeyError"></span>
+                                            <span class="flex-non-important text-danger font-small" id="notificationMessageValuesError"></span>
+                                            <span class="flex-non-important text-danger font-small" id="notificationMessageValuesJsonError"></span>
                                         <tr>
                                             <td valign="top">
                                                 <input data-bind="attr: {'id': 'formkey_' + $index()}, textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
@@ -215,7 +215,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <span data-bind="visible: !$root.formpostkeyvaluepairs()" class="text-danger font-small" id="invalidNotificationMessageRawJson"></span>
+                                        <span class="text-danger font-small" id="invalidNotificationMessageRawJson"></span>
                                         <tr>
                                             <td>
                                                 <textarea id="notificationMessageRawJson" data-bind="textInput: $data.notificationMessageRawJson, onChange"
