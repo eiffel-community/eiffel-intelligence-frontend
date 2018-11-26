@@ -14,4 +14,4 @@ before_install:
   - chmod +x pom.xml
   
 script:
-  - mvn test
+  - mvn test -q
