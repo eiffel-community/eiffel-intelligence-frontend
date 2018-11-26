@@ -136,16 +136,16 @@ public class BackEndInstanceFileUtils {
      *
      */
     private void setDefaultEiBackendInstance(JsonArray jArray) {
-    	for (JsonElement instanceJsonObj : jArray) {
-    		JsonObject jObject = instanceJsonObj.getAsJsonObject();
-    		if (Boolean.getBoolean(jObject.get("defaultBackend").toString())) {
-    			backendInstancesUtils.setDefaultBackEndInstance(jObject.get(BackEndInstancesUtils.NAME).toString(),
-    					jObject.get(BackEndInstancesUtils.HOST).toString(),
-    					Integer.parseInt(jObject.get(BackEndInstancesUtils.PORT).toString()),
-    					jObject.get(BackEndInstancesUtils.CONTEXT_PATH).toString(),
-    					Boolean.getBoolean(jObject.get(BackEndInstancesUtils.DEFAULT).toString()));
-    		}
-    	}
+        for (JsonElement instanceJsonObj : jArray) {
+            JsonObject jObject = instanceJsonObj.getAsJsonObject();
+            if (Boolean.getBoolean(jObject.get("defaultBackend").toString())) {
+                backendInstancesUtils.setDefaultBackEndInstance(jObject.get(BackEndInstancesUtils.NAME).toString(),
+                jObject.get(BackEndInstancesUtils.HOST).toString(),
+                Integer.parseInt(jObject.get(BackEndInstancesUtils.PORT).toString()),
+                jObject.get(BackEndInstancesUtils.CONTEXT_PATH).toString(),
+                Boolean.getBoolean(jObject.get(BackEndInstancesUtils.DEFAULT).toString()));
+            }
+        }
     }
 
     /**
