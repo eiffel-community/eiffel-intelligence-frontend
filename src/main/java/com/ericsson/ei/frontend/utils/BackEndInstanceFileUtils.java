@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import lombok.Setter;
 
@@ -46,8 +47,17 @@ public class BackEndInstanceFileUtils {
     public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
-        JsonArray backendInstancesListJsonArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
-
+        JsonArray backendInstancesListJsonArray = null;
+        try {
+        	backendInstancesListJsonArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
+        }
+        catch (JsonSyntaxException e) {
+        	LOG.error("Failed to parse EI backned instances list json object." +
+                      "\nMake sure ei.backendInstancesListJsonContent properties is set with one or more EI Backend instances." +
+        			  "\nError message: " + e.getMessage() +
+        			  "\nErrors: " + e);
+        	System.exit(1);
+        }
 
         // Use home folder if a specific backendInstancesFilePath isn't provided
         if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
