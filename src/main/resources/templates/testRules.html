@@ -9,6 +9,7 @@
     <meta name="author" content="" />
     <script type="text/javascript" src="js/testrules.js"></script>
     <script type="text/javascript" src="js/downloadFile.js"></script>
+    <script type="text/javascript" src="resources/testRules_constants.js"></script>
 </head>
 
 <body>
@@ -37,9 +38,6 @@
                            Clear All Rules
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
-	                </div>
-                    <div>
-	                    <img class="cursor-pointer" id="uploadRulesInfo" alt="Upload Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top" title="Upload rules must be in a json list, Ex: [{},{}]"/>
 	                </div>
                 </div>
                 <div class="col-12 pt-2">
@@ -83,9 +81,6 @@
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
                     </div>
-                    <div>
-                        <img class="cursor-pointer" id="uploadEventsInfo" alt="Upload Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top" title="Upload events must be in a json list, Ex: [{},{}]"/>
-                    </div>
                 </div>
                 <div class="col-12 pt-2">
                     <h3>Events</h3>
@@ -118,6 +113,9 @@
                 </div>
                 <div class="col-4 text-center">
                     <button class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
+                    <button class="rules_info">
+                        <img src="assets/images/information.png"/>
+                    </button>
                 </div>
                 <div class="col-4">
                     <button class="btn btn-success download_events white-space-normal float-right">
@@ -152,6 +150,27 @@
 	      </div>
 	      <div class="modal-body modal-height-fit">
 	        <p id="aggregatedObjectContent" class="pre"></p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div id="infoModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Usage Information</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body modal-height-fit">
+	        <p id="infoContent" class="pre"></p>
+	        <div style="text-align: center">
+	           <a href="https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/TestRulesUserGuide.md" style="text-decoration: none;">Test Rules User Guide</a>
+	        </div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

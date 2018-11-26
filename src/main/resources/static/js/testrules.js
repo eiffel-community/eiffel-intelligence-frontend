@@ -2,25 +2,7 @@
 var frontendServiceUrl;
 var i = 0;
 var isReplacing = true;
-var ruleTemplate = {
-  "TemplateName" : "",
-  "Type" : "",
-  "TypeRule" : "",
-  "IdRule" : "",
-  "StartEvent" : "",
-  "IdentifyRules" : "",
-  "MatchIdRules" : {},
-  "ExtractionRules" : "",
-  "DownstreamIdentifyRules" : "",
-  "DownstreamMergeRules" : "",
-  "DownstreamExtractionRules" : "",
-  "ArrayMergeOptions" : "",
-  "HistoryIdentifyRules" : "",
-  "HistoryExtractionRules" : "",
-  "HistoryPathRules" : "",
-  "ProcessRules" : null,
-  "ProcessFunction" : null
-};
+
 jQuery(document).ready(
     function() {
 
@@ -167,6 +149,14 @@ jQuery(document).ready(
         }
         return self;
       }
+
+      //Create information modal
+      $(".container").on("click", "button.rules_info", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $('#infoContent').text(test_rule_info);
+        $('#infoModal').modal('show');
+      });
 
       var vm = new AppViewModel();
       ko.applyBindings(vm, $("#submitButton")[0]);
