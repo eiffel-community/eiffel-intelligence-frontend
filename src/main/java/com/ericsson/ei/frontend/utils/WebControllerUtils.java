@@ -39,7 +39,6 @@ public class WebControllerUtils {
     @Value("${ei.frontendServiceHost}")
     private String frontendServiceHost;
 
-    @Setter
     @Value("${ei.frontendServicePort}")
     private int frontendServicePort;
 
@@ -52,11 +51,9 @@ public class WebControllerUtils {
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
 
-    @Getter
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Getter
     @Value("${build.version}")
     private String version;
 
