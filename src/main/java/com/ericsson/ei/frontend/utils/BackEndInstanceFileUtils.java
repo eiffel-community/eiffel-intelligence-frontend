@@ -86,6 +86,9 @@ public class BackEndInstanceFileUtils {
                 dumpJsonArray(backendInstancesListJsonArray);
                 ensureValidFile();
             }
+            else {
+            	LOG.info("EI-Bakend instances list file that will be used: " + eiInstancesPath);
+            }
             
         }
     }
