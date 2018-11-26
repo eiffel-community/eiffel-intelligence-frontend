@@ -47,17 +47,6 @@ public class BackEndInstanceFileUtils {
     public void init() throws IOException {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
-        JsonArray backendInstancesListJsonArray = null;
-        try {
-        	backendInstancesListJsonArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
-        }
-        catch (JsonSyntaxException e) {
-        	LOG.error("Failed to parse EI backned instances list json object." +
-                      "\nMake sure ei.backendInstancesListJsonContent properties is set with one or more EI Backend instances." +
-        			  "\nError message: " + e.getMessage() +
-        			  "\nErrors: " + e);
-        	System.exit(1);
-        }
 
         // Use home folder if a specific backendInstancesFilePath isn't provided
         if(backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
@@ -73,9 +62,8 @@ public class BackEndInstanceFileUtils {
             setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
             LOG.info("EI Instances List file path is not provided! " +
                      "Will create a default EI Instances List file at file path: " + eiInstancesPath);
-            dumpJsonArray(backendInstancesListJsonArray);
-            ensureValidFile();
-            setDefaultEiBackendInstance(backendInstancesListJsonArray);
+            
+            parseAndSetEiInstancesList();
             
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
@@ -83,14 +71,51 @@ public class BackEndInstanceFileUtils {
             	LOG.info("EI Instances List file don' exist! Creating file with given or " +
                          "default EI instances list content. File path: " + eiInstancesPath);
                 createFileWithDirs();
-                dumpJsonArray(backendInstancesListJsonArray);
-                ensureValidFile();
+                parseAndSetEiInstancesList();
             }
             else {
-            	LOG.info("EI-Bakend instances list file that will be used: " + eiInstancesPath);
+            	LOG.info("EI-Backend instances list file that will be used: " + eiInstancesPath);
             }
             
         }
+    }
+    
+    
+    private void parseAndSetEiInstancesList() {
+        JsonArray parsedBackendInstancesListJsonArray = null;
+        parsedBackendInstancesListJsonArray = parseEiInstancesListJsonObject();
+        dumpJsonArray(parsedBackendInstancesListJsonArray);
+        try {
+			ensureValidFile();
+		} catch (IOException e) {
+			LOG.error("Failed to validate EI Instances List json object." +
+		               "\nError message: " + e.getMessage() +
+		               "\nErrors: " + e);
+		}
+        setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
+    }
+    
+    private JsonArray parseEiInstancesListJsonObject() {
+        JsonArray backendInstancesListJsonArray = null;
+        
+        if ( backendInstancesListJsonContent == null || backendInstancesListJsonContent.isEmpty()) {
+        	LOG.error("EI backned instances list json object is empty, can't continue." +
+                      "\nMake sure that EI Instances list flags is set, " +
+        			  " 'ei.backendInstancesFilePath' or 'ei.backendInstancesListJsonContent'");
+      	System.exit(1);
+        }
+        
+        try {
+        	backendInstancesListJsonArray = (JsonArray) new JsonParser().parse(backendInstancesListJsonContent.toString());
+        }
+        catch (JsonSyntaxException e) {
+        	LOG.error("Failed to parse EI backned instances list json object." +
+                      "\nMake sure ei.backendInstancesListJsonContent properties is set with one or more EI Backend instances." +
+        			  "\nError message: " + e.getMessage() +
+        			  "\nErrors: " + e);
+        	System.exit(1);
+        }
+        return backendInstancesListJsonArray;
     }
     
     private void setDefaultEiBackendInstance(JsonArray jArray) {
