@@ -4,9 +4,6 @@ language: java
 
 services: 
 
-dist:
-  - trusty
-
 jdk:
   - oraclejdk8
   
