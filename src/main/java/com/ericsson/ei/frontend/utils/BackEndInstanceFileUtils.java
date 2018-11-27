@@ -104,7 +104,7 @@ public class BackEndInstanceFileUtils {
         JsonArray backendInstancesListJsonArray = null;
 
         if (backendInstancesListJsonContent == null || backendInstancesListJsonContent.isEmpty()) {
-            LOG.error("EI backned instances list json object is empty, can't continue."
+            LOG.error("EI backend instances list json object is empty, can't continue."
                     + "\nMake sure that EI Instances list flags is set, "
                     + " 'ei.backendInstancesFilePath' or 'ei.backendInstancesListJsonContent'");
             System.exit(1);
@@ -114,8 +114,8 @@ public class BackEndInstanceFileUtils {
             backendInstancesListJsonArray = (JsonArray) new JsonParser()
                     .parse(backendInstancesListJsonContent.toString());
         } catch (JsonSyntaxException e) {
-            LOG.error("Failed to parse EI backned instances list json object."
-                    + "\nMake sure ei.backendInstancesListJsonContent properties is set with one or more EI Backend instances."
+            LOG.error("Failed to parse EI backend instances list json object."
+                    + "\nMake sure ei.backendInstancesListJsonContent property is set with one or more EI Backend instances."
                     + "\nError message: " + e.getMessage() + "\nErrors: " + e);
             System.exit(1);
         }
