@@ -93,7 +93,7 @@ public class BackEndInstanceFileUtils {
         try {
 			ensureValidFile();
 		} catch (IOException e) {
-			LOG.error("Failed to validate EI Instances List json object." +
+			     LOG.error("Failed to validate EI Instances List json object." +
 		               "\nError message: " + e.getMessage() +
 		               "\nErrors: " + e);
 		}
