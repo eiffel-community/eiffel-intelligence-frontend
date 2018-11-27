@@ -18,9 +18,6 @@ import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 
 public class TestSubscriptionHandling extends SeleniumBaseClass {
 
-    @MockBean
-    protected CloseableHttpClient mockedHttpClient;
-
     private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
             SeleniumConfig.getTempDownloadDirectory().getPath(), "subscriptionsTemplate.json");
     private static final String SUBSCRIPTION_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest",
@@ -36,8 +33,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private JavascriptExecutor js;
 
+    @MockBean
+    protected CloseableHttpClient mockedHttpClient;
+
     @Test
     public void testSubscriptionHandlingWithLDAPEnabled() throws Exception {
+        initBaseMocks(mockedHttpClient);
         // Open index page.
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
@@ -75,8 +76,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         indexPageObject.clickSubscriptionPage();
 
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
-        assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath));
-        assert (!subscriptionPage.buttonExistByXPath(editButtonXPath));
+        assert (subscriptionPage.buttonDoesNotExistByXPath(deleteButtonXPath));
+        assert (subscriptionPage.buttonDoesNotExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
         // Given LDAP is enabled, "Reload" subscriptions and then click
@@ -108,8 +109,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath2));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath2));
         subscriptionPage.clickViewButtonByXPath(viewButtonXPath2);
-        assert (!subscriptionPage.buttonExistByXPath(editButtonXPath2));
-        assert (!subscriptionPage.buttonExistByXPath(deleteButtonXPath2));
+        assert (subscriptionPage.buttonDoesNotExistByXPath(editButtonXPath2));
+        assert (subscriptionPage.buttonDoesNotExistByXPath(deleteButtonXPath2));
 
         // Test view button
         subscriptionPage.clickViewButtonByXPath(viewButtonXPath2);
@@ -125,8 +126,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // all subscriptions are deleted
         String mockedDeleteResponse = "";
         subscriptionPage.clickBulkDelete(mockedDeleteResponse);
-        assert (!subscriptionPage.textExistsInTable("Subscription1"));
-        assert (!subscriptionPage.textExistsInTable("Subscription2"));
+        assert (subscriptionPage.textDoesNotExistsInTable("Subscription1"));
+        assert (subscriptionPage.textDoesNotExistsInTable("Subscription2"));
 
         // Verify that "get template" button works
         String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
@@ -146,7 +147,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // is open
         subscriptionPage.clickAddSubscription();
         String formHeaderID = "formHeader";
-        assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
+        assert (subscriptionPage.presenceOfHeader(formHeaderID));
 
         // On subscription form, select the template as "Mail Trigger" and
         // verify Test form "Cancel" button:Click "Cancel" button and verify
@@ -157,7 +158,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Again, click "Add Subscription" button and verify that "Subscription
         // Form" is open
         subscriptionPage.clickAddSubscription();
-        assert ((new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfHeader(formHeaderID))));
+        assert (subscriptionPage.presenceOfHeader(formHeaderID));
 
         // On subscription form, select the template as "Mail Trigger" and
         // verify
