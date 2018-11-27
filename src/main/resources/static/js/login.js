@@ -12,8 +12,9 @@ jQuery(document).ready(function() {
                 router.navigate('subscriptions');
             },
             success: function (data) {
-                isSecured = JSON.parse(ko.toJSON(data)).security;
-                if (isSecured == false) {
+                var currentUser = localStorage.getItem("currentUser");
+                var isSecured = JSON.parse(ko.toJSON(data)).security;
+                if (isSecured == false || (isSecured == true && currentUser != null)) {
                     router.navigate('subscriptions');
                 }
             }
@@ -62,11 +63,13 @@ jQuery(document).ready(function() {
 		});
 	}
 
-	function doIfUserLoggedIn(name) {
-		$("#ldapUserName").text(name);
-		$("#loginBlock").hide();
-		$("#logoutBlock").show();
-	}
+    function doIfUserLoggedIn(name) {
+        localStorage.removeItem("currentUser");
+        localStorage.setItem("currentUser", name);
+        $("#ldapUserName").text(name);
+        $("#loginBlock").hide();
+        $("#logoutBlock").show();
+    }
 
 	var observableObject = $("#viewModelDOMObject")[0];
 	ko.cleanNode(observableObject);

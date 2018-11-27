@@ -70,18 +70,20 @@ jQuery(document).ready(function() {
     });
 
     function doIfUserLoggedIn(currentUser) {
-        if (currentUser != "") {
-            $("#ldapUserName").text(currentUser);
-            $("#logoutBlock").show();
-            $(".show_if_authorized").show();
-        }
+        localStorage.removeItem("currentUser");
+        localStorage.setItem("currentUser", currentUser);
+        $("#ldapUserName").text(currentUser);
+        $("#logoutBlock").show();
+        $(".show_if_authorized").show();
     }
 
     function doIfUserLoggedOut() {
+        localStorage.removeItem("currentUser");
         $("#ldapUserName").text("Guest");
         $("#loginBlock").show();
         $("#logoutBlock").hide();
         $(".show_if_authorized").hide();
+        localStorage.setItem('errorsStore', []);
     }
 
     function updateBackEndInstanceList() {
@@ -108,7 +110,7 @@ jQuery(document).ready(function() {
             contentType: "application/string; charset=utf-8",
             error: function (data) {},
             success: function (data) {
-                isSecured = JSON.parse(ko.toJSON(data)).security;
+                var isSecured = JSON.parse(ko.toJSON(data)).security;
                 if (isSecured == true) {
                     checkLoggedInUser();
                 }
@@ -120,7 +122,7 @@ jQuery(document).ready(function() {
         $.ajax({
             url : frontendServiceUrl + "/auth/login",
             type : "GET",
-            contentType : 'application/json; charset=utf-8',
+            contentType : 'application/string; charset=utf-8',
             cache: false,
             error : function (request, textStatus, errorThrown) {
                 doIfUserLoggedOut();

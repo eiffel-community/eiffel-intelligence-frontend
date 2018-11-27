@@ -57,6 +57,7 @@ jQuery(document).ready(function () {
             cache: false,
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
                     EIConnBtn.style.background = green;
                     backendStatus = true;
                 } else {
@@ -74,6 +75,15 @@ jQuery(document).ready(function () {
         });
     }
     checkBackendStatus();
+
+    function doIfUserLoggedOut() {
+        localStorage.removeItem("currentUser");
+        $("#ldapUserName").text("Guest");
+        $("#loginBlock").show();
+        $("#logoutBlock").hide();
+        $(".show_if_authorized").hide();
+        localStorage.setItem('errorsStore', []);
+    }
 
     function loadSubButtons() {
         $(".loadingAnimation").hide();
@@ -315,37 +325,18 @@ jQuery(document).ready(function () {
             type: "GET",
             contentType: "application/string; charset=utf-8",
             error: function () {
-                drawTable();
+                drawTable(false);
             },
             success: function (data) {
                 isSecured = JSON.parse(ko.toJSON(data)).security;
-                if (isSecured == true) {
-                    checkLoggedInUser();
-                } else {
-                    drawTable();
-                }
-            }
-        });
-    }
-
-    function checkLoggedInUser() {
-        $.ajax({
-            url : frontendServiceUrl + "/auth/login",
-            type : "GET",
-            contentType : 'application/json; charset=utf-8',
-            cache: false,
-            error : function (request, textStatus, errorThrown) {
-                drawTable("");
-            },
-            success : function (responseData, textStatus) {
-                var user = JSON.parse(ko.toJSON(responseData)).user;
-                drawTable(user);
+                drawTable(isSecured);
             }
         });
     }
 
     // /Start ## Datatables ##################################################
-    function drawTable(currentUser) {
+    function drawTable(isSecured) {
+        var currentUser = localStorage.getItem("currentUser");
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -429,7 +420,7 @@ jQuery(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        if (currentUser == undefined || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
+                        if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
@@ -440,7 +431,7 @@ jQuery(document).ready(function () {
                 }
             ],
             "initComplete": function () {
-                if (currentUser == undefined) {
+                if (isSecured == false) {
                     table.column(2).visible(false);
                 }
                 $("#check-all").click(function () {
@@ -449,7 +440,6 @@ jQuery(document).ready(function () {
             }
         });
     };
-
     checkSecurityAndDrawTable();
 
     $("#sidenavCollapse").click(function() {

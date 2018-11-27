@@ -247,9 +247,9 @@ public class SubscriptionPage extends PageBaseClass {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
-                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("subscriptions")));
         Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("auth")));
+                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth")));
         WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
