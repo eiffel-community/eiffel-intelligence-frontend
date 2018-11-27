@@ -165,10 +165,6 @@ public class EIRequestsController {
             LOG.debug("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
-        } catch (java.lang.NullPointerException e) {
-            // This is most likely an error during test so we make it silent.
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            LOG.warn("Forward Request Warning: " + e);
         } catch (IOException e) {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
             LOG.error("Forward Request Errors: " + e);
