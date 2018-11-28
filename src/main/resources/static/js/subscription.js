@@ -910,7 +910,6 @@ jQuery(document).ready(function () {
             var testValueShouldBeValidatedAsJson = (
                 String(testKey).toLowerCase().replace(/"/g, "") == "json" && testValue != "");
             if (testValueShouldBeValidatedAsJson) {
-
                 // check value field for valid JSON
                 var testValueIsNotValidJson = !validateJsonString(testValue);
                 if (testValueIsNotValidJson) {
@@ -1042,9 +1041,6 @@ jQuery(document).ready(function () {
         } else if (save_method === 'edit') {  // Update existing
             type = "PUT";
         }
-
-        console.log("Orginal = " + ko.toJSON(vm.subscription()));
-        console.log("Copy = " + JSON.stringify(formDataToSend));
 
         // AJAX Callback handling
         var callback = {
