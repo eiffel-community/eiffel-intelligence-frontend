@@ -146,14 +146,14 @@ jQuery(document).ready(function () {
         // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
             var allowEmpty = true;
-            var keyOnly = false;
+            var validateOnlyKey = false;
             $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
             if (new_value == "REST_POST") {
                 vm.restPost(true);
                 if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
                     vm.formpostkeyvaluepairs(true);
-                    validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly, allowEmpty)
+                    validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey, allowEmpty)
                 } else {
                     validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
                 }
@@ -166,12 +166,12 @@ jQuery(document).ready(function () {
 
         // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
-            var keyOnly = false;
+            var validateOnlyKey = false;
             var allowEmpty = true;
             // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
             lastPressedRestPostBodyMediaType = new_value;
             if (new_value == "application/x-www-form-urlencoded") {
-                validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly, allowEmpty)
+                validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey, allowEmpty)
                 vm.formpostkeyvaluepairs(true);
             } else {
                 vm.formpostkeyvaluepairs(false);
@@ -200,8 +200,8 @@ jQuery(document).ready(function () {
         this.formvalue = ko.observable(formdata.formvalue);
 
         this.formkey.subscribe(function (newText) {
-            var keyOnly = true;
-            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), keyOnly)
+            var validateOnlyKey = true;
+            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey)
         });
 
         this.formvalue.subscribe(function (newText) {
@@ -751,7 +751,11 @@ jQuery(document).ready(function () {
                     }
                     item[0].requirements[i] = new conditions_model(conditions_array);
                 }
-                if (item[0].notificationMessageKeyValues.length == 1 && item[0].notificationMessageKeyValues[0].formkey == "") {
+
+                var notificationMessageRawJsonShouldBeReplacedWithFormValue = (
+                    item[0].notificationMessageKeyValues.length == 1 &&
+                    item[0].notificationMessageKeyValues[0].formkey == "");
+                if (notificationMessageRawJsonShouldBeReplacedWithFormValue) {
                     item[0].notificationMessageRawJson = item[0].notificationMessageKeyValues[0].formvalue;
                     item[0].notificationMessageKeyValues[0] = new formdata_model({"formkey":"","formvalue":""});
                 } else {
@@ -797,6 +801,7 @@ jQuery(document).ready(function () {
         $('#modal_form :input').prop("disabled", true);
         $('#modal_form .close').show();
         $('#modal_form .close').prop("disabled", false);
+        $('.text-danger').hide();
     }
     // /Stop ## pupulate JSON  ###########################################
 
@@ -804,6 +809,7 @@ jQuery(document).ready(function () {
         var error = false;
         $('#invalidSubscriptionName').hide();
         $('#subscriptionNameInput').removeClass("is-invalid");
+        $('#errorExists').hide();
 
         // Validate SubscriptionName field
         if (subscriptionName == "") {
@@ -832,8 +838,11 @@ jQuery(document).ready(function () {
         var error = false;
         $('#invalidNotificationMeta').hide();
         $('#notificationMeta').removeClass("is-invalid");
+        $('#errorExists').hide();
 
-        if (!allowEmpty && notificationMeta == "" || !allowEmpty && notificationMeta.replace(/\s/g, "") == '""') {
+        var notoficationMetaIsEmpty = (
+            !allowEmpty && notificationMeta == "" || !allowEmpty && notificationMeta.replace(/\s/g, "") == '""');
+        if (notoficationMetaIsEmpty) {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
             error = true;
         } else if (vm.restPost()) {
@@ -841,7 +850,8 @@ jQuery(document).ready(function () {
         } else if (!vm.restPost()) {
             // Validate email
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!regExpression.test(notificationMeta) && notificationMeta != "") {
+            var isInvalidEmailAddress = (!regExpression.test(notificationMeta) && notificationMeta != "");
+            if (isInvalidEmailAddress) {
                 $('#invalidNotificationMeta').text("Not a valid email.");
                 error = true;
             }
@@ -860,13 +870,16 @@ jQuery(document).ready(function () {
         $('#notificationMessageValuesJsonError').hide();
         $('#invalidNotificationMessageRawJson').hide();
         $('#notificationMessageRawJson').removeClass("is-invalid");
+        $('#errorExists').hide();
 
-        if (!allowEmpty && jsonData == "") {
+        var inputDataIsEmpty = (!allowEmpty && jsonData == "");
+        if (inputDataIsEmpty) {
             $('#invalidNotificationMessageRawJson').text("The raw body field must not be empty.");
             error = true;
         }
 
-        if (jsonData != "" && !validateJsonString(jsonData)) {
+        var inpurDataIsNotValidJson = (jsonData != "" && !validateJsonString(jsonData));
+        if (inpurDataIsNotValidJson) {
             $('#invalidNotificationMessageRawJson').text("Input is not valid JSON string.");
             error = true;
         }
@@ -879,24 +892,28 @@ jQuery(document).ready(function () {
         return error;
     }
 
-    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, keyOnly, allowEmpty) {
+    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, validateOnlyKey, allowEmpty) {
         var error = false;
         $('#notificationMessageKeyError').hide();
         $('#notificationMessageValuesError').hide();
         $('#notificationMessageValuesJsonError').hide();
         $('#invalidNotificationMessageRawJson').hide();
+        $('#errorExists').hide();
 
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var test_key = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
-            var test_value = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
+            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
+            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
 
             $('#formvalue_' + i).removeClass("is-invalid");
             $('#formkey_' + i).removeClass("is-invalid");
 
-            if (String(test_key).toLowerCase().replace(/"/g, "") == "json" && test_value != "") {
+            var testValueShouldBeValidatedAsJson = (
+                String(testKey).toLowerCase().replace(/"/g, "") == "json" && testValue != "");
+            if (testValueShouldBeValidatedAsJson) {
 
                 // check value field for valid JSON
-                if (!validateJsonString(test_value)) {
+                var testValueIsNotValidJson = !validateJsonString(testValue);
+                if (testValueIsNotValidJson) {
                     $('#formvalue_' + i).addClass("is-invalid");
                     $('#formkey_' + i).addClass("is-invalid");
                     $('#notificationMessageValuesJsonError').text("A key indicates JSON but value is not valid JSON!");
@@ -905,14 +922,16 @@ jQuery(document).ready(function () {
                 }
             }
 
-            if (test_key == "" && !allowEmpty) {
+            var testKeyIsEmpty = (testKey == "" && !allowEmpty);
+            if (testKeyIsEmpty) {
                 $('#formkey_' + i).addClass("is-invalid");
                 $('#notificationMessageKeyError').text("One or more keys are not set!");
                 $('#notificationMessageKeyError').show();
                 error = true;
             }
 
-            if (!keyOnly && !allowEmpty && test_value == "") {
+            var testValueIsEmpty = (!validateOnlyKey && !allowEmpty && testValue == "");
+            if (testValueIsEmpty) {
                 $('#formvalue_' + i).addClass("is-invalid");
                 $('#notificationMessageValuesError').text("One or more values are not set!");
                 $('#notificationMessageValuesError').show();
@@ -922,33 +941,38 @@ jQuery(document).ready(function () {
         return error;
     }
 
-    // /Start ## Save Subscription ##########################################
-    $('div.modal-footer').on('click', 'button.save_record', function (event) {
-        var error = false;
-        event.stopPropagation();
-        event.preventDefault();
-
+    function validateFormPostData() {
         // Validations start
+        var error = false;
         $('.text-danger').hide();
+
         // Validate subscription name field
-        if (validateName(String(vm.subscription()[0].subscriptionName()))) {
+        var subscriptionName = String(vm.subscription()[0].subscriptionName());
+        var subscriptionNameIsInvalid = validateName(subscriptionName);
+        if (subscriptionNameIsInvalid) {
             error = true;
         }
 
         // Validate notificationMeta field
-        if (validateNotificationMeta(String(vm.subscription()[0].notificationMeta()))) {
+        var notificationMeta = String(vm.subscription()[0].notificationMeta());
+        var notificationMetaIsInvalid = validateNotificationMeta(notificationMeta);
+        if (notificationMetaIsInvalid) {
             error = true;
         }
 
         // Validate notification message(s)
         if (vm.formpostkeyvaluepairs()) {
             // Validate notificationMessageKeyValues field
-            if (validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues())) {
+            var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
+            var notificationMessageKeyValuesArrayIsInvalid = validateNotificationMessageKeyValues(notificationMessageKeyValuesArray);
+            if (notificationMessageKeyValuesArrayIsInvalid) {
                 error = true;
             }
         } else {
-            // Validate notificationMessageRawJson field
-            if (validateMessageRawJson(String(vm.subscription()[0].notificationMessageRawJson()))) {
+            // Validate notificationMessageRawJson fieldvar notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
+            var notificationMessageRawJson = String(vm.subscription()[0].notificationMessageRawJson());
+            var notificationMessageRawJsonisInvalid = validateMessageRawJson(notificationMessageRawJson);
+            if (notificationMessageRawJsonisInvalid) {
                 error = true;
             }
         }
@@ -969,23 +993,46 @@ jQuery(document).ready(function () {
         if (error) {
             $('#errorExists').text("Required fields not filled or invalid data");
             $('#errorExists').show();
-            return;
+            return false;
         }
+        return true;
         //END: Check of other subscription fields values
+    }
 
-        // Data preperations
+    function createParsedFormCopy(jsonCopiedData) {
         // Ensure MAIL notificationType has no restPostBodyMediaType
-        if (vm.subscription()[0].notificationType() == "MAIL") {
-            vm.subscription()[0].restPostBodyMediaType("");
+        if (jsonCopiedData[0].notificationType == "MAIL") {
+            jsonCopiedData[0]['restPostBodyMediaType'] = "";
         }
 
         if (!vm.formpostkeyvaluepairs()) {
-            // since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
-            var formKeyValuePair = { "formkey": "", "formvalue": vm.subscription()[0].notificationMessageRawJson() };
-            vm.subscription()[0].notificationMessageKeyValues([new formdata_model(formKeyValuePair)]);
+            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
+            // and ensures the list contains only one object.
+            var notificationMessageKeyValues = [];
+            var formKeyValuePair = { "formkey": "", "formvalue": jsonCopiedData[0].notificationMessageRawJson };
+            notificationMessageKeyValues.push(formKeyValuePair);
+            jsonCopiedData[0]['notificationMessageKeyValues'] = notificationMessageKeyValues;
         }
+
         // Delete notificationMessageRawJson since it is not used in back end.
-        //delete vm.subscription()[0].notificationMessageRawJson;
+        delete jsonCopiedData[0]['notificationMessageRawJson'];
+
+        return jsonCopiedData
+    }
+
+    // /Start ## Save Subscription ##########################################
+    $('div.modal-footer').on('click', 'button.save_record', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var allSubscriptionFieldsIsValid = validateFormPostData();
+        if (!allSubscriptionFieldsIsValid) {
+            return
+        }
+
+        // Prepare copy of form data
+        var jsonParsedFormData = ko.toJS(vm.subscription());
+        var formDataToSend = createParsedFormCopy(jsonParsedFormData);
 
         var url = frontendServiceUrl + "/subscriptions";
         var type;
@@ -995,6 +1042,9 @@ jQuery(document).ready(function () {
         } else if (save_method === 'edit') {  // Update existing
             type = "PUT";
         }
+
+        console.log("Orginal = " + ko.toJSON(vm.subscription()));
+        console.log("Copy = " + JSON.stringify(formDataToSend));
 
         // AJAX Callback handling
         var callback = {
@@ -1029,7 +1079,7 @@ jQuery(document).ready(function () {
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()), callback);
+        ajaxHttpSender.sendAjax(url, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
 

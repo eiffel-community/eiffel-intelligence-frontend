@@ -38,13 +38,12 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     "notificationMeta" : "http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build",
                     "notificationType" : "REST_POST",
                     "restPostBodyMediaType" : "application/x-www-form-urlencoded",
-                    "notificationMessageRawJson" : "",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "json",
-                        "formvalue" : "{parameter: [{ name: 'jsonparams', value : to_string(@) }, { name: 'runpipeline', value : 'mybuildstep' }]}"
-                    }                    
-                    ],                    
+                        "formvalue" : "{\"parameter\": [{ \"name\": \"jsonparams\", \"value\" : \"to_string(@)\" }, { \"name\": \"runpipeline\", \"value\" : \"mybuildstep\" }]}"
+                    }
+                    ],
                     "repeat" : false,
                     "requirements" : [
                     {
@@ -66,11 +65,10 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
                     "notificationMeta" : "http://<MyHost:port>/api/doit",
                     "notificationType" : "REST_POST",
                     "restPostBodyMediaType" : "application/json",
-                    "notificationMessageRawJson" : "{mydata: [{ fullaggregation : to_string(@) }]}",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
-                        "formvalue" : ""
+                        "formvalue" : "{\"mydata\": [{ \"fullaggregation\" : \"to_string(@)\" }]}"
                     }
                 ],
                     "repeat" : false,
@@ -94,11 +92,10 @@ template_vars["templateEmailTrigger"] =
                     "notificationMeta" : "mymail@company.com",
                     "notificationType" : "MAIL",
                     "restPostBodyMediaType" : "",
-                    "notificationMessageRawJson" : "{mydata: [{ fullaggregation : to_string(@) }]}",
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "",
-                        "formvalue" : ""
+                        "formvalue" : "{\"mydata\": [{ \"fullaggregation\" : \"to_string(@)\" }]}"
                     }
                 ],
                     "repeat" : false,
