@@ -36,6 +36,21 @@ body {
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
 }
+/* Information page start */
+.table-text-setting {
+    margin: auto;
+    width: 48%;
+}
+.section-p-text {
+    /*background-color: #fbfbfb;*/
+    padding: 17px;
+    border-radius: 15px;
+    text-align: center;
+}
+.left-table-pane {
+    width: 30%;
+}
+/* Information page stop */
 .testRulePage {
     position: fixed;
     top: 0px;
