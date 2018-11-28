@@ -1,35 +1,34 @@
-
-
-
 jQuery(document).ready(function() {
-
     // Fetch injected URL from DOM
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var backendServerUrl = $('#backendServerUrl').text();
-
-    var tableTdKeyWidth = '25%';
 
     var body = document.getElementById('eiPageFrame');
 
     function createTable() {
         var tbl = document.createElement('table');
-        tbl.style.width = '40%';
-        tbl.setAttribute('border', '3');
-        tbl.setAttribute('align', 'center');
-        tbl.setAttribute('class', 'table table-bordered table-striped dataTable');
+        tbl.setAttribute('class', 'table table-bordered table-striped dataTable table-text-setting');
         return tbl;
     }
 
-    // Fetch injected URL from DOM
-    frontendServiceUrl = $('#frontendServiceUrl').text();
+    function createLabel(inputText) {
+        var label = document.createElement('p');
+        label.innerHTML = inputText;
+        label.setAttribute('class', 'section-p-text table-text-setting');
+        return label;
+    }
 
-	function generateGeneralEiInfo(data) {
-        body.appendChild(document.createElement('br'));
+    function createErrorMessage(inputText) {
+        var element = document.createElement('h4');
+        element.innerHTML = inputText;
+        element.setAttribute('class', 'table-text-setting alert-danger text-center');
+        return element;
+    }
+
+    function generateGeneralEiInfo(data) {
         var tbdy = document.createElement('tbody');
 
-        var label = document.createElement('p');
-        label.innerHTML = 'General Eiffel Intelligence Information';
-        label.setAttribute('align', 'center');
+        var label = createLabel('General Eiffel Intelligence Information');
         body.appendChild(label);
 
         var div = document.createElement('div');
@@ -37,141 +36,98 @@ jQuery(document).ready(function() {
 
         var tbl = createTable();
 
-        var tr = document.createElement('tr');
-        var tdKey = document.createElement('td');
-        tdKey.setAttribute('width', tableTdKeyWidth);
-        tdKey.appendChild(document.createTextNode('ApplicationName'));
-        tr.appendChild(tdKey);
-        var tdValue = document.createElement('td');
-//        tdValue.setAttribute('width', '30px');
-        tdValue.appendChild(document.createTextNode(data.applicationName));
-        tr.appendChild(tdValue);
-        tbdy.appendChild(tr);
+        var tableContent = [
+            { key: 'Application Name', value: data.applicationName },
+            { key: 'Version', value: data.version },
+            { key: 'EI Backend Connected Server', value: backendServerUrl },
+            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled },
+        ];
 
-
-        tr = document.createElement('tr');
-        tdKey = document.createElement('td');
-        tdKey.setAttribute('width', tableTdKeyWidth);
-        tdKey.appendChild(document.createTextNode('Version'));
-        tr.appendChild(tdKey);
-        tdValue = document.createElement('td');
-        tdValue.appendChild(document.createTextNode(data.version));
-        tr.appendChild(tdValue);
-        tbdy.appendChild(tr);
-
-        tr = document.createElement('tr');
-        tdKey = document.createElement('td');
-        tdKey.setAttribute('width', tableTdKeyWidth);
-        tdKey.appendChild(document.createTextNode('EI RestApi Requests Via Server'));
-        tr.appendChild(tdKey);
-        tdValue = document.createElement('td');
-        tdValue.appendChild(document.createTextNode(frontendServiceUrl));
-        tr.appendChild(tdValue);
-        tbdy.appendChild(tr);
-
-        tr = document.createElement('tr');
-        tdKey = document.createElement('td');
-        tdKey.setAttribute('width', tableTdKeyWidth);
-        tdKey.appendChild(document.createTextNode('EI Backend Connected Server'));
-        tr.appendChild(tdKey);
-        tdValue = document.createElement('td');
-		tdValue.id = "connectedBackend"
-        tdValue.appendChild(document.createTextNode(backendServerUrl));
-        tr.appendChild(tdValue);
-        tbdy.appendChild(tr);
-
-        tr = document.createElement('tr');
-        tdKey = document.createElement('td');
-        tdKey.setAttribute('width', tableTdKeyWidth);
-        tdKey.appendChild(document.createTextNode('EI Test Rules functionality enabled'));
-        tr.appendChild(tdKey);
-        tdValue = document.createElement('td');
-        tdValue.appendChild(document.createTextNode(data.testRulesEnabled));
-        tr.appendChild(tdValue);
-        tbdy.appendChild(tr);
-
+        for (i = 0; i < tableContent.length; i++) {
+            key = tableContent[i].key;
+            value = tableContent[i].value;
+            var tr = createTableRow(key, value);
+            tbdy.appendChild(tr);
+        }
 
         tbl.appendChild(tbdy);
         div.appendChild(tbl);
         body.appendChild(div);
+    }
 
-        body.appendChild(document.createElement('br'));
-	}
-
-	function generateEIInformationBasedOnList(dataList, tableLabel) {
+    function generateEIInformationBasedOnList(dataList, tableLabel) {
         var div = document.createElement('div');
         div.setAttribute('class','table-responsive');
 
-        var label = document.createElement('p');
-        label.innerHTML = tableLabel;
-        label.setAttribute('align', 'center');
+        var label = createLabel(tableLabel);
         body.appendChild(label);
 
         var tbdy = null;
         var tbl = null;
 
         dataList.forEach(function(dataSubList) {
-        		tbdy = document.createElement('tbody');
-        		tbl = createTable();
+            tbdy = document.createElement('tbody');
+            tbl = createTable();
 
-        	    Object.keys(dataSubList).forEach(function(dataKey) {
-        	        var tr = document.createElement('tr');
-        	        var tdKey = document.createElement('td');
-        	        tdKey.setAttribute('width', tableTdKeyWidth);
-        	        tdKey.appendChild(document.createTextNode(dataKey));
-        	        tr.appendChild(tdKey);
-        	        var tdValue = document.createElement('td');
-        	        tdValue.appendChild(document.createTextNode(dataSubList[dataKey]));
-        	        tr.appendChild(tdValue);
-        	        tbdy.appendChild(tr);
-
-        	    });
+            Object.keys(dataSubList).forEach(function(dataKey) {
+                value = dataSubList[dataKey];
+                var tr = createTableRow(dataKey, value);
+                tbdy.appendChild(tr);
+            });
 
         });
 
         tbl.appendChild(tbdy);
         div.appendChild(tbl);
         body.appendChild(div);
+    }
 
-        body.appendChild(document.createElement('br'));
-
-	}
+    function createTableRow(key, value) {
+        var tr = document.createElement('tr');
+        var tdKey = document.createElement('td');
+        tdKey.setAttribute('class', 'left-table-pane');
+        tdKey.appendChild(document.createTextNode(key));
+        tr.appendChild(tdKey);
+        var tdValue = document.createElement('td');
+        tdValue.appendChild(document.createTextNode(value));
+        tr.appendChild(tdValue);
+        return tr;
+    }
 
     function getInstanceInfo() {
         $.ajax({
-              url: frontendServiceUrl + "/information",
-              contentType : 'application/json;charset=UTF-8',
-              type: 'GET',
-              error : function (XMLHttpRequest, textStatus, errorThrown) {
-                  if (XMLHttpRequest.responseText == "") {
-                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">There is no response from backend</h3>";
-                  } else {
-                      var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                      var errors = "";
-                      for (var i = 0; i < responseJSON.length; i++) {
-                          errors = errors + "\n" + responseJSON[i].reason;
-                      }
-                      document.getElementById("eiPageFrame").innerHTML = "<h3 style=\"text-align: center;\">" + errors + "</h3>";
-                  }
-              },
-              success : function (data, textStatus, xhr) {
-                  var eiInfoContainer = document.getElementById('eiInfoContainer');
-	                var data = JSON.parse(xhr.responseText);
-	                generateGeneralEiInfo(data);
-	                generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
-	                generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
-	                generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
-	                generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
-	                generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
-	                generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
-	                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
-	                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-	                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
-	                generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
-	                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
-              },
-              complete: function (XMLHttpRequest, textStatus) {}
-        	  });
+            url: frontendServiceUrl + "/information",
+            contentType : 'application/json;charset=UTF-8',
+            type: 'GET',
+            error : function (XMLHttpRequest, textStatus, errorThrown) {
+                var label = createLabel('General Eiffel Intelligence Information');
+                body.appendChild(label);
+                if (XMLHttpRequest.responseText == "") {
+                    var element = createErrorMessage('<strong>Error</strong> There is no response from backend!');
+                    body.appendChild(element);
+                } else {
+                    var element = createErrorMessage('Error: ' + XMLHttpRequest.responseText + '!');
+                    body.appendChild(element);
+                }
+            },
+            success : function (data, textStatus, xhr) {
+                var eiInfoContainer = document.getElementById('eiInfoContainer');
+                var data = JSON.parse(xhr.responseText);
+                generateGeneralEiInfo(data);
+                generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+                generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
+                generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
+                generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
+                generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
+                generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
+                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
+                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
+                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
+                generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
+                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
+            },
+            complete: function (XMLHttpRequest, textStatus) {}
+        });
     }
 
     getInstanceInfo();

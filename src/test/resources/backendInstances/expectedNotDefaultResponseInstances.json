@@ -3,7 +3,7 @@
         "name": "someName",
         "host": "someHost",
         "port": 9888,
-        "path": "somePath",
+        "contextPath": "somePath",
         "https": false,
         "defaultBackend": false,
         "active": true
@@ -12,7 +12,7 @@
         "name": "otherName",
         "host": "otherHost",
         "port": 9998,
-        "path": "otherPath",
+        "contextPath": "otherPath",
         "https": false,
         "defaultBackend": true,
         "active": false

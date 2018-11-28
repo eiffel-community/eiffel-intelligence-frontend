@@ -39,6 +39,21 @@ body {
 .flex-non-important {
     display: flex;
 }
+/* Information page start */
+.table-text-setting {
+    margin: auto;
+    width: 48%;
+}
+.section-p-text {
+    /*background-color: #fbfbfb;*/
+    padding: 17px;
+    border-radius: 15px;
+    text-align: center;
+}
+.left-table-pane {
+    width: 30%;
+}
+/* Information page stop */
 .testRulePage {
     position: fixed;
     top: 0px;
@@ -195,4 +210,27 @@ input:checked + .slider:before {
         max-width: 100%;
         width: 100%;
     }
+}
+
+button.rules_info {
+  text-align: center;
+  max-height: auto;
+  max-width: auto;
+  margin: 0px;
+  padding: 0px;
+  background: white;
+  border: none;
+}
+
+button.rules_info:active {
+    outline: none;
+}
+
+button.rules_info:focus {
+    outline:0;
+    outline:none;
+}
+
+#infoContent{
+   font: 16px "Calibri";
 }
