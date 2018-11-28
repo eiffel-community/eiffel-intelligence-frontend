@@ -880,7 +880,7 @@ jQuery(document).ready(function () {
 
         var inpurDataIsNotValidJson = (jsonData != "" && !validateJsonString(jsonData));
         if (inpurDataIsNotValidJson) {
-            $('#invalidNotificationMessageRawJson').text("Input is not valid JSON string.");
+            $('#invalidNotificationMessageRawJson').text("Input is not valid JSON.");
             error = true;
         }
 
