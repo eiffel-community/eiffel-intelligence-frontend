@@ -114,20 +114,13 @@ body {
 	position: absolute;
 	left: -999em;
 }
-
+.flex-wrap {
+	flex-wrap: wrap;
+}
 #back_end_down_warning {
     font-size: 12pt;
     color: #dc3545;
-    animation: blinkingText 3.5s infinite;
 }
-@keyframes blinkingText{
-    0% {    opacity: 1;  }
-    25% {   opacity: 0.7;}
-    50% {   opacity: 0.3;}
-    75% {   opacity: 0.7;}
-    100% {  opacity: 1;  }
-}
-
 /* The switch - the box around the slider */
 .switch {
     position: relative;

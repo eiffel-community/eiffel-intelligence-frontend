@@ -109,6 +109,10 @@ jQuery(document).ready(function () {
         }
     }, 1000);
 
+    $(".control").click(function() {
+        console.log("Hej Chrille!");
+    });
+
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $("#btnEIConnection").click(function () {
         checkBackendStatus();
