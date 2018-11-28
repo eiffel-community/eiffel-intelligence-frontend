@@ -878,11 +878,14 @@ jQuery(document).ready(function () {
             error = true;
         }
 
+        /*
+        JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
         var inpurDataIsNotValidJson = (jsonData != "" && !validateJsonString(jsonData));
         if (inpurDataIsNotValidJson) {
             $('#invalidNotificationMessageRawJson').text("Input is not valid JSON.");
             error = true;
         }
+        */
 
         if (error) {
             $('#invalidNotificationMessageRawJson').show();
@@ -907,6 +910,8 @@ jQuery(document).ready(function () {
             $('#formvalue_' + i).removeClass("is-invalid");
             $('#formkey_' + i).removeClass("is-invalid");
 
+            /*
+            JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
             var testValueShouldBeValidatedAsJson = (
                 String(testKey).toLowerCase().replace(/"/g, "") == "json" && testValue != "");
             if (testValueShouldBeValidatedAsJson) {
@@ -920,6 +925,7 @@ jQuery(document).ready(function () {
                     error = true;
                 }
             }
+            */
 
             var testKeyIsEmpty = (testKey == "" && !allowEmpty);
             if (testKeyIsEmpty) {
