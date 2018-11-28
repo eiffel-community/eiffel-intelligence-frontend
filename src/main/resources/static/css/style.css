@@ -1,3 +1,16 @@
+html, body {
+    height: 100%;
+}
+body {
+    overflow: hidden;
+    padding-top: 60px;
+}
+.content-wrapper {
+    height: 100%;
+}
+#table {
+    border-spacing: 0px;
+}
 .modal-subscription {
     max-width: 650px;
 }
@@ -8,7 +21,8 @@
 	width: 25rem;
 }
 .rule-button {
-    width: 150px;
+    width: auto;
+    min-width: 150px;
 }
 .display-inline-table {
     display: inline-table;
@@ -18,12 +32,6 @@
 }
 .split {
 	max-width: 50%;
-}
-@media (max-width: 576px) {
-    .split {
-        max-width: 100%;
-        width: 100%;
-    }
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -64,8 +72,13 @@
     height: 45px;
     animation: spin 1s cubic-bezier(.86,0,.07,1) infinite;
 }
+
 .cursor-pointer {
-	cursor: pointer;
+    cursor: pointer;
+}
+.tooltip-inner {
+    text-align: left;
+    max-width: 410px;
 }
 .badge-rounded {
 	display: inline-block;
@@ -74,6 +87,90 @@
 	white-space: nowrap;
 	border-radius: .25rem;
 }
+.modal-height-fit {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+.modal-width-aggregated {
+    max-width: 750px;
+}
+.pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em;
+    font-size: medium;
+}
+.showPasswordButton{
+    margin-top: 10px;
+}
+.font-small {
+    font-size: small;
+}
+.font-medium {
+    font-size: medium;
+}
+.hide {
+	position: absolute;
+	left: -999em;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 43px;
+    height: 23px;
+    margin-left: 5px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+/* Rounded sliders */
+.slider.round {
+    border-radius: 25px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -83,17 +180,16 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 @media (max-width: 576px) {
+	body {
+        padding-top: 80px;
+    }
     .container {
         max-width: 480px;
     }
-}
-body {
-    padding-top: 60px;
-    overflow: scroll !important;
-}
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
+    .split {
+        max-width: 100%;
+        width: 100%;
     }
 }

@@ -8,12 +8,8 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Eiffel Intelligence</title>
-  <!-- Bootstrap core CSS-->
   <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Page level plugin CSS-->
   <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <!-- Custom styles for this template-->
   <link href="assets/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
   <link href="assets/datatables/responsive.dataTables.min.css" rel="stylesheet" />
   <link href="css/sb-admin.css" rel="stylesheet" />
@@ -23,11 +19,13 @@
   <link href="assets/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
   <link href="css/errMsg.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet" />
+
+  <title>Eiffel Intelligence</title>
 </head>
 
 <body class="bg-dark" id="page-top">
-  <div class="hidden" style="display: none" id="eiffelDocumentationUrlLinks" th:text="${eiffelDocumentationUrlLinks}"></div>
-  <div class="hidden" style="display: none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
+  <div class="d-none" id="eiffelDocumentationUrlLinks" th:text="${eiffelDocumentationUrlLinks}"></div>
+  <div class="d-none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <a class="navbar-brand" th:href="${frontendServiceUrl}">
@@ -107,7 +105,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="userName"></a>
+          <a class="nav-link" id="ldapUserName"></a>
         </li>
         <li class="nav-item" id="loginBlock" style="display: none">
           <a class="nav-link" id="loginBtn" href="#">
@@ -156,7 +154,6 @@
   <script type="text/javascript" src="assets/datatables/jquery.dataTables.js"></script>
   <script type="text/javascript" src="assets/datatables/dataTables.bootstrap4.js"></script>
   <script type="text/javascript" src="assets/datatables/dataTables.responsive.min.js"></script>
-
   <script type="text/javascript" src="assets/knockout/knockout-3.4.2.js"></script>
   <script type="text/javascript" src="assets/knockout/knockout.mapping.js"></script>
   <script type="text/javascript" src="assets/jquery-ui/jquery-ui.min.js"></script>
@@ -165,13 +162,10 @@
   <script type="text/javascript" src="assets/jgrowl/jquery.jgrowl.min.js"></script>
   <script type="text/javascript" src="assets/dateformat/date.format.js"></script>
   <script type="text/javascript" src="assets/jsonlint/jsonlint.js"></script>
-
   <script type="text/javascript" src="assets/bootstrap/js/popper.min.js"></script>
   <script type="text/javascript" src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-
   <script type="text/javascript" src="assets/js/sb-admin.min.js"></script>
   <script type="text/javascript" src="assets/js/sb-admin-datatables.min.js"></script>
-
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/errorMessages.js"></script>
 </body>

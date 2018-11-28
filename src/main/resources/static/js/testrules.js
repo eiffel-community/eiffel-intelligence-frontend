@@ -1,6 +1,7 @@
 // Global vars
 var frontendServiceUrl;
 var i = 0;
+var isReplacing = true;
 var ruleTemplate = {
   "TemplateName" : "",
   "Type" : "",
@@ -69,20 +70,20 @@ jQuery(document).ready(
       }
 
       // Model for knockout(KO) binding
-      function AppViewModel(rulesList) {
-        var self = this;
-        self.rulesBindingList = ko.observableArray(rulesList);
-        self.eventsBindingList = ko.observableArray([]);
-        self.parsedToString = function(item) {
-          return JSON.stringify(item, null, 2);
-        };
+      function AppViewModel() {
+          var self = this;
+          self.rulesBindingList = ko.observableArray([]);
+          self.eventsBindingList = ko.observableArray([]);
+          self.parsedToString = function(item) {
+              return JSON.stringify(item, null, 2);
+          };
         // Removing the rule
-        self.removeRule = function(data, event) {
+          self.removeRule = function(data, event) {
           var context = ko.contextFor(event.target);
           self.rulesBindingList.splice(context.$index(), 1);
           if (self.rulesBindingList().length == 0) {
             window.logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
-            self.rulesBindingList.push(ruleTemplate);
+            self.addRule(ruleTemplate);
           }
         };
 
@@ -91,53 +92,41 @@ jQuery(document).ready(
           var context = ko.contextFor(event.target);
           self.eventsBindingList.splice(context.$index(), 1);
           if (self.eventsBindingList().length == 0) {
-            self.eventsBindingList.push({});
             window.logMessages("Deleted all events, but we need atleast one event.");
+            self.addEvent({});
           }
         };
 
+        self.validateJSON = function(observableArray) {
+            var array = [];
+            ko.utils.arrayForEach(observableArray, function (element) {
+                try {
+                    array.push(JSON.parse(element.data()));
+                } catch (e) {
+                    window.logMessages("Invalid json rule format :\n" + element.data());
+                    return false;
+                }
+            });
+            return array;
+        };
+        
         //This submit function for finding the aggregated object from the rules and events, This function internally call the ajax call
         self.submit = function() {
-          var events = $("#eventsListID").val();
-          var formRules = [];
-          $('.formRules').each(function() {
-            try {
-              formRules.push(JSON.parse($(this).val()));
-            } catch (e) {
-                window.logMessages("Invalid json rule format :\n" + $(this).val());
-                return false;
-            }
-          });
-          
-          var formEvents = [];
-          $('.formEvents').each(function() {
-            try {
-              formEvents.push(JSON.parse($(this).val()));
-            } catch (e) {
-                window.logMessages("Invalid json event format :\n" + $(this).val());
-                return false;
-            }
-          });
+          var rules = self.validateJSON(self.rulesBindingList());
+          var events = self.validateJSON(self.eventsBindingList());
 
           var callback = {
             beforeSend : function() {
             },
             success : function(data, textStatus) {
-              var returnData = data;
-              if (returnData.length > 0) {
+              if (data.length > 0) {
                 $.jGrowl("Successfully aggregated object generated", {
                   sticky : false,
                   theme : 'Error'
                 });
 
-                $('#aggregatedresultData').text(JSON.stringify(data, null, 2));
-                var divText = document.getElementById("aggregatedresult").outerHTML;
-                var myWindow = window.open('', '', 'width=700,height=1000');
-                var doc = myWindow.document;
-                doc.open();
-                doc.write(divText);
-                doc.close();
-                myWindow.focus();
+                $('#aggregatedObjectContent').text(JSON.stringify(data, null, 2));
+                $('#aggregatedObjectModal').modal('show');
               }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -153,59 +142,40 @@ jQuery(document).ready(
           
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/rules/rule-check/aggregation", "POST", JSON.stringify(JSON.parse('{"listRulesJson":'
-                + JSON.stringify(formRules) + ',"listEventsJson":' + JSON.stringify(formEvents) + '}')), callback);
+                + JSON.stringify(rules) + ',"listEventsJson":' + JSON.stringify(events) + '}')), callback);
         };
 
         // This function for adding rule
-        self.addRule = function() {
-          self.rulesBindingList.push(JSON.parse(JSON.stringify(ruleTemplate)));
+        self.addRule = function(data) {
+            self.rulesBindingList.push({'data': ko.observable(self.parsedToString(data))});
         };
         // This function for adding rule
-        self.addEvent = function() {
-          self.eventsBindingList.push({});
+        self.addEvent = function(data) {
+            self.eventsBindingList.push({'data': ko.observable(self.parsedToString(data))});
         };
+
+        // This function is used to remove all rules
+        self.clearAllRules = function(){
+            self.rulesBindingList([]);
+            self.addRule(ruleTemplate);
+        }
+
+	// This function is used to remove all events
+        self.clearAllEvents = function(){
+            self.eventsBindingList([]);
+            self.addEvent({});
+        }
         return self;
       }
 
-      var vm = new AppViewModel([]);
+      var vm = new AppViewModel();
       ko.applyBindings(vm, $("#submitButton")[0]);
-      vm.rulesBindingList.push(ruleTemplate);
-      vm.eventsBindingList.push({});
-
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
+      vm.addRule(ruleTemplate);
+      vm.addEvent({});
 
-      function validateRulesJsonAndCreateSubscriptions(subscriptionFile) {
-	      var reader = new FileReader();
-	      reader.onload = function() {
-	        var fileContent = reader.result;
-	        var jsonLintResult = "";
-	        try {
-	          jsonLintResult = jsonlint.parse(fileContent);
-	        } catch (e) {
-	            window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
-	            return false;
-	        }
-	        $.jGrowl('JSON Format Check Succeeded', {
-	          sticky : false,
-	          theme : 'Notify'
-	        });
-
-	        var rulesList = JSON.parse(fileContent);
-	        ko.cleanNode($("#testRulesDOMObject")[0]);
-	        ko.cleanNode($("#submitButton")[0]);
-	        $("#testRulesDOMObject").css('min-height', $(".navbar-sidenav").height() - 180);
-	        vm.rulesBindingList.removeAll();
-	        $('.rulesListDisplay > div:gt(0)').remove();
-	        vm.rulesBindingList = ko.observableArray(rulesList);
-	        ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
-	        ko.applyBindings(vm, $("#submitButton")[0]);
-	        loadTooltip();
-	      };
-	    reader.readAsText(subscriptionFile);
-      }
-
-      function validateEventsJsonAndCreateSubscriptions(subscriptionFile) {
+      function validateJSONAndUpload(subscriptionFile, isRules) {
           var reader = new FileReader();
           reader.onload = function() {
             var fileContent = reader.result;
@@ -220,82 +190,105 @@ jQuery(document).ready(
               sticky : false,
               theme : 'Notify'
             });
-            var eventsList = JSON.parse(fileContent);
-            ko.cleanNode($("#testEventsDOMObject")[0]);
-            vm.eventsBindingList.removeAll();
-            $('.eventsListDisplay > div:gt(0)').remove();
-            vm.eventsBindingList = ko.observableArray(eventsList);
-            ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
-            loadTooltip();
+
+            var list = JSON.parse(fileContent);
+            if (isRules) {
+                if (isReplacing) {
+                    vm.rulesBindingList([]);
+                }
+                list.forEach(function(element) {
+                    vm.addRule(element);
+                });
+            } else {
+                if (isReplacing) {
+                    vm.eventsBindingList([]);
+                }
+                list.forEach(function(element) {
+                    vm.addEvent(element);
+                });
+            }
           };
-          reader.readAsText(subscriptionFile);
+
+          if (subscriptionFile != null){
+            reader.readAsText(subscriptionFile);
+          }
        }
 
-        //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
-        var pomRules = document.getElementById('uploadRulesFile');
-        pomRules.onchange = function uploadFinished() {
-            var subscriptionFile = pomRules.files[0];
-            validateRulesJsonAndCreateSubscriptions(subscriptionFile);
-            $(this).val("");
-        };
-        
-        var pomEvents = document.getElementById('uploadEventsFile');
-        pomEvents.onchange = function uploadFinished() {
-            var subscriptionFile = pomEvents.files[0];
-            validateEventsJsonAndCreateSubscriptions(subscriptionFile);
-            $(this).val("");
-        };
-          
+      //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
+      var pomRules = document.getElementById('uploadRulesFile');
+      pomRules.onchange = function uploadFinished() {
+        var subscriptionFile = pomRules.files[0];
+        validateJSONAndUpload(subscriptionFile, true);
+        $(this).val("");
+      };
+
+      var pomEvents = document.getElementById('uploadEventsFile');
+      pomEvents.onchange = function uploadFinished() {
+        var subscriptionFile = pomEvents.files[0];
+        validateJSONAndUpload(subscriptionFile, false);
+        $(this).val("");
+      };
+
       //Upload events list json data
       $(".container").on("click", "button.upload_rules", function(event) {
         event.stopPropagation();
         event.preventDefault();
+        var isRules = true;
+        replaceAppendModal(isRules);
 
-        function createRulesUploadWindow() {
-          if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pomRules.dispatchEvent(event);
-          } else {
-            pomRules.click();
-          }
-        }
-        
-        function createUploadWindowMSExplorer() {
-          $('#upload_rules').click();
-          var file = $('#upload_rules').prop('files')[0];
-          validateRulesJsonAndCreateSubscriptions(file);
-        }
-
-        // HTML5 Download File window handling
-        createRulesUploadWindow();
       });
 
-      //Upload list of events json data
+       //Upload list of events json data
       $(".container").on("click", "button.upload_events", function(event) {
         event.stopPropagation();
         event.preventDefault();
-
-        function createUploadWindow() {
-          if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pomEvents.dispatchEvent(event);
-          } else {
-            pomEvents.click();
-          }
-        }
-
-        function createUploadWindowMSExplorer() {
-          $('#upload_events').click();
-          var file = $('#upload_events').prop('files')[0];
-          validateEventsJsonAndCreateSubscriptions(file);
-        }
-
-
-        // HTML5 Download File window handling
-        createUploadWindow();
+        var isRules = false;
+        replaceAppendModal(isRules);
       });
+
+      function replaceAppendModal(isRules){
+        $('#AppendReplaceModal').modal('show');
+
+        document.getElementById('replaceButton').onclick = function(){
+            $('#AppendReplaceModal').modal('hide');
+            isReplacing = true;
+            if(isRules){
+                createRulesUploadWindow();
+            }else{
+                createUploadWindow();
+            }
+        };
+
+        document.getElementById('appendButton').onclick = function(){
+            $('#AppendReplaceModal').modal('hide');
+            isReplacing = false;
+            if(isRules){
+                createRulesUploadWindow();
+            }else{
+                createUploadWindow();
+            }
+        };
+      }
+
+     function createRulesUploadWindow() {
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pomRules.dispatchEvent(event);
+        } else {
+          pomRules.click();
+        }
+      }
+
+      function createUploadWindow() {
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pomEvents.dispatchEvent(event);
+        } else {
+          pomEvents.click();
+        }
+      }
 
       // Download the modified rule
       $('.container').on('click', 'button.download_rules', function() {
@@ -311,6 +304,25 @@ jQuery(document).ready(
         if (formRules.length !== 0) {
           var jsonData = JSON.stringify(formRules, null, 2);
           downloadFile(jsonData, "application/json;charset=utf-8", "rules.json");
+        } else {
+            window.logMessages("Data not available for download!");
+          }
+      });
+
+      // Download the modified events
+      $('.container').on('click', 'button.download_events', function() {
+        var formEvents = [];
+        $('.formEvents').each(function() {
+          try {
+            formEvents.push(JSON.parse($(this).val()));
+          } catch (e) {
+            window.logMessages("Invalid json format :\n" + $(this).val());
+            return false;
+          }
+        });
+        if (formEvents.length !== 0) {
+          var jsonData = JSON.stringify(formEvents, null, 2);
+          downloadFile(jsonData, "application/json;charset=utf-8", "events.json");
         } else {
             window.logMessages("Data not available for download!");
           }
@@ -379,6 +391,10 @@ jQuery(document).ready(
 
         function loadTooltip() {
             $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+        }
+ 
+        function closeTooltip() {
+        	$('.tooltip').tooltip('hide');
         }
     }
 );

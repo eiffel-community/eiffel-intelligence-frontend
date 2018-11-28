@@ -143,14 +143,6 @@ public class BackendInformationControllerUtilsTest {
                 "{\"message\": \"Backend instance with name 'TestName' was selected.\"}".toString(), HttpStatus.OK);
         response = backendInfoContrUtils.handleRequestToSwitchBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
-
-        // Test with input as json.
-        when(stream.collect(any())).thenReturn(instancesWithActive.toString());
-        expectedResponse = createExpectedResponse(
-                "{\"message\": \"Backend instance with name 'otherName' was selected.\"}".toString(), HttpStatus.OK);
-        response = backendInfoContrUtils.handleRequestToSwitchBackEnd(mockedRequest);
-        assertEquals(expectedResponse, response);
-
     }
 
     @Test
