@@ -7,7 +7,7 @@ function instanceModel() {
 	    name: ko.observable(""),
 		host: ko.observable(""),
 		port: ko.observable(""),
-		path: ko.observable(""),
+		contextPath: ko.observable(""),
 		https: ko.observable(false)
 	};
 	self.add = function(instance) {

@@ -1,25 +1,8 @@
 // Global vars
 var frontendServiceUrl;
 var i = 0;
-var ruleTemplate = {
-  "TemplateName" : "",
-  "Type" : "",
-  "TypeRule" : "",
-  "IdRule" : "",
-  "StartEvent" : "",
-  "IdentifyRules" : "",
-  "MatchIdRules" : {},
-  "ExtractionRules" : "",
-  "DownstreamIdentifyRules" : "",
-  "DownstreamMergeRules" : "",
-  "DownstreamExtractionRules" : "",
-  "ArrayMergeOptions" : "",
-  "HistoryIdentifyRules" : "",
-  "HistoryExtractionRules" : "",
-  "HistoryPathRules" : "",
-  "ProcessRules" : null,
-  "ProcessFunction" : null
-};
+var isReplacing = true;
+
 jQuery(document).ready(
     function() {
 
@@ -167,6 +150,14 @@ jQuery(document).ready(
         return self;
       }
 
+      //Create information modal
+      $(".container").on("click", "button.rules_info", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $('#infoContent').text(test_rule_info);
+        $('#infoModal').modal('show');
+      });
+
       var vm = new AppViewModel();
       ko.applyBindings(vm, $("#submitButton")[0]);
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
@@ -189,91 +180,105 @@ jQuery(document).ready(
               sticky : false,
               theme : 'Notify'
             });
-            
+
             var list = JSON.parse(fileContent);
-            if (isRules == true) {
-                vm.rulesBindingList([]);
+            if (isRules) {
+                if (isReplacing) {
+                    vm.rulesBindingList([]);
+                }
                 list.forEach(function(element) {
                     vm.addRule(element);
                 });
             } else {
-                vm.eventsBindingList([]);
+                if (isReplacing) {
+                    vm.eventsBindingList([]);
+                }
                 list.forEach(function(element) {
                     vm.addEvent(element);
                 });
             }
           };
-          
+
           if (subscriptionFile != null){
             reader.readAsText(subscriptionFile);
           }
        }
 
-        //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
-        var pomRules = document.getElementById('uploadRulesFile');
-        pomRules.onchange = function uploadFinished() {
-            var subscriptionFile = pomRules.files[0];
-            validateJSONAndUpload(subscriptionFile, true);
-            $(this).val("");
-        };
-        
-        var pomEvents = document.getElementById('uploadEventsFile');
-        pomEvents.onchange = function uploadFinished() {
-            var subscriptionFile = pomEvents.files[0];
-            validateJSONAndUpload(subscriptionFile, false);
-            $(this).val("");
-        };
-          
+      //Set onchange event on the input element "uploadRulesFile" and "uploadEventsFile"
+      var pomRules = document.getElementById('uploadRulesFile');
+      pomRules.onchange = function uploadFinished() {
+        var subscriptionFile = pomRules.files[0];
+        validateJSONAndUpload(subscriptionFile, true);
+        $(this).val("");
+      };
+
+      var pomEvents = document.getElementById('uploadEventsFile');
+      pomEvents.onchange = function uploadFinished() {
+        var subscriptionFile = pomEvents.files[0];
+        validateJSONAndUpload(subscriptionFile, false);
+        $(this).val("");
+      };
+
       //Upload events list json data
       $(".container").on("click", "button.upload_rules", function(event) {
         event.stopPropagation();
         event.preventDefault();
+        var isRules = true;
+        replaceAppendModal(isRules);
 
-        function createRulesUploadWindow() {
-          if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pomRules.dispatchEvent(event);
-          } else {
-            pomRules.click();
-          }
-        }
-        
-        function createUploadWindowMSExplorer() {
-          $('#upload_rules').click();
-          var file = $('#upload_rules').prop('files')[0];
-          validateJSONAndUpload(file, true);
-        }
-
-        // HTML5 Download File window handling
-        createRulesUploadWindow();
       });
 
-      //Upload list of events json data
+       //Upload list of events json data
       $(".container").on("click", "button.upload_events", function(event) {
         event.stopPropagation();
         event.preventDefault();
-
-        function createUploadWindow() {
-          if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pomEvents.dispatchEvent(event);
-          } else {
-            pomEvents.click();
-          }
-        }
-
-        function createUploadWindowMSExplorer() {
-          $('#upload_events').click();
-          var file = $('#upload_events').prop('files')[0];
-          validateJSONAndUpload(file, false);
-        }
-
-
-        // HTML5 Download File window handling
-        createUploadWindow();
+        var isRules = false;
+        replaceAppendModal(isRules);
       });
+
+      function replaceAppendModal(isRules){
+        $('#AppendReplaceModal').modal('show');
+
+        document.getElementById('replaceButton').onclick = function(){
+            $('#AppendReplaceModal').modal('hide');
+            isReplacing = true;
+            if(isRules){
+                createRulesUploadWindow();
+            }else{
+                createUploadWindow();
+            }
+        };
+
+        document.getElementById('appendButton').onclick = function(){
+            $('#AppendReplaceModal').modal('hide');
+            isReplacing = false;
+            if(isRules){
+                createRulesUploadWindow();
+            }else{
+                createUploadWindow();
+            }
+        };
+      }
+
+     function createRulesUploadWindow() {
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pomRules.dispatchEvent(event);
+        } else {
+          pomRules.click();
+        }
+      }
+
+      function createUploadWindow() {
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pomEvents.dispatchEvent(event);
+        } else {
+          pomEvents.click();
+        }
+      }
 
       // Download the modified rule
       $('.container').on('click', 'button.download_rules', function() {

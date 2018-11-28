@@ -2,7 +2,7 @@
     "name": "someName",
     "host": "someHost",
     "port": 9888,
-    "path": "somePath",
+    "contextPath": "somePath",
     "https": false,
     "defaultBackend": false
 }

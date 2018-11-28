@@ -29,14 +29,14 @@ import com.ericsson.ei.frontend.utils.WebControllerUtils;
 public class WebControllerUtilsTest {
 	private static final String HOST = "testHost";
 	private static final int PORT = 12345;
-	private static final String PATH = "/path";
+	private static final String CONTEXT_PATH = "/path";
     private WebControllerUtils controllerUtils;
 
     @Test
     public void testGetFrontEndServiceUrl() throws Exception {
-    	String expectedUrl = String.format("http://%s:%s%s", HOST, PORT, PATH);
-    	controllerUtils = new WebControllerUtils(HOST, PORT, PATH, false, null, null, null, null);
-    	assertEquals(expectedUrl, controllerUtils.getFrontEndServiceUrl());
+      String expectedUrl = String.format("http://%s:%s%s", HOST, PORT, CONTEXT_PATH);
+      controllerUtils = new WebControllerUtils(HOST, PORT, CONTEXT_PATH, false, null, null, null, null);
+      assertEquals(expectedUrl, controllerUtils.getFrontEndServiceUrl());
     }
 
 }

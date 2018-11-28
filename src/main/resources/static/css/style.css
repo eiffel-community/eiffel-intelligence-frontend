@@ -208,3 +208,26 @@ input:checked + .slider:before {
         width: 100%;
     }
 }
+
+button.rules_info {
+  text-align: center;
+  max-height: auto;
+  max-width: auto;
+  margin: 0px;
+  padding: 0px;
+  background: white;
+  border: none;
+}
+
+button.rules_info:active {
+    outline: none;
+}
+
+button.rules_info:focus {
+    outline:0;
+    outline:none;
+}
+
+#infoContent{
+   font: 16px "Calibri";
+}
