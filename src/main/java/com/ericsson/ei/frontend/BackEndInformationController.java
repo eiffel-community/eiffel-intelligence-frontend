@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -37,7 +38,8 @@ public class BackEndInformationController {
 
     @Autowired
     private BackEndInfoirmationControllerUtils backEndInfoContUtils;
-
+    
+    @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request for instances.");
@@ -45,6 +47,7 @@ public class BackEndInformationController {
         return response;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.PUT)
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to switch back end.");
@@ -52,14 +55,16 @@ public class BackEndInformationController {
         return response;
 
     }
-
+    
+    @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to delete back end.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToDeleteBackEnd(request);
         return response;
     }
-
+    
+    @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
         LOG.debug("Recieved request to add back end.");
