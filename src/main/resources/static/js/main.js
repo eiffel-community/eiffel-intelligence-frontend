@@ -11,6 +11,9 @@ jQuery(document).ready(function() {
             });
         };
     }(jQuery));
+    // Used for navigation/routing. First parameter is used to set the main URL but can be set to null.
+    // Second is to set the use of hash to true or false. This uses and old routing approach with hash in the URL.
+    // Third specifies the hash character you want to use.
     var router = new Navigo(null, true, '#');
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
     var frontendServiceUrl = $('#frontendServiceUrl').text();
