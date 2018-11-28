@@ -126,7 +126,7 @@ public class BackendInformationControllerUtilsTest {
         when(mockedSession.getAttribute("backEndInstanceName")).thenReturn(null);
         when(backEndInstancesUtils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
         expectedResponse = createExpectedResponse(
-                "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"path\":\"/\"}]",
+                "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"contextPath\":\"/\"}]",
                 HttpStatus.OK);
         response = backendInfoContrUtils.handleRequestForInstances(mockedRequest);
         assertEquals(expectedResponse, response);

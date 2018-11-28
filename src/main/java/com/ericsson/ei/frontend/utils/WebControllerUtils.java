@@ -64,16 +64,16 @@ public class WebControllerUtils {
     public String getFrontEndServiceUrl() {
         String requestedUrl = null;
         String http = "http";
-        String path = "";
+        String contextPath = "";
         if (useSecureHttpFrontend) {
         	http = "https";
         }
 
         if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-        	path = ("/" + frontendContextPath).replace("//", "/");
+        	contextPath = ("/" + frontendContextPath).replace("//", "/");
         }
 
-        requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, path);
+        requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, contextPath);
 
         return requestedUrl;
     }
