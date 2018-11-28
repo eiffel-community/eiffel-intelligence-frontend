@@ -3,6 +3,7 @@ package com.ericsson.ei.frontend.utils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
@@ -56,12 +57,25 @@ public class BackEndInstanceFileUtils {
             if (!eiHomeExists) {
                 createEiHomeFolder(eiHome);
             }
-
-            setEiInstancesPath(Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME).toString());
-            LOG.info("EI Instances List file path is not provided! "
-                    + "Will create a default EI Instances List file at file path: " + eiInstancesPath);
-
-            parseAndSetEiInstancesList();
+            
+            Path eiInstancesListFilePath = Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME);
+            setEiInstancesPath(eiInstancesListFilePath.toString());
+            File eiInstancesListFile = new File(eiInstancesListFilePath.toString());
+            if (eiInstancesListFile.exists() && eiInstancesListFile.length() != 0) {
+                LOG.info("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
+                        "\nWill use that EI Instances List file.");
+            }
+            else {
+                if (eiInstancesListFile.exists() && eiInstancesListFile.length() == 0) {
+                    LOG.info("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
+                            "\nThat EI Instances List file is empty!. Will try to create a default EI Instances List in that file.");
+                }
+                else {
+                    LOG.info("EI Instances List file path is not provided! " +
+                            "Will create a default EI Instances List file at file path: " + eiInstancesPath);
+                }
+                parseAndSetEiInstancesList();
+            }
 
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
@@ -164,7 +178,6 @@ public class BackEndInstanceFileUtils {
      */
     public void dumpJsonArray(JsonArray jsonArrayToDump) {
         try {
-            ensureValidFile();
             Files.write(Paths.get(eiInstancesPath), jsonArrayToDump.toString().getBytes());
         } catch (IOException e) {
             LOG.error("Couldn't add instance to file " + e.getMessage());
@@ -180,7 +193,7 @@ public class BackEndInstanceFileUtils {
             }
 
             if (!fileContainsJsonArray()) {
-                LOG.error("File does not contain valid json! JSON:'"
+                LOG.error("File does not contain valid json! JSON:' "
                         + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
                 System.exit(-1);
             }
