@@ -94,17 +94,17 @@ jQuery(document).ready(function () {
 
     // Check if buttons should be enabled or disabled
     // Execute code to show or hide status enable disable buttons
-    var buttonsDiabled = false;
+    var buttonsDisabled = false;
     window.setInterval(function () {
-        if (!backendStatus && !buttonsDiabled) {
+        if (!backendStatus && !buttonsDisabled) {
             $("#back_end_down_warning").show();
             $(".hidden_by_default").show();
-            buttonsDiabled = true;
-            toggleButtonsDisabled(buttonsDiabled);
-        } else if (backendStatus && buttonsDiabled) {
+            buttonsDisabled = true;
+            toggleButtonsDisabled(buttonsDisabled);
+        } else if (backendStatus && buttonsDisabled) {
             $("#back_end_down_warning").hide();
-            buttonsDiabled = false;
-            toggleButtonsDisabled(buttonsDiabled);
+            buttonsDisabled = false;
+            toggleButtonsDisabled(buttonsDisabled);
             reload_table();
         }
     }, 1000);
