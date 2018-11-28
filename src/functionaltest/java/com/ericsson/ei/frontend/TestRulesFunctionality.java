@@ -17,9 +17,6 @@ import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestRulesFunctionality extends SeleniumBaseClass {
 
-    @MockBean
-    protected CloseableHttpClient mockedHttpClient;
-
     private static final String DOWNLOADED_RULES_TEMPLATE_FILE_PATH = String.join(
             File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rulesTemplate.json");
     private static final String RULES_TEMPLATE_FILE_PATH = String.join(
@@ -33,8 +30,12 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(
             File.separator, "src", "functionaltest", "resources", "responses", "AggregatedObjectResponse.json");
 
+    @MockBean
+    protected CloseableHttpClient mockedHttpClient;
+
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
+        initBaseMocks(mockedHttpClient);
         // Load index page and wait for it to load
         IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();

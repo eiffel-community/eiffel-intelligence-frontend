@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,12 +9,21 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicStatusLine;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +61,10 @@ public class SeleniumBaseClass {
 
     @Autowired
     private BackEndInstanceFileUtils backEndInstanceFileUtils;
-    
+
     @Autowired
     protected BackEndInstancesUtils backEndInstancesUtils;
-    
+
     @Before
     public void setUp() throws Exception {
         File tempFile = File.createTempFile("tempfile", ".json");
@@ -88,6 +98,32 @@ public class SeleniumBaseClass {
 
     protected static String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
+    }
+
+    protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {
+        CloseableHttpResponse responseData = createMockedHTTPResponse("\"\":\"\"", 200);
+        Mockito.doReturn(responseData).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth/checkStatus")));
+
+        Mockito.doReturn(responseData).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth")));
+
+        Mockito.doReturn(responseData).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptions")));
+
+        Mockito.doReturn(responseData).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/rules/rule-check/testRulePageEnabled")));
+
+    }
+
+    private CloseableHttpResponse createMockedHTTPResponse(String message, int httpStatus) {
+        HttpEntity entity = EntityBuilder.create().setText(message).setContentType(ContentType.APPLICATION_JSON)
+                .build();
+        CloseableHttpResponse mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
+        mockedHttpResponse.setEntity(entity);
+        when(mockedHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
+        when(mockedHttpResponse.getEntity()).thenReturn(entity);
+        return mockedHttpResponse;
     }
 
 }
