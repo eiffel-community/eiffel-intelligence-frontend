@@ -116,6 +116,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
+        this.emailSubject = ko.observable(data.emailSubjectID);
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -206,6 +207,7 @@ jQuery(document).ready(function () {
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
+        
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.restPost = ko.observable(false);

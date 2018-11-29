@@ -156,7 +156,22 @@
                                     </label>
                                 </div>
                             </div>
-
+                            
+                             <!-- Form post emailSubject field -->                            
+                            <div class="form-group" data-bind="visible: $data.notificationType() == 'MAIL'">
+                                <label class="pl-1 control-label font-weight-bold">Subject</label>
+                                <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                    title=
+                                        "This is your choice for the email notification subject. <br>
+                                        Default value is 'Email Subscription Notification' <br>
+                                        which is configured in the property file" />                                
+                                <div >
+                                    <label>
+                                        <input name="emailSubject"  id="emailSubjectID" placeholder="emailSubject" type="text"/>                                        
+                                    </label>
+                                </div>
+                            </div> 
+                            
                             <div class="p-1 border border-primary form-group">
                                 <label class="control-label font-weight-bold">NotificationMessage</label>
                                 <div>
