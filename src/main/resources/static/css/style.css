@@ -75,7 +75,7 @@ body {
     align-items: center;
     flex-flow: column;
 }
-.subButtons {
+.hidden_by_default {
 	display: none;
 }
 .loader {
@@ -132,7 +132,13 @@ body {
 	position: absolute;
 	left: -999em;
 }
-
+.flex-wrap {
+	flex-wrap: wrap;
+}
+#back_end_down_warning {
+    font-size: 12pt;
+    color: #dc3545;
+}
 /* The switch - the box around the slider */
 .switch {
     position: relative;

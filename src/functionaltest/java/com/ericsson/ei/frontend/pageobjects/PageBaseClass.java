@@ -23,7 +23,7 @@ public class PageBaseClass {
     CloseableHttpResponse mockedHttpResponse;
     protected FirefoxDriver driver;
     protected String baseUrl;
-    protected final int TIMEOUT_TIMER = 11;
+    protected final int TIMEOUT_TIMER = 10;
 
     public PageBaseClass(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
         super();
@@ -31,6 +31,10 @@ public class PageBaseClass {
         this.driver = driver;
         this.baseUrl = baseUrl;
         PageFactory.initElements(driver, this);
+    }
+
+    public void refreshPage() {
+        driver.navigate().refresh();
     }
 
     public void waitForJQueryToLoad() {

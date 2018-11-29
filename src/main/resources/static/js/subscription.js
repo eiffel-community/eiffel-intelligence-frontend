@@ -68,18 +68,14 @@ jQuery(document).ready(function () {
             success: function (data, textStatus) {
                 EIConnBtn.style.background = green;
                 backendStatus = true;
+            },
+            complete: function () {
+                setTimeout(loadSubButtons, 800);
             }
         });
     }
+    checkBackendStatus();
 
-    function doIfUserLoggedIn() {
-        var currentUser = localStorage.getItem("currentUser");
-        if (currentUser != "") {
-            $("#ldapUserName").text(currentUser);
-            $("#logoutBlock").show();
-            $(".show_if_authorized").show();
-        }
-    }
     function doIfUserLoggedOut() {
         localStorage.removeItem("currentUser");
         $("#ldapUserName").text("Guest");
@@ -89,8 +85,30 @@ jQuery(document).ready(function () {
         localStorage.setItem('errorsStore', []);
     }
 
+    function loadSubButtons() {
+        $("#loadingAnimation").hide();
+        $("#subButtons").show();
+    }
+
     // Check if EI Backend Server is online every X seconds
     window.setInterval(function () { checkBackendStatus(); }, 15000);
+
+    // Check if buttons should be enabled or disabled
+    // Execute code to show or hide status enable disable buttons
+    var buttonsDisabled = false;
+    window.setInterval(function () {
+        if (!backendStatus && !buttonsDisabled) {
+            $("#back_end_down_warning").show();
+            $(".hidden_by_default").show();
+            buttonsDisabled = true;
+            toggleButtonsDisabled(buttonsDisabled);
+        } else if (backendStatus && buttonsDisabled) {
+            $("#back_end_down_warning").hide();
+            buttonsDisabled = false;
+            toggleButtonsDisabled(buttonsDisabled);
+            reload_table();
+        }
+    }, 1000);
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $("#btnEIConnection").click(function () {
@@ -340,25 +358,6 @@ jQuery(document).ready(function () {
         };
     };
 
-    // Start to check is backend secured
-    var isSecured = false;
-    $.ajax({
-        url: frontendServiceUrl + "/auth",
-        contentType: 'application/json; charset=utf-8',
-        type: 'GET',
-        error: function () { },
-        success: function (data) {
-            isSecured = JSON.parse(ko.toJSON(data)).security;
-            if (isSecured == true) {
-                doIfUserLoggedIn();
-            }
-        },
-        complete: function () {
-            checkBackendStatus();
-        }
-    });
-    // Finish to check is backend secured
-
     // Cleanup old ViewModel and Knockout Obeservables from previous page load.
     var observableObject = $('#ViewModelDOMObject')[0];
     ko.cleanNode(observableObject);
@@ -368,119 +367,134 @@ jQuery(document).ready(function () {
 
     // /Stop ## Knockout #####################################################
 
-    // /Start ## Datatables ##################################################
-    var currentUser = localStorage.getItem("currentUser");
-    table = $('#table').DataTable({
-        "responsive": true,
-        "autoWidth": false,
-        "processing": true, //Feature control the processing indicator.
-        "serverSide": false, //Feature control DataTables' server-side processing mode.
-        "fixedHeader": true,
-        "order": [], //Initial no order.
-        "searching": true,
-        // Load data for the table's content from an Ajax source
-        "ajax": {
-            "url": frontendServiceUrl + "/subscriptions",
-            "type": "GET",
-            "dataSrc": "",   // Flat structure from EI backend REST API
-            "error": function () { }
-        },
-        //Set column definition initialisation properties.
-        "columnDefs": [
-            {
-                "targets": [0],
-                "orderable": false,
-                "className": "control",
-                "data":"subscriptionName",
-                "render": function (data, type, row, meta) {
-                    return '';
-                }
+    function checkSecurityAndDrawTable() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            error: function () {
+                drawTable(false);
             },
-            {
-                "targets": [1],
-                "orderable": false,
-                "data": "subscriptionName",
-                "title": '<input type="checkbox" id="check-all" />',
-                "render": function (data, type, row, meta) {
-                    return '<input type="checkbox" class="data-check" value="' + data + '">';
-                }
-            },
-            {
-                "targets": [2],
-                "orderable": true,
-                "title": "Owner",
-                "data": "ldapUserName",
-                "defaultContent": ""
-            },
-            {
-                "targets": [3],
-                "orderable": true,
-                "title": "SubscriptionName",
-                "data": "subscriptionName"
-            },
-            {
-                "targets": [4],
-                "orderable": true,
-                "title": "Date",
-                "data": "created",
-                "mRender": function (data, type, row, meta) {
-                    return vm.getUTCDate(data);
-                }
-            },
-            {
-                "targets": [5],
-                "orderable": true,
-                "title": "NotificationType",
-                "data": "notificationType"
-            },
-            {
-                "targets": [6],
-                "orderable": true,
-                "title": "NotificationMeta",
-                "data": "notificationMeta"
-            },
-            {
-                "targets": [7],
-                "orderable": true,
-                "title": "Repeat",
-                "data": "repeat"
-            },
-            {
-                "targets": [8],
-                "className": "sub-action-column",
-                "orderable": false,
-                "title": "Action",
-                "data": null,
-                "render": function (data, type, row, meta) {
+            success: function (data) {
+                isSecured = JSON.parse(ko.toJSON(data)).security;
+                drawTable(isSecured);
+            }
+        });
+    }
 
-                    if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
-                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
-                    } else {
-                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
+    // /Start ## Datatables ##################################################
+    function drawTable(isSecured) {
+        var currentUser = localStorage.getItem("currentUser");
+        table = $('#table').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            "processing": true, //Feature control the processing indicator.
+            "serverSide": false, //Feature control DataTables' server-side processing mode.
+            "fixedHeader": true,
+            "order": [], //Initial no order.
+            "searching": true,
+            // Load data for the table's content from an Ajax source
+            "ajax": {
+                "url": frontendServiceUrl + "/subscriptions",
+                "type": "GET",
+                "dataSrc": "",   // Flat structure from EI backend REST API
+                "error": function () { }
+            },
+            //Set column definition initialisation properties.
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "orderable": false,
+                    "className": "control",
+                    "data":"subscriptionName",
+                    "render": function (data, type, row, meta) {
+                        return '';
+                    }
+                },
+                {
+                    "targets": [1],
+                    "orderable": false,
+                    "data": "subscriptionName",
+                    "title": '<input type="checkbox" id="check-all"/>',
+                    "render": function (data, type, row, meta) {
+                        return '<input type="checkbox" class="data-check" value="' + data + '">';
+                    }
+                },
+                {
+                    "targets": [2],
+                    "orderable": true,
+                    "title": "Owner",
+                    "data": "ldapUserName",
+                    "defaultContent": ""
+                },
+                {
+                    "targets": [3],
+                    "orderable": true,
+                    "title": "SubscriptionName",
+                    "data": "subscriptionName"
+                },
+                {
+                    "targets": [4],
+                    "orderable": true,
+                    "title": "Date",
+                    "data": "created",
+                    "mRender": function (data, type, row, meta) {
+                        return vm.getUTCDate(data);
+                    }
+                },
+                {
+                    "targets": [5],
+                    "orderable": true,
+                    "title": "NotificationType",
+                    "data": "notificationType"
+                },
+                {
+                    "targets": [6],
+                    "orderable": true,
+                    "title": "NotificationMeta",
+                    "data": "notificationMeta"
+                },
+                {
+                    "targets": [7],
+                    "orderable": true,
+                    "title": "Repeat",
+                    "data": "repeat"
+                },
+                {
+                    "targets": [8],
+                    "className": "sub-action-column",
+                    "orderable": false,
+                    "title": "Action",
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+
+                        if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                                + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
+                                + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
+                        } else {
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>';
+                        }
                     }
                 }
+            ],
+            "initComplete": function () {
+                if (isSecured == false) {
+                    table.column(2).visible(false);
+                }
+                $("#check-all").click(function () {
+                    $(".data-check").prop('checked', $(this).prop('checked'));
+                });
             }
-        ],
-        "initComplete": function () {
-            if (isSecured == false) {
-                table.column(2).visible(false);
-            }
-        }
-    });
+        });
+    };
+    checkSecurityAndDrawTable();
 
     $("#sidenavCollapse").click(function() {
         table.responsive.rebuild();
         table.responsive.recalc();
     });
     // /Stop ## Datatables ##################################################
-
-    // /Start ## check all subscriptions ####################################
-    $("#check-all").click(function () {
-        $(".data-check").prop('checked', $(this).prop('checked'));
-    });
-    // /Stop ## check all subscriptions #####################################
 
     // /Start ## Add Subscription ########################################
     $("#addSubscription").click(function () {
@@ -1127,11 +1141,13 @@ jQuery(document).ready(function () {
     });
     // /Stop ## Delete Subscription #########################################
 
-    // Delay display buttons
-    setTimeout(showButtons, 800);
-    function showButtons() {
-        $(".loadingAnimation").hide();
-        $(".subButtons").show();
+    function toggleButtonsDisabled(disabled) {
+        $('#addSubscription').prop("disabled", disabled);
+        $('#bulkDelete').prop("disabled", disabled);
+        $('#uploadSubscription').prop("disabled", disabled);
+        $('#getTemplateButton').prop("disabled", disabled);
+        $('#reloadButton').prop("disabled", disabled);
+        $('.table-btn').prop("disabled", disabled);
     }
 
     function loadTooltip() {

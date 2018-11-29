@@ -243,13 +243,33 @@ public class SubscriptionPage extends PageBaseClass {
         return false;
     }
 
+    public boolean buttonDoesNotExistByXPath(String XPath) {
+        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // next row.
+        String findInRow;
+        try {
+            findInRow = "[2]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPath + findInRow)));
+        } catch (Exception e) {
+            return false;
+        }
+        try {
+            findInRow = "[1]";
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPath + findInRow)));
+        } catch (Exception e) {
+            return false;
+        }
+        //elementIsNotVisible
+        return true;
+    }
+
     public void clickReloadLDAP(String response, String responseAuth) throws IOException {
         CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
         CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(
-                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("subscriptions")));
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("subscriptions")));
         Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().contains("auth")));
+                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth")));
         WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
@@ -258,6 +278,15 @@ public class SubscriptionPage extends PageBaseClass {
     public boolean textExistsInTable(String txt) {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean textDoesNotExistsInTable(String txt) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
         } catch (Exception e) {
             return false;
         }
