@@ -6,7 +6,7 @@
 
 <p>The graphical user interface for testing rules consists of two panes. Left pane is intended to add the rules and right pane is intended for adding the Eiffel events.</p>
 
-            (Picture)
+<img src="./images/GUI_TestRules.png"></img>
 
 <h3>Add</h3>
 
@@ -16,11 +16,11 @@
 
 <p>Load buttons are for loading rules/events from external files. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p> 
     
-            (Picture)
+<img src="./images/GUI_TestRules_Replace_Append.png"></img>
 
 <p>After that you need to choose from which file you want to load rules/events.</p>
 
-            (Picture)
+<img src="./images/GUI_TestRules_Browse_File.png"></img>
 
 <p>The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}].</p>
 
@@ -241,7 +241,7 @@
 
 <p>"Clear All" buttons remove all rules respective events. After clicking on button, a pop-up window shows up and asks for confirmation. After confirming all rules or events are removed.</p>
 
-            (Picture)
+<img src="./images/GUI_TestRules_Clear_All.png"></img>
 
 <h3>Trash Can Button</h3>
 
@@ -251,6 +251,6 @@
 
 <p>Clicking on "Find Aggregated Object" button will start the aggregation process. If rules and events are correct, a pop-up window with the aggregated object will show up on the screen.</p>
 
-(Picture)
+<img src="./images/GUI_TestRules_Aggregated_Object.png"></img>
 
 <p>More information about how to write rules can be found on …</p>
