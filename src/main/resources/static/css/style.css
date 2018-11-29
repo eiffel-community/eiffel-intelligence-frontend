@@ -21,7 +21,8 @@ body {
 	width: 25rem;
 }
 .rule-button {
-    width: 150px;
+    width: auto;
+    min-width: 150px;
 }
 .display-inline-table {
     display: inline-table;
@@ -35,6 +36,21 @@ body {
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
 }
+/* Information page start */
+.table-text-setting {
+    margin: auto;
+    width: 48%;
+}
+.section-p-text {
+    /*background-color: #fbfbfb;*/
+    padding: 17px;
+    border-radius: 15px;
+    text-align: center;
+}
+.left-table-pane {
+    width: 30%;
+}
+/* Information page stop */
 .testRulePage {
     position: fixed;
     top: 0px;
@@ -56,7 +72,7 @@ body {
     align-items: center;
     flex-flow: column;
 }
-.subButtons {
+.hidden_by_default {
 	display: none;
 }
 .loader {
@@ -113,7 +129,13 @@ body {
 	position: absolute;
 	left: -999em;
 }
-
+.flex-wrap {
+	flex-wrap: wrap;
+}
+#back_end_down_warning {
+    font-size: 12pt;
+    color: #dc3545;
+}
 /* The switch - the box around the slider */
 .switch {
     position: relative;
@@ -191,4 +213,27 @@ input:checked + .slider:before {
         max-width: 100%;
         width: 100%;
     }
+}
+
+button.rules_info {
+  text-align: center;
+  max-height: auto;
+  max-width: auto;
+  margin: 0px;
+  padding: 0px;
+  background: white;
+  border: none;
+}
+
+button.rules_info:active {
+    outline: none;
+}
+
+button.rules_info:focus {
+    outline:0;
+    outline:none;
+}
+
+#infoContent{
+   font: 16px "Calibri";
 }

@@ -162,14 +162,14 @@ jQuery(document).ready(function() {
 
     init();
 
-    function singleInstanceModel(name, host, port, path, https, active) {
+    function singleInstanceModel(name, host, port, contextPath, https, active) {
         this.name = ko.observable(name),
         this.host = ko.observable(host),
         this.port = ko.observable(port),
-        this.path = ko.observable(path),
+        this.contextPath = ko.observable(contextPath),
         this.https = ko.observable(https),
         this.active = ko.observable(active),
-        this.information = name.toUpperCase() + " - " + host + " " + port + "/" + path;
+        this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
     }
 
     function viewModel(data) {
@@ -180,7 +180,7 @@ jQuery(document).ready(function() {
         var oldSelectedActive = self.selectedActive;
         for(var i = 0; i < json.length; i++) {
             var obj = json[i];
-            var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.path, obj.https, obj.active);
+            var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.contextPath, obj.https, obj.active);
             self.instances.push(instance);
             if(obj.active == true){
                 currentName = obj.name;

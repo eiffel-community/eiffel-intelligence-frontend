@@ -93,6 +93,23 @@ jQuery(document).ready(function () {
     // Check if EI Backend Server is online every X seconds
     window.setInterval(function () { checkBackendStatus(); }, 15000);
 
+    // Check if buttons should be enabled or disabled
+    // Execute code to show or hide status enable disable buttons
+    var buttonsDisabled = false;
+    window.setInterval(function () {
+        if (!backendStatus && !buttonsDisabled) {
+            $("#back_end_down_warning").show();
+            $(".hidden_by_default").show();
+            buttonsDisabled = true;
+            toggleButtonsDisabled(buttonsDisabled);
+        } else if (backendStatus && buttonsDisabled) {
+            $("#back_end_down_warning").hide();
+            buttonsDisabled = false;
+            toggleButtonsDisabled(buttonsDisabled);
+            reload_table();
+        }
+    }, 1000);
+
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $("#btnEIConnection").click(function () {
         checkBackendStatus();
@@ -258,9 +275,20 @@ jQuery(document).ready(function () {
         };
 
         self.getUTCDate = function (epochtime) {
-            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-            d.setUTCMilliseconds(epochtime);
-            return d;  // Is now a date (in client time zone)
+            var date = new Date(epochtime);
+            var resolvedOptions = Intl.DateTimeFormat().resolvedOptions();
+            var options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: false,
+                    timeZone: resolvedOptions.timeZone,
+                    timeZoneName: 'short'
+            };
+            return date.toLocaleDateString(resolvedOptions.locale, options);  // Is now a date (in client time zone)
         }
 
         self.add_requirement = function (data, event) {
@@ -421,11 +449,11 @@ jQuery(document).ready(function () {
                     "render": function (data, type, row, meta) {
 
                         if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button> '
-                                + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record">Edit</button> '
-                                + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record">Delete</button>';
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                                + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
+                                + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
                         } else {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record">View</button>';
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>';
                         }
                     }
                 }
@@ -970,6 +998,15 @@ jQuery(document).ready(function () {
         });
     });
     // /Stop ## Delete Subscription #########################################
+
+    function toggleButtonsDisabled(disabled) {
+        $('#addSubscription').prop("disabled", disabled);
+        $('#bulkDelete').prop("disabled", disabled);
+        $('#uploadSubscription').prop("disabled", disabled);
+        $('#getTemplateButton').prop("disabled", disabled);
+        $('#reloadButton').prop("disabled", disabled);
+        $('.table-btn').prop("disabled", disabled);
+    }
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });

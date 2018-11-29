@@ -41,14 +41,16 @@ import lombok.Setter;
 public class BackEndInstancesUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesUtils.class);
-    private static final String NAME = "name";
-    private static final String HOST = "host";
-    private static final String PORT = "port";
-    private static final String PATH = "path";
-    private static final String HTTPS = "https";
+
+    public static final String NAME = "name";
+    public static final String HOST = "host";
+    public static final String PORT = "port";
+    public static final String CONTEXT_PATH = "contextPath";
+    public static final String HTTPS = "https";
+    public static final String DEFAULT = "defaultBackend";
+
     private static final long SECONDS_BETWEEN_PARSING = 20;
 
-    @Value("${ei.backendServerName:#{null}}")
     private String defaultBackEndInstanceName;
 
     @Autowired
@@ -64,7 +66,7 @@ public class BackEndInstancesUtils {
     private boolean savedSinceLastParsing = false;
 
     /**
-     * Function to check weather an instance host, port, path and https is
+     * Function to check weather an instance host, port, context path and https is
      * unique.
      *
      * @param JsonObject
@@ -77,7 +79,7 @@ public class BackEndInstancesUtils {
             // Ensure unique host, port and context paths
             if (backendInformation.getHost().equals(instance.get(HOST).getAsString())
                     && Integer.valueOf(backendInformation.getPort()) == instance.get(PORT).getAsInt()
-                    && backendInformation.getPath().equals(instance.get(PATH).getAsString())
+                    && backendInformation.getContextPath().equals(instance.get(CONTEXT_PATH).getAsString())
                     && backendInformation.isUseSecureHttpBackend() == instance.get(HTTPS).getAsBoolean()) {
                 return true;
             }
@@ -86,8 +88,8 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns whether the name is unique, the name is an identifier thus must
-     * be unique.
+     * Returns whether the name is unique, the name is an identifier thus must be
+     * unique.
      *
      * @param JsonObject
      * @return boolean
@@ -106,8 +108,7 @@ public class BackEndInstancesUtils {
     /**
      * Returns the BackEndInformation based on input name.
      *
-     * @param String
-     *            name
+     * @param String name
      * @return backendInformation if exist null if no backendInformation exist
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
@@ -139,8 +140,7 @@ public class BackEndInstancesUtils {
     /**
      * Adds a new back end to the backEndInformationList and saves the data.
      *
-     * @param instance
-     *            back end information as JsonObject
+     * @param instance back end information as JsonObject
      */
     public void addNewBackEnd(JsonObject instance) {
         parseBackEndInstances();
@@ -155,8 +155,7 @@ public class BackEndInstancesUtils {
     /**
      * Deletes a back end from the backEndInformationList and saves the new list.
      *
-     * @param objectToDelete
-     *            back end information as JsonObject
+     * @param objectToDelete back end information as JsonObject
      */
     public void deleteBackEnd(JsonObject objectToDelete) {
         parseBackEndInstances();
@@ -164,7 +163,7 @@ public class BackEndInstancesUtils {
             if (backendInformation.getName().equals(objectToDelete.get(NAME).getAsString())
                     && backendInformation.getHost().equals(objectToDelete.get(HOST).getAsString())
                     && backendInformation.getPort().equals(objectToDelete.get(PORT).getAsString())
-                    && backendInformation.getPath().equals(objectToDelete.get(PATH).getAsString())
+                    && backendInformation.getContextPath().equals(objectToDelete.get(CONTEXT_PATH).getAsString())
                     && backendInformation.isUseSecureHttpBackend() == objectToDelete.get(HTTPS).getAsBoolean()
                     && !backendInformation.isDefaultBackend()) {
                 backEndInformationList.remove(backendInformation);
@@ -197,14 +196,14 @@ public class BackEndInstancesUtils {
      * @param name
      * @param host
      * @param port
-     * @param path
+     * @param contextPath
      * @param def
      */
-    public void setDefaultBackEndInstance(String name, String host, int port, String path, boolean def) {
+    public void setDefaultBackEndInstance(String name, String host, int port, String contextPath, boolean def) {
         getDefaultBackendInformation().setName(name);
         getDefaultBackendInformation().setHost(host);
         getDefaultBackendInformation().setPort(String.valueOf(port));
-        getDefaultBackendInformation().setPath(path);
+        getDefaultBackendInformation().setContextPath(contextPath);
         getDefaultBackendInformation().setUseSecureHttpBackend(false);
         getDefaultBackendInformation().setDefaultBackend(def);
     }
@@ -242,21 +241,21 @@ public class BackEndInstancesUtils {
 
         currentlyParsing = false;
         savedSinceLastParsing = false;
-        nextTimeToParse  = System.currentTimeMillis() + (SECONDS_BETWEEN_PARSING * 1000);
+        nextTimeToParse = System.currentTimeMillis() + (SECONDS_BETWEEN_PARSING * 1000);
     }
 
     private boolean parsingIsApplicable() {
         /**
-         * If this is a test and test is dependent on parsing to be executed
-         * we want to parse.
+         * If this is a test and test is dependent on parsing to be executed we want to
+         * parse.
          */
         if (isRunningTests) {
             return true;
         }
 
         /**
-         * If parsing is ongoing wait for it to finish, we do not parse again
-         * since it should already be up to date.
+         * If parsing is ongoing wait for it to finish, we do not parse again since it
+         * should already be up to date.
          */
         if (currentlyParsing) {
             long stopTime = System.currentTimeMillis() + 10000;
@@ -270,8 +269,7 @@ public class BackEndInstancesUtils {
         }
 
         /**
-         * If parsing has not been done for a set amount of time,
-         * then we want to parse.
+         * If parsing has not been done for a set amount of time, then we want to parse.
          */
         if (nextTimeToParse <= System.currentTimeMillis()) {
             return true;
@@ -280,7 +278,7 @@ public class BackEndInstancesUtils {
         /**
          * If an update has happened to the file, then we should parse the file.
          */
-        if (savedSinceLastParsing ) {
+        if (savedSinceLastParsing) {
             return true;
         }
 
