@@ -25,6 +25,11 @@ Potential future features for Eiffel Intelligence Frontend include:
 * Web hooks
 * Much more
 
+## Supported Browsers
+Edge >= 17.17619
+Chrome >= 63.0.3239.132
+Firefox >= 60.2.0
+
 # About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
 
