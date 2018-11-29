@@ -70,7 +70,7 @@ jQuery(document).ready(function () {
                 backendStatus = true;
             },
             complete: function () {
-                toggleSubButtons(backendStatus);
+                toggleOnBackendStatus(backendStatus);
                 setTimeout(loadSubButtons, 800);
             }
         });
@@ -95,19 +95,20 @@ jQuery(document).ready(function () {
     window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if buttons should be enabled or disabled
-    // Execute code to show or hide status enable disable buttons
-    function toggleSubButtons(backendStatus) {
+    // Toggle warning text on and off
+    // Check backend status to shrink or increase space for warning to show
+    function toggleOnBackendStatus(backendStatus) {
         if(!backendStatus && !$("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-6");
-            $("#btnEIContainer").parent().removeClass("col-md-6");
+            $("#subTitle").parent().removeClass("col-md-9");
+            $("#btnEIContainer").parent().removeClass("col-md-3");
             $("#subTitle").parent().addClass("col-md-4");
             $("#btnEIContainer").parent().addClass("col-md-2");
         }
         if(backendStatus && $("#back_end_down_warning").is(":visible")) {
             $("#subTitle").parent().removeClass("col-md-4");
             $("#btnEIContainer").parent().removeClass("col-md-2");
-            $("#subTitle").parent().addClass("col-md-6");
-            $("#btnEIContainer").parent().addClass("col-md-6");
+            $("#subTitle").parent().addClass("col-md-9");
+            $("#btnEIContainer").parent().addClass("col-md-3");
             reload_table();
         }
         $("#back_end_down_warning").toggle(!backendStatus);
@@ -390,7 +391,7 @@ jQuery(document).ready(function () {
                     "targets": [0],
                     "orderable": false,
                     "className": "control",
-                    "data":"subscriptionName",
+                    "data": "subscriptionName",
                     "render": function (data, type, row, meta) {
                         return '';
                     }
@@ -468,6 +469,9 @@ jQuery(document).ready(function () {
                 }
                 $("#check-all").click(function () {
                     $(".data-check").prop('checked', $(this).prop('checked'));
+                });
+                $(".control").click(function () {
+                    setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
                 });
             }
         });
