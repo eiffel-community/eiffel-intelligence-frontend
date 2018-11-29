@@ -18,24 +18,28 @@
             <h1 id="test_rules_header">Test Rules</h1>
         </div>
         <div class="row px-3">
-            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testRulesDOMObject">
-                <div class="d-flex flex-wrap">
+            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right" id="testRulesDOMObject">
+                <div class="d-flex flex-wrap sticky-button-bar">
 	                <div class="col-11">
+	                   <button class="btn btn-primary add_rule mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind($data, ruleTemplate)">
+                           Add
+                           <i class="fa fa-fw  fa-plus"></i>
+                       </button>
 	                   <button class="btn btn-primary upload_rules mr-1 mt-1 d-inline-block">
-                           Load Rules from file
+                           Load From File
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hide" type='file' id='uploadRulesFile' name='file'/>
-	                   <button class="btn btn-primary download_rules_template rule-button mr-1 mt-1 d-inline-block">
+                       <button class="btn btn-primary download_rules mr-1 mt-1 d-inline-block">
+                           Download
+                           <i class="fa fa-fw  fa-download"></i>
+                       </button>
+	                   <button class="btn btn-primary download_rules_template mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-	                   <button class="btn btn-primary add_rule rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind($data, ruleTemplate)">
-                           Add Rule
-                           <i class="fa fa-fw  fa-plus"></i>
-                       </button>
-                       <button class="btn btn-danger clear_all_rules rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllRules.bind()">
-                           Clear All Rules
+                       <button class="btn btn-danger clear_all_rules mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'rules')">
+                           Clear All
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
 	                </div>
@@ -60,24 +64,28 @@
                     </div>
                 </div>
             </div>
-            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right border-success" id="testEventsDOMObject">
-                <div class="d-flex flex-wrap">
+            <div class="p-1 col-lg-6 col-md-6 col-12 border border-right" id="testEventsDOMObject">
+                <div class="d-flex flex-wrap sticky-button-bar">
                     <div class="col-11">
+                       <button class="btn btn-primary add_event mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind($data, {})">
+                           Add
+                           <i class="fa fa-fw  fa-plus"></i>
+                       </button>
                        <button class="btn btn-primary upload_events mr-1 mt-1 d-inline-block">
-                           Load Events from file
+                           Load From File
                            <i class="fa fa-fw  fa-upload"></i>
                        </button>
                        <input class="hide" type='file' id='uploadEventsFile' name='file'/>
-                       <button class="btn btn-primary download_events_template rule-button mr-1 mt-1 d-inline-block">
+                       <button class="btn btn-primary download_events mr-1 mt-1 d-inline-block">
+                           Download
+                           <i class="fa fa-fw  fa-download"></i>
+                       </button>
+                       <button class="btn btn-primary download_events_template mr-1 mt-1 d-inline-block">
                            Get Template
                            <i class="fa fa-fw  fa-download"></i>
                        </button>
-                       <button class="btn btn-primary add_event rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind($data, {})">
-                           Add Event
-                           <i class="fa fa-fw  fa-plus"></i>
-                       </button>
-                       <button class="btn btn-danger clear_all_events rule-button mr-1 mt-1 d-inline-block" data-bind="click : $root.clearAllEvents.bind()">
-                           Clear All Events
+                       <button class="btn btn-danger clear_all_events mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'events')">
+                           Clear All
                            <i class="fa fa-fw  fa-trash"></i>
                        </button>
                     </div>
@@ -103,24 +111,12 @@
                 </div>
             </div>
         </div>
-        <div class="row-fluid divpad" id="submitButton">
-            <div class="row">
-                <div class="col-4">
-                    <button class="btn btn-success download_rules white-space-normal">
-                        Download Rules
-                        <i class="fa fa-fw  fa-download"></i>
-                    </button>
-                </div>
-                <div class="col-4 text-center">
+        <div class="row-fluid divpad footer-buttons" id="submitButton">
+            <div class="row ">
+                <div class="text-center">
                     <button class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find Aggregated Object</button>
                     <button class="rules_info">
                         <img src="assets/images/information.png"/>
-                    </button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-success download_events white-space-normal float-right">
-                        Download Events
-                        <i class="fa fa-fw  fa-download"></i>
                     </button>
                 </div>
             </div>
@@ -178,5 +174,39 @@
 	    </div>
 	  </div>
 	</div>
+ 
+    <!-- /. Clear all events -->
+    <div class="modal delete-warning-modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title">WARNING!</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <!-- ko if: $root.clearType()=="rules" -->
+	                    <p id="delete-warning-modal-text" >Do you really want to remove all rules?</p>
+	                <!-- /ko-->
+
+	                <!-- ko if: $root.clearType()=="events" -->
+	                    <p id="delete-warning-modal-text" >Do you really want to remove all events?</p>
+	                <!-- /ko-->
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+	                <!-- ko if: $root.clearType()=="rules" -->
+	                    <button data-bind="click: $root.clearAllRules" type="button" class="btn btn-danger">Clear all rules</button>
+	                <!-- /ko-->
+
+	                <!-- ko if: $root.clearType()=="events" -->
+	                    <button data-bind="click: $root.clearAllEvents" type="button" class="btn btn-danger">Clear all events</button>
+	                <!-- /ko-->
+	            </div>
+	        </div>
+        </div>
+    </div>
 </body>
 </html>
