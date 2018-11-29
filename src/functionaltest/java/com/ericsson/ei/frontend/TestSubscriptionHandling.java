@@ -53,6 +53,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String response = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
 
         subscriptionPage.clickReload(response);
+        subscriptionPage.refreshPage();
 
         String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
         String viewButtonXPath = "(//button[@id='view-Subscription1'])";

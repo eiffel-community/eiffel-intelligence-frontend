@@ -86,8 +86,8 @@ jQuery(document).ready(function () {
     }
 
     function loadSubButtons() {
-        $(".loadingAnimation").hide();
-        $(".subButtons").show();
+        $("#loadingAnimation").hide();
+        $("#subButtons").show();
     }
 
     // Check if EI Backend Server is online every X seconds
