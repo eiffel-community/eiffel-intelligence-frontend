@@ -2,6 +2,8 @@ jQuery(document).ready(function() {
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServicePath = "/backend";
 function instanceModel() {
+    var router = new Navigo(null, true, '#');
+
     var self = this;
 	self.instance = {
 	    name: ko.observable(""),
@@ -30,7 +32,7 @@ function instanceModel() {
 				},
 				success: function (responseData, XMLHttpRequest, textStatus) {
 					$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
-					$("#mainFrame").load("switch-backend.html");
+					router.navigate('switch-backend');
 				}
 			});
 		}

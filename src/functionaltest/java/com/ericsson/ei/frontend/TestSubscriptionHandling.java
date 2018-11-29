@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -30,8 +29,6 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
             "functionaltest", "resources", "responses", "SubscriptionForSaveCase.json");
     private static final String SUBSCRIPTION_FOR_UPLOAD_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionForUploadCase.json");
-
-    private JavascriptExecutor js;
 
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
@@ -56,6 +53,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String response = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH);
 
         subscriptionPage.clickReload(response);
+        subscriptionPage.refreshPage();
 
         String expandButtonXPath = "//tr[contains(.,'Subscription1')]/td[1]";
         String viewButtonXPath = "(//button[@id='view-Subscription1'])";
@@ -66,32 +64,26 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.buttonExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
-        // Given LDAP is enabled, "Reload" subscriptions and then click
+        // Given LDAP is enabled, "Reload" subscriptions and reload
         // subscription page with LDAP enabled with unauthorized user names
         // Verify that subscriptions exists but only with "View" button
         String responseSub = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
         String responseAuth = "{\"security\":true}";
 
         subscriptionPage.clickReloadLDAP(responseSub, responseAuth);
-        indexPageObject.clickSubscriptionPage();
+        subscriptionPage.refreshPage();
 
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));
         assert (subscriptionPage.buttonDoesNotExistByXPath(deleteButtonXPath));
         assert (subscriptionPage.buttonDoesNotExistByXPath(editButtonXPath));
         assert (subscriptionPage.buttonExistByXPath(viewButtonXPath));
 
-        // Given LDAP is enabled, "Reload" subscriptions and then click
-        // subscription page with LDAP enabled with both unauthorized and
-        // unauthorized user names (in this case authorized user is "ABCD" with
-        // subscriptions, "subscription1" and "subscription2") Verify that
-        // current user can see only their own subscriptions' edit and delete
-        // buttons.
-        String keyForUser = "currentUser";
-        String valueForUser = "ABCD";
+        // Given LDAP is enabled, reload the index page and mock the user response as
+        // user 'ABCD'. Verify that current user can see only their own subscriptions'
+        // edit and delete buttons.
+        String responseUser = "{\"user\":\"ABCD\"}";
 
-        js = (driver);
-        js.executeScript(String.format("window.localStorage.setItem('%s','%s');", keyForUser, valueForUser));
-        indexPageObject.clickSubscriptionPage();
+        indexPageObject.loadPageLDAP(responseAuth, responseUser);
 
         assert (subscriptionPage.textExistsInTable("Subscription1"));
         assert (subscriptionPage.clickExpandButtonByXPath(expandButtonXPath));

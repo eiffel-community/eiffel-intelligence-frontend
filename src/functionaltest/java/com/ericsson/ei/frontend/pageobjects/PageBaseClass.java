@@ -33,6 +33,10 @@ public class PageBaseClass {
         PageFactory.initElements(driver, this);
     }
 
+    public void refreshPage() {
+        driver.navigate().refresh();
+    }
+
     public void waitForJQueryToLoad() {
         try {
             WebDriverWait webDriverWait = new WebDriverWait(driver, 10);
