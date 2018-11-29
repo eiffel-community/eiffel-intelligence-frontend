@@ -1,7 +1,7 @@
 # GUI Overview
 
 Eiffel Intelligence Frontend GUI can be divided into two parts a navigation window and a work window.
-<img src="https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/src/main/resources/static/assets/images/GUI_subscription_example.png">
+<img src="https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/TestRulesUserGuideUpdate/wiki/images/GUI_subscription_example.png">
 </img>
 
 As the name suggests, navigation window provides its users one click access to the resources to interact with EI. This window contains some buttons. Clicking on any of these buttons result in either opening an interactive form in the work window or opening a new window with some information resource.
