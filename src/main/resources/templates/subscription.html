@@ -87,7 +87,7 @@
                         <div id="ViewModelDOMObject" class="form-body">
 
                             <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
                                 <div>
                                     <select class="w-100" id="selectTemplate"
                                         data-bind="options: subscription_templates_in,
@@ -100,7 +100,7 @@
 
                             <!-- ko foreach:  subscription -->
                             <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
                                     <!-- text injected from subscription.js -->
                                     <span class="text-danger font-small" id="invalidSubscriptionName"></span>
@@ -127,24 +127,25 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">NotificationType</label>
-                                <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+
+                            <div class="p-1 border border-primary form-group">
+                                <div class="form-group">
+                                    <label class="h5 pl-1 control-label font-weight-bold">NotificationType</label>
+                                    <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used when the subscription is triggered."/>
 
                                 <!-- Rest or Mail radio buttons -->
-                                <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
-                                    <label>
-                                        <input type="radio" name="restOrMailGroup" data-bind="
+                                    <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
+                                        <label>
+                                            <input type="radio" name="restOrMailGroup" data-bind="
                                                 attr: {value: value, id: id}, checked: $parent.notificationType, onChange" />
-                                        <span data-bind="text: label"></span>
-                                    </label>
+                                            <span data-bind="text: label"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="form-group" data-bind="visible: $data.notificationType() == 'REST_POST'">
-                                <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
-                                <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                <div class="form-group" data-bind="visible: $data.notificationType() == 'REST_POST'">
+                                    <label class="h5 pl-1 control-label font-weight-bold">RestPostMediaType</label>
+                                    <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
                                         "This decides the Content-Type of the POST body. <br>
                                         Default is: <br>
@@ -152,57 +153,58 @@
                                         You may select: <br>
                                         FORM/POST Parameters (application/x-www-form-urlencoded)" />
 
-                                <!-- Form post  radio buttons -->
-                                <div data-bind="foreach: $root.restPostBodyMediaType_in" >
+                                 <!-- Form post  radio buttons -->
+                                    <div data-bind="foreach: $root.restPostBodyMediaType_in" >
                                     <label>
                                         <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
                                                 attr: {value: value, id: id}, checked: $parent.restPostBodyMediaType, onChange" />
                                         <span data-bind="text: label"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="p-1 border form-group">
-                                <label class="control-label font-weight-bold">NotificationMessage</label>
-                                <div>
-                                    <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="keyInNotificationMessage"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="noNotificationMessage"></span>
-                                </div>
-                                <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
-                                    <thead>
-                                        <tr>
-                                            <th width="20%">Key</th>
-                                            <th width="80%">Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: notificationMessageKeyValues">
-                                        <tr>
-                                            <td valign="top">
-                                                <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
+                                        </label>
+                                   </div>
+                               </div>
+                              
+                               <label class="h5 control-label font-weight-bold">NotificationMessage</label>
+                               <div>
+                                   <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="keyInNotificationMessage"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="noNotificationMessage"></span>
+                               </div>
+                               <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                               <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
+                                   <thead>
+                                       <tr>
+                                           <th width="20%">Key</th>
+                                           <th width="80%">Value</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody data-bind="foreach: notificationMessageKeyValues">
+                                       <tr>
+                                           <td valign="top">
+                                               <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
+>>>>>>> 12cfe8e... Fix grouping of subscription elements
                                                     type="text" />
-                                            </td>
-                                            <td>
-                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
+                                           </td>
+                                           <td>
+                                               <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
                                                     placeholder="Value" class="form-control" type="text"></textarea>
-                                            </td>
-                                            <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
-                                                <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}"
+                                           </td>
+                                           <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
+                                               <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}"
                                                     class="btn btn-danger float-rightmr-1 mr-1 mt-1 d-inline-block">
-                                                    <i class="fa fa-fw fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                                   <i class="fa fa-fw fa-trash"></i>
+                                               </button>
+                                           </td>
+                                       </tr>
+                                   </tbody>
                                 </table>
+
                                 <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
                                 <div data-bind="if: $root.formpostkeyvaluepairs() && $root.restPost()"  class="pt-1 d-flex justify-content-end">
                                     <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair" class="btn btn-success mr-1 mt-1 d-inline-block">
@@ -226,11 +228,24 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                                                
+                              <!--  NOTIFICATION META  -->
+                              <div class="form-group">
+                                <label class="h5 pl-1 control-label font-weight-bold">NotificationMeta</label>
+                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                    title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
+                                <div>
+                                    <span class="text-danger font-small" id="invalidNotificationMeta"></span>
+                                    <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
+                                        name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
+                                    <span class="help-block"></span>
+                                </div>
+                              </div>
                             </div>
 
                             <!--  AUTHENTICATION  -->
                             <div class="pt-3 form-group">
-                                <label class="pl-1 control-label font-weight-bold">Authorization</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Authorization</label>
                                 <div>
                                     <select id="selectAuth" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
                                         optionsText: 'text', optionsValue: 'value', value: authenticationType">
@@ -262,7 +277,7 @@
                             </div>
 
                             <div class="pt-3 form-group">
-                                <label class="pl-1 control-label font-weight-bold">Repeat</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Repeat</label>
                                 <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Instructs whether the subscription should be re-triggered for new additions to the aggregated object. If false only first time the conditions are fulfilled
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
@@ -276,19 +291,6 @@
                                 </div>
                             </div>
 
-                            <!--  NOTIFICATION META  -->
-                            <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
-                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                    title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
-                                <div>
-                                    <span class="text-danger font-small" id="invalidNotificationMeta"></span>
-                                    <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
-                                        name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-
                             <!--  REQUIREMENTS  -->
                             <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                             <div class="pl-0 ml-0">
@@ -299,7 +301,7 @@
                                     title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups."/>
                             </div>
                             <div class="p-1 border form-group">
-                                <label class="control-label font-weight-bold">Requirement</label>
+                                <label class="h5 control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
 
                                     <!-- ko foreach: requirements_item.conditions -->
