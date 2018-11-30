@@ -61,11 +61,15 @@ jQuery(document).ready(function () {
                     EIConnBtn.style.background = green;
                     backendStatus = true;
                 } else {
+                    doIfSecurityOff();
                     EIConnBtn.style.background = red;
                     backendStatus = false;
                 }
             },
             success: function (data, textStatus) {
+                if(backendStatus == false) {
+                    checkBackendSecured();
+                }
                 EIConnBtn.style.background = green;
                 backendStatus = true;
             },
@@ -75,15 +79,6 @@ jQuery(document).ready(function () {
         });
     }
     checkBackendStatus();
-
-    function doIfUserLoggedOut() {
-        localStorage.removeItem("currentUser");
-        $("#ldapUserName").text("Guest");
-        $("#loginBlock").show();
-        $("#logoutBlock").hide();
-        $(".show_if_authorized").hide();
-        localStorage.setItem('errorsStore', []);
-    }
 
     function loadSubButtons() {
         $("#loadingAnimation").hide();

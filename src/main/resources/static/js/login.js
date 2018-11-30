@@ -63,14 +63,6 @@ jQuery(document).ready(function() {
 		});
 	}
 
-    function doIfUserLoggedIn(name) {
-        localStorage.removeItem("currentUser");
-        localStorage.setItem("currentUser", name);
-        $("#ldapUserName").text(name);
-        $("#loginBlock").hide();
-        $("#logoutBlock").show();
-    }
-
 	var observableObject = $("#viewModelDOMObject")[0];
 	ko.cleanNode(observableObject);
 	var model = new loginModel();
