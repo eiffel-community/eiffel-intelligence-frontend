@@ -159,12 +159,12 @@
                                         <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
                                                 attr: {value: value, id: id}, checked: $parent.restPostBodyMediaType, onChange" />
                                         <span data-bind="text: label"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                             <!-- Form post emailSubject field -->                            
-                            <div class="form-group" data-bind="visible: $data.notificationType() == 'MAIL'">
+                                        </label>
+                                   </div>
+                               </div>
+                               
+                               <!-- Form post emailSubject field -->                            
+                              <div class="form-group" data-bind="visible: $data.notificationType() == 'MAIL'">
                                 <label class="h5 control-label font-weight-bold">Subject</label>
                                 <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
@@ -173,35 +173,33 @@
                                 <div>
                                     <input name="emailSubject"  id="emailSubjectID" placeholder="emailSubject" class="form-control" type="text"/>                                    
                                 </div>
-                            </div> 
-                            
-                            <div class="p-1 border border-primary form-group">
-                                <label class="h5 control-label font-weight-bold">NotificationMessage</label>
-                                <div>
-                                    <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="keyInNotificationMessage"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="noNotificationMessage"></span>
-                                </div>
-                                <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
-                                    <thead>
-                                        <tr>
-                                            <th width="20%">Key</th>
-                                            <th width="80%">Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: notificationMessageKeyValues">
-                                        <tr>
-                                            <td valign="top">
-                                                <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
-                                                    type="text" />
+                              </div>
+                              
+                               <label class="h5 control-label font-weight-bold">NotificationMessage</label>
+                               <div>
+                                   <span class="text-danger font-small" id="noNotificationKeyOrValue"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="keyInNotificationMessage"></span>
+                               </div>
+                               <div>
+                                   <span class="text-danger font-small" id="noNotificationMessage"></span>
+                               </div>
+                               <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                               <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
+                                   <thead>
+                                       <tr>
+                                           <th width="20%">Key</th>
+                                           <th width="80%">Value</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody data-bind="foreach: notificationMessageKeyValues">
+                                       <tr>
+                                           <td valign="top">
+                                               <input data-bind="textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control" type="text" />
                                            </td>
                                            <td>
                                                <textarea data-bind="textInput:$data.formvalue, onChange" name="formvalue"
@@ -312,7 +310,6 @@
                                 <img class="cursor-pointer" alt="Requirement Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups."/>
                             </div>
-
                             <div class="p-1 border form-group">
                                 <label class="h5 control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
