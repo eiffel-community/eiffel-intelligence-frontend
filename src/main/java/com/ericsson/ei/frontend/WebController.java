@@ -54,6 +54,8 @@ public class WebController {
     @RequestMapping("/eiInfo.html")
     public String eiInfo(Model model, HttpServletRequest request) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        model.addAttribute("frontendServiceVersion", frontEndUtils.getVersion());
+        model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
         model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
         return "eiInfo";
     }
@@ -62,12 +64,6 @@ public class WebController {
     public String login(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "login";
-    }
-
-    // Added documentation for JMESPath rules usage
-    @RequestMapping("/jmesPathRulesSetUp.html")
-    public String jmesPathRulesSetUp(Model model) {
-        return "jmesPathRulesSetUp";
     }
 
     @RequestMapping("/add-instances.html")

@@ -1,6 +1,8 @@
 package com.ericsson.ei.frontend.pageobjects;
 
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import org.mockito.Mockito;
@@ -31,6 +33,17 @@ public class IndexPage extends PageBaseClass {
         driver.get(baseUrl);
         waitForJQueryToLoad();
         return this;
+    }
+
+    public void loadPageLDAP(String responseAuth, String responseUser) throws ClientProtocolException, IOException {
+        CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
+        CloseableHttpResponse responseDataUser = this.createMockedHTTPResponse(responseUser, 200);
+        Mockito.doReturn(responseDataAuth).when(mockedHttpClient).execute(
+                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth")));
+        Mockito.doReturn(responseDataUser).when(mockedHttpClient)
+                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth/login")));
+        driver.get(baseUrl);
+        waitForJQueryToLoad();
     }
 
     public String getTitle() {
