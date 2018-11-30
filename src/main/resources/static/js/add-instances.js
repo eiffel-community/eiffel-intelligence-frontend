@@ -2,12 +2,14 @@ jQuery(document).ready(function() {
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServicePath = "/backend";
 function instanceModel() {
+    var router = new Navigo(null, true, '#');
+
     var self = this;
 	self.instance = {
 	    name: ko.observable(""),
 		host: ko.observable(""),
 		port: ko.observable(""),
-		path: ko.observable(""),
+		contextPath: ko.observable(""),
 		https: ko.observable(false)
 	};
 	self.add = function(instance) {
@@ -30,7 +32,7 @@ function instanceModel() {
 				},
 				success: function (responseData, XMLHttpRequest, textStatus) {
 					$.jGrowl(responseData.message, {sticky: false, theme: 'Notify'});
-					$("#mainFrame").load("switch-backend.html");
+					router.navigate('switch-backend');
 				}
 			});
 		}

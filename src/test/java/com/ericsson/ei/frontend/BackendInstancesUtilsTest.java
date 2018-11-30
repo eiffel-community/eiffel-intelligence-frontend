@@ -71,7 +71,7 @@ public class BackendInstancesUtilsTest {
         JsonObject newInstance = instance.getAsJsonObject();
         newInstance.addProperty("host", "newHost");
         newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
-        newInstance.addProperty("path", "newPath");
+        newInstance.addProperty("contextPath", "newPath");
         result = utils.checkIfInstanceAlreadyExist(newInstance);
 
         assertEquals("Instance should not exist: '" + result + "'.", false, result);
@@ -87,7 +87,7 @@ public class BackendInstancesUtilsTest {
         newInstance = instance.getAsJsonObject();
         newInstance.addProperty("host", "newHost");
         newInstance.addProperty("port", newInstance.get("port").getAsInt() + 1);
-        newInstance.addProperty("path", "newPath");
+        newInstance.addProperty("contextPath", "newPath");
 
         result = utils.checkIfInstanceNameAlreadyExist(newInstance);
         assertEquals("Instance name should already exist: '" + result + "'.", true, result);

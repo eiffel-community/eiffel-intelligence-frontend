@@ -39,7 +39,6 @@ public class WebControllerUtils {
     @Value("${ei.frontendServiceHost}")
     private String frontendServiceHost;
 
-    @Setter
     @Value("${ei.frontendServicePort}")
     private int frontendServicePort;
 
@@ -51,6 +50,12 @@ public class WebControllerUtils {
 
     @Value("${ei.eiffelDocumentationUrls}")
     private String eiffelDocumentationUrls;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    @Value("${build.version}")
+    private String version;
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
@@ -64,16 +69,16 @@ public class WebControllerUtils {
     public String getFrontEndServiceUrl() {
         String requestedUrl = null;
         String http = "http";
-        String path = "";
+        String contextPath = "";
         if (useSecureHttpFrontend) {
         	http = "https";
         }
 
         if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-        	path = ("/" + frontendContextPath).replace("//", "/");
+        	contextPath = ("/" + frontendContextPath).replace("//", "/");
         }
 
-        requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, path);
+        requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, contextPath);
 
         return requestedUrl;
     }

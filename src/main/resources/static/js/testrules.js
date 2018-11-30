@@ -2,25 +2,7 @@
 var frontendServiceUrl;
 var i = 0;
 var isReplacing = true;
-var ruleTemplate = {
-  "TemplateName" : "",
-  "Type" : "",
-  "TypeRule" : "",
-  "IdRule" : "",
-  "StartEvent" : "",
-  "IdentifyRules" : "",
-  "MatchIdRules" : {},
-  "ExtractionRules" : "",
-  "DownstreamIdentifyRules" : "",
-  "DownstreamMergeRules" : "",
-  "DownstreamExtractionRules" : "",
-  "ArrayMergeOptions" : "",
-  "HistoryIdentifyRules" : "",
-  "HistoryExtractionRules" : "",
-  "HistoryPathRules" : "",
-  "ProcessRules" : null,
-  "ProcessFunction" : null
-};
+
 jQuery(document).ready(
     function() {
 
@@ -158,20 +140,39 @@ jQuery(document).ready(
         self.clearAllRules = function(){
             self.rulesBindingList([]);
             self.addRule(ruleTemplate);
+            $('.delete-warning-modal').modal("hide");
         }
 
-	// This function is used to remove all events
+	    // This function is used to remove all events
         self.clearAllEvents = function(){
             self.eventsBindingList([]);
             self.addEvent({});
+            $('.delete-warning-modal').modal("hide");
         }
+
+        // This function is used to remove all rules
+        self.clearType = ko.observable("rules");
+        self.confirmClearAll = function(clearType){
+            self.clearType(clearType);
+            $('.delete-warning-modal').modal('show');
+        }
+
         return self;
       }
+
+      //Create information modal
+      $(".container").on("click", "button.rules_info", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $('#infoContent').text(test_rule_info);
+        $('#infoModal').modal('show');
+      });
 
       var vm = new AppViewModel();
       ko.applyBindings(vm, $("#submitButton")[0]);
       ko.applyBindings(vm, $("#testRulesDOMObject")[0]);
       ko.applyBindings(vm, $("#testEventsDOMObject")[0]);
+      ko.applyBindings(vm, $(".delete-warning-modal")[0]);
       vm.addRule(ruleTemplate);
       vm.addEvent({});
 

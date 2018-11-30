@@ -1,6 +1,28 @@
 
 jQuery(document).ready(function() {
-var frontendServiceUrl = $('#frontendServiceUrl').text();
+    var router = new Navigo(null, true, '#');
+    var frontendServiceUrl = $('#frontendServiceUrl').text();
+
+    function checkBackendSecured() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            error: function (data) {
+                router.navigate('subscriptions');
+            },
+            success: function (data) {
+                var currentUser = localStorage.getItem("currentUser");
+                var isSecured = JSON.parse(ko.toJSON(data)).security;
+                if (isSecured == false || (isSecured == true && currentUser != null)) {
+                    router.navigate('subscriptions');
+                }
+            }
+        });
+    }
+
+    checkBackendSecured();
+
 	// /Start ## Knockout ####################################################
 	function loginModel() {
 		this.userState = {
@@ -36,18 +58,9 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 				var currentUser = JSON.parse(ko.toJSON(responseData)).user;
 				$.jGrowl("Welcome " + currentUser, { sticky : false, theme : 'Notify' });
 				doIfUserLoggedIn(currentUser);
-				$("#mainFrame").load("subscriptionpage.html");
-			},
-			complete : function (request, textStatus) { }
+				router.navigate('subscriptions');
+			}
 		});
-	}
-
-	function doIfUserLoggedIn(name) {
-		localStorage.removeItem("currentUser");
-		localStorage.setItem("currentUser", name);
-		$("#ldapUserName").text(name);
-		$("#loginBlock").hide();
-		$("#logoutBlock").show();
 	}
 
 	var observableObject = $("#viewModelDOMObject")[0];
