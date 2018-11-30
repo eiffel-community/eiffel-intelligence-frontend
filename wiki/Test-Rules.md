@@ -14,15 +14,17 @@
 
 <h3>Load From File</h3>
 
-<p>Load buttons are for loading rules/events from external files. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p> 
+<p>Load buttons are for loading rules/events from external files. The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}]. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p> 
     
 <img src="./images/GUI_TestRules_Replace_Append.png"></img>
 
-<p>After that you need to choose from which file you want to load rules/events.</p>
+<p>After that, you need to choose from which file you want to load rules/events.</p>
 
 <img src="./images/GUI_TestRules_Browse_File.png"></img>
 
-<p>The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}].</p>
+<p>When the file has been chosen, rules or events are loaded into text areas. In this example events template was loaded and the result can be seen on the image below.</p>
+
+<img src="./images/GUI_TestRules_Events.png"></img>
 
 <h3>Download</h3>
 
@@ -253,4 +255,4 @@
 
 <img src="./images/GUI_TestRules_Aggregated_Object.png"></img>
 
-<p>More information about how to write rules can be found on …</p>
+**_More information about how to write rules can be found [here](https://github.com/eiffel-community/eiffel-intelligence)._**
