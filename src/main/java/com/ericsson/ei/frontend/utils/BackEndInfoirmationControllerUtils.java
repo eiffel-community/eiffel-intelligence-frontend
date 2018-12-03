@@ -89,9 +89,9 @@ public class BackEndInfoirmationControllerUtils {
                     "{\"message\": \"Backend instance with name '" + selectedInstanceName + "' was selected.\"}",
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Internal error" + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Error while switching instance: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -115,9 +115,9 @@ public class BackEndInfoirmationControllerUtils {
                     + objectToDelete.get("name").getAsString() + "' was deleted.\"}",
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Internal error" + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Error while deleteing instance: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -163,9 +163,9 @@ public class BackEndInfoirmationControllerUtils {
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Internal error, " + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Error while adding instances: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
