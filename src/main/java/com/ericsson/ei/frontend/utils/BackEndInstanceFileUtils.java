@@ -57,10 +57,11 @@ public class BackEndInstanceFileUtils {
             if (!eiHomeExists) {
                 createEiHomeFolder(eiHome);
             }
-            
+
             Path eiInstancesListFilePath = Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME);
             setEiInstancesPath(eiInstancesListFilePath.toString());
             File eiInstancesListFile = new File(eiInstancesListFilePath.toString());
+
             if (eiInstancesListFile.exists() && eiInstancesListFile.length() != 0) {
                 LOG.info("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
                         "\nWill use that EI Instances List file.");
@@ -74,7 +75,6 @@ public class BackEndInstanceFileUtils {
                     LOG.info("EI Instances List file path is not provided! " +
                             "Will create a default EI Instances List file at file path: " + eiInstancesPath);
                 }
-                parseAndSetEiInstancesList();
             }
 
         } else {
@@ -83,45 +83,40 @@ public class BackEndInstanceFileUtils {
                 LOG.info("EI Instances List file don' exist! Creating file with given or "
                         + "default EI instances list content. File path: " + eiInstancesPath);
                 createFileWithDirs();
-                parseAndSetEiInstancesList();
             } else {
                 LOG.info("EI-Backend instances list file that will be used: " + eiInstancesPath);
             }
-
         }
+        parseAndSetEiInstancesList();
     }
 
     /**
      * Parses Ei Instances list from backendInstancesListJsonContent property and
      * sets default EI-Backend instance.
-     * 
+     *
      */
     private void parseAndSetEiInstancesList() {
+        ensureValidFile();
         JsonArray parsedBackendInstancesListJsonArray = null;
         parsedBackendInstancesListJsonArray = parseEiInstancesListJsonObject();
-        dumpJsonArray(parsedBackendInstancesListJsonArray);
-        try {
-            ensureValidFile();
-        } catch (IOException e) {
-            LOG.error("Failed to validate EI Instances List json object." + "\nError message: " + e.getMessage()
-                    + "\nErrors: " + e);
-        }
-        setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
+        //dumpJsonArray(parsedBackendInstancesListJsonArray);
+
+        //setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
     }
 
     /**
      * Parses Ei Instances list from backendInstancesListJsonContent property.
-     * 
+     *
      * @return JsonArray
      */
     private JsonArray parseEiInstancesListJsonObject() {
         JsonArray backendInstancesListJsonArray = null;
 
         if (backendInstancesListJsonContent == null || backendInstancesListJsonContent.isEmpty()) {
-            LOG.error("EI backend instances list json object is empty, can't continue."
+            LOG.warn("EI backend instances list json object is empty."
                     + "\nMake sure that EI Instances list flags is set, "
                     + " 'ei.backendInstancesFilePath' or 'ei.backendInstancesListJsonContent'");
-            System.exit(1);
+            return new JsonArray();
         }
 
         try {
@@ -185,7 +180,7 @@ public class BackEndInstanceFileUtils {
 
     }
 
-    private void ensureValidFile() throws IOException {
+    private void ensureValidFile() {
         try {
             if (!(new File(eiInstancesPath).isFile())) {
                 createFileWithDirs();

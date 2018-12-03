@@ -142,6 +142,13 @@ public class BackEndInfoirmationControllerUtils {
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 
+            if (!backEndInstancesUtils.mayAddNewDefaultInstance(instance)) {
+                LOG.debug("Not a unique name.");
+                return new ResponseEntity<>(
+                        "{\"message\": \"A default back end instance already exists.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 backEndInstancesUtils.addNewBackEnd(instance);
                 LOG.debug("Added new back end.");
@@ -171,7 +178,7 @@ public class BackEndInfoirmationControllerUtils {
 
     private JsonArray setActiveInstance(JsonArray allAvailableInstances, String activeInstance) {
         if (allAvailableInstances.size() == 0) {
-            throw new NoSuchElementException ("No Available instances.");
+            throw new NoSuchElementException ("No Available instances, back end instance list is empty!");
         }
         for (JsonElement element : allAvailableInstances) {
             if (activeInstance == null && element.getAsJsonObject().get("defaultBackend").getAsBoolean()) {

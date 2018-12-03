@@ -102,7 +102,24 @@ public class BackEndInstancesUtils {
             }
         }
         return false;
+    }
 
+    /**
+     * Returns weather the user tries to add a new default instance but default already exists.
+     *
+     * @param instance
+     * @return boolean
+     */
+    public boolean mayAddNewDefaultInstance(JsonObject instance) {
+        boolean inputInstanceHasDefaultSet = instance.get(DEFAULT).getAsBoolean();
+        if (inputInstanceHasDefaultSet) {
+            for (BackEndInformation backendInformation : backEndInformationList) {
+                if (backendInformation.isDefaultBackend()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**

@@ -51,3 +51,5 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
     - [**Aggregated object**](./wiki/Test-Rules.md#Aggregated-object)
     - [**Rule set up**](./wiki/Test-Rules.md#Rule-set-up)
     - [**The most common operation you would do**](./wiki/Test-Rules.md#The-most-common-operation-you-would-do)
+1. [**Bridge Functions**](./wiki/Bridge.md)
+    - [**Examples, using CURL through EI Bridge**](./wiki/Bridge.md#Curl-Examples)
