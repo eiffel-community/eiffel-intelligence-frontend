@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -48,7 +47,8 @@ public class BackEndInstanceFileUtils {
         LOG.info("Initiating BackEndInstanceFileUtils.");
 
         // Use home folder if a specific backendInstancesFilePath isn't provided
-        if (backendInstancesFilePath == null || backendInstancesFilePath.isEmpty()) {
+        boolean useUserHomeDirectory = (backendInstancesFilePath == null || backendInstancesFilePath.isEmpty());
+        if (useUserHomeDirectory) {
 
             String homeFolder = System.getProperty("user.home");
             String eiHome = Paths.get(homeFolder, EI_HOME_DEFAULT_NAME).toString();
@@ -75,6 +75,7 @@ public class BackEndInstanceFileUtils {
                     LOG.info("EI Instances List file path is not provided! " +
                             "Will create a default EI Instances List file at file path: " + eiInstancesPath);
                 }
+                parseAndSetEiInstancesList();
             }
 
         } else {
@@ -83,11 +84,11 @@ public class BackEndInstanceFileUtils {
                 LOG.info("EI Instances List file don' exist! Creating file with given or "
                         + "default EI instances list content. File path: " + eiInstancesPath);
                 createFileWithDirs();
+                parseAndSetEiInstancesList();
             } else {
                 LOG.info("EI-Backend instances list file that will be used: " + eiInstancesPath);
             }
         }
-        parseAndSetEiInstancesList();
     }
 
     /**

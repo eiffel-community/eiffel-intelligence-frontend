@@ -142,11 +142,14 @@ public class BackEndInfoirmationControllerUtils {
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 
-            if (!backEndInstancesUtils.mayAddNewDefaultInstance(instance)) {
-                LOG.debug("Not a unique name.");
-                return new ResponseEntity<>(
-                        "{\"message\": \"A default back end instance already exists.\"}",
-                        getHeaders(), HttpStatus.BAD_REQUEST);
+            final boolean instanceHasDefaultFlag = instance.has(BackEndInstancesUtils.DEFAULT);
+            if(instanceHasDefaultFlag) {
+                if (!backEndInstancesUtils.mayAddNewDefaultInstance(instance)) {
+                    LOG.debug("Not a unique name.");
+                    return new ResponseEntity<>(
+                            "{\"message\": \"A default back end instance already exists.\"}",
+                            getHeaders(), HttpStatus.BAD_REQUEST);
+                }
             }
 
             if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
