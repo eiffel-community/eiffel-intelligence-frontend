@@ -99,9 +99,9 @@ public class BackEndInstanceFileUtils {
         ensureValidFile();
         JsonArray parsedBackendInstancesListJsonArray = null;
         parsedBackendInstancesListJsonArray = parseEiInstancesListJsonObject();
-        //dumpJsonArray(parsedBackendInstancesListJsonArray);
+        dumpJsonArray(parsedBackendInstancesListJsonArray);
 
-        //setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
+        setDefaultEiBackendInstance(parsedBackendInstancesListJsonArray);
     }
 
     /**
