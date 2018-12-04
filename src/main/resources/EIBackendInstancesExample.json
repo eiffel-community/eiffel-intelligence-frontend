@@ -1,6 +1,6 @@
 [
   {
-    "path": "",
+    "contextPath": "",
     "port": "8091",
     "name": "test",
     "host": "localhost",
@@ -8,7 +8,7 @@
     "defaultBackend": false
   },
   {
-    "path": "eiffel",
+    "contextPath": "eiffel",
     "port": "8091",
     "name": "source",
     "host": "localhost",

@@ -16,15 +16,15 @@
 <body>
     <div class="d-none" id="subscriptionTemplate" th:text="${subscriptionTemplate}"></div>
     <div class="d-flex flex-wrap">
-        <div class="col-md-4 col-6 order-md-0">
-            <h3>Eiffel Intelligence Subscription Handling</h3>
+        <div class="col-md-9 col-sm-8 col-6 order-md-0">
+            <h3 id="subTitle">Eiffel Intelligence Subscription Handling</h3>
         </div>
-        <div class="col-md-6 col-12 order-last order-md-1">
-            <span id="back_end_down_warning" class="hidden_by_default">
+        <div id="back_end_down_warning" class="col-md-6 col-12 order-last order-md-1 hidden_by_default">
+            <span>
                 Ensure back end is up or switch to another back end before continuing!
             </span>
         </div>
-        <div class="col-md-2 col-6 order-md-2 d-flex justify-content-end">
+        <div class="col-md-3 col-sm-4 col-6 order-md-2 d-flex justify-content-end">
             <div id="btnEIContainer">
                 <button title="EI connection status check is refreshed continuously. Click button to force check status."
                     type="button" id="btnEIConnection" class="btn btnEIConnectionStatus white-space-normal">
@@ -87,7 +87,7 @@
                         <div id="ViewModelDOMObject" class="form-body">
 
                             <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Load Subscription Template (Examples)</label>
                                 <div>
                                     <select class="w-100" id="selectTemplate"
                                         data-bind="options: subscription_templates_in,
@@ -100,7 +100,7 @@
 
                             <!-- ko foreach:  subscription -->
                             <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">SubscriptionName</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">SubscriptionName</label>
                                 <div>
                                     <!-- text injected from subscription.js -->
                                     <span class="text-danger font-small" id="invalidSubscriptionName"></span>
@@ -117,130 +117,127 @@
                                     <span class="help-block"></span>
                                 </div>
                             </div>
-                            <!-- Type should be removed?
-                            <div class="form-group" data-bind="visible: $data.aggregationtype()">
-                                <label class="pl-1 control-label font-weight-bold">Type</label>
-                                <div>
-                                    <span data-bind="text:$data.aggregationtype" name="aggregationtype"
-                                        placeholder="aggregation_type" class="form-control display-inline-table" type="text"></span>
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">NotificationType</label>
-                                <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+
+                            <div class="p-1 border form-group">
+                                <div class="form-group">
+                                    <label class="h5 pl-1 control-label font-weight-bold">NotificationType</label>
+                                    <img class="cursor-pointer" id="notificationTypeInfo" alt="NotificationType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="This is the notification method used when the subscription is triggered."/>
 
                                 <!-- Rest or Mail radio buttons -->
-                                <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
-                                    <label>
-                                        <input type="radio" name="restOrMailGroup" data-bind="
+                                    <div id="notificationTypeRadio" data-bind="foreach: $root.notificationType_in" >
+                                        <label>
+                                            <input type="radio" name="restOrMailGroup" data-bind="
                                                 attr: {value: value, id: id}, checked: $parent.notificationType, onChange" />
-                                        <span data-bind="text: label"></span>
-                                    </label>
+                                            <span data-bind="text: label"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group" data-bind="visible: $root.restPost()">
-                                <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
-                                <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                    title=
-                                        "This decides the Content-Type of the POST body. <br>
-                                        Default is: <br>
-                                        RAW BODY: JSON (application/json) <br>
-                                        You may select: <br>
-                                        FORM/POST Parameters (application/x-www-form-urlencoded)" />
+                                <div class="form-group" data-bind="visible: $root.restPost()">
+                                    <label class="pl-1 control-label font-weight-bold">RestPostMediaType</label>
+                                    <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                        title=
+                                            "This decides the Content-Type of the POST body. <br>
+                                            Default is: <br>
+                                            RAW BODY: JSON (application/json) <br>
+                                            You may select: <br>
+                                            FORM/POST Parameters (application/x-www-form-urlencoded)" />
 
-                                <!-- Form post  radio buttons -->
-                                <div data-bind="foreach: $root.restPostBodyMediaType_in" >
-                                    <label>
-                                        <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
-                                                attr: {value: value, id: id}, checked: $parent.restPostBodyMediaType, onChange" />
-                                        <span data-bind="text: label"></span>
-                                    </label>
+                                    <!-- Form post  radio buttons -->
+                                        <div data-bind="foreach: $root.restPostBodyMediaType_in" >
+                                        <label>
+                                            <input type="radio" name="restPostBodyMediaTypeGroup" data-bind="
+                                                    attr: {value: value, id: id}, checked: $parent.restPostBodyMediaType, onChange" />
+                                            <span data-bind="text: label"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="p-1 border border-primary form-group">
-                                <label class="control-label font-weight-bold">NotificationMessage</label>
-                                <div>
+                                <div class="form-group">
+                                    <label class="control-label font-weight-bold">NotificationMessage</label>
+                                    <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                                    <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">Key</th>
+                                                <th width="80%">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-bind="foreach: notificationMessageKeyValues">
+                                                <span class="flex-non-important text-danger font-small" id="notificationMessageKeyError"></span>
+                                                <span class="flex-non-important text-danger font-small" id="notificationMessageValuesError"></span>
+                                                <span class="flex-non-important text-danger font-small" id="notificationMessageValuesJsonError"></span>
+                                            <tr>
+                                                <td valign="top">
+                                                    <input data-bind="attr: {'id': 'formkey_' + $index()}, textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
+                                                        type="text" />
+                                                </td>
+                                                <td>
+                                                    <textarea data-bind="attr: {'id': 'formvalue_' + $index()}, textInput:$data.formvalue, onChange" name="formvalue"
+                                                        placeholder="Value" class="form-control" type="text"></textarea>
+                                                </td>
+                                                <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
+                                                    <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}"
+                                                        class="btn btn-danger float-rightmr-1 mr-1 mt-1 d-inline-block">
+                                                        <i class="fa fa-fw fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
+                                    <div data-bind="if: $root.formpostkeyvaluepairs() && $root.restPost()"  class="pt-1 d-flex justify-content-end">
+                                        <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair" class="btn btn-success mr-1 mt-1 d-inline-block">
+                                            Add
+                                            <i class="fa fa-fw fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Table for RAW BODY: JSON (application/json) -->
+                                    <table width="100%" data-bind="visible: !$root.formpostkeyvaluepairs()">
+                                        <thead>
+                                            <tr>
+                                                <th width="100%">Raw Body</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <span class="text-danger font-small" id="invalidNotificationMessageRawJson"></span>
+                                            <tr>
+                                                <td>
+                                                    <textarea id="notificationMessageRawJson" data-bind="textInput: $data.notificationMessageRawJson, onChange"
+                                                        name="notificationMessageRawJson" placeholder="Raw JSON body." class="form-control" type="text"></textarea>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div>
-                                    <span class="text-danger font-small" id="notificationMessageKeyValuesArrayToLarge"></span>
+
+                                <!--  NOTIFICATION META  -->
+                                <div class="form-group">
+                                    <label class="h5 pl-1 control-label font-weight-bold">NotificationMeta</label>
+                                    <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                        title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
+                                    <div>
+                                        <span class="text-danger font-small" id="invalidNotificationMeta"></span>
+                                        <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
+                                            name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
+                                        <span class="help-block"></span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="text-danger font-small" id="keyInNotificationMessage"></span>
-                                </div>
-                                <div>
-                                    <span class="text-danger font-small" id="noNotificationMessage"></span>
-                                </div>
-                                <!-- Table for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <table width="100%" data-bind="visible: $root.formpostkeyvaluepairs()">
-                                    <thead>
-                                        <tr>
-                                            <th width="20%">Key</th>
-                                            <th width="80%">Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: notificationMessageKeyValues">
-                                            <span class="flex-non-important text-danger font-small" id="notificationMessageKeyError"></span>
-                                            <span class="flex-non-important text-danger font-small" id="notificationMessageValuesError"></span>
-                                            <span class="flex-non-important text-danger font-small" id="notificationMessageValuesJsonError"></span>
-                                        <tr>
-                                            <td valign="top">
-                                                <input data-bind="attr: {'id': 'formkey_' + $index()}, textInput:$data.formkey, onChange" name="formkey" placeholder="Key" class="form-control"
-                                                    type="text" />
-                                            </td>
-                                            <td>
-                                                <textarea data-bind="attr: {'id': 'formvalue_' + $index()}, textInput:$data.formvalue, onChange" name="formvalue"
-                                                    placeholder="Value" class="form-control" type="text"></textarea>
-                                            </td>
-                                            <td data-bind="if: $root.subscription()[0].notificationMessageKeyValues().length > 1" valign="top" >
-                                                <button data-bind="click: function(data, event) {$root.delete_NotificationMsgKeyValuePair(data, event, $index());}"
-                                                    class="btn btn-danger float-rightmr-1 mr-1 mt-1 d-inline-block">
-                                                    <i class="fa fa-fw fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <!-- Button for FORM/POST Parameters (application/x-www-form-urlencoded) -->
-                                <div data-bind="if: $root.formpostkeyvaluepairs() && $root.restPost()"  class="pt-1 d-flex justify-content-end">
-                                    <button id="kvID" data-bind="click: $root.addNotificationMsgKeyValuePair" class="btn btn-success mr-1 mt-1 d-inline-block">
-                                        Add
-                                        <i class="fa fa-fw fa-plus"></i>
-                                    </button>
-                                </div>
-                                <!-- Table for RAW BODY: JSON (application/json) -->
-                                <table width="100%" data-bind="visible: !$root.formpostkeyvaluepairs()">
-                                    <thead>
-                                        <tr>
-                                            <th width="100%">Raw Body</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <span class="text-danger font-small" id="invalidNotificationMessageRawJson"></span>
-                                        <tr>
-                                            <td>
-                                                <textarea id="notificationMessageRawJson" data-bind="textInput: $data.notificationMessageRawJson, onChange"
-                                                    name="notificationMessageRawJson" placeholder="Raw JSON body." class="form-control" type="text"></textarea>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
 
                             <!--  AUTHENTICATION  -->
                             <div class="pt-3 form-group">
-                                <label class="pl-1 control-label font-weight-bold">Authorization</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Authorization</label>
                                 <div>
                                     <select id="selectAuth" title="Choose an authentication type" data-bind="options: $root.authenticationType_in,
                                         optionsText: 'text', optionsValue: 'value', value: authenticationType">
                                     </select>
                                 </div>
                             </div>
-                            <div class="p-1 border border-primary form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
+                            <div class="p-1 border form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                                 <label class="pt-1 control-label font-weight-bold">Username</label>
                                 <div>
                                     <input id="userNameInput" title="Enter user name" data-bind="textInput:userName" name="userName"
@@ -254,8 +251,8 @@
                                     <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password" name="password" placeholder="password"
                                         class="form-control" type="password" />
 
-									<div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
-									    <button data-bind="click: function(){$root.showPassword(true);}" class="btn btn-warning">
+                                    <div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
+                                        <button data-bind="click: function(){$root.showPassword(true);}" class="btn btn-warning">
                                             <i class="glyphicon glyphicon-trash"></i>
                                             Change password
                                         </button>
@@ -266,7 +263,7 @@
 
                             <!--  REPEAT  -->
                             <div class="pt-3 form-group">
-                                <label class="pl-1 control-label font-weight-bold">Repeat</label>
+                                <label class="h5 pl-1 control-label font-weight-bold">Repeat</label>
                                 <img class="cursor-pointer" id="repeatInfo" alt="Repeat Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Instructs whether the subscription should be re-triggered for new additions to the aggregated object. If false only first time the conditions are fulfilled
                                     a notification will be triggered. No matter how many times the aggregated object is updated."/>
@@ -280,19 +277,6 @@
                                 </div>
                             </div>
 
-                            <!--  NOTIFICATION META  -->
-                            <div class="form-group">
-                                <label class="pl-1 control-label font-weight-bold">NotificationMeta</label>
-                                <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                    title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
-                                <div>
-                                    <span class="text-danger font-small" id="invalidNotificationMeta"></span>
-                                    <textarea id="notificationMeta" data-bind="textInput: $data.notificationMeta, onChange"
-                                        name="notificationMeta" placeholder="notificationMeta" class="form-control" type="text"></textarea>
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-
                             <!--  REQUIREMENTS  -->
                             <!-- ko foreach:   { data: requirements, as: 'requirements_item' } -->
                             <div class="pl-0 ml-0">
@@ -302,16 +286,16 @@
                                 <img class="cursor-pointer" alt="Requirement Information" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title="Info: 'AND' is used between Conditions in Requirement groups, and 'OR' is used between Requirement groups."/>
                             </div>
-                            <div class="p-1 border border-primary form-group">
-                                <label class="control-label font-weight-bold">Requirement</label>
+                            <div class="p-1 border form-group">
+                                <label class="h5 control-label font-weight-bold">Requirement</label>
                                 <div id="requirementID">
 
                                     <!-- ko foreach: requirements_item.conditions -->
                                     <div id="conditionID">
-										<!-- ko if: $index() !== 0 -->
-										<h5 class="d-inline">AND</h5>
-										<!-- /ko -->
-										<label class="control-label font-weight-bold">Condition</label>
+                                        <!-- ko if: $index() !== 0 -->
+                                        <h5 class="d-inline">AND</h5>
+                                        <!-- /ko -->
+                                        <label class="control-label font-weight-bold">Condition</label>
 
                                         <!-- ko ifnot: $data.jmespath() -->
                                         <div >
