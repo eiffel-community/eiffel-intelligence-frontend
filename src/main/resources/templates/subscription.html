@@ -171,7 +171,8 @@
                                         "This is your choice for the email notification subject. <br>
                                         Default value is set by admin in property file" />                                
                                 <div>
-                                    <input name="emailSubject"  id="emailSubjectID" placeholder="emailSubject" class="form-control" type="text"/>                                    
+                                    <input id="emailSubjectID" data-bind="textInput:$data.emailSubject, onChange"
+                                        name="emailSubject" placeholder="emailSubject" class="form-control" type="text"/>                                    
                                 </div>
                               </div>
                               

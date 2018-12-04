@@ -129,7 +129,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
-        this.emailSubject = ko.observable(data.emailSubjectID);
+        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'}); 
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
