@@ -1,7 +1,7 @@
 // Short usage description of test rules
 var test_rule_info = '1. Load buttons are for loading rules/events from external files.\n' +
                     '    It is possible to choose if you want to append or replace\n' +
-                    '    aready written rules/events in the text areas.\n'+
+                    '    already written rules/events in the text areas.\n'+
                     '      * The file content should be formatted as JSON objects in\n' +
                     '         a JSON list, ex. [{Object1}, {Object2}].\n' +
                     '\n2. By clicking on "Get Template" buttons you will download rules\n' +
