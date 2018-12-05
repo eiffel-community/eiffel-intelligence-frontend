@@ -157,10 +157,12 @@ public class EIRequestsController {
     }
 
     private ResponseEntity<String> getResponse(HttpRequestBase request) {
-        String responseBody = "";
+        String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
         try (CloseableHttpResponse eiResponse = client.execute(request)) {
-            responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
+            if(eiResponse.getEntity() != null) {
+                responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
+            }
             statusCode = eiResponse.getStatusLine().getStatusCode();
             LOG.debug("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
