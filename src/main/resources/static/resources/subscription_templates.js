@@ -3,19 +3,19 @@ var template_vars = {};
 
 //default subscription object (Add subscription)
 
-    var default_json_empty =
-
-           [{
+    var default_json_empty = [
+        {
             "created": "",
             "notificationMeta" : "",
             "notificationType" : "",
             "restPostBodyMediaType" : "",
+            "notificationMessageRawJson" : "",
             "notificationMessageKeyValues" : [
-                    {
-                        "formkey" : "",
-                        "formvalue" : ""
-                    }
-                ],
+                {
+                    "formkey" : "",
+                    "formvalue" : ""
+                }
+            ],
             "repeat" : null,
             "requirements" : [
                 {
@@ -27,7 +27,8 @@ var template_vars = {};
                 }
             ],
             "subscriptionName" : ""
-        }];
+        }
+    ];
 
 
 // Subscription Template Jenkins Pipeline Parameterized Job trigger
@@ -40,9 +41,9 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "json",
-                        "formvalue" : "{parameter: [{ name: 'jsonparams', value : to_string(@) }, { name: 'runpipeline', value : 'mybuildstep' }]}"
-                    }                    
-                    ],                    
+                        "formvalue" : "{parameter: [{ name: jsonparams, value : to_string(@) }, { name: runpipeline, value : mybuildstep }]}"
+                    }
+                    ],
                     "repeat" : false,
                     "requirements" : [
                     {
@@ -53,7 +54,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Jenkins_Pipline_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Jenkins_Pipline_Trigger"
                 }];
 
 
@@ -80,7 +81,7 @@ template_vars["templateRestPostJsonRAWBodyTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Rest_Post_Raw_Body_Json_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Rest_Post_Raw_Body_Json_Trigger"
                 }];
 
 
@@ -108,5 +109,5 @@ template_vars["templateEmailTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "<Subscription_Template_Mail_Trigger>"
+                    "subscriptionName" : "Subscription_Template_Mail_Trigger"
                 }];

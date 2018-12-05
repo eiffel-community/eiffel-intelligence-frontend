@@ -125,7 +125,8 @@ jQuery(document).ready(function () {
         this.notificationMeta = ko.observable(data.notificationMeta).extend({ notify: 'always' });
         this.notificationType = ko.observable(data.notificationType);
         this.restPostBodyMediaType = ko.observable(data.restPostBodyMediaType);
-        this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues);
+        this.notificationMessageRawJson = ko.observable(data.notificationMessageRawJson).extend({ notify: 'always' });
+        this.notificationMessageKeyValues = ko.observableArray(data.notificationMessageKeyValues).extend({ notify: 'always' });
         this.notificationMessageKeyValuesAuth = ko.observableArray(data.notificationMessageKeyValuesAuth);
         this.repeat = ko.observable(data.repeat);
         this.requirements = ko.observableArray(data.requirements);
@@ -163,28 +164,37 @@ jQuery(document).ready(function () {
         // Subscribe START
         // Subscribe notificationType
         this.notificationType.subscribe(function (new_value) {
+            var allowEmpty = true;
+            var validateOnlyKey = false;
             $('#invalidNotificationMeta').hide();
             vm.formpostkeyvaluepairs(false);
             if (new_value == "REST_POST") {
                 vm.restPost(true);
                 if (lastPressedRestPostBodyMediaType == "application/x-www-form-urlencoded") {
                     vm.formpostkeyvaluepairs(true);
+                    validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey, allowEmpty)
+                } else {
+                    validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
                 }
             } else {
+                validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
                 vm.restPost(false);
             }
-            var allowEmpty = true;
             validateNotificationMeta(this.notificationMeta(), allowEmpty);
         }, this);
 
         // Subscribe restPostBodyMediaType
         this.restPostBodyMediaType.subscribe(function (new_value) {
+            var validateOnlyKey = false;
+            var allowEmpty = true;
             // Remember last restPostMediaType, when switching from MAIL we get back to the last used.
             lastPressedRestPostBodyMediaType = new_value;
             if (new_value == "application/x-www-form-urlencoded") {
+                validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey, allowEmpty)
                 vm.formpostkeyvaluepairs(true);
             } else {
                 vm.formpostkeyvaluepairs(false);
+                validateMessageRawJson(this.notificationMessageRawJson(), allowEmpty);
             }
         }, this);
 
@@ -197,15 +207,25 @@ jQuery(document).ready(function () {
             var allowEmpty = false;
             validateNotificationMeta(notificationMeta, allowEmpty);
         });
+
+        this.notificationMessageRawJson.subscribe(function (jsonData) {
+            validateMessageRawJson(jsonData)
+        });
         // Subscribe END
     }
 
     function formdata_model(formdata) {
         this.formkey = ko.observable(formdata.formkey);
         this.formvalue = ko.observable(formdata.formvalue);
+
+        this.formkey.subscribe(function (newText) {
+            var validateOnlyKey = true;
+            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues(), validateOnlyKey)
+        });
+
         this.formvalue.subscribe(function (newText) {
-            // TODO implement form data check.
-         });
+            validateNotificationMessageKeyValues(vm.subscription()[0].notificationMessageKeyValues())
+        });
     }
 
     function conditions_model(condition) {
@@ -582,11 +602,8 @@ jQuery(document).ready(function () {
         var reader = new FileReader();
         reader.onload = function () {
             var fileContent = reader.result;
-            var jsonLintResult = "";
-            try {
-                jsonLintResult = jsonlint.parse(fileContent);
-            } catch (e) {
-                window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+            var isValid = validateJsonString(fileContent, true);
+            if (!isValid) {
                 return false;
             }
             $.jGrowl('JSON Format Check Succeeded', {
@@ -597,6 +614,18 @@ jQuery(document).ready(function () {
             tryToCreateSubscription(subscriptionJsonList);
         };
         reader.readAsText(subscriptionFile);
+    }
+
+    function validateJsonString(jsonString, logError) {
+        try {
+            var jsonLintResult = jsonlint.parse(jsonString);
+            return true;
+        } catch (e) {
+            if (logError) {
+                window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+            }
+            return false;
+        }
     }
 
     var pom = document.getElementById('upload_sub');
@@ -741,8 +770,18 @@ jQuery(document).ready(function () {
                     }
                     item[0].requirements[i] = new conditions_model(conditions_array);
                 }
-                for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
-                    item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
+
+                var notificationMessageRawJsonShouldBeReplacedWithFormValue = (
+                    item[0].notificationMessageKeyValues.length == 1 &&
+                    item[0].notificationMessageKeyValues[0].formkey == "");
+                if (notificationMessageRawJsonShouldBeReplacedWithFormValue) {
+                    item[0].notificationMessageRawJson = item[0].notificationMessageKeyValues[0].formvalue;
+                    item[0].notificationMessageKeyValues[0] = new formdata_model({"formkey":"","formvalue":""});
+                } else {
+                    item[0].notificationMessageRawJson = "";
+                    for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
+                        item[0].notificationMessageKeyValues[i] = new formdata_model(item[0].notificationMessageKeyValues[i])
+                    }
                 }
 
                 return new subscription_model(item[0]);
@@ -781,6 +820,7 @@ jQuery(document).ready(function () {
         $('#modal_form :input').prop("disabled", true);
         $('#modal_form .close').show();
         $('#modal_form .close').prop("disabled", false);
+        $('.text-danger').hide();
     }
     // /Stop ## pupulate JSON  ###########################################
 
@@ -788,6 +828,7 @@ jQuery(document).ready(function () {
         var error = false;
         $('#invalidSubscriptionName').hide();
         $('#subscriptionNameInput').removeClass("is-invalid");
+        $('#errorExists').hide();
 
         // Validate SubscriptionName field
         if (subscriptionName == "") {
@@ -800,7 +841,6 @@ jQuery(document).ready(function () {
         var regExpression = /(\W)/g;
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
-            console.log("Invalid characters: [" + invalidLetters + "].")
             $('#invalidSubscriptionName').text(
                 "Only letters, numbers and underscore allowed! "
                 + "Invalid characters: [" + invalidLetters + "]");
@@ -817,8 +857,11 @@ jQuery(document).ready(function () {
         var error = false;
         $('#invalidNotificationMeta').hide();
         $('#notificationMeta').removeClass("is-invalid");
+        $('#errorExists').hide();
 
-        if (!allowEmpty && notificationMeta == "") {
+        var notoficationMetaIsEmpty = (
+            !allowEmpty && notificationMeta == "" || !allowEmpty && notificationMeta.replace(/\s/g, "") == '""');
+        if (notoficationMetaIsEmpty) {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
             error = true;
         } else if (vm.restPost()) {
@@ -826,67 +869,135 @@ jQuery(document).ready(function () {
         } else if (!vm.restPost()) {
             // Validate email
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!regExpression.test(notificationMeta) && notificationMeta != "") {
+            var isInvalidEmailAddress = (!regExpression.test(notificationMeta) && notificationMeta != "");
+            if (isInvalidEmailAddress) {
                 $('#invalidNotificationMeta').text("Not a valid email.");
-                $('#notificationMeta').addClass("is-invalid");
                 error = true;
             }
         }
         if (error) {
+            $('#notificationMeta').addClass("is-invalid");
             $('#invalidNotificationMeta').show();
         }
         return error;
     }
 
-    // /Start ## Save Subscription ##########################################
-    $('div.modal-footer').on('click', 'button.save_record', function (event) {
+    function validateMessageRawJson(jsonData, allowEmpty) {
         var error = false;
-        event.stopPropagation();
-        event.preventDefault();
-        var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
-        if (!vm.formpostkeyvaluepairs()) {
-            notificationMessageKeyValuesArray[0].formkey = ""; // OBS must be empty when NOT using REST POST Form key/value pairs
+        $('#notificationMessageKeyError').hide();
+        $('#notificationMessageValuesError').hide();
+        $('#notificationMessageValuesJsonError').hide();
+        $('#invalidNotificationMessageRawJson').hide();
+        $('#notificationMessageRawJson').removeClass("is-invalid");
+        $('#errorExists').hide();
+
+        var inputDataIsEmpty = (!allowEmpty && jsonData == "");
+        if (inputDataIsEmpty) {
+            $('#invalidNotificationMessageRawJson').text("The raw body field must not be empty.");
+            error = true;
         }
 
+        /*
+        JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
+        var inpurDataIsNotValidJson = (jsonData != "" && !validateJsonString(jsonData));
+        if (inpurDataIsNotValidJson) {
+            $('#invalidNotificationMessageRawJson').text("Input is not valid JSON.");
+            error = true;
+        }
+        */
+
+        if (error) {
+            $('#invalidNotificationMessageRawJson').show();
+            $('#notificationMessageRawJson').addClass("is-invalid");
+        }
+
+        return error;
+    }
+
+    function validateNotificationMessageKeyValues(notificationMessageKeyValuesArray, validateOnlyKey, allowEmpty) {
+        var error = false;
+        $('#notificationMessageKeyError').hide();
+        $('#notificationMessageValuesError').hide();
+        $('#notificationMessageValuesJsonError').hide();
+        $('#invalidNotificationMessageRawJson').hide();
+        $('#errorExists').hide();
+
+        for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
+            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
+            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
+
+            $('#formvalue_' + i).removeClass("is-invalid");
+            $('#formkey_' + i).removeClass("is-invalid");
+
+            /*
+            JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
+            var testValueShouldBeValidatedAsJson = (
+                String(testKey).toLowerCase().replace(/"/g, "") == "json" && testValue != "");
+            if (testValueShouldBeValidatedAsJson) {
+                // check value field for valid JSON
+                var testValueIsNotValidJson = !validateJsonString(testValue);
+                if (testValueIsNotValidJson) {
+                    $('#formvalue_' + i).addClass("is-invalid");
+                    $('#formkey_' + i).addClass("is-invalid");
+                    $('#notificationMessageValuesJsonError').text("A key indicates JSON but value is not valid JSON!");
+                    $('#notificationMessageValuesJsonError').show();
+                    error = true;
+                }
+            }
+            */
+
+            var testKeyIsEmpty = (testKey == "" && !allowEmpty);
+            if (testKeyIsEmpty) {
+                $('#formkey_' + i).addClass("is-invalid");
+                $('#notificationMessageKeyError').text("One or more keys are not set!");
+                $('#notificationMessageKeyError').show();
+                error = true;
+            }
+
+            var testValueIsEmpty = (!validateOnlyKey && !allowEmpty && testValue == "");
+            if (testValueIsEmpty) {
+                $('#formvalue_' + i).addClass("is-invalid");
+                $('#notificationMessageValuesError').text("One or more values are not set!");
+                $('#notificationMessageValuesError').show();
+                error = true;
+            }
+        }
+        return error;
+    }
+
+    function validateFormPostData() {
+        // Validations start
+        var error = false;
         $('.text-danger').hide();
 
         // Validate subscription name field
-        if (validateName(String(vm.subscription()[0].subscriptionName()))) {
+        var subscriptionName = String(vm.subscription()[0].subscriptionName());
+        var subscriptionNameIsInvalid = validateName(subscriptionName);
+        if (subscriptionNameIsInvalid) {
             error = true;
         }
 
         // Validate notificationMeta field
-        if (validateNotificationMeta(String(vm.subscription()[0].notificationMeta()))) {
+        var notificationMeta = String(vm.subscription()[0].notificationMeta());
+        var notificationMetaIsInvalid = validateNotificationMeta(notificationMeta);
+        if (notificationMetaIsInvalid) {
             error = true;
         }
 
-        //START: Check of other subscription fields values
-        for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var test_key = ko.toJSON(notificationMessageKeyValuesArray[i].formkey);
-            var test_value = ko.toJSON(notificationMessageKeyValuesArray[i].formvalue());
-            if (vm.formpostkeyvaluepairs()) {
-                if (test_key.replace(/\s/g, "") === '""' || test_value.replace(/\s/g, "") === '""') {
-                    $('#noNotificationKeyOrValue').text("NotificationMessage key and or values must be set");
-                    $('#noNotificationKeyOrValue').show();
-                    error = true;
-                }
+        // Validate notification message(s)
+        if (vm.formpostkeyvaluepairs()) {
+            // Validate notificationMessageKeyValues field
+            var notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
+            var notificationMessageKeyValuesArrayIsInvalid = validateNotificationMessageKeyValues(notificationMessageKeyValuesArray);
+            if (notificationMessageKeyValuesArrayIsInvalid) {
+                error = true;
             }
-            else {
-                if (notificationMessageKeyValuesArray.length !== 1) {
-                    $('#notificationMessageKeyValuesArrayToLarge').text("Only one array is allowed for notificationMessage when NOT using key/value pairs");
-                    $('#notificationMessageKeyValuesArrayToLarge').show();
-                    error = true;
-                }
-                else if (test_key !== '""') {
-                    $('#keyInNotificationMessage').text("Key in notificationMessage must be empty when NOT using key/value pairs");
-                    $('#keyInNotificationMessage').show();
-                    error = true;
-                }
-                else if (test_value.replace(/\s/g, "") === '""') {
-                    $('#noNotificationMessage').text("Value in notificationMessage must have a value when NOT using key/value pairs");
-                    $('#noNotificationMessage').show();
-                    error = true;
-                }
+        } else {
+            // Validate notificationMessageRawJson fieldvar notificationMessageKeyValuesArray = vm.subscription()[0].notificationMessageKeyValues();
+            var notificationMessageRawJson = String(vm.subscription()[0].notificationMessageRawJson());
+            var notificationMessageRawJsonisInvalid = validateMessageRawJson(notificationMessageRawJson);
+            if (notificationMessageRawJsonisInvalid) {
+                error = true;
             }
         }
 
@@ -906,29 +1017,60 @@ jQuery(document).ready(function () {
         if (error) {
             $('#errorExists').text("Required fields not filled or invalid data");
             $('#errorExists').show();
-            return;
+            return false;
         }
+        return true;
         //END: Check of other subscription fields values
+    }
 
-        var url;
+    function createParsedFormCopy(jsonCopiedData) {
+        // Ensure MAIL notificationType has no restPostBodyMediaType
+        if (jsonCopiedData[0].notificationType == "MAIL") {
+            jsonCopiedData[0]['restPostBodyMediaType'] = "";
+        }
+
+        if (!vm.formpostkeyvaluepairs()) {
+            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
+            // and ensures the list contains only one object.
+            var notificationMessageKeyValues = [];
+            var formKeyValuePair = { "formkey": "", "formvalue": jsonCopiedData[0].notificationMessageRawJson };
+            notificationMessageKeyValues.push(formKeyValuePair);
+            jsonCopiedData[0]['notificationMessageKeyValues'] = notificationMessageKeyValues;
+        }
+
+        // Delete notificationMessageRawJson since it is not used in back end.
+        delete jsonCopiedData[0]['notificationMessageRawJson'];
+
+        return jsonCopiedData
+    }
+
+    // /Start ## Save Subscription ##########################################
+    $('div.modal-footer').on('click', 'button.save_record', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var allSubscriptionFieldsIsValid = validateFormPostData();
+        if (!allSubscriptionFieldsIsValid) {
+            return
+        }
+
+        // Prepare copy of form data
+        var jsonParsedFormData = ko.toJS(vm.subscription());
+        var formDataToSend = createParsedFormCopy(jsonParsedFormData);
+
+        var url = frontendServiceUrl + "/subscriptions";
         var type;
         if (save_method === 'add') {  // Add new
-            url = frontendServiceUrl + "/subscriptions";
             type = "POST";
 
         } else if (save_method === 'edit') {  // Update existing
-            url = frontendServiceUrl + "/subscriptions";
             type = "PUT";
-        }
-        // Ensure MAIL notificationType has no restPostBodyMediaType
-        if (vm.subscription()[0].notificationType() == "MAIL") {
-            vm.subscription()[0].restPostBodyMediaType("");
         }
 
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
-                $('#btnSave').text('saving...'); //change button text
+                $('#btnSave').text('Saving...'); //change button text
                 $('#btnSave').attr('disabled', true); //set button disable
             },
             success: function (data, textStatus) {
@@ -951,14 +1093,14 @@ jQuery(document).ready(function () {
                 $('#serverError').show();
             },
             complete: function () {
-                $('#btnSave').text('save'); //change button text
+                $('#btnSave').text('Save'); //change button text
                 $('#btnSave').attr('disabled', false); //set button enable
             }
         };
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(url, type, ko.toJSON(vm.subscription()), callback);
+        ajaxHttpSender.sendAjax(url, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
 
