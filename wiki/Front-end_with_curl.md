@@ -148,7 +148,7 @@ Note: It is not possible to add the backendurl parameter as a JSON parameter.
    <tr>
       <td>/rules/rule-check/testRulePageEnabled</td>
       <td>GET</td>
-      <td>gives a result weather the test rules function is enabed in the back-end</td>
+      <td>Gives a result weather the test rules function is enabed in the back-end</td>
    </tr>
    <tr>
       <td>/rules/rule-check/aggregation</td>
