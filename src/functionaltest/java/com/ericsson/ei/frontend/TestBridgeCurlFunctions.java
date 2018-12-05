@@ -39,9 +39,6 @@ import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
 public class TestBridgeCurlFunctions extends TestBaseClass {
     private static MockServerClient mockClient1;
     private static MockServerClient mockClient2;
@@ -54,11 +51,10 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
 
     private static String mockServer2Url;
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @Before
     public void before() throws Exception {
+        backEndInstancesUtils.setDefaultBackEndInstance("test", BASE_URL, mockServer1.getLocalPort(), "", true);
+
         mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
         mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
         mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));

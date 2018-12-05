@@ -31,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
@@ -52,10 +53,7 @@ public class SeleniumBaseClass extends TestBaseClass {
 
     @Before
     public void setUp() throws Exception {
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
         MockitoAnnotations.initMocks(this);
-
         driver = SeleniumConfig.initFirefoxDriver();
         baseUrl = SeleniumConfig.getBaseUrl(testServerPort);
     }
@@ -71,10 +69,6 @@ public class SeleniumBaseClass extends TestBaseClass {
         }
 
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-    }
-
-    protected static String getJSONStringFromFile(String filepath) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
 
     protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {

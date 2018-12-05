@@ -29,10 +29,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
@@ -42,6 +44,7 @@ import com.ericsson.ei.frontend.utils.WebControllerUtils;
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class TestBaseClass {
     @LocalServerPort
     protected int testServerPort;
@@ -52,10 +55,13 @@ public class TestBaseClass {
     private String filePath = "";
 
     @Autowired
-    private BackEndInstanceFileUtils backEndInstanceFileUtils;
+    protected BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     @Autowired
     protected BackEndInstancesUtils backEndInstancesUtils;
+
+    @Autowired
+    protected MockMvc mockMvc;
 
     @PostConstruct
     public void init() throws Exception {
@@ -70,5 +76,9 @@ public class TestBaseClass {
         backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
 
         webControllerUtils.setFrontendServicePort(testServerPort);
+    }
+
+    protected static String getJSONStringFromFile(String filepath) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
     }
 }
