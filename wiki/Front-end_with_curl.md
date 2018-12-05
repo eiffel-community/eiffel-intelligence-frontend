@@ -46,8 +46,7 @@ If the back-end list lack a default back-end one may be added by using a HTTP PO
 <pre>{"name":"Any default name", "host":"*Your back-end url*", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}</pre>
 <p>You may add a back-end using for example CURL:</p>
 <pre>
-   curl -d '{"name":"My Default Back-
-  End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
+   curl -d '{"name":"My Default Back-End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
 </pre>
 <p>
 Note: Back-end names must be unique and only two elements may not have the same "host", "port" and "contextPath", one of these three keys must be different.
