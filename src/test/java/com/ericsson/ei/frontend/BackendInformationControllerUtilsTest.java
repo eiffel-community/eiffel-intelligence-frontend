@@ -186,10 +186,22 @@ public class BackendInformationControllerUtilsTest {
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
 
+        // Test failure to add new default instance.
+        when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
+        when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
+        when(backEndInstancesUtils.mayAddNewDefaultInstance(any())).thenReturn(false);
+        instance.addProperty("defaultBackend", true);
+        when(stream.collect(any())).thenReturn(instance.toString());
+        expectedResponse = createExpectedResponse("{\"message\": \"A default back end instance already exists.\"}",
+                HttpStatus.BAD_REQUEST);
+        response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
+        assertEquals(expectedResponse, response);
+        instance.addProperty("defaultBackend", false);
+
         // Test internal error
         when(stream.collect(any())).thenReturn("[");
         expectedResponse = createExpectedResponse(
-                "Internal error, java.io.EOFException: End of input at line 1 column 2 path $[0]",
+                "{\"message\": \"Internal Error: java.io.EOFException: End of input at line 1 column 2 path $[0]\"}",
                 HttpStatus.INTERNAL_SERVER_ERROR);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);

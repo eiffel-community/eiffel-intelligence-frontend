@@ -143,28 +143,29 @@ public class BackEndInfoirmationControllerUtils {
             }
 
             final boolean instanceHasDefaultFlag = instance.has(BackEndInstancesUtils.DEFAULT);
-            if(instanceHasDefaultFlag) {
+            if(instanceHasDefaultFlag && instance.get(BackEndInstancesUtils.DEFAULT).getAsBoolean()) {
                 if (!backEndInstancesUtils.mayAddNewDefaultInstance(instance)) {
-                    LOG.debug("Not a unique name.");
+                    LOG.debug("Default back-end instance already exists.");
                     return new ResponseEntity<>(
                             "{\"message\": \"A default back end instance already exists.\"}",
                             getHeaders(), HttpStatus.BAD_REQUEST);
                 }
             }
 
-            if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
-                backEndInstancesUtils.addNewBackEnd(instance);
-                LOG.debug("Added new back end.");
-                return new ResponseEntity<>(
-                        "{\"message\": \"Backend instance with name '"
-                        + instance.get("name").getAsString() + "' was added.\"}",
-                        getHeaders(), HttpStatus.OK);
-            } else {
+            if (backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
                 LOG.debug("Back end already exist.");
                 return new ResponseEntity<>(
                         "{\"message\": \"Backend instance already exist.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
+
             }
+
+            backEndInstancesUtils.addNewBackEnd(instance);
+            LOG.debug("Added new back end.");
+            return new ResponseEntity<>(
+                    "{\"message\": \"Backend instance with name '"
+                    + instance.get("name").getAsString() + "' was added.\"}",
+                    getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Error while adding instances: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";

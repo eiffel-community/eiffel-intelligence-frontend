@@ -111,12 +111,9 @@ public class BackEndInstancesUtils {
      * @return boolean
      */
     public boolean mayAddNewDefaultInstance(JsonObject instance) {
-        boolean inputInstanceHasDefaultSet = instance.get(DEFAULT).getAsBoolean();
-        if (inputInstanceHasDefaultSet) {
-            for (BackEndInformation backendInformation : backEndInformationList) {
-                if (backendInformation.isDefaultBackend()) {
-                    return false;
-                }
+        for (BackEndInformation backendInformation : backEndInformationList) {
+            if (backendInformation.isDefaultBackend()) {
+                return false;
             }
         }
         return true;
