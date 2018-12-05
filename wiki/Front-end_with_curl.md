@@ -153,7 +153,7 @@ Note: It is not possible to add the backendurl parameter as a JSON parameter.
    <tr>
       <td>/rules/rule-check/aggregation</td>
       <td>POST</td>
-      <td>*Needs update*</td>
+      <td>Takes rules, events from an object and returns an aggregated object</td>
    </tr>
 </table>
 <p>Lets do some examples on Curl commands</p>
