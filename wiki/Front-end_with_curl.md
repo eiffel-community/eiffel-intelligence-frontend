@@ -44,9 +44,11 @@ You may see that in the list you get, all objects have a key <code>active</code>
 If the back-end list lack a default back-end one may be added by using a HTTP POST request. The injected object should be specified in JSON and look like the example below.
 </p>
 <pre>{"name":"Any default name", "host":"*Your back-end url*", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}</pre>
-<p>You may add a back-end using for example CURL:</p>
+<p>
+You may add a back-end using for example CURL:
+</p>
 <pre>
-   curl -d '{"name":"My Default Back-End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
+curl -d '{"name":"My Default Back-End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
 </pre>
 <p>
 Note: Back-end names must be unique and only two elements may not have the same "host", "port" and "contextPath", one of these three keys must be different.
@@ -68,7 +70,6 @@ An example of a way to add such parameter is below, note that the "?" indicates 
 curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
 Tomcat Example:
 curl -X GET http://localhost:8080/eifrontend/auth?backendurl="http://127.0.0.1:8090/eibackend/"
-
 </pre>
 <p>
 This way of entering the backendurl may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
@@ -168,116 +169,116 @@ The <code>/subscriptions</code> endpoint is one that may be used the most, we ma
 A POST request with subscriptions in a file may look as the following example.
 </p>
 <pre>
-   curl -X POST -d @file_containing_list_of_json_objects -H "Content-Type: application/json" http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
+curl -X POST -d @file_containing_list_of_json_objects -H "Content-Type: application/json" http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 </pre>
 <p>
 Here is an example using this endpoint and the result it gives in case we have the templated subscriptions added.
 </p>
 <pre>
-   curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
+curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 </pre>
 <p>The back-end used is running on localhost and port 8080, we redirect the request to 127.0.0.1 and port 8090 as requested in the query parameters and the result is as follows </p>
 <pre>
-     [
+[
+  {
+    "aggregationtype":"eiffel-intelligence",
+    "created":1543577879242,
+    "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
+    "notificationType":"REST_POST",
+    "restPostBodyMediaType":"application/x-www-form-urlencoded",
+    "notificationMessageKeyValues":[
       {
-        "aggregationtype":"eiffel-intelligence",
-        "created":1543577879242,
-        "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
-        "notificationType":"REST_POST",
-        "restPostBodyMediaType":"application/x-www-form-urlencoded",
-        "notificationMessageKeyValues":[
-          {
-            "formkey":"json",
-            "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
-          }
-        ],
-        "repeat":false,
-        "requirements":[
-          {
-            "conditions":[
-              {
-                "jmespath":"gav.groupId=='com.othercompany.library'"
-              }
-            ]
-          }
-        ],
-        "subscriptionName":"Subscription1",
-        "userName":"functionalUser",
-        "password":"",
-        "ldapUserName":"",
-        "notificationMessageKeyValuesAuth":[
-
-        ],
-        "_id":{
-          "$oid":"5c012117aeb9d61aed160a2c"
-        },
-        "authenticationType":"BASIC_AUTH"
-      },
-      {
-        "aggregationtype":"eiffel-intelligence",
-        "created":1543577879265,
-        "notificationMeta":"http://eiffel-jenkins2:8080/job/ei-artifact-triggered-job/build",
-        "notificationType":"REST_POST",
-        "restPostBodyMediaType":"application/x-www-form-urlencoded",
-        "notificationMessageKeyValues":[
-          {
-            "formkey":"json",
-            "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
-          }
-        ],
-        "repeat":false,
-        "requirements":[
-          {
-            "conditions":[
-              {
-                "jmespath":"gav.groupId=='com.othercompany.library'"
-              }
-            ]
-          }
-        ],
-        "subscriptionName":"Subscription2",
-        "password":"",
-        "ldapUserName":"",
-        "notificationMessageKeyValuesAuth":[
-
-        ],
-        "_id":{
-          "$oid":"5c012117aeb9d61aed160a2d"
-        },
-        "authenticationType":"NO_AUTH"
-      },
-      {
-        "aggregationtype":"eiffel-intelligence",
-        "created":1543577879280,
-        "notificationMeta":"mymail@company.com",
-        "notificationType":"MAIL",
-        "restPostBodyMediaType":"",
-        "notificationMessageKeyValues":[
-          {
-            "formkey":"",
-            "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
-          }
-        ],
-        "repeat":false,
-        "requirements":[
-          {
-            "conditions":[
-              {
-                "jmespath":"gav.groupId=='com.othercompany.library'"
-              }
-            ]
-          }
-        ],
-        "subscriptionName":"Subscription3_Mail_Notification",
-        "password":"",
-        "ldapUserName":"",
-        "notificationMessageKeyValuesAuth":[
-
-        ],
-        "_id":{
-          "$oid":"5c012117aeb9d61aed160a2e"
-        },
-        "authenticationType":"NO_AUTH"
+        "formkey":"json",
+        "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
       }
-    ]
+    ],
+    "repeat":false,
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"gav.groupId=='com.othercompany.library'"
+          }
+        ]
+      }
+    ],
+    "subscriptionName":"Subscription1",
+    "userName":"functionalUser",
+    "password":"",
+    "ldapUserName":"",
+    "notificationMessageKeyValuesAuth":[
+
+    ],
+    "_id":{
+      "$oid":"5c012117aeb9d61aed160a2c"
+    },
+    "authenticationType":"BASIC_AUTH"
+  },
+  {
+    "aggregationtype":"eiffel-intelligence",
+    "created":1543577879265,
+    "notificationMeta":"http://eiffel-jenkins2:8080/job/ei-artifact-triggered-job/build",
+    "notificationType":"REST_POST",
+    "restPostBodyMediaType":"application/x-www-form-urlencoded",
+    "notificationMessageKeyValues":[
+      {
+        "formkey":"json",
+        "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
+      }
+    ],
+    "repeat":false,
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"gav.groupId=='com.othercompany.library'"
+          }
+        ]
+      }
+    ],
+    "subscriptionName":"Subscription2",
+    "password":"",
+    "ldapUserName":"",
+    "notificationMessageKeyValuesAuth":[
+
+    ],
+    "_id":{
+      "$oid":"5c012117aeb9d61aed160a2d"
+    },
+    "authenticationType":"NO_AUTH"
+  },
+  {
+    "aggregationtype":"eiffel-intelligence",
+    "created":1543577879280,
+    "notificationMeta":"mymail@company.com",
+    "notificationType":"MAIL",
+    "restPostBodyMediaType":"",
+    "notificationMessageKeyValues":[
+      {
+        "formkey":"",
+        "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
+      }
+    ],
+    "repeat":false,
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"gav.groupId=='com.othercompany.library'"
+          }
+        ]
+      }
+    ],
+    "subscriptionName":"Subscription3_Mail_Notification",
+    "password":"",
+    "ldapUserName":"",
+    "notificationMessageKeyValuesAuth":[
+
+    ],
+    "_id":{
+      "$oid":"5c012117aeb9d61aed160a2e"
+    },
+    "authenticationType":"NO_AUTH"
+  }
+]
 </pre>
