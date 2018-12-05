@@ -1,182 +1,142 @@
 package com.ericsson.ei.frontend;
 
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.codec.binary.StringUtils;
+import javax.annotation.PostConstruct;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.junit.MockServerRule;
+import org.mockserver.integration.ClientAndServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.google.gson.JsonParser;
+import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TestBridgeCurlFunctions {
+public class TestBridgeCurlFunctions extends TestBaseClass {
+    private static MockServerClient mockClient1;
+    private static MockServerClient mockClient2;
+    private static ClientAndServer mockServer1;
+    private static ClientAndServer mockServer2;
+
+    private static final String BASE_URL = "localhost";
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
-    private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
-    private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
     private static final String BACKEND_PARAM = "backendurl";
-    private static final String NOT_FOUND = "[]";
-    private String subscriptionRequestBody;
-    private String responseBodyPost;
-    private String responseBodyPut;
-    private String responseBodyDelete;
-    private String encodedAuth;
+
+    private static String mockServer2Url;
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
-
-    @Autowired
-    private BackEndInstanceFileUtils backEndInstanceFileUtils;
-
-    @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);
-
-    private MockServerClient mockServerClient;
-
     @Before
-    public void init() throws Exception {
-    	File tempFile = File.createTempFile("tempfile", ".json");
-        tempFile.deleteOnExit();
+    public void before() throws Exception {
+        mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
 
-        String filePath = tempFile.getAbsolutePath().toString();
-        Files.write(Paths.get(filePath), "[]".getBytes());
-        backEndInstanceFileUtils.setEiInstancesPath(filePath);
-
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
-
-        subscriptionRequestBody = FileUtils.readFileToString(new File(SUBSCRIPTION_FILE_PATH), "UTF-8");
-        subscriptionRequestBody = subscriptionRequestBody.replaceAll("\r", "");
-        responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}").toString();
-        responseBodyPut = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}").toString();
-        responseBodyDelete = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}").toString();
+        mockClient2.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
     }
 
+    /**
+     * This test does a normal request to the bridge and ensures it uses the default specified back end.
+     * @throws Exception
+     */
     @Test
-    public void testCreateSubscriptionSuccess() throws Exception {
-        mockSubscriptionEndpointForPostAndPut("POST", responseBodyPost);
-        mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
-                .andExpect(content().string(responseBodyPost)).andReturn();
+    public void testHandleSubscriptionsDefaultBackEnd() throws Exception {
+        mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT));
+        mockClient1.verify(request().withMethod("PUT").withPath(SUBSCRIPTION_ENDPOINT));
+
+        mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT));
+        mockClient1.verify(request().withMethod("POST").withPath(SUBSCRIPTION_ENDPOINT));
+
+        mockMvc.perform(get(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT));
+        mockClient1.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
+
+        mockClient2.verifyZeroInteractions();
+
     }
 
+    /**
+     * This test ensures that a back end specified by a URL parameter is overriding the default back end
+     * and uses the input one instead.
+     * @throws Exception
+     */
     @Test
-    public void testCreateSubscriptionNotFound() throws Exception {
-        mockSubscriptionEndpointForPostAndPut("POST", responseBodyPost);
-        mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
-    }
+    public void testHandleSubscriptionsUserSpecifiedBackend() throws Exception {
+        URIBuilder builder = new URIBuilder();
+        builder.setParameter(BACKEND_PARAM, mockServer2Url)
+                .setPath(SUBSCRIPTION_ENDPOINT)
+                .setHost(BASE_URL)
+                .setPort(testServerPort)
+                .setScheme("http");
 
-    @Test
-    public void testUpdateSubscriptionSuccess() throws Exception {
-        mockSubscriptionEndpointForPostAndPut("PUT", responseBodyPut);
-        mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
-                .andExpect(content().string(responseBodyPut)).andReturn();
-    }
+        /**
+         * Since MockMvc has problem including real parameters in a request we use a real
+         * http request and sends this request to the bridge.
+         */
+        HttpClientBuilder.create().build().execute(new HttpGet(builder.toString()));
+        mockClient2.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
 
-    @Test
-    public void testUpdateSubscriptionNotFound() throws Exception {
-        mockSubscriptionEndpointForPostAndPut("PUT", responseBodyPut);
-        mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
-    }
+        HttpClientBuilder.create().build().execute(new HttpPost(builder.toString()));
+        mockClient2.verify(request().withMethod("POST").withPath(SUBSCRIPTION_ENDPOINT));
 
-    @Test
-    public void testDeleteSubscriptionSuccess() throws Exception {
-        mockSubscriptionEndpointForDelete();
-        mockMvc.perform(delete(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andExpect(content().string(responseBodyDelete)).andReturn();
-    }
+        HttpClientBuilder.create().build().execute(new HttpPut(builder.toString()));
+        mockClient2.verify(request().withMethod("PUT").withPath(SUBSCRIPTION_ENDPOINT));
 
-    @Test
-    public void testDeleteSubscriptionNotFound() throws Exception {
-        mockSubscriptionEndpointForDelete();
-        mockMvc.perform(delete(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
-    }
-
-    @Test
-    public void testGetSubscriptionSuccess() throws Exception {
-        mockSubscriptionEndpointForGet();
-        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT)
-                .servletPath(SUBSCRIPTION_DELETE_ENDPOINT).header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
-                .andExpect(content().string(subscriptionRequestBody)).andReturn();
-    }
-
-    @Test
-    public void testGetSubscriptionNotFound() throws Exception {
-        mockSubscriptionEndpointForGet();
-        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT)
-                .servletPath(SUBSCRIPTION_DELETE_ENDPOINT).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
-    }
-
-    private void mockSubscriptionEndpointForPostAndPut(String method, String responseBody) {
-        mockServerClient
-                .when(request().withMethod(method).withPath(SUBSCRIPTION_ENDPOINT).withBody(subscriptionRequestBody)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(responseBody).withStatusCode(200).withHeader(HttpHeaders.AUTHORIZATION,
-                        "Basic " + encodedAuth));
-    }
-
-    private void mockSubscriptionEndpointForDelete() {
-        mockServerClient
-                .when(request().withMethod("DELETE").withPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(responseBodyDelete).withStatusCode(200)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
-    }
-
-    private void mockSubscriptionEndpointForGet() {
-        mockServerClient
-                .when(request().withMethod("GET").withPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(subscriptionRequestBody).withStatusCode(200)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
+        mockClient1.verifyZeroInteractions();
     }
 
     @After
     public void after() throws IOException {
-    	backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        mockClient1.clear(request());
+        mockClient2.clear(request());
+    }
+
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
+        mockServer1 = startClientAndServer();
+        mockServer2 = startClientAndServer();
+
+        mockClient1 = new MockServerClient(BASE_URL, mockServer1.getLocalPort());
+        mockClient2 = new MockServerClient(BASE_URL, mockServer2.getLocalPort());
+
+        mockServer2Url = "HTTP://" + BASE_URL + ":"  + mockServer2.getLocalPort();
+    }
+
+    @AfterClass
+    public static void tearDownMocks() throws IOException {
+        mockClient1.stop();
+        mockClient2.stop();
     }
 }

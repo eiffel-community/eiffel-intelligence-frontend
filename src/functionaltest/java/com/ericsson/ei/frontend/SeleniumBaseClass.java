@@ -40,47 +40,24 @@ import com.ericsson.ei.frontend.utils.WebControllerUtils;
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class SeleniumBaseClass {
-    @LocalServerPort
-    private int randomServerPort;
-
+public class SeleniumBaseClass extends TestBaseClass {
     @Autowired
     @InjectMocks
     EIRequestsController eIRequestsController;
-
-    @Autowired
-    WebControllerUtils webControllerUtils;
-
 
     protected FirefoxDriver driver;
     protected String baseUrl;
 
     private StringBuffer verificationErrors = new StringBuffer();
 
-    private String filePath = "";
-
-    @Autowired
-    private BackEndInstanceFileUtils backEndInstanceFileUtils;
-
-    @Autowired
-    protected BackEndInstancesUtils backEndInstancesUtils;
-
     @Before
     public void setUp() throws Exception {
-        File tempFile = File.createTempFile("tempfile", ".json");
-        tempFile.deleteOnExit();
-
-        filePath = tempFile.getAbsolutePath().toString();
-        Files.write(Paths.get(filePath), "[]".getBytes());
-        backEndInstanceFileUtils.setEiInstancesPath(filePath);
-
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
         MockitoAnnotations.initMocks(this);
-        webControllerUtils.setFrontendServicePort(randomServerPort);
 
         driver = SeleniumConfig.initFirefoxDriver();
-        baseUrl = SeleniumConfig.getBaseUrl(randomServerPort);
+        baseUrl = SeleniumConfig.getBaseUrl(testServerPort);
     }
 
     @After
