@@ -1,8 +1,5 @@
 package com.ericsson.ei.frontend;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -11,23 +8,8 @@ import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicStatusLine;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +18,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;

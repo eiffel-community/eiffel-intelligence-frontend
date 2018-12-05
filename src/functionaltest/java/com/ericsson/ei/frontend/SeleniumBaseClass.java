@@ -5,9 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
@@ -29,14 +26,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.ericsson.ei.config.SeleniumConfig;
-import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -82,8 +74,8 @@ public class SeleniumBaseClass extends TestBaseClass {
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptions")));
 
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/rules/rule-check/testRulePageEnabled")));
+        Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
+                .argThat(request -> (request).getURI().toString().contains("/rules/rule-check/testRulePageEnabled")));
 
     }
 
@@ -92,7 +84,8 @@ public class SeleniumBaseClass extends TestBaseClass {
                 .build();
         CloseableHttpResponse mockedHttpResponse = Mockito.mock(CloseableHttpResponse.class);
         mockedHttpResponse.setEntity(entity);
-        when(mockedHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
+        when(mockedHttpResponse.getStatusLine())
+                .thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
         when(mockedHttpResponse.getEntity()).thenReturn(entity);
         return mockedHttpResponse;
     }

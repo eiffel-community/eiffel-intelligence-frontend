@@ -7,12 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,20 +19,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
-import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 public class TestBridgeCurlFunctions extends TestBaseClass {
     private static MockServerClient mockClient1;
@@ -65,7 +48,9 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
     }
 
     /**
-     * This test does a normal request to the bridge and ensures it uses the default specified back end.
+     * This test does a normal request to the bridge and ensures it uses the
+     * default specified back end.
+     *
      * @throws Exception
      */
     @Test
@@ -84,22 +69,20 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
     }
 
     /**
-     * This test ensures that a back end specified by a URL parameter is overriding the default back end
-     * and uses the input one instead.
+     * This test ensures that a back end specified by a URL parameter is
+     * overriding the default back end and uses the input one instead.
+     *
      * @throws Exception
      */
     @Test
     public void testHandleSubscriptionsUserSpecifiedBackend() throws Exception {
         URIBuilder builder = new URIBuilder();
-        builder.setParameter(BACKEND_PARAM, mockServer2Url)
-                .setPath(SUBSCRIPTION_ENDPOINT)
-                .setHost(BASE_URL)
-                .setPort(testServerPort)
-                .setScheme("http");
+        builder.setParameter(BACKEND_PARAM, mockServer2Url).setPath(SUBSCRIPTION_ENDPOINT).setHost(BASE_URL)
+                .setPort(testServerPort).setScheme("http");
 
         /**
-         * Since MockMvc has problem including real parameters in a request we use a real
-         * http request and sends this request to the bridge.
+         * Since MockMvc has problem including real parameters in a request we
+         * use a real http request and sends this request to the bridge.
          */
         HttpClientBuilder.create().build().execute(new HttpGet(builder.toString()));
         mockClient2.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
@@ -127,7 +110,7 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
         mockClient1 = new MockServerClient(BASE_URL, mockServer1.getLocalPort());
         mockClient2 = new MockServerClient(BASE_URL, mockServer2.getLocalPort());
 
-        mockServer2Url = "HTTP://" + BASE_URL + ":"  + mockServer2.getLocalPort();
+        mockServer2Url = "HTTP://" + BASE_URL + ":" + mockServer2.getLocalPort();
     }
 
     @AfterClass

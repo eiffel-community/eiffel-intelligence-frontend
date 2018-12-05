@@ -16,7 +16,6 @@ import org.mockserver.integration.ClientAndServer;
 
 import com.ericsson.ei.frontend.pageobjects.AddBackendPage;
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
-import com.ericsson.ei.frontend.pageobjects.InfoPage;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 import com.ericsson.ei.frontend.pageobjects.SwitchBackendPage;
 
@@ -28,12 +27,12 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
     private static final String BASE_URL = "localhost";
 
-    private static final String NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
-    private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
-    private static final String INFORMATION_RESPONSE_FILEPATH = String.join(
-            File.separator, "src", "functionaltest", "resources", "responses", "InformationResponse.json");
+    private static final String NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src",
+            "functionaltest", "resources", "responses", "NewInstanceSubscriptionResponse.json");
+    private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src",
+            "functionaltest", "resources", "responses", "DefaultInstanceSubscriptionResponse.json");
+    private static final String INFORMATION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest",
+            "resources", "responses", "InformationResponse.json");
 
     @Test
     public void testSwitchBackend() throws Exception {
@@ -52,7 +51,8 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         // Test add backend instance
         indexPageObject.clickAdminBackendInstancesBtn();
         AddBackendPage addBackendPage = indexPageObject.clickAddBackendInstanceBtn();
-        SwitchBackendPage switchBackendPage = addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
+        SwitchBackendPage switchBackendPage = addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2,
+                "");
 
         assertEquals("new_instance", switchBackendPage.getInstanceNameAtPosition(1));
 

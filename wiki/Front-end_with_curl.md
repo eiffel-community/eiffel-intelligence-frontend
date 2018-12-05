@@ -1,71 +1,84 @@
-# Bridge
+# Curl Examples to front-end
 
-The Bridge is a part of the Eiffel Intelligence front end.
+The front-end is accessable not only via the web GUI.
 
 <h3>Introduktion</h3>
 <p>
-The Bridge is always used by the front-end web GUI as a connection between the back end instances and the GUI.
-The bridge functionality is built in as a part to the front ends web server and handles request coming from the web GUI towards any of the back ends configured.
-The bridge may also be used by other applications such as CURL or any kind of program that can make HTTP(S) requests.
+The front-end has a bridge functionality that is built in as a part to the front-ends web server and handles request coming from the web GUI towards any of the back-ends configured.
+The front-end may also be used by other applications such as CURL or any kind of program that can make HTTP(S) requests.
 </p>
 
-<h3>The Bridge handels:</h3>
+<h3>The front-end handels:</h3>
 <ul>
    <li>POST, PUT and GET requests</li>
-   <li>Default back end</li>
-   <li>Input back end</li>
+   <li>Default back-end</li>
+   <li>Input back-end</li>
 </ul>
 <p>
-While the web gui may use the back-end instances list and select different back ends in an easy way, a user that uses the bridge without the included web GUI may need to specify a back end URL.
+While the web gui may use the back-end instances list and select different back-ends in an easy way, a user that uses the front-end without the included web GUI may need to specify a back-end URL.
 This may be done by adding a backendurl parameter to the request.
 </p>
-
-<h3>Default back end</h3>
 <p>
-The bridge may have been setup mwith a default back end, this means that if no back end is specified when making a HTTP request to the bridge the default back end will be used.
-If you want to see a list of back ends and see if there is a default back end set you may use the command:
+Note that for users where the front-end and back-end is runnign with the help of Tomcat there will be context paths used.
+</p>
+<h3>Default back-end</h3>
+<p>
+The front-end may have been setup mwith a default back-end, this means that if no back-end is specified when making a HTTP request to the front-end the default back-end will be used.
+If you want to see a list of back-ends and see if there is a default back-end set you may use the command:
 </p>
 <pre>
-   curl -X GET http://*url to bridge*/backend
+Normal curl command for get:
+curl -X GET http://*front-end-url*/*contect-path-if-any*/backend
+Curl command for get with host, port using Tomcat:
+curl -X GET http://localhost:8080/eifrontend/backend
+Curl command running the .war file:
+curl -X GET http://localhost:8080/backend
 </pre>
 <p>
-The default back end should have the key <code>defaultBackend</code> set to <code>true</code>. If the JSON list ends up empty there is no back ends specified in the bridge. If there is no JSON object with the key set to true there is no default back end.
+The default back-end should have the key <code>defaultBackend</code> set to <code>true</code>. If the JSON list ends up empty there is no back-ends specified in the front-end. If there is no JSON object with the key set to true there is no default back-end.
 </p>
 <p>
-You may see that in the list you get, all objects have a key <code>active</code> set to <code>true or false</code>, this key points to the back end that acts as default, if no default back end exist, the active should usually be the first object in the list.
+You may see that in the list you get, all objects have a key <code>active</code> set to <code>true or false</code>, this key points to the back-end that acts as default, if no default back-end exist, the active should usually be the first object in the list.
 </p>
 <p>
-If the back-end list lack a default back end one may be added by using a HTTP POST request. The injected object should be specified in JSON and look like the example below.
+If the back-end list lack a default back-end one may be added by using a HTTP POST request. The injected object should be specified in JSON and look like the example below.
 </p>
+<pre>{"name":"Any default name", "host":"*Your back-end url*", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}</pre>
+<p>You may add a back-end using for example CURL:</p>
 <pre>
-{"name":"Any default name", "host":"*Your back end url*", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}
+   curl -d '{"name":"My Default Back-
+  End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
 </pre>
-<p>You may add a back end using for example CURL:</p>
-<pre>
-   curl -d '{"name":"My Default Back End", "host":"localhost", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}' -H "Content-Type: application/json" -X POST http://localhost:8080/backend
-</pre>
-<p>Note: Back end names must be unique and only two elements may not have the same "host", "port" and "contextPath", one of these three keys must be different. There may also only be one default back end instance.</p>
-
-
-<h3>Specified back end</h3>
 <p>
-As a user of the bridge you may want to specify your own back end URL if you do not want to use the default back end.
-This is possible to do by injecting the back end URL as a query parameter.
+Note: Back-end names must be unique and only two elements may not have the same "host", "port" and "contextPath", one of these three keys must be different.
+All myst have values except contextPath that may be empty.
+There may also only be one default back-end instance.
+</p>
+
+<h3>Specified back-end</h3>
+<p>
+As a user of the front-end you may want to specify your own back-end URL if you do not want to use the default back-end.
+This is possible to do by injecting the back-end URL as a query parameter.
 The parameters key should be <code>backendurl</code> then enter the full HTTP URL you wish to use.
 </p>
 <p>
-An example of a way to add such parameter is below, note that the "?" indicates that parameters has been added to the bridge url.
-<code>Localhost:8080</code> is the bridge url, and we want to access the context path /auth but on URL <code>http://127.0.0.1:8090/</code> that is the back end we wish to use.
+An example of a way to add such parameter is below, note that the "?" indicates that parameters has been added to the front-end url.
+<code>Localhost:8080</code> is the front-end url, and we want to access the context path /auth but on URL <code>http://127.0.0.1:8090/</code> that is the back-end we wish to use.
 </p>
-<pre>curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"</pre>
+<pre>
+curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
+Tomcat Example:
+curl -X GET http://localhost:8080/eifrontend/auth?backendurl="http://127.0.0.1:8090/eibackend/"
+
+</pre>
 <p>
-This way of entering the backendurl may be the easiest way. It works with GET, POST and PUT requests.
+This way of entering the backendurl may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
 </p>
 <p>
 Note: It is not possible to add the backendurl parameter as a JSON parameter.
 </p>
 
-<h3>Endpoints Bridged To Back End</h3>
+<h3>Endpoints bridged from front-end to back-End</h3>
 <table>
    <tr>
       <th>Context Path</th>
@@ -80,12 +93,12 @@ Note: It is not possible to add the backendurl parameter as a JSON parameter.
    <tr>
       <td>/auth/checkStatus</td>
       <td>GET</td>
-      <td>Back end status, is back end online</td>
+      <td>Back-end status, is back-end online</td>
    </tr>
    <tr>
       <td>/subscriptions</td>
       <td>GET</td>
-      <td>Fetches all available subscriptions from the back end</td>
+      <td>Fetches all available subscriptions from the back-end</td>
    </tr>
    <tr>
       <td>/subscriptions</td>
@@ -100,17 +113,17 @@ Note: It is not possible to add the backendurl parameter as a JSON parameter.
    <tr>
       <td>/subscriptions/*subscription name*</td>
       <td>GET</td>
-      <td>Fetches information about a single subscription from the back end</td>
+      <td>Fetches information about a single subscription from the back-end</td>
    </tr>
    <tr>
       <td>/subscriptions/*subscription name*</td>
       <td>DELETE</td>
-      <td>Deletes a single instance from the back end</td>
+      <td>Deletes a single instance from the back-end</td>
    </tr>
    <tr>
       <td>/information</td>
       <td>GET</td>
-      <td>Fetches all information from about the back end and it´s components</td>
+      <td>Fetches all information from about the back-end and it´s components</td>
    </tr>
    <tr>
       <td>/queryAggregatedObject</td>
@@ -135,7 +148,7 @@ Note: It is not possible to add the backendurl parameter as a JSON parameter.
    <tr>
       <td>/rules/rule-check/testRulePageEnabled</td>
       <td>GET</td>
-      <td>gives a result weather the test rules function is enabed in the back end</td>
+      <td>gives a result weather the test rules function is enabed in the back-end</td>
    </tr>
    <tr>
       <td>/rules/rule-check/aggregation</td>
@@ -164,7 +177,7 @@ Here is an example using this endpoint and the result it gives in case we have t
 <pre>
    curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 </pre>
-<p>The back end used is running on localhost and port 8080, we redirect the request to 127.0.0.1 and port 8090 as requested in the query parameters and the result is as follows </p>
+<p>The back-end used is running on localhost and port 8080, we redirect the request to 127.0.0.1 and port 8090 as requested in the query parameters and the result is as follows </p>
 <pre>
      [
       {

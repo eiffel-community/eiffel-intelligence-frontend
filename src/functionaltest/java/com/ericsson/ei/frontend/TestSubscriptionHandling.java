@@ -213,7 +213,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         subscriptionPage.clickAddConditionBtn();
         assertEquals(2, subscriptionPage.countElements(conditionFieldID));
 
-        // Test "Add Requirement" button: click the button and assert that it adds an additional "requirement" field
+        // Test "Add Requirement" button: click the button and assert that it
+        // adds an additional "requirement" field
         String requirementFieldID = "requirementID";
         subscriptionPage.clickAddRequirementBtn();
         assertEquals(2, subscriptionPage.countElements(requirementFieldID));
