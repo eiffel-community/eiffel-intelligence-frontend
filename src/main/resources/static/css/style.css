@@ -252,3 +252,8 @@ button.rules_info:focus {
 #infoContent{
    font: 16px "Calibri";
 }
+.alert-message {
+	max-width: 300px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
