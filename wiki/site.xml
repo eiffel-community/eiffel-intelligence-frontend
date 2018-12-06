@@ -31,11 +31,11 @@
     <body>
         <head/>
         <breadcrumbs>
-            <item name="Index" href="index.html" />
+            <item name="Home" href="index.html" />
         </breadcrumbs>
 
         <menu name="Overview">
-            <item name="Index" href="index.html" />
+            <item name="Home" href="index.html" />
             <item name="Add Subscription" href="Add-Subscription.html" />
             <item name="GUI overview" href="GUI-Overview.html" />
             <item name="Subscription handling" href="Subscription-Handling.html" />
