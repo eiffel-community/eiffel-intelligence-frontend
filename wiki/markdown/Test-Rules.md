@@ -186,7 +186,7 @@ key "id", artifactId will be extracted from the event GAV and temp will be set
 to true.
 </p>
 
-EiffelArtifactCreatedEvent example, click to unfold
+EiffelArtifactCreatedEvent example
 
     {
         "meta":{
@@ -246,34 +246,32 @@ our aggregated object. Keep in mind that we are adding to the root of aggregated
 object so no need to specify MergeResolverRules.
 </p>
 
-<pre>
-{
-    "TemplateName":"ARTIFACT_1",
-    "Type":"EiffelArtifactCreatedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"YES",
-    "IdentifyRules":"[meta.id]",
-    "MatchIdRules":{
-      "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{ id : meta.id, artifactId : data.gav.artifactId, temp : `\"true\"` }"
-}
-</pre>
+
+    {
+        "TemplateName":"ARTIFACT_1",
+        "Type":"EiffelArtifactCreatedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"YES",
+        "IdentifyRules":"[meta.id]",
+        "MatchIdRules":{
+          "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{ id : meta.id, artifactId : data.gav.artifactId, temp : `\"true\"` }"
+    }
+
 
 And here is the resulting aggregated object.
 
-<pre>
-{
-    "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-    "aggregatedObject":{
-      "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-      "artifactId": "test_arm_test",
-      "temp":"true",
-      "TemplateName":"ARTIFACT_1"
+    {
+        "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+        "aggregatedObject":{
+          "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+          "artifactId": "test_arm_test",
+          "temp":"true",
+          "TemplateName":"ARTIFACT_1"
+        }
     }
-}
-</pre>
 
 <h4>Inserting a JSON array to the aggregated object</h4>
 
@@ -284,21 +282,21 @@ such an eiffel message is received it should form a new element and be inserted
 into aggregated object. Rule example is below.
 </p>
 
-<pre>
-{
-    "TemplateName":"ARTIFACT_1",
-    "Type":"EiffelConfidenceLevelModifiedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='SUBJECT'].target",
-    "MatchIdRules":{
-      "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{ eventId:meta.id, time:meta.time, name:data.name, value:data.value }",
-    "MergeResolverRules":"[ {NONEPATH:NONE}, {confidenceLevels: [{ eventId: meta.id }]} ]"
-}
-</pre>
+
+    {
+        "TemplateName":"ARTIFACT_1",
+        "Type":"EiffelConfidenceLevelModifiedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='SUBJECT'].target",
+        "MatchIdRules":{
+          "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{ eventId:meta.id, time:meta.time, name:data.name, value:data.value }",
+        "MergeResolverRules":"[ {NONEPATH:NONE}, {confidenceLevels: [{ eventId: meta.id }]} ]"
+    }
+
 
 <p>
 When receiving an EiffelConfidenceLevelModifiedEvent message the aggregated 
@@ -322,119 +320,117 @@ use that. The full expression would then be
 <code>"MergeResolverRules":"[ {NONEPATH:NONE}, {confidenceLevels: [{ eventId: meta.id }]} ]"</code>.
 </p>
 
-EiffelConfidenceLevelModifiedEvent for example, click to unfold
-<pre>
-{
-    "links":[
-        {
-         "target":"40df7fc4-0c40-40a3-a349-9f6da0ba81c5",
-         "type":"CAUSE"
-        },
-        {
-         "target":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-         "type":"SUBJECT"
-        }
-    ],
-    "meta":{
-        "id":"f37d59a3-069e-4f4c-8cc5-a52e73501a76",
-        "source":{
-            "domainId":"example.domain"
-        },
-        "time":1481875988767,
-        "type":"EiffelConfidenceLevelModifiedEvent",
-        "version":"1.0.0"
-    },
-    "data":{
-        "value":"SUCCESS",
-        "customData":[
-            {
-                "value":"CLM2",
-                "key":"name"
-            },
-            {
-                "value":1,
-                "key":"iteration"
-            }
-        ],
-        "name":"performance"
-    }
-}
-</pre>
+EiffelConfidenceLevelModifiedEvent for example
 
-Aggregated object before receiving EiffelConfidenceLevelModifiedEvent click to unfold
-<pre>
-{
-    "_id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-    "aggregatedObject":{
-        "id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-        "type":"EiffelArtifactCreatedEvent",
-        "time":1481875891763,
-        "gav":{
-            "artifactId":"sub-system",
-            "version":"1.1.0",
-            "groupId":"com.mycompany.myproduct"
+    {
+        "links":[
+            {
+             "target":"40df7fc4-0c40-40a3-a349-9f6da0ba81c5",
+             "type":"CAUSE"
+            },
+            {
+             "target":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+             "type":"SUBJECT"
+            }
+        ],
+        "meta":{
+            "id":"f37d59a3-069e-4f4c-8cc5-a52e73501a76",
+            "source":{
+                "domainId":"example.domain"
+            },
+            "time":1481875988767,
+            "type":"EiffelConfidenceLevelModifiedEvent",
+            "version":"1.0.0"
         },
-        "fileInformation":[
-            {
-               "classifier":"debug",
-               "extension":"jar"
-            },
-            {
-                "classifier":"test",
-                "extension":"txt"
-            },
-            {
-                "classifier":"application",
-                "extension":"exe"
-            }
-        ],
-        "buildCommand":null,
-        "TemplateName":"ARTIFACT_1"
-    }
-}
-</pre>
-
-Aggregated object after receiving EiffelConfidenceLevelModifiedEvent click to unfold
-
-<pre>
-{
-    "_id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-    "aggregatedObject":{
-        "fileInformation":[
-            {
-                "extension":"jar",
-                "classifier":"debug"
-            },
-            {
-                "extension":"txt",
-                "classifier":"test"
-            },
-            {
-                "extension":"exe",
-                "classifier":"application"
-            }
-        ],
-        "buildCommand":null,
-        "confidenceLevels":[
-            {
-                "eventId":"f37d59a3-069e-4f4c-8cc5-a52e73501a76",
-                "name":"performance",
-                "time":1481875988767,
-                "value":"SUCCESS"
-            }
-        ],
-        "TemplateName":"ARTIFACT_1",
-        "id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-        "time":1481875891763,
-        "type":"EiffelArtifactCreatedEvent",
-        "gav":{
-            "groupId":"com.mycompany.myproduct",
-            "artifactId":"sub-system",
-            "version":"1.1.0"
+        "data":{
+            "value":"SUCCESS",
+            "customData":[
+                {
+                    "value":"CLM2",
+                    "key":"name"
+                },
+                {
+                    "value":1,
+                    "key":"iteration"
+                }
+            ],
+            "name":"performance"
         }
     }
-}
-</pre>
+
+
+Aggregated object before receiving EiffelConfidenceLevelModifiedEvent
+
+    {
+        "_id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+        "aggregatedObject":{
+            "id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+            "type":"EiffelArtifactCreatedEvent",
+            "time":1481875891763,
+            "gav":{
+                "artifactId":"sub-system",
+                "version":"1.1.0",
+                "groupId":"com.mycompany.myproduct"
+            },
+            "fileInformation":[
+                {
+                   "classifier":"debug",
+                   "extension":"jar"
+                },
+                {
+                    "classifier":"test",
+                    "extension":"txt"
+                },
+                {
+                    "classifier":"application",
+                    "extension":"exe"
+                }
+            ],
+            "buildCommand":null,
+            "TemplateName":"ARTIFACT_1"
+        }
+    }
+
+
+Aggregated object after receiving EiffelConfidenceLevelModifiedEvent
+
+    {
+        "_id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+        "aggregatedObject":{
+            "fileInformation":[
+                {
+                    "extension":"jar",
+                    "classifier":"debug"
+                },
+                {
+                    "extension":"txt",
+                    "classifier":"test"
+                },
+                {
+                    "extension":"exe",
+                    "classifier":"application"
+                }
+            ],
+            "buildCommand":null,
+            "confidenceLevels":[
+                {
+                    "eventId":"f37d59a3-069e-4f4c-8cc5-a52e73501a76",
+                    "name":"performance",
+                    "time":1481875988767,
+                    "value":"SUCCESS"
+                }
+            ],
+            "TemplateName":"ARTIFACT_1",
+            "id":"6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+            "time":1481875891763,
+            "type":"EiffelArtifactCreatedEvent",
+            "gav":{
+                "groupId":"com.mycompany.myproduct",
+                "artifactId":"sub-system",
+                "version":"1.1.0"
+            }
+        }
+    }
 
 <h3>Clear All Rules/Clear All Events</h3>
 
@@ -452,111 +448,107 @@ to <code>"ongoing":"true"</code>.
 </p>
 
 Rules for EiffelTestCaseStartedEvent
-<pre>
-{
-    "TemplateName":"TEST_EXECUTION_1",
-    "Type":"EiffelTestCaseStartedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='TEST_CASE_EXECUTION'].target",
-    "MatchIdRules":{
-        "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{ ongoing : `\"true\"`}",
-    "MergeResolverRules":"[{NONEPATH:NONE}, {test_suite: [{ test_case : [{ trigger_event_id: links | [?type=='TEST_CASE_EXECUTION'] | [0].target }]} ]}]",
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"",
-    "HistoryExtractionRules":"",
-    "ProcessRules":null,
-    "ProcessFunction":null
-}
-</pre>
 
-Aggregated object before receiving EiffelTestCaseStartedEvent, click to unfold
-<pre>
-{
-    "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-    "aggregatedObject":{
-        "ongoing":"true",
-        "test_suite":[
-            {
-                "test_case":[
-                    {
-                        "ongoing":"false",
-                        "test_data":null,
-                        "trigger_event_id":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
-                    }
-                ]
-            }
-        ],
+    {
         "TemplateName":"TEST_EXECUTION_1",
-        "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-        "time":1234567890,
-        "type":"EiffelActivityTriggeredEvent",
-        "version":"1.0.0",
-        "test_suite_name":"Pre-release installation and security verification"
-    }
-}
-</pre>
-
-EiffelTestCaseStartedEvent, click to unfold
-<pre>
-{
-    "meta":{
-        "type":"EiffelTestCaseStartedEvent",
-        "version":"1.0.0",
-        "time":1234567890,
-        "id":"v46ef19d-20ab-4d2y-h9fe-87haha6kde47"
-    },
-    "data":{
-        "executor":"My Test Framework",
-        "liveLogs":[
-             {
-                 "name":"My test log",
-                 "uri":"file:///tmp/logs/data.log"
-             }
-        ]
-    },
-    "links":[
-        {
-            "type":"ENVIRONMENT",
-            "target":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1"
+        "Type":"EiffelTestCaseStartedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='TEST_CASE_EXECUTION'].target",
+        "MatchIdRules":{
+            "_id":"%IdentifyRules_objid%"
         },
-        {
-            "type":"TEST_CASE_EXECUTION",
-            "target":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
-        }
-    ]
-}
-</pre>
-
-Aggregated object after receiving EiffelTestCaseStartedEvent, click to unfold
-<pre>
-{
-    "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-    "aggregatedObject":{
-        "ongoing":"true",
-        "test_suite":[
-            {
-                "test_case":[
-                    {
-                        "ongoing":"true",
-                        "test_data":null,
-                        "trigger_event_id":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
-                    }
-                ]
-            }
-        ],
-        "TemplateName":"TEST_EXECUTION_1",
-        "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
-        "time":1234567890,
-        "type":"EiffelActivityTriggeredEvent",
-        "version":"1.0.0",
-        "test_suite_name":"Pre-release installation and security verification"
+        "ExtractionRules":"{ ongoing : `\"true\"`}",
+        "MergeResolverRules":"[{NONEPATH:NONE}, {test_suite: [{ test_case : [{ trigger_event_id: links | [?type=='TEST_CASE_EXECUTION'] | [0].target }]} ]}]",
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"",
+        "HistoryExtractionRules":"",
+        "ProcessRules":null,
+        "ProcessFunction":null
     }
-}
-</pre>
+
+Aggregated object before receiving EiffelTestCaseStartedEvent
+
+    {
+        "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+        "aggregatedObject":{
+            "ongoing":"true",
+            "test_suite":[
+                {
+                    "test_case":[
+                        {
+                            "ongoing":"false",
+                            "test_data":null,
+                            "trigger_event_id":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
+                        }
+                    ]
+                }
+            ],
+            "TemplateName":"TEST_EXECUTION_1",
+            "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+            "time":1234567890,
+            "type":"EiffelActivityTriggeredEvent",
+            "version":"1.0.0",
+            "test_suite_name":"Pre-release installation and security verification"
+        }
+    }
+
+EiffelTestCaseStartedEvent
+
+    {
+        "meta":{
+            "type":"EiffelTestCaseStartedEvent",
+            "version":"1.0.0",
+            "time":1234567890,
+            "id":"v46ef19d-20ab-4d2y-h9fe-87haha6kde47"
+        },
+        "data":{
+            "executor":"My Test Framework",
+            "liveLogs":[
+                 {
+                     "name":"My test log",
+                     "uri":"file:///tmp/logs/data.log"
+                 }
+            ]
+        },
+        "links":[
+            {
+                "type":"ENVIRONMENT",
+                "target":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1"
+            },
+            {
+                "type":"TEST_CASE_EXECUTION",
+                "target":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
+            }
+        ]
+    }
+
+Aggregated object after receiving EiffelTestCaseStartedEvent
+
+    {
+        "_id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+        "aggregatedObject":{
+            "ongoing":"true",
+            "test_suite":[
+                {
+                    "test_case":[
+                        {
+                            "ongoing":"true",
+                            "test_data":null,
+                            "trigger_event_id":"v46ef19d-20gb-4d2y-h9fa-87dada6kde47"
+                        }
+                    ]
+                }
+            ],
+            "TemplateName":"TEST_EXECUTION_1",
+            "id":"b46ef12d-25gb-4d7y-b9fd-8763re66de47",
+            "time":1234567890,
+            "type":"EiffelActivityTriggeredEvent",
+            "version":"1.0.0",
+            "test_suite_name":"Pre-release installation and security verification"
+        }
+    }
 
 <p>Clicking on "Find Aggregated Object" button will start the aggregation process. If rules and events are correct, a pop-up window with the aggregated object will show up on the screen.</p>
 
@@ -587,104 +579,104 @@ EiffelArtifactCreatedEvent will be EiffelArtifactPublishedEvent.
 
 
 <h4>Rule examples with different identifiers that might be used as a reference</h4>
-<pre>
-{
-    "TemplateName":"TEST_EXECUTION_1",a
-    "Type":"EiffelTestCaseTriggeredEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='CONTEXT'].target",
-    "MatchIdRules":{
-        "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{trigger_event_id : meta.id, test_data : data.testcase, ongoing : `\"false\"`}",
-    "MergeResolverRules":"[{NONEPATH:NONE},  {test_suite: [{ test_case : [{ trigger_event_id:meta.id}]} ]}]",
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"",
-    "HistoryExtractionRules":"",
-    "ProcessRules":null,
-    "ProcessFunction":null
-}
-{
-    "TemplateName":"TEST_EXECUTION_1",
-    "Type":"EiffelActivityFinishedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='ACTIVITY_EXECUTION'].target",
-    "MatchIdRules":{
-        "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{ ongoing : `\"false\"`, outcome : data.outcome}",
-    "MergeResolverRules":null,
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"",
-    "HistoryExtractionRules":"",
-    "ProcessRules":null,
-    "ProcessFunction":null
-}
-{
-    "TemplateName":"ARTIFACT_1",
-    "Type":"EiffelConfidenceLevelModifiedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='SUBJECT'].target",
-    "MatchIdRules":{
-        "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{confidenceLevels :[{ eventId:meta.id, time:meta.time, name:data.name, value:data.value}]}",
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"",
-    "HistoryExtractionRules":"",
-    "ProcessRules":null,
-    "ProcessFunction":null
-}
-{
-    "TemplateName":"ARTIFACT_1",
-    "Type":"EiffelArtifactCreatedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"YES",
-    "IdentifyRules":"[meta.id]",
-    "MatchIdRules":{
-        "_id":"%IdentifyRules_objid%"
-    },
-    "ExtractionRules":"{ id : meta.id, type : meta.type, time : meta.time, gav : data.gav, fileInformation : data.fileInformation, buildCommand : data.buildCommand }",
-    "DownstreamIdentifyRules":"links | [?type=='COMPOSITION'].target",
-    "DownstreamMergeRules":"{\"externalComposition\":{\"eventId\":%IdentifyRules%}}",
-    "DownstreamExtractionRules":"{artifacts: [{id : meta.id}]}",
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"links | [?type=='COMPOSITION'].target",
-    "HistoryExtractionRules":"{internalComposition:{artifacts: [{id : meta.id}]}}",
-    "HistoryPathRules":"{artifacts: {id: meta.id}}",
-    "ProcessRules":null,
-    "ProcessFunction":null
-}
-{
-    "TemplateName":"ARTIFACT_1",
-    "Type":"EiffelTestCaseFinishedEvent",
-    "TypeRule":"meta.type",
-    "IdRule":"meta.id",
-    "StartEvent":"NO",
-    "IdentifyRules":"links | [?type=='TEST_CASE_EXECUTION'].target",
-    "MatchIdRules":{
-        "$and":[
-            {
-                "aggregatedObject.testCaseExecutions.testCaseStartedEventId":"%IdentifyRules%"
-            }
-        ]
-    },
-    "ExtractionRules":"{ testCaseFinishEventId:meta.id, testCaseFinishedTime:meta.time, testCase:data.outcome}",
-    "MergeResolverRules":"{\"testCaseStartedEventId\":%IdentifyRules%}",
-    "ArrayMergeOptions":"",
-    "HistoryIdentifyRules":"",
-    "HistoryExtractionRules":"",
-    "ProcessRules":"{testCaseDuration : diff(testCaseExecutions[0].testCaseFinishedTime, testCaseExecutions[0].testCaseStartedTime)}",
-    "ProcessFunction":"difference"
-}
-</pre>
+
+    {
+        "TemplateName":"TEST_EXECUTION_1",a
+        "Type":"EiffelTestCaseTriggeredEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='CONTEXT'].target",
+        "MatchIdRules":{
+            "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{trigger_event_id : meta.id, test_data : data.testcase, ongoing : `\"false\"`}",
+        "MergeResolverRules":"[{NONEPATH:NONE},  {test_suite: [{ test_case : [{ trigger_event_id:meta.id}]} ]}]",
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"",
+        "HistoryExtractionRules":"",
+        "ProcessRules":null,
+        "ProcessFunction":null
+    }
+    {
+        "TemplateName":"TEST_EXECUTION_1",
+        "Type":"EiffelActivityFinishedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='ACTIVITY_EXECUTION'].target",
+        "MatchIdRules":{
+            "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{ ongoing : `\"false\"`, outcome : data.outcome}",
+        "MergeResolverRules":null,
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"",
+        "HistoryExtractionRules":"",
+        "ProcessRules":null,
+        "ProcessFunction":null
+    }
+    {
+        "TemplateName":"ARTIFACT_1",
+        "Type":"EiffelConfidenceLevelModifiedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='SUBJECT'].target",
+        "MatchIdRules":{
+            "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{confidenceLevels :[{ eventId:meta.id, time:meta.time, name:data.name, value:data.value}]}",
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"",
+        "HistoryExtractionRules":"",
+        "ProcessRules":null,
+        "ProcessFunction":null
+    }
+    {
+        "TemplateName":"ARTIFACT_1",
+        "Type":"EiffelArtifactCreatedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"YES",
+        "IdentifyRules":"[meta.id]",
+        "MatchIdRules":{
+            "_id":"%IdentifyRules_objid%"
+        },
+        "ExtractionRules":"{ id : meta.id, type : meta.type, time : meta.time, gav : data.gav, fileInformation : data.fileInformation, buildCommand : data.buildCommand }",
+        "DownstreamIdentifyRules":"links | [?type=='COMPOSITION'].target",
+        "DownstreamMergeRules":"{\"externalComposition\":{\"eventId\":%IdentifyRules%}}",
+        "DownstreamExtractionRules":"{artifacts: [{id : meta.id}]}",
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"links | [?type=='COMPOSITION'].target",
+        "HistoryExtractionRules":"{internalComposition:{artifacts: [{id : meta.id}]}}",
+        "HistoryPathRules":"{artifacts: {id: meta.id}}",
+        "ProcessRules":null,
+        "ProcessFunction":null
+    }
+    {
+        "TemplateName":"ARTIFACT_1",
+        "Type":"EiffelTestCaseFinishedEvent",
+        "TypeRule":"meta.type",
+        "IdRule":"meta.id",
+        "StartEvent":"NO",
+        "IdentifyRules":"links | [?type=='TEST_CASE_EXECUTION'].target",
+        "MatchIdRules":{
+            "$and":[
+                {
+                    "aggregatedObject.testCaseExecutions.testCaseStartedEventId":"%IdentifyRules%"
+                }
+            ]
+        },
+        "ExtractionRules":"{ testCaseFinishEventId:meta.id, testCaseFinishedTime:meta.time, testCase:data.outcome}",
+        "MergeResolverRules":"{\"testCaseStartedEventId\":%IdentifyRules%}",
+        "ArrayMergeOptions":"",
+        "HistoryIdentifyRules":"",
+        "HistoryExtractionRules":"",
+        "ProcessRules":"{testCaseDuration : diff(testCaseExecutions[0].testCaseFinishedTime, testCaseExecutions[0].testCaseStartedTime)}",
+        "ProcessFunction":"difference"
+    }
+
 
 <p>
 Also note that if you refer to a key that does not exist, a value of null (or 
