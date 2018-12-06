@@ -11,41 +11,11 @@
 <body class="nav-link">
     <div class="d-none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
     <div class="d-none" id="frontendServiceVersion" th:text="${frontendServiceVersion}"></div>
+    <div class="d-none" id="frontendReleaseVersion" th:text="${frontendReleaseVersion}"></div>
+    <div class="d-none" id="frontendAppName" th:text="${frontendAppName}"></div>
     <div class="d-none" id="backendServerUrl" th:text="${backendServerUrl}"></div>
 
-    <div class="col-12" id="eiPageFrame">
-        <p class="section-p-text table-text-setting">General Eiffel Intelligence Front End Information</p>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped dataTable table-text-setting">
-                <tbody>
-                    <tr>
-                        <td class="left-table-pane">
-                            Application Name
-                        </td>
-                        <td>
-                            <span th:text="${frontendAppName}"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="left-table-pane">
-                            Application Version
-                        </td>
-                        <td>
-                            <span th:text="${frontendServiceVersion}"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="left-table-pane">
-                            Application URL
-                        </td>
-                        <td>
-                            <span th:text="${frontendServiceUrl}"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <div class="col-12" id="eiPageFrame"></div>
 
     <script type="text/javascript" src="js/eiInfo.js"></script>
 
