@@ -1,16 +1,18 @@
 jQuery(document).ready(function() {
     // Fetch injected URL from DOM
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
-    var frontendServiceVersion = $('#frontendServiceVersion').text();
-    var frontendReleaseVersion = $('#frontendReleaseVersion').text();
-    var frontendAppName = $('#frontendAppName').text();
+    var frontEndServiceUrl = $('#frontendServiceUrl').text();
+    var frontEndVersion = $('#version').text();
+    var frontEndEnterpriseVersion = $('#enterpriseVersion').text();
+    var frontEndEnterpriseVersionName = $('#enterpriseVersionName').text();
+    var frontEndAppName = $('#frontendAppName').text();
 
-    var backendServerUrl = $('#backendServerUrl').text();
+    var backEndServerUrl = $('#backendServerUrl').text();
 
     var body = document.getElementById('eiPageFrame');
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front End Information";
 
+    var defaultEnterpriseVersionName = "Enterprise Version";
 
     function createTable() {
         var tbl = document.createElement('table');
@@ -34,16 +36,19 @@ jQuery(document).ready(function() {
 
     function createFrontEndGeneralInfo() {
         var tableContent = [
-            { key: 'Application Name', value: frontendAppName },
-            { key: 'Release Version', value: frontendReleaseVersion },
+            { key: 'Application Name', value: frontEndAppName },
+            { key: 'Version', value: frontEndVersion },
         ];
 
-        // Service version is a version added after release in application.properties
-        if (frontendServiceVersion) {
-            tableContent.push({ key: 'Service Version', value: frontendServiceVersion });
+        // Enterprise version is a version added after release in application.properties
+        if (frontEndEnterpriseVersion) {
+            if (!frontEndEnterpriseVersionName) {
+                frontEndEnterpriseVersionName = defaultEnterpriseVersionName;
+            }
+            tableContent.push({ key: frontEndEnterpriseVersionName, value: frontEndEnterpriseVersion });
         }
 
-        tableContent.push({ key: 'EI Front-End URL', value: frontendServiceUrl });
+        tableContent.push({ key: 'EI Front-End URL', value: frontEndServiceUrl });
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
     }
@@ -51,15 +56,19 @@ jQuery(document).ready(function() {
     function createGeneralEIInfo(data) {
         var tableContent = [
             { key: 'Application Name', value: data.applicationName },
-            { key: 'Release Version', value: data.version }
+            { key: 'Version', value: data.version }
         ];
 
-        // Service version is a version added after release in application.properties
-        if (data.serviceVersion) {
-            tableContent.push({ key: 'Service Version', value: frontendServiceVersion });
+        // Enterprise version is a version added after release in application.properties
+        if (data.enterpriseVersion) {
+            if (!data.frontEndEnterpriseVersionName) {
+                data.frontEndEnterpriseVersionName = defaultEnterpriseVersionName;
+            }
+            tableContent.push({ key: data.enterpriseVersionName, value: data.enterpriseVersion });
         }
 
-        tableContent.push({ key: 'EI Back-End Connected Server', value: backendServerUrl });
+        tableContent.push({ key: 'EI Back-End Connected Server', value: backEndServerUrl });
+        tableContent.push({ key: 'Test Rules File Path', value: data.rulesPath });
         tableContent.push({ key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled });
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);
@@ -129,7 +138,7 @@ jQuery(document).ready(function() {
 
     function getInstanceInfo() {
         $.ajax({
-            url: frontendServiceUrl + "/information",
+            url: frontEndServiceUrl + "/information",
             contentType : 'application/json;charset=UTF-8',
             type: 'GET',
             error : function (XMLHttpRequest, textStatus, errorThrown) {

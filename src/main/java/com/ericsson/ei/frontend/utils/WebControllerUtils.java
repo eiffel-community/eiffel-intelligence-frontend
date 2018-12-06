@@ -44,25 +44,28 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WebControllerUtils {
 
-    @Value("${ei.frontendServiceHost}")
+    @Value("${ei.frontendServiceHost:#{null}}")
     private String frontendServiceHost;
 
-    @Value("${ei.frontendServicePort}")
+    @Value("${ei.frontendServicePort:#{null}}")
     private int frontendServicePort;
 
-    @Value("${ei.frontendContextPath}")
+    @Value("${ei.frontendContextPath:#{null}}")
     private String frontendContextPath;
 
-    @Value("${ei.useSecureHttpFrontend}")
+    @Value("${ei.useSecureHttpFrontend:#{null}}")
     private boolean useSecureHttpFrontend;
 
-    @Value("${ei.eiffelDocumentationUrls}")
+    @Value("${ei.eiffelDocumentationUrls:#{null}}")
     private String eiffelDocumentationUrls;
 
-    @Value("${build.version}")
-    private String version;
+    @Value("${build.version.name::#{null}}")
+    private String EnterpriseVersionName;
 
-    private String releaseVersion;
+    @Value("${build.version:#{null}}")
+    private String EnterpriseVersion;
+
+    private String version;
 
     private String applicationName;
 
@@ -79,7 +82,7 @@ public class WebControllerUtils {
         Model model;
         model = reader.read(new FileReader("pom.xml"));
         applicationName = model.getArtifactId();
-        releaseVersion = model.getVersion();
+        version = model.getVersion();
     }
 
     /**
