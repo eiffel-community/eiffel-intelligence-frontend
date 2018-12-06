@@ -1,3 +1,5 @@
+# Home
+
 Eiffel Intelligence Frontend provides Eiffel Intelligence (EI) users a simple 
 and easy to use GUI. More precisely, Eiffel Intelligence Frontend allows the 
 configuration of subscription and aggregation rules in Eiffel Intelligence 
