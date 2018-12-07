@@ -4,7 +4,7 @@ Clicking on the Subscription Handling element will display some buttons in main
 page which help perform a number of subscription related actions. A table may 
 become visible, which is populated by the information about the stored (if any) 
 subscriptions in the connected database. This view is also the default view of 
-the Eiffel Intelligence Frontend, once the authentication (if enabled)is done .
+the Eiffel Intelligence Frontend, once the authentication (if enabled)is done.
 
 #### _Add Subscription_ 
 This button opens a form with a number of fields to create a subscription 
@@ -27,4 +27,4 @@ while red means no instance is connected.
 To search subscriptions with matching names in the database (displayed in the 
 table).
 
-**_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/Subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/Subscriptions.md)_**
+**_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/Subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/Subscriptions.md)_**
