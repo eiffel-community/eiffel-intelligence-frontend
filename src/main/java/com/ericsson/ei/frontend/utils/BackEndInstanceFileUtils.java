@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,7 +56,7 @@ public class BackEndInstanceFileUtils {
             if (!eiHomeExists) {
                 createEiHomeFolder(eiHome);
             }
-            
+
             Path eiInstancesListFilePath = Paths.get(eiHome, BACKEND_INSTANCES_DEFAULT_FILENAME);
             setEiInstancesPath(eiInstancesListFilePath.toString());
             File eiInstancesListFile = new File(eiInstancesListFilePath.toString());
@@ -94,7 +93,7 @@ public class BackEndInstanceFileUtils {
     /**
      * Parses Ei Instances list from backendInstancesListJsonContent property and
      * sets default EI-Backend instance.
-     * 
+     *
      */
     private void parseAndSetEiInstancesList() {
         JsonArray parsedBackendInstancesListJsonArray = null;
@@ -111,7 +110,7 @@ public class BackEndInstanceFileUtils {
 
     /**
      * Parses Ei Instances list from backendInstancesListJsonContent property.
-     * 
+     *
      * @return JsonArray
      */
     private JsonArray parseEiInstancesListJsonObject() {

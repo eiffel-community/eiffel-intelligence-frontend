@@ -16,16 +16,12 @@
 */
 package com.ericsson.ei.frontend.utils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -73,16 +69,11 @@ public class WebControllerUtils {
     private BackEndInstancesUtils backEndInstancesUtils;
 
     @PostConstruct
-    public void init() throws IOException, XmlPullParserException {
-        getDataFromPom();
-    }
-
-    private void getDataFromPom() throws FileNotFoundException, IOException, XmlPullParserException {
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        Model model;
-        model = reader.read(new FileReader("pom.xml"));
-        applicationName = model.getArtifactId();
-        version = model.getVersion();
+    public void init() throws IOException {
+        Properties properties = new Properties();
+        properties.load(WebControllerUtils.class.getResourceAsStream("/default-application.properties"));
+        version = properties.getProperty("version");
+        applicationName = properties.getProperty("artifactId");
     }
 
     /**

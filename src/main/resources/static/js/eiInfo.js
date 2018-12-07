@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
 
     var body = document.getElementById('eiPageFrame');
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
-    var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front End Information";
+    var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
 
     var defaultEnterpriseVersionName = "Enterprise Version";
 
@@ -67,8 +67,8 @@ jQuery(document).ready(function() {
             tableContent.push({ key: data.enterpriseVersionName, value: data.enterpriseVersion });
         }
 
+        tableContent.push({ key: 'Rules File Path', value: data.rulesPath });
         tableContent.push({ key: 'EI Back-End Connected Server', value: backEndServerUrl });
-        tableContent.push({ key: 'Test Rules File Path', value: data.rulesPath });
         tableContent.push({ key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled });
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);

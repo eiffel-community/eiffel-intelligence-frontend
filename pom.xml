@@ -36,11 +36,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-      <version>3.3.9</version>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
@@ -119,6 +114,22 @@
   </dependencies>
 
   <build>
+    <resources>
+	   <resource>
+	      <directory>src/main/resources</directory>
+	      <filtering>true</filtering>
+	      <includes>
+	        <include>**/default-application.properties</include>
+	      </includes>
+	    </resource>
+	    <resource>
+	      <directory>src/main/resources</directory>
+	      <filtering>false</filtering>
+	      <excludes>
+	          <exclude>**/default-application.properties</exclude>
+	      </excludes>
+	  </resource>
+	</resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
