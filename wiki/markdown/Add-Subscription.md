@@ -11,11 +11,12 @@ Mail Trigger.
 **SubscriptionName:** A field to give a name to the current subscription. Only 
 letters, underscore and numbers are allowed in this field.
 
-**NotificationType:** A dropdown list with two options, i.e., REST POST and 
+**NotificationType:** There are two options: REST POST and 
 Mail Trigger, depending on how a subscriber want to be notified when a 
-subscription is fulfilled.
+subscription is fulfilled. If Notification type MAIL is selected an email 
+subject may be entered, but it is optional.
 
-**RestPostMediaType:** A dropdown list that provides options for selecting a 
+**RestPostMediaType:** Options for selecting a 
 specific form content type. The options available in the list depends on the 
 selected template type.
 
@@ -28,12 +29,10 @@ used to add more messages.
 authorization type is provided which is “BASIC_AUTH”. The option “NO_AUTH” 
 implies that authorization is not required.
 
-**Repeat:** A drop down list to choose either true or false. It depends whether 
-same subscription should be re-triggered for new additions to the aggregated 
-object. If false, the notification will be triggered only the first time when 
-conditions are fulfilled. 
-
-**NotificationMeta:** A unique address need to be added for notification.
+**Repeat:** It is possible to enable repeat, e.g. whether same subscription 
+should be re-triggered for new additions to the aggregated object. If disabled, 
+the notification will be triggered only the first time when conditions are 
+fulfilled. 
 
 **Requirement:** It is used to add a requirement, which need to be fulfilled 
 before a subscription is triggered. Requirement is added in the form of a 
