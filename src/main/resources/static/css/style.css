@@ -217,19 +217,6 @@ input:checked + .slider:before {
     100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 576px) {
-	body {
-        padding-top: 80px;
-    }
-    .container {
-        max-width: 480px;
-    }
-    .split {
-        max-width: 100%;
-        width: 100%;
-    }
-}
-
 button.rules_info {
   text-align: center;
   max-height: auto;
@@ -256,4 +243,24 @@ button.rules_info:focus {
 	max-width: 300px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+a.alert-message:active {
+    background-color: lightgrey !important;
+}
+@media (max-width: 576px) {
+    body {
+        padding-top: 80px;
+    }
+    .container {
+        max-width: 480px;
+    }
+    .split {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+@media (max-width: 992px) {
+    .alert-message {
+        max-width: 100%;
+    }
 }

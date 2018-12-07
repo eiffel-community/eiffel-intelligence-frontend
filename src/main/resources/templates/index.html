@@ -97,8 +97,8 @@
             </span>
           </a>
           <div id="alerts" class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages.slice(0).reverse()">
-              <a class="dropdown-item alert-message small" data-bind="text: message, attr: {title: message}"></a>
-              <div class="dropdown-divider" data-bind="visible:$index() < $parent.errorMessages().length - 1"></div>
+              <a class="pt-2 pb-2 dropdown-item alert-message small cursor-pointer" data-bind="text: message, click: function(data, event) {$root.expandMessage(data, event)}"></a>
+              <div class="m-0 dropdown-divider" data-bind="visible:$index() < $root.errorMessages().length - 1"></div>
           </div>
         </li>
         <li class="nav-item">
