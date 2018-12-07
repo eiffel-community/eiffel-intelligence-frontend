@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Component
-public class BackEndInfoirmationControllerUtils {
+public class BackEndInformationControllerUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInfoirmationControllerUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationControllerUtils.class);
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
@@ -156,8 +157,9 @@ public class BackEndInfoirmationControllerUtils {
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
+            LOG.error(ExceptionUtils.getStackTrace(e));
             return new ResponseEntity<>(
-                    "Internal error, " + e.getMessage(),
+                    "{\"message\": \"Internal server error.\"}",
                     getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
