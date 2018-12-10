@@ -18,7 +18,7 @@ body {
     min-width: 160px;
 }
 .card-standard {
-	width: 25rem;
+    width: 25rem;
 }
 
 .sticky-button-bar{
@@ -43,7 +43,7 @@ body {
     white-space: normal;
 }
 .split {
-	max-width: 50%;
+    max-width: 50%;
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -88,7 +88,7 @@ body {
     flex-flow: column;
 }
 .hidden_by_default {
-	display: none;
+    display: none;
 }
 .loader {
     border-width: 7px;
@@ -111,11 +111,11 @@ body {
     max-width: 410px;
 }
 .badge-rounded {
-	display: inline-block;
-	padding: .1em;
-	text-align: center;
-	white-space: nowrap;
-	border-radius: .25rem;
+    display: inline-block;
+    padding: .1em;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: .25rem;
 }
 .modal-height-fit {
     max-height: calc(100vh - 200px);
@@ -141,11 +141,11 @@ body {
     font-size: medium;
 }
 .hide {
-	position: absolute;
-	left: -999em;
+    position: absolute;
+    left: -999em;
 }
 .flex-wrap {
-	flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 #back_end_down_warning {
     font-size: 12pt;
@@ -237,12 +237,12 @@ button.rules_info:focus {
 }
 
 #infoContent{
-   font: 16px "Calibri";
+    font: 16px "Calibri";
 }
 .alert-message {
-	width: 300px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 div.alert-message:active {
     background-color: grey !important;
@@ -252,6 +252,11 @@ div.alert-message:active {
     margin-left: -0.5rem;
     top: 0.3rem;
     font-size: 0.55rem;
+}
+.alerts-container {
+    max-height: 370px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 @media (max-width: 576px) {
     body {
@@ -273,5 +278,8 @@ div.alert-message:active {
         margin-left: 0rem;
         top: 0.65rem;
         font-size: 0.75rem
+    }
+    .alerts-container {
+        max-height: 185px;
     }
 }

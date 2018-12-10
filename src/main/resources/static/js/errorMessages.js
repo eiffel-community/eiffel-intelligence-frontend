@@ -35,14 +35,14 @@ function viewModel (data) {
     }
     self.expandMessage = function (data, event) {
         if(event.target.classList.contains("white-space-normal")) {
-            vm.resetExpandMessage();
+            event.target.classList.remove("white-space-normal");
         } else {
-            vm.resetExpandMessage();
+            self.resetExpandMessage();
             event.target.classList.add("white-space-normal");
         }
     }
     self.resetExpandMessage = function () {
-        $("#alerts").children("div").removeClass("white-space-normal");
+        $("#alerts").children().children(".dropdown-item").removeClass("white-space-normal");
     }
     self.stopPropagation = function () {
         $('div.alert-message').on('click', function (event) {
