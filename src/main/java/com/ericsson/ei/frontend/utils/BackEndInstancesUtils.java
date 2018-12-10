@@ -66,8 +66,9 @@ public class BackEndInstancesUtils {
     private boolean savedSinceLastParsing = false;
 
     /**
-     * Function to check weather an instance host, port, context path and https is
-     * unique.
+     * Returns true or false depending if instance host, port, contextPath or https already exist.
+     * Will return true if all values are the same, false if any value is different, thus input instance
+     * details are unique.
      *
      * @param JsonObject
      * @return boolean
@@ -88,7 +89,7 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns whether the name is unique, the name is an identifier thus must be
+     * Returns true or false depending if the name is unique, the name is an identifier thus must be
      * unique.
      *
      * @param JsonObject
@@ -105,12 +106,12 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns weather the user tries to add a new default instance but default already exists.
+     * Returns true or false depending if default instance exist.
      *
      * @param instance
      * @return boolean
      */
-    public boolean mayAddNewDefaultInstance(JsonObject instance) {
+    public boolean hasDefaultBackend() {
         for (BackEndInformation backendInformation : backEndInformationList) {
             if (backendInformation.isDefaultBackend()) {
                 return false;
