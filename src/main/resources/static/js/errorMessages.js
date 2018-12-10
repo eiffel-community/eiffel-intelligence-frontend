@@ -4,29 +4,27 @@ function messageModel (message) {
 function viewModel (data) {
     var self = this;
     self.errorMessages = ko.observableArray([]);
-    var errorsStore = new Array();
+    var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
+    var storedNew = JSON.parse(sessionStorage.getItem('ei.errorMessagesNew') || '[]');
 
     self.init = function() {
-        var storage = sessionStorage.getItem('errorsStore');
-        if(storage != undefined && storage != "") {
-            let msg = JSON.parse(storage);
-            for(var i=0; i<msg.length; i++){
-                errorsStore.push(msg[i]);
-            }
-        }
-        var json = JSON.parse(ko.toJSON(errorsStore));
+        var json = storedOld.concat(storedNew);
         for(var i = 0; i < json.length; i++) {
-            var obj = json[i];
-            self.addErrorMessage(obj.message);
+            self.addErrorMessage(json[i].message);
         }
     }
     self.addErrorMessage = function (data) {
-        let msgErr = new messageModel(data);
-        self.errorMessages.push(msgErr);
+        var model = new messageModel(data);
+        self.errorMessages.push(model);
     };
     self.storeErrorMessage = function (data) {
-        errorsStore.push({message:data});
-        sessionStorage.setItem('errorsStore', JSON.stringify(errorsStore));
+        storedNew.push({"message": data})
+        sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
+    }
+    self.mergeErrorMessages = function () {
+        var json = storedOld.concat(storedNew);
+        sessionStorage.setItem('ei.errorMessages', JSON.stringify(json));
+        sessionStorage.setItem('ei.errorMessagesNew', '[]');
     }
     self.expandMessage = function (data, event) {
         if(event.target.classList.contains("white-space-normal")) {
@@ -51,10 +49,10 @@ vm.init();
 ko.cleanNode($("#alerts")[0]);
 ko.applyBindings(vm,$("#alerts")[0]);
 
-function logMessages (messageErr) {
-    $.jGrowl(messageErr, {sticky: false, theme: 'Error', position:'center'});
-    vm.addErrorMessage(messageErr);
-    vm.storeErrorMessage(messageErr);
+function logMessages (message) {
+    $.jGrowl(message, {sticky: false, theme: 'Error', position:'center'});
+    vm.addErrorMessage(message);
+    vm.storeErrorMessage(message);
     vm.stopPropagation();
 }
 
@@ -62,4 +60,5 @@ vm.stopPropagation();
 
 $('#alertsDropdown').on('click', function (event) {
     vm.resetExpandMessage();
+    vm.mergeErrorMessages();
 });
