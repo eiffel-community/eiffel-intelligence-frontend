@@ -2,10 +2,13 @@ function messageModel (message) {
     this.message = ko.observable(message);
 }
 function viewModel (data) {
+    //sessionStorage.setItem('ei.errorMessages', '[]');
+    //sessionStorage.setItem('ei.errorMessagesNew', '[]');
     var self = this;
     self.errorMessages = ko.observableArray([]);
     var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
     var storedNew = JSON.parse(sessionStorage.getItem('ei.errorMessagesNew') || '[]');
+    self.newMessagesLength = ko.observable(storedNew.length);
 
     self.init = function() {
         var json = storedOld.concat(storedNew);
@@ -20,11 +23,17 @@ function viewModel (data) {
     self.storeErrorMessage = function (data) {
         storedNew.push({"message": data})
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
+        self.updateNewMessagesLength();
     }
     self.mergeErrorMessages = function () {
-        var json = storedOld.concat(storedNew);
-        sessionStorage.setItem('ei.errorMessages', JSON.stringify(json));
-        sessionStorage.setItem('ei.errorMessagesNew', '[]');
+        storedOld = storedOld.concat(storedNew);
+        storedNew = [];
+        sessionStorage.setItem('ei.errorMessages', JSON.stringify(storedOld));
+        sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
+        self.updateNewMessagesLength();
+    }
+    self.updateNewMessagesLength = function () {
+        self.newMessagesLength(storedNew.length);
     }
     self.expandMessage = function (data, event) {
         if(event.target.classList.contains("white-space-normal")) {
@@ -48,6 +57,9 @@ var vm = new viewModel();
 vm.init();
 ko.cleanNode($("#alerts")[0]);
 ko.applyBindings(vm,$("#alerts")[0]);
+ko.cleanNode($("#alertsDropdown")[0]);
+ko.applyBindings(vm,$("#alertsDropdown")[0]);
+vm.stopPropagation();
 
 function logMessages (message) {
     $.jGrowl(message, {sticky: false, theme: 'Error', position:'center'});
@@ -55,8 +67,6 @@ function logMessages (message) {
     vm.storeErrorMessage(message);
     vm.stopPropagation();
 }
-
-vm.stopPropagation();
 
 $('#alertsDropdown').on('click', function (event) {
     vm.resetExpandMessage();

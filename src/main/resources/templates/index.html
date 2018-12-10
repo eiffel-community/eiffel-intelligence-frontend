@@ -89,16 +89,11 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-fw fa-bell"></i>
-            <span class="d-lg-none">Alerts
-              <span class="badge badge-pill badge-warning">6 New</span>
-            </span>
-            <span class="indicator text-warning d-none d-lg-block">
-              <i class="fa fa-fw fa-circle"></i>
-            </span>
+            <span class="badge badge-pill badge-warning" data-bind="visible: $root.newMessagesLength() > 0, text: $root.newMessagesLength()"></span>
           </a>
           <div id="alerts" class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages.slice(0).reverse()">
               <a class="pt-2 pb-2 dropdown-item alert-message small cursor-pointer" data-bind="text: message, click: function(data, event) {$root.expandMessage(data, event)}"></a>
-              <div class="m-0 dropdown-divider" data-bind="visible:$index() < $root.errorMessages().length - 1"></div>
+              <div class="m-0 dropdown-divider" data-bind="visible: $index() < $root.errorMessages().length - 1"></div>
           </div>
         </li>
         <li class="nav-item">

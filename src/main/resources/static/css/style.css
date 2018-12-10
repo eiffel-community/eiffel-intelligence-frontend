@@ -218,13 +218,13 @@ input:checked + .slider:before {
 }
 
 button.rules_info {
-  text-align: center;
-  max-height: auto;
-  max-width: auto;
-  margin: 0px;
-  padding: 0px;
-  background: white;
-  border: none;
+    text-align: center;
+    max-height: auto;
+    max-width: auto;
+    margin: 0px;
+    padding: 0px;
+    background: white;
+    border: none;
 }
 
 button.rules_info:active {
@@ -247,6 +247,12 @@ button.rules_info:focus {
 a.alert-message:active {
     background-color: lightgrey !important;
 }
+.badge {
+    position: absolute;
+    margin-left: -0.5rem;
+    top: 0.3rem;
+    font-size: 0.55rem;
+}
 @media (max-width: 576px) {
     body {
         padding-top: 80px;
@@ -262,5 +268,10 @@ a.alert-message:active {
 @media (max-width: 992px) {
     .alert-message {
         max-width: 100%;
+    }
+    .badge {
+        margin-left: 0rem;
+        top: 0.65rem;
+        font-size: 0.75rem
     }
 }
