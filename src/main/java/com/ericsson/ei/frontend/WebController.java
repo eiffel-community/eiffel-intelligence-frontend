@@ -55,8 +55,7 @@ public class WebController {
     public String eiInfo(Model model, HttpServletRequest request) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("version", frontEndUtils.getVersion());
-        model.addAttribute("enterpriseVersion", frontEndUtils.getEnterpriseVersion());
-        model.addAttribute("enterpriseVersionName", frontEndUtils.getEnterpriseVersionName());
+        model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());
         model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
         model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
         return "eiInfo";

@@ -1,9 +1,8 @@
 jQuery(document).ready(function() {
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
-    var frontEndVersion = $('#version').text();
-    var frontEndEnterpriseVersion = $('#enterpriseVersion').text();
-    var frontEndEnterpriseVersionName = $('#enterpriseVersionName').text();
+    var frontEndVersion = $('#frontEndVersion').text();
+    var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
     var frontEndAppName = $('#frontendAppName').text();
 
     var backEndServerUrl = $('#backendServerUrl').text();
@@ -35,41 +34,31 @@ jQuery(document).ready(function() {
     }
 
     function createFrontEndGeneralInfo() {
+        if (frontEndApplicationPropertiesVersion) {
+            frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
+        }
         var tableContent = [
             { key: 'Application Name', value: frontEndAppName },
             { key: 'Version', value: frontEndVersion },
+            { key: 'EI Front-End URL', value: frontEndServiceUrl }
         ];
-
-        // Enterprise version is a version added after release in application.properties
-        if (frontEndEnterpriseVersion) {
-            if (!frontEndEnterpriseVersionName) {
-                frontEndEnterpriseVersionName = defaultEnterpriseVersionName;
-            }
-            tableContent.push({ key: frontEndEnterpriseVersionName, value: frontEndEnterpriseVersion });
-        }
-
-        tableContent.push({ key: 'EI Front-End URL', value: frontEndServiceUrl });
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
     }
 
     function createGeneralEIInfo(data) {
-        var tableContent = [
-            { key: 'Application Name', value: data.applicationName },
-            { key: 'Version', value: data.version }
-        ];
 
-        // Enterprise version is a version added after release in application.properties
-        if (data.enterpriseVersion) {
-            if (!data.frontEndEnterpriseVersionName) {
-                data.frontEndEnterpriseVersionName = defaultEnterpriseVersionName;
-            }
-            tableContent.push({ key: data.enterpriseVersionName, value: data.enterpriseVersion });
+        if (data.applicationPropertiesVersion) {
+            data.version = data.version + " (" + data.applicationPropertiesVersion + ")";
         }
 
-        tableContent.push({ key: 'Rules File Path', value: data.rulesPath });
-        tableContent.push({ key: 'EI Back-End Connected Server', value: backEndServerUrl });
-        tableContent.push({ key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled });
+        var tableContent = [
+            { key: 'Application Name', value: data.applicationName },
+            { key: 'Version', value: data.version },
+            { key: 'Rules File Path', value: data.rulesPath },
+            { key: 'EI Back-End Connected Server', value: backEndServerUrl },
+            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
+        ];
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);
     }

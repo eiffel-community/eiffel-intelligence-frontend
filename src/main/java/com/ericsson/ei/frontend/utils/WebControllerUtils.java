@@ -55,11 +55,8 @@ public class WebControllerUtils {
     @Value("${ei.eiffelDocumentationUrls:#{null}}")
     private String eiffelDocumentationUrls;
 
-    @Value("${build.version.name::#{null}}")
-    private String EnterpriseVersionName;
-
     @Value("${build.version:#{null}}")
-    private String EnterpriseVersion;
+    private String applicationPropertiesVersion;
 
     private String version;
 
