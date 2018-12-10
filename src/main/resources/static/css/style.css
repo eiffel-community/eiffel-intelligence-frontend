@@ -240,12 +240,12 @@ button.rules_info:focus {
    font: 16px "Calibri";
 }
 .alert-message {
-	max-width: 300px;
+	width: 300px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-a.alert-message:active {
-    background-color: lightgrey !important;
+div.alert-message:active {
+    background-color: grey !important;
 }
 .badge {
     position: absolute;
@@ -267,7 +267,7 @@ a.alert-message:active {
 }
 @media (max-width: 992px) {
     .alert-message {
-        max-width: 100%;
+        width: 100%;
     }
     .badge {
         margin-left: 0rem;

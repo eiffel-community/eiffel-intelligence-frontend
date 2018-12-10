@@ -2,8 +2,6 @@ function messageModel (message) {
     this.message = ko.observable(message);
 }
 function viewModel (data) {
-    //sessionStorage.setItem('ei.errorMessages', '[]');
-    //sessionStorage.setItem('ei.errorMessagesNew', '[]');
     var self = this;
     self.errorMessages = ko.observableArray([]);
     var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
@@ -44,10 +42,10 @@ function viewModel (data) {
         }
     }
     self.resetExpandMessage = function () {
-        $("#alerts").children("a").removeClass("white-space-normal");
+        $("#alerts").children("div").removeClass("white-space-normal");
     }
     self.stopPropagation = function () {
-        $('a.alert-message').on('click', function (event) {
+        $('div.alert-message').on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
         });
