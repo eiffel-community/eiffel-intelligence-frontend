@@ -35,7 +35,7 @@ If you want to see a list of back-ends and see if there is a default back-end se
 
 The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up empty there are no back-ends specified in the front-end. If there is no JSON object with the key set to true there is no default back-end.
 
-You may see that in the list you get, all objects have a key `active` set to `true or false`, this key points to the back-end that acts as default, if no default back-end exist, the active should usually be the first object in the list.
+You may see that in the list, all objects have a key `active` set to `true or false`, this key points to the back-end that acts as default, if no default back-end exist, the active should usually be the first object in the list.
 
 If the back-end list lacks a default back-end one may be added by using a HTTP POST request. The injected object should be specified in JSON and look like the example below.
 
