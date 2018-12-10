@@ -17,14 +17,20 @@ function viewModel (data) {
     self.addErrorMessage = function (data) {
         var model = new messageModel(data);
         self.errorMessages.push(model);
-    };
+    }
+    self.removeErrorMessage = function (index) {
+        var length = self.errorMessages.length;
+        var realIndex = length - 1 - index;
+        self.errorMessages.splice(realIndex,1);
+        self.mergeErrorMessages();
+    }
     self.storeErrorMessage = function (data) {
         storedNew.push({"message": data})
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
         self.updateNewMessagesLength();
     }
     self.mergeErrorMessages = function () {
-        storedOld = storedOld.concat(storedNew);
+        storedOld = ko.toJS(self.errorMessages);
         storedNew = [];
         sessionStorage.setItem('ei.errorMessages', JSON.stringify(storedOld));
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
@@ -33,7 +39,7 @@ function viewModel (data) {
     self.updateNewMessagesLength = function () {
         self.newMessagesLength(storedNew.length);
     }
-    self.expandMessage = function (data, event) {
+    self.expandMessage = function (event) {
         if(event.target.classList.contains("white-space-normal")) {
             event.target.classList.remove("white-space-normal");
         } else {
@@ -45,7 +51,11 @@ function viewModel (data) {
         $("#alerts").children().children(".dropdown-item").removeClass("white-space-normal");
     }
     self.stopPropagation = function () {
-        $('div.alert-message').on('click', function (event) {
+        $('i.fa-minus-circle').on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        });
+        $('div.message-block').on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
         });
@@ -53,10 +63,8 @@ function viewModel (data) {
 }
 var vm = new viewModel();
 vm.init();
-ko.cleanNode($("#alerts")[0]);
-ko.applyBindings(vm,$("#alerts")[0]);
-ko.cleanNode($("#alertsDropdown")[0]);
-ko.applyBindings(vm,$("#alertsDropdown")[0]);
+ko.cleanNode($("#alertsParent")[0]);
+ko.applyBindings(vm,$("#alertsParent")[0]);
 vm.stopPropagation();
 
 function logMessages (message) {

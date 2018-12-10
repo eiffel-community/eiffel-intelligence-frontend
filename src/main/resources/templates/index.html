@@ -86,20 +86,23 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown">
+        <li id="alertsParent" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-fw fa-bell"></i>
             <span class="d-lg-none pr-2">Alert</span>
             <span class="badge badge-pill badge-warning" data-bind="visible: $root.newMessagesLength() > 0, text: $root.newMessagesLength()"></span>
           </a>
-          <div id="alerts" class="dropdown-menu dropdown-menu-right alerts-container" aria-labelledby="alertsDropdown" data-bind="foreach: errorMessages.slice(0).reverse()">
-              <div class="d-flex">
-                <div class="col-11 pt-2 pb-2 dropdown-item alert-message small cursor-pointer" data-bind="text: message, click: function(data, event) {$root.expandMessage(data, event)}"></div>
-                <div class="col-1 d-flex justify-content-center align-items-center">
-                    <i class="fa fa-fw fa-minus-circle"></i>
-                </div>
-              </div>
-              <div class="m-0 dropdown-divider" data-bind="visible: $index() < $root.errorMessages().length - 1"></div>
+          <div class="dropdown-menu dropdown-menu-right alerts-container" aria-labelledby="alertsDropdown">
+            <div class="text-center" data-bind="if: $root.errorMessages().length == 0">No messages</div>
+            <div id="alerts" data-bind="foreach: errorMessages.slice(0).reverse()">
+	            <div class="d-flex message-block">
+	              <div class="col-11 pt-2 pb-2 dropdown-item alert-message small cursor-pointer" data-bind="text: message, click: function(data, event) {$root.expandMessage(event)}"></div>
+	              <div class="col-1 d-flex justify-content-center align-items-center">
+	                  <i class="fa fa-fw fa-minus-circle" data-bind="click: function(data, event) {$root.removeErrorMessage($index())}"></i>
+	              </div>
+	            </div>
+	            <div class="m-0 dropdown-divider" data-bind="visible: $index() < $root.errorMessages().length - 1"></div>
+            </div>
           </div>
         </li>
         <li class="nav-item">
