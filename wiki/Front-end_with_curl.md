@@ -48,7 +48,7 @@ You may add a back-end using for example CURL:
     curl -d '{"name":"My Default Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":true}' \
         -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
 
-__Note:__ A back-end names must be unique.
+__Note:__ `name` must be unique.
 
 Even with different names all elements must be unique, you may not have two or more elements with the same `host`, `port`, `contextPath` or `https` value, one of these three keys must be different. Only the `contextPath` key may be left empty.
 
@@ -64,7 +64,7 @@ Even with different names all elements must be unique, you may not have two or m
     ]
 
 All entries has different `names`.
-Second entry has different `host`, third entry has different `port`, third entry has different `contextPath`, fifth eentry has `https` changed to true.
+Second entry has different `host`, third entry has different `port`, third entry has different `contextPath`, fifth entry has `https` changed to true.
 
 ###### Example of __invalid__ back-end list:
 
@@ -84,7 +84,7 @@ This is possible to do by injecting the back-end URL as a query parameter.
 The parameters key should be `backendurl` then enter the full HTTP URL you wish to use.
 
 An example of a way to add such parameter is below, note that the "?" indicates that parameters has been added to the front-end url.
-`Localhost:8080` is the front-end url, and we want to access the context path /auth but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
+`localhost:8080` is the front-end url, and we want to access the context path /auth but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
 
 
     curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
@@ -108,12 +108,12 @@ Note: It is not possible to add the `backendurl` parameter as a JSON parameter.
     <tr>
         <td>/auth</td>
         <td>GET</td>
-        <td>Authentication status, is LDAP enabled</td>
+        <td>Check if LDAP security is enabled</td>
     </tr>
     <tr>
         <td>/auth/checkStatus</td>
         <td>GET</td>
-        <td>Back-end status, is back-end online</td>
+        <td>Used to check the back-end status.</td>
     </tr>
     <tr>
         <td>/subscriptions</td>

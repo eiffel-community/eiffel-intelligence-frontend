@@ -189,7 +189,7 @@ public class BackendInformationControllerUtilsTest {
         // Test failure to add new default instance.
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
-        when(backEndInstancesUtils.mayAddNewDefaultInstance(any())).thenReturn(false);
+        when(backEndInstancesUtils.hasDefaultBackend()).thenReturn(false);
         instance.addProperty("defaultBackend", true);
         when(stream.collect(any())).thenReturn(instance.toString());
         expectedResponse = createExpectedResponse("{\"message\": \"A default back end instance already exists.\"}",
