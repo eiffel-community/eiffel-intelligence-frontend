@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
+var timerInterval;
 
 jQuery(document).ready(function () {
 
@@ -87,7 +88,9 @@ jQuery(document).ready(function () {
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function () { checkBackendStatus(); }, 15000);
+    if (timerInterval == null){
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    }
 
     // Check if buttons should be enabled or disabled
     // Toggle warning text on and off
