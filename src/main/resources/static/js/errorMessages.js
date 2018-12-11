@@ -48,14 +48,10 @@ function viewModel (data) {
         }
     }
     self.resetExpandMessage = function () {
-        $("#alerts").children().children(".dropdown-item").removeClass("white-space-normal");
+        $(".alert-message").removeClass("white-space-normal");
     }
     self.stopPropagation = function () {
-        $('i.fa-minus-circle').on('click', function (event) {
-            event.stopPropagation();
-            event.preventDefault();
-        });
-        $('div.message-block').on('click', function (event) {
+        $('.alerts-container').on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
         });
