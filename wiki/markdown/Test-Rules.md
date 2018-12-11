@@ -6,7 +6,7 @@
 
 <p>The graphical user interface for testing rules consists of two panes. Left pane is intended to add the rules and right pane is intended for adding the Eiffel events.</p>
 
-<img src="./images/GUI_TestRules.png"></img>
+<img src="../images/GUI_TestRules.png"></img>
 
 <h3>Add</h3>
 
@@ -16,15 +16,15 @@
 
 <p>Load buttons are for loading rules/events from external files. The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}]. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p> 
     
-<img src="./images/GUI_TestRules_Replace_Append.png"></img>
+<img src="../images/GUI_TestRules_Replace_Append.png"></img>
 
 <p>After that, you need to choose from which file you want to load rules/events.</p>
 
-<img src="./images/GUI_TestRules_Browse_File.png"></img>
+<img src="../images/GUI_TestRules_Browse_File.png"></img>
 
 <p>When the file has been chosen, rules or events are loaded into text areas. In this example events template was loaded and the result can be seen on the image below.</p>
 
-<img src="./images/GUI_TestRules_Events.png"></img>
+<img src="../images/GUI_TestRules_Events.png"></img>
 
 <h3>Download</h3>
 

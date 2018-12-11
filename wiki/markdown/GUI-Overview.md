@@ -3,7 +3,7 @@
 Eiffel Intelligence Frontend GUI can be divided into two parts a navigation 
 window and a work window.
 
-<img src="./images/GUI_subscription_example.png">
+<img src="../images/GUI_subscription_example.png">
 </img>
 
 As the name suggests, navigation window provides its users one click access to 
