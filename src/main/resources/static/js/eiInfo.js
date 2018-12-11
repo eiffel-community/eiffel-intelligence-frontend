@@ -1,9 +1,15 @@
 jQuery(document).ready(function() {
     // Fetch injected URL from DOM
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
-    var backendServerUrl = $('#backendServerUrl').text();
+    var frontEndServiceUrl = $('#frontendServiceUrl').text();
+    var frontEndVersion = $('#frontEndVersion').text();
+    var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
+    var frontEndAppName = $('#frontendAppName').text();
+
+    var backEndServerUrl = $('#backendServerUrl').text();
 
     var body = document.getElementById('eiPageFrame');
+    var generalEIInfoLabel = "General Eiffel Intelligence Information";
+    var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
 
     function createTable() {
         var tbl = document.createElement('table');
@@ -25,23 +31,46 @@ jQuery(document).ready(function() {
         return element;
     }
 
-    function generateGeneralEiInfo(data) {
+    function createFrontEndGeneralInfo() {
+        if (frontEndApplicationPropertiesVersion) {
+            frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
+        }
+        var tableContent = [
+            { key: 'Application Name', value: frontEndAppName },
+            { key: 'Version', value: frontEndVersion },
+            { key: 'EI Front-End URL', value: frontEndServiceUrl }
+        ];
+
+        generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
+    }
+
+    function createGeneralEIInfo(data) {
+
+        if (data.applicationPropertiesVersion) {
+            data.version = data.version + " (" + data.applicationPropertiesVersion + ")";
+        }
+
+        var tableContent = [
+            { key: 'Application Name', value: data.applicationName },
+            { key: 'Version', value: data.version },
+            { key: 'Rules File Path', value: data.rulesPath },
+            { key: 'EI Back-End Connected Server', value: backEndServerUrl },
+            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
+        ];
+
+        generateGeneralInfo(tableContent, generalEIInfoLabel);
+    }
+
+    function generateGeneralInfo(tableContent, labelText) {
         var tbdy = document.createElement('tbody');
 
-        var label = createLabel('General Eiffel Intelligence Information');
+        var label = createLabel(labelText);
         body.appendChild(label);
 
         var div = document.createElement('div');
         div.setAttribute('class','table-responsive');
 
         var tbl = createTable();
-
-        var tableContent = [
-            { key: 'Application Name', value: data.applicationName },
-            { key: 'Version', value: data.version },
-            { key: 'EI Backend Connected Server', value: backendServerUrl },
-            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled },
-        ];
 
         for (i = 0; i < tableContent.length; i++) {
             key = tableContent[i].key;
@@ -96,24 +125,19 @@ jQuery(document).ready(function() {
 
     function getInstanceInfo() {
         $.ajax({
-            url: frontendServiceUrl + "/information",
+            url: frontEndServiceUrl + "/information",
             contentType : 'application/json;charset=UTF-8',
             type: 'GET',
             error : function (XMLHttpRequest, textStatus, errorThrown) {
-                var label = createLabel('General Eiffel Intelligence Information');
+                var label = createLabel(generalEIInfoLabel);
                 body.appendChild(label);
-                if (XMLHttpRequest.responseText == "") {
-                    var element = createErrorMessage('<strong>Error</strong> There is no response from backend!');
-                    body.appendChild(element);
-                } else {
-                    var element = createErrorMessage('Error: ' + XMLHttpRequest.responseText + '!');
-                    body.appendChild(element);
-                }
+                var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
+                body.appendChild(element);
             },
             success : function (data, textStatus, xhr) {
                 var eiInfoContainer = document.getElementById('eiInfoContainer');
                 var data = JSON.parse(xhr.responseText);
-                generateGeneralEiInfo(data);
+                createGeneralEIInfo(data);
                 generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
                 generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
                 generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
@@ -130,6 +154,7 @@ jQuery(document).ready(function() {
         });
     }
 
+    createFrontEndGeneralInfo();
     getInstanceInfo();
 
 });
