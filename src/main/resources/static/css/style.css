@@ -239,8 +239,13 @@ button.rules_info:focus {
 #infoContent{
     font: 16px "Calibri";
 }
+#alertsParent {
+	width: 65px;
+}
+#alerts {
+	width: 350px;
+}
 .alert-message {
-    width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
