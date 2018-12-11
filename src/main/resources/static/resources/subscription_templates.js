@@ -91,6 +91,7 @@ template_vars["templateEmailTrigger"] =
                     "created": "",
                     "notificationMeta" : "mymail@company.com",
                     "notificationType" : "MAIL",
+                    "emailSubject" : "",
                     "restPostBodyMediaType" : "",
                     "notificationMessageKeyValues" : [
                     {
