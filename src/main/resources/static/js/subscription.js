@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
+var timerInterval;
 
 jQuery(document).ready(function () {
 
@@ -87,7 +88,9 @@ jQuery(document).ready(function () {
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function () { checkBackendStatus(); }, 15000);
+    if (timerInterval == null){
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    }
 
     // Check if buttons should be enabled or disabled
     // Toggle warning text on and off
@@ -135,6 +138,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
+        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'}); 
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -244,6 +248,7 @@ jQuery(document).ready(function () {
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
+        
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.restPost = ko.observable(false);
