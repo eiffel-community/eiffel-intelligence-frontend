@@ -276,7 +276,10 @@ div.alert-message:active {
     }
 }
 @media (max-width: 992px) {
-    .alert-message {
+    #alertsParent {
+        width: 100%;
+    }
+    #alerts {
         width: 100%;
     }
     .badge {
