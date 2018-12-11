@@ -11,8 +11,6 @@ jQuery(document).ready(function() {
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
 
-    var defaultEnterpriseVersionName = "Enterprise Version";
-
     function createTable() {
         var tbl = document.createElement('table');
         tbl.setAttribute('class', 'table table-bordered table-striped dataTable table-text-setting');
