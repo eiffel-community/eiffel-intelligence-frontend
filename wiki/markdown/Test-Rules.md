@@ -6,7 +6,7 @@
 
 <p>The graphical user interface for testing rules consists of two panes. Left pane is intended to add the rules and right pane is intended for adding the Eiffel events.</p>
 
-<img src="../images/GUI_TestRules.png"></img>
+<img src="../images/GUI_TestRules.png" />
 
 <h3>Add</h3>
 
@@ -14,17 +14,17 @@
 
 <h3>Load From File</h3>
 
-<p>Load buttons are for loading rules/events from external files. The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}]. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p> 
-    
-<img src="../images/GUI_TestRules_Replace_Append.png"></img>
+<p>Load buttons are for loading rules/events from external files. The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}]. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p>
+
+<img src="../images/GUI_TestRules_Replace_Append.png" />
 
 <p>After that, you need to choose from which file you want to load rules/events.</p>
 
-<img src="../images/GUI_TestRules_Browse_File.png"></img>
+<img src="../images/GUI_TestRules_Browse_File.png" />
 
 <p>When the file has been chosen, rules or events are loaded into text areas. In this example events template was loaded and the result can be seen on the image below.</p>
 
-<img src="../images/GUI_TestRules_Events.png"></img>
+<img src="../images/GUI_TestRules_Events.png" />
 
 <h3>Download</h3>
 
@@ -239,7 +239,7 @@ Events Template
 
 <p>"Clear All" buttons remove all rules respective events. After clicking on button, a pop-up window shows up and asks for confirmation. After confirming all rules or events are removed.</p>
 
-<img src="./images/GUI_TestRules_Clear_All.png"></img>
+<img src="../images/GUI_TestRules_Clear_All.png" />
 
 <h3>Trash Can Button</h3>
 
@@ -249,7 +249,7 @@ Events Template
 
 <p>Clicking on "Find Aggregated Object" button will start the aggregation process. If rules and events are correct, a pop-up window with the aggregated object will show up on the screen.</p>
 
-<img src="./images/GUI_TestRules_Aggregated_Object.png"></img>
+<img src="../images/GUI_TestRules_Aggregated_Object.png" />
 
 <h2>Curl</h2>
 
@@ -259,19 +259,19 @@ Events Template
 
 <p>To execute rules on specific events with curl, you need to create a JSON file with rules and events. File should contain:</p>
 
-    { 
+    {
         "listEventsJson": [
             {Event1},
             {Event2}
             ...
-        ], 
+        ],
         "listRulesJson": [
             {Rule1},
             {Rule2},
             ...
-        ] 
+        ]
     }
-    
+
 <p>And then run curl command below.</p>
 
     curl -X POST -d "@<path to file>" -H "Content-Type: application/json" http://<host>:8080/rules/rule-check/aggregation?backendurl="http://127.0.0.1:8090/"
