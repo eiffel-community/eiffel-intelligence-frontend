@@ -43,6 +43,7 @@
             <item name="GUI overview" href="GUI-Overview.html" />
             <item name="Subscription handling" href="Subscription-Handling.html" />
             <item name="Test rules" href="Test-Rules.html" />
+            <item name="Curl Examples" href="Front-end_with_curl.html" />
         </menu>
 
         <footer/>
