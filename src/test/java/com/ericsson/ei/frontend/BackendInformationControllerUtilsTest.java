@@ -166,7 +166,8 @@ public class BackendInformationControllerUtilsTest {
         // Test successfully added.
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
-        expectedResponse = createExpectedResponse("{\"message\": \"Backend instance with name 'someName' was added.\"}",
+        expectedResponse = createExpectedResponse(
+                "{\"message\": \"Back-end instance with name 'someName' was successfully added to the back-end instance list.\"}",
                 HttpStatus.OK);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
@@ -174,22 +175,34 @@ public class BackendInformationControllerUtilsTest {
         // Test back end name already exist
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
-                "{\"message\": \"Backend instance with name 'someName' already exists.\"}", HttpStatus.BAD_REQUEST);
+                "{\"message\": \"Back-end instance with name 'someName' already exists.\"}", HttpStatus.BAD_REQUEST);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
 
         // Test instance already exist
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(true);
-        expectedResponse = createExpectedResponse("{\"message\": \"Backend instance already exist.\"}",
+        expectedResponse = createExpectedResponse("{\"message\": \"Back-end instance with given values already exist.\"}",
                 HttpStatus.BAD_REQUEST);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
 
+        // Test failure to add new default instance.
+        when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
+        when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
+        when(backEndInstancesUtils.hasDefaultBackend()).thenReturn(true);
+        instance.addProperty("defaultBackend", true);
+        when(stream.collect(any())).thenReturn(instance.toString());
+        expectedResponse = createExpectedResponse("{\"message\": \"A default back-end instance already exists.\"}",
+                HttpStatus.BAD_REQUEST);
+        response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
+        assertEquals(expectedResponse, response);
+        instance.addProperty("defaultBackend", false);
+
         // Test internal error
         when(stream.collect(any())).thenReturn("[");
         expectedResponse = createExpectedResponse(
-                "Internal error, java.io.EOFException: End of input at line 1 column 2 path $[0]",
+                "{\"message\": \"Internal Error: java.io.EOFException: End of input at line 1 column 2 path $[0]\"}",
                 HttpStatus.INTERNAL_SERVER_ERROR);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);

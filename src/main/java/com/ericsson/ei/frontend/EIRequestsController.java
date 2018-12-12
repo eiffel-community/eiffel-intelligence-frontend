@@ -169,9 +169,9 @@ public class EIRequestsController {
                     + "\nForwarding response back to EI Frontend WebUI.");
         } catch (IOException e) {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: " + String.valueOf(e) + "\"}";
             LOG.error("Forward Request Errors: " + e);
         }
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
