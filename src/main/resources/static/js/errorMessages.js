@@ -1,48 +1,76 @@
-var errorsStore = new Array();
-let msg = JSON.parse(sessionStorage.getItem('errorsStore'));
-if(msg){
-    for(var i=0; i<msg.length; i++){
-        errorsStore.push(msg[i]);
-    }
-}
-function viewModel(message){
+function messageModel (message) {
     this.message = ko.observable(message);
 }
-function model(data){
+function viewModel (data) {
     var self = this;
     self.errorMessages = ko.observableArray([]);
-    var json = JSON.parse(ko.toJSON(data));
-    json.reverse();
-    for(var i = 0; i < json.length; i++) {
-        var obj = json[i];
-    	let msgErr = new viewModel(obj.message);
-    	self.errorMessages.push(msgErr);
+    var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
+    var storedNew = JSON.parse(sessionStorage.getItem('ei.errorMessagesNew') || '[]');
+    self.newMessagesLength = ko.observable(storedNew.length);
+
+    self.init = function() {
+        var json = storedOld.concat(storedNew);
+        for(var i = 0; i < json.length; i++) {
+            self.addErrorMessage(json[i].message);
+        }
+    }
+    self.addErrorMessage = function (data) {
+        var model = new messageModel(data);
+        self.errorMessages.push(model);
+    }
+    self.removeErrorMessage = function (index) {
+        var length = self.errorMessages.length;
+        var realIndex = length - 1 - index;
+        self.errorMessages.splice(realIndex,1);
+        self.mergeErrorMessages();
+    }
+    self.storeErrorMessage = function (data) {
+        storedNew.push({"message": data})
+        sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
+        self.updateNewMessagesLength();
+    }
+    self.mergeErrorMessages = function () {
+        storedOld = ko.toJS(self.errorMessages);
+        storedNew = [];
+        sessionStorage.setItem('ei.errorMessages', JSON.stringify(storedOld));
+        sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
+        self.updateNewMessagesLength();
+    }
+    self.updateNewMessagesLength = function () {
+        self.newMessagesLength(storedNew.length);
+    }
+    self.expandMessage = function (event) {
+        if(event.target.classList.contains("white-space-normal")) {
+            event.target.classList.remove("white-space-normal");
+        } else {
+            self.resetExpandMessage();
+            event.target.classList.add("white-space-normal");
+        }
+    }
+    self.resetExpandMessage = function () {
+        $(".alert-message").removeClass("white-space-normal");
+    }
+    self.stopPropagation = function () {
+        $('.alerts-container').on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        });
     }
 }
-function logMessages(messageErr){
-    $.jGrowl(messageErr, {sticky: false, theme: 'Error', position:'center'});
-    errorsStore.push({message:messageErr});
-    sessionStorage.setItem('errorsStore', JSON.stringify(errorsStore));
-    $('div.dropdown-menu').replaceWith("<div id=\"alerts\" style=\"display: none;\" class=\"dropdown-menu\" aria-labelledby=\"alertsDropdown\" data-bind=\"foreach: errorMessages\">" +
-                                            "<div class=\"dropdown-divider\"> </div>" +
-                                                "<a class=\"dropdown-item\">" +
-                                                    "<div class=\"dropdown-message small\" data-bind=\"text: message, attr: {title: message}\"></div>" +
-                                                "</a>" +
-                                        "</div>");
-    ko.cleanNode($("#alerts")[0]);
-    ko.applyBindings(new model(errorsStore),$("#alerts")[0]);
+var vm = new viewModel();
+vm.init();
+ko.cleanNode($("#alertsParent")[0]);
+ko.applyBindings(vm,$("#alertsParent")[0]);
+vm.stopPropagation();
+
+function logMessages (message) {
+    $.jGrowl(message, {sticky: false, theme: 'Error', position:'center'});
+    vm.addErrorMessage(message);
+    vm.storeErrorMessage(message);
+    vm.stopPropagation();
 }
-$(document).mouseup(function(e){
-    var container = $("#alerts");
-    var bell = $("i.fa.fa-fw.fa-bell");
-    var click = $("#alertsDropdown");
-    var x = document.getElementById("alerts");
-    let msg = JSON.parse(sessionStorage.getItem('errorsStore'));
-    if (!container.is(e.target) && container.has(e.target).length === 0 && x.style.display === "block"){
-        container.hide();
-    } else if(msg && x.style.display === "none" && (click.is(e.target) || bell.is(e.target))){
-        container.show();
-    }
+
+$('#alertsDropdown').on('click', function (event) {
+    vm.resetExpandMessage();
+    vm.mergeErrorMessages();
 });
-ko.cleanNode($("#alerts")[0]);
-ko.applyBindings(new model(errorsStore),$("#alerts")[0]);

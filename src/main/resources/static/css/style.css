@@ -18,7 +18,7 @@ body {
     min-width: 160px;
 }
 .card-standard {
-	width: 25rem;
+    width: 25rem;
 }
 
 .sticky-button-bar{
@@ -43,7 +43,7 @@ body {
     white-space: normal;
 }
 .split {
-	max-width: 50%;
+    max-width: 50%;
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
@@ -88,7 +88,7 @@ body {
     flex-flow: column;
 }
 .hidden_by_default {
-	display: none;
+    display: none;
 }
 .loader {
     border-width: 7px;
@@ -111,11 +111,11 @@ body {
     max-width: 410px;
 }
 .badge-rounded {
-	display: inline-block;
-	padding: .1em;
-	text-align: center;
-	white-space: nowrap;
-	border-radius: .25rem;
+    display: inline-block;
+    padding: .1em;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: .25rem;
 }
 .modal-height-fit {
     max-height: calc(100vh - 200px);
@@ -141,11 +141,11 @@ body {
     font-size: medium;
 }
 .hide {
-	position: absolute;
-	left: -999em;
+    position: absolute;
+    left: -999em;
 }
 .flex-wrap {
-	flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 #back_end_down_warning {
     font-size: 12pt;
@@ -217,27 +217,14 @@ input:checked + .slider:before {
     100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 576px) {
-	body {
-        padding-top: 80px;
-    }
-    .container {
-        max-width: 480px;
-    }
-    .split {
-        max-width: 100%;
-        width: 100%;
-    }
-}
-
 button.rules_info {
-  text-align: center;
-  max-height: auto;
-  max-width: auto;
-  margin: 0px;
-  padding: 0px;
-  background: white;
-  border: none;
+    text-align: center;
+    max-height: auto;
+    max-width: auto;
+    margin: 0px;
+    padding: 0px;
+    background: white;
+    border: none;
 }
 
 button.rules_info:active {
@@ -250,5 +237,57 @@ button.rules_info:focus {
 }
 
 #infoContent{
-   font: 16px "Calibri";
+    font: 16px "Calibri";
+}
+#alertsParent {
+	width: 65px;
+}
+#alerts {
+	width: 350px;
+}
+.alert-message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+div.alert-message:active {
+    background-color: grey !important;
+}
+.badge {
+    position: absolute;
+    margin-left: -0.5rem;
+    top: 0.3rem;
+    font-size: 0.55rem;
+}
+.alerts-container {
+    max-height: 370px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+@media (max-width: 576px) {
+    body {
+        padding-top: 80px;
+    }
+    .container {
+        max-width: 480px;
+    }
+    .split {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+@media (max-width: 992px) {
+    #alertsParent {
+        width: 100%;
+    }
+    #alerts {
+        width: 100%;
+    }
+    .badge {
+        margin-left: 0rem;
+        top: 0.65rem;
+        font-size: 0.75rem
+    }
+    .alerts-container {
+        max-height: 185px;
+    }
 }
