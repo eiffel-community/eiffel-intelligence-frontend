@@ -2,13 +2,19 @@ sudo: required
 
 language: java
 
-services: 
+services:
 
 jdk:
-  - oraclejdk8
-  
+- oraclejdk8
+
 before_install:
-  - chmod +x pom.xml
-  
+- chmod +x pom.xml
+- chmod +x deploy.sh
+
 script:
-  - mvn test
+- mvn test -Dtest=TestAlarm
+
+after_success:
+- mvn site
+- mvn clean
+- "./deploy.sh $GITHUB_TOKEN"
