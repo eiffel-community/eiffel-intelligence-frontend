@@ -176,6 +176,8 @@
                             <sources>
                                 <source>src/functionaltest/java</source>
                                 <source>src/functionaltest/resources</source>
+                                <source>src/integrationtest/java</source>
+                                <source>src/integrationtest/resources</source>
                             </sources>
                         </configuration>
                     </execution>
