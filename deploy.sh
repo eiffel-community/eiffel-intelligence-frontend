@@ -14,7 +14,9 @@ commit_files() {
 }
 
 upload_files() {
-  git push --quiet "https://$GITHUB_TOKEN@github.com/e-pettersson-ericsson/eiffel-intelligence-frontend.git" > /dev/null 2>&1
+  git remote add origin "https://$GITHUB_TOKEN@github.com/e-pettersson-ericsson/eiffel-intelligence-frontend.git" > /dev/null 2>&1
+  git remote -v
+  git push --quiet origin HEAD:master
 }
 
 
