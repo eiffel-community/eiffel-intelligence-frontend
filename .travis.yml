@@ -22,7 +22,6 @@ deploy:
   local_dir: docs/
   on:
     branch: travis-test  # temp for test
-  keep-history: true  # creates incremental commits
 
 env:
   global:
