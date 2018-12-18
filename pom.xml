@@ -177,7 +177,7 @@
                 <directory>src/integrationtest/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/integration-test.properties</include>
+                    <include>**/*.*</include>
                 </includes>
             </testResource>
         </testResources>
@@ -254,7 +254,8 @@
                               <exclude>**/functionaltest/*</exclude>
                           </excludes>
                           <includes>
-                              <include>**/TestBridgeEndpointsRunner.java</include>
+                              <!-- <include>**/TestAuthNoSecurityRunner.java</include> -->
+                              <include>**/TestDownloadRunner.java</include>
                           </includes>
                       </configuration>
                   </execution>
