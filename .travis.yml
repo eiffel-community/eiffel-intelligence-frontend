@@ -12,6 +12,7 @@ before_install:
 
 script:
 - mvn test -Dtest=TestAlarm  # only for test to minimize logs
+- git checkout gh-pages
 - rm -rf docs
 - mvn site
 - mvn clean
@@ -22,6 +23,6 @@ deploy:
   github-token: $GITHUB_TOKEN
   local_dir: docs/
   on:
-    branch: travis-test  # temp for test
+    branch: master
   keep-history: true
   allow-empty-commit: true
