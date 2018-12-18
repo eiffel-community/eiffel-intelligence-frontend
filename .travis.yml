@@ -12,12 +12,20 @@ before_install:
 - chmod +x deploy.sh
 
 script:
-- mvn test
-
-after_success:
+- mvn test -Dtest=TestAlarm
 - mvn site
 - mvn clean
-- "./deploy.sh $GITHUB_TOKEN"
+
+#- "./deploy.sh $GITHUB_TOKEN"
+
+deploy:
+  skip_cleanup: true
+  provider: pages
+  github-token: $GITHUB_TOKEN
+  local_dir: docs/
+  on:
+    branch: travis-test  #temp for test
+  keep-history: true  # creates incremental commits
 
 env:
   global:
