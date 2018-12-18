@@ -12,6 +12,7 @@ before_install:
 
 script:
 - mvn test -Dtest=TestAlarm  # only for test to minimize logs
+- rm -rf docs
 - mvn site
 - mvn clean
 
