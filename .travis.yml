@@ -11,7 +11,9 @@ before_install:
 - chmod +x pom.xml
 
 script:
-- mvn test -Dtest=TestAlarm  # only for test to minimize logs
+- mvn test
+
+# TODO: clean up and put into deploy job
 - rm -rf docs
 - mvn site
 - mvn clean
@@ -23,5 +25,3 @@ deploy:
   local_dir: docs/
   on:
     branch: master
-  keep-history: true
-  allow-empty-commit: true
