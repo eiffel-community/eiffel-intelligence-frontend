@@ -9,14 +9,11 @@ jdk:
 
 before_install:
 - chmod +x pom.xml
-- chmod +x deploy.sh
 
 script:
-- mvn test -Dtest=TestAlarm
+- mvn test -Dtest=TestAlarm  # only for test to minimize logs
 - mvn site
 - mvn clean
-
-#- "./deploy.sh $GITHUB_TOKEN"
 
 deploy:
   skip_cleanup: true
@@ -24,7 +21,7 @@ deploy:
   github-token: $GITHUB_TOKEN
   local_dir: docs/
   on:
-    branch: travis-test  #temp for test
+    branch: travis-test  # temp for test
   keep-history: true  # creates incremental commits
 
 env:
