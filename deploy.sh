@@ -1,12 +1,9 @@
 echo "Executing deploy script to generate site docs"
 
-
 commit_files() {
   git status
   git add docs/*
-  git status
   git commit --message "Generated site documentation. Travis build: $TRAVIS_BUILD_NUMBER [skip ci]"
-  git status
 }
 
 upload_files() {
