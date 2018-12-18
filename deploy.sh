@@ -1,9 +1,5 @@
-echo "Testing to deploy generated site docs"
+echo "Executing deploy script to generate site docs"
 
-setup_git() {
-  git config user.email "travis@travis-ci.org"
-  git config user.name "Travis CI"
-}
 
 commit_files() {
   git status
@@ -20,6 +16,5 @@ upload_files() {
 }
 
 
-# setup_git
 commit_files
 upload_files
