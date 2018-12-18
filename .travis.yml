@@ -12,7 +12,7 @@ before_install:
 - chmod +x deploy.sh
 
 script:
-- mvn test -Dtest=TestAlarm
+- mvn test
 
 after_success:
 - mvn site
