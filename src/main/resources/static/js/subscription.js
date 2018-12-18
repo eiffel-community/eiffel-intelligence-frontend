@@ -5,6 +5,7 @@ var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 var timerInterval;
+var statusIntervalTime = 150000;
 
 jQuery(document).ready(function () {
 
@@ -89,7 +90,7 @@ jQuery(document).ready(function () {
 
     // Check if EI Backend Server is online every X seconds
     if (timerInterval == null){
-        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, statusIntervalTime);
     }
 
     // Check if buttons should be enabled or disabled
@@ -138,7 +139,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
-        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'}); 
+        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'});
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -248,7 +249,7 @@ jQuery(document).ready(function () {
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
-        
+
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.restPost = ko.observable(false);
@@ -1078,14 +1079,17 @@ jQuery(document).ready(function () {
             },
             success: function (data, textStatus) {
                 var returnData = [data];
+                console.log("Response: " + textStatus.text );
                 if (returnData.length > 0) {
                     $('#modal_form').modal('hide');
                     reload_table();
                     // Clear ObservableArray
                     vm.subscription([]);
                 }
+                console.log("Done!");
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("ERROR !! Response: " + XMLHttpRequest );
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {

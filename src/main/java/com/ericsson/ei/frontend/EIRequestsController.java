@@ -14,11 +14,16 @@
 package com.ericsson.ei.frontend;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -48,8 +53,7 @@ import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
-
-    private CloseableHttpClient client = HttpClientBuilder.create().build();
+    private static final String X_PATH_NAME = "X-Auth-Token";
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
@@ -64,13 +68,10 @@ public class EIRequestsController {
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
         HttpGet eiRequest = new HttpGet(eiRequestUrl);
-        String header = request.getHeader("Authorization");
 
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        eiRequest = (HttpGet) addHeadersToRequest(eiRequest, request);
 
-        return getResponse(eiRequest);
+        return getResponse(eiRequest, request);
     }
 
     /**
@@ -95,14 +96,11 @@ public class EIRequestsController {
 
         HttpPost eiRequest = new HttpPost(eiRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
+
+        eiRequest = (HttpPost) addHeadersToRequest(eiRequest, request);
         eiRequest.setHeader("Content-type", "application/json");
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
-
-        return getResponse(eiRequest);
+        return getResponse(eiRequest, request);
     }
 
     /**
@@ -127,14 +125,11 @@ public class EIRequestsController {
 
         HttpPut eiRequest = new HttpPut(eiRequestUrl);
         eiRequest.setEntity(inputReqJsonEntity);
+
+        eiRequest = (HttpPut) addHeadersToRequest(eiRequest, request);
         eiRequest.setHeader("Content-type", "application/json");
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
-
-        return getResponse(eiRequest);
+        return getResponse(eiRequest, request);
     }
 
     /**
@@ -148,22 +143,30 @@ public class EIRequestsController {
 
         HttpDelete eiRequest = new HttpDelete(eiRequestUrl);
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        eiRequest = (HttpDelete) addHeadersToRequest(eiRequest, request);
 
-        return getResponse(eiRequest);
+        return getResponse(eiRequest, request);
     }
 
-    private ResponseEntity<String> getResponse(HttpRequestBase request) {
+    private ResponseEntity<String> getResponse(HttpRequestBase eiRequest, HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
         String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
-        try (CloseableHttpResponse eiResponse = client.execute(request)) {
+
+        LOG.debug("Forwarding request to: " + eiRequest.getURI().toString());
+        System.out.println("Making request to: " + eiRequest.getURI().toString());
+        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(eiRequest)) {
             if(eiResponse.getEntity() != null) {
                 responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             }
+
+            headers = getHeadersFromResponse(eiResponse, request);
             statusCode = eiResponse.getStatusLine().getStatusCode();
+
+            responseBody = "{\"statusCode\": " + statusCode + ", \"message\": \"My test message\"}";
+            System.out.println("EI Http response status code: " + statusCode
+                    + "\nEI Received response body:\n" + responseBody
+                    + "\nForwarding response back to EI Frontend WebUI.");
             LOG.debug("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
@@ -172,9 +175,58 @@ public class EIRequestsController {
             responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: " + String.valueOf(e) + "\"}";
             LOG.error("Forward Request Errors: " + e);
         }
-        HttpHeaders headers = new HttpHeaders();
+
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
+    }
+
+    private HttpHeaders getHeadersFromResponse(CloseableHttpResponse eiResponse, HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        List<String> headerNameList = new ArrayList<String>();
+        List<String> accepted = new ArrayList<>(Arrays.asList(
+                X_PATH_NAME, "authorization"));
+
+        for (Header header : eiResponse.getAllHeaders()) {
+            if (header.getName().equalsIgnoreCase(X_PATH_NAME)) {
+                LOG.debug("Adding '" + X_PATH_NAME + "' to current session.");
+                request.getSession().setAttribute(X_PATH_NAME, header.getValue());
+            }
+            if (accepted.contains(header.getName())) {
+                headers.add(header.getName(), header.getValue());
+            } else {
+                headerNameList.add(header.getName());
+            }
+            headers.add(header.getName(), header.getValue());
+        }
+        System.out.println("Headers in response: "+ headerNameList.toString());
+        LOG.debug("Headers in response: "+ headerNameList.toString());
+        return headers;
+    }
+
+    private HttpRequestBase addHeadersToRequest(HttpRequestBase eiRequest, HttpServletRequest request) {
+        Enumeration<String> headerNames = request.getHeaderNames();
+        List<String> headerNameList = new ArrayList<>();
+        List<String> accepted = new ArrayList<>(Arrays.asList(
+                X_PATH_NAME, "authorization"));
+
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            if (accepted.contains(headerName)) {
+                eiRequest.addHeader(headerName, request.getHeader(headerName));
+            } else {
+                headerNameList.add("\nName: " +headerName+ " Value: " + request.getHeader(headerName));
+            }
+        }
+
+        if (request.getSession().getAttribute(X_PATH_NAME) != null) {
+            LOG.debug("Adding '" + X_PATH_NAME + "' to the request header.");
+            eiRequest.addHeader(X_PATH_NAME, request.getSession().getAttribute(X_PATH_NAME).toString());
+        }
+
+        LOG.debug("Headers added to request: "+ headerNameList.toString());
+        System.out.println("Headers added to request: "+ headerNameList.toString());
+
+        return eiRequest;
     }
 }
