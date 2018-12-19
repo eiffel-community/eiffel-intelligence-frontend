@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -94,6 +96,20 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
 
+    @When("^aggregation is prepared with rules file \'(.*)\' and events file \'(.*)\'$")
+    public void aggregation_is_prepared(String rulesFileName, String eventsFileName) throws Throwable {
+        String path = "/bodies/";
+        String rulesPath = this.getClass().getResource(path+rulesFileName).getFile();
+        String eventsPath = this.getClass().getResource(path+eventsFileName).getFile();
+        String rules = FileUtils.readFileToString(new File(rulesPath), "UTF-8");
+        String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8"); 
+        String body = new JSONObject()
+                .put("listRulesJson", new JSONArray(rules))
+                .put("listEventsJson", new JSONArray(events))
+                .toString();
+        httpRequest.setBody(body);
+    }
+
     @When("^request is sent$")
     public void request_sent() throws Throwable {
         response = httpRequest.performRequest();
@@ -102,7 +118,6 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
     @Then("^response code (\\d+) is received$")
     public void get_response_code(int statusCode) throws Throwable {
         LOGGER.info("Response code: {}", response.getStatusCode());
-        LOGGER.info("Response body: {}", response.getBody());
         assertEquals(HttpStatus.valueOf(statusCode), response.getStatusCode());
     }
 
@@ -119,7 +134,7 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
-        assertEquals(fileContent, response.getBody());
+        assertEquals(fileContent.replaceAll("\\s+",""), response.getBody().replaceAll("\\s+",""));
     }
 
     @Then("^body contains \'(.*)\'$")

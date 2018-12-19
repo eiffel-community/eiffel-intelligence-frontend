@@ -257,7 +257,8 @@
                               <!-- <include>**/TestAuthNoSecurityRunner.java</include> -->
                               <!-- <include>**/TestDownloadRunner.java</include> -->
                               <!-- <include>**/TestSubscriptionsRunner.java</include> -->
-                              <include>**/TestInformationRunner.java</include>
+                              <!-- <include>**/TestInformationRunner.java</include> -->
+                              <include>**/TestRulesRunner.java</include>
                           </includes>
                       </configuration>
                   </execution>

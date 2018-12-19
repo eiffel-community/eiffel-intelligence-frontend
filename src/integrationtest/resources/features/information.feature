@@ -2,7 +2,7 @@
 Feature: Information test
 
   @GetInformationScenario
-  Scenario: Get Information
+  Scenario: Get information
     Given frontend is up and running
     When a 'GET' request is prepared for REST API '/information'
     And request is sent
