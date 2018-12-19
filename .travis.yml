@@ -11,10 +11,9 @@ before_install:
 - chmod +x pom.xml
 
 script:
-- mvn test
+  - mvn test
 
-
-script:
+before_deploy:
   - rm -rf docs
   - mvn site
   - mvn clean
