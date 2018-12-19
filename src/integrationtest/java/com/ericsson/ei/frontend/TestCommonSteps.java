@@ -3,7 +3,6 @@ package com.ericsson.ei.frontend;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
@@ -17,9 +16,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.AbstractTestExecutionListener;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.ericsson.ei.config.Utils;
 import com.ericsson.ei.utils.HttpRequest;
 import com.ericsson.ei.utils.HttpRequest.HttpMethod;
 
@@ -31,7 +32,8 @@ import cucumber.api.java.en.When;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EIFrontendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = EIFrontendApplication.class, loader = SpringBootContextLoader.class)
-public class TestCommonSteps {
+@TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class, TestCommonSteps.class })
+public class TestCommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     int frontendPort;
@@ -68,13 +70,26 @@ public class TestCommonSteps {
         case "GET":
             httpRequest = new HttpRequest(HttpMethod.GET);
             break;
+        case "PUT":
+            httpRequest = new HttpRequest(HttpMethod.PUT);
+            break;
+        case "DELETE":
+            httpRequest = new HttpRequest(HttpMethod.DELETE);
+            break;
         }
         httpRequest.setHost(hostName).setPort(frontendPort).setEndpoint(endpoint);
+    }
+
+    @When("^\'(.*)\' is appended to endpoint$")
+    public void append_to_endpoint(String append) throws Throwable {
+        String endpoint = httpRequest.getEndpoint() + append;
+        httpRequest.setEndpoint(endpoint);
     }
     
     @When("^body is set to file \'(.*)\'$")
     public void set_body(String filename) throws Throwable {
-        String filePath = this.getClass().getResource(filename).getFile();
+        String path = "/bodies/";
+        String filePath = this.getClass().getResource(path+filename).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
@@ -104,5 +119,11 @@ public class TestCommonSteps {
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
         assertEquals(fileContent, response.getBody());
+    }
+
+    @Then("^body contains \'(.*)\'$")
+    public void response_body_contains(String contains) throws Throwable {
+        LOGGER.info("Response body: {}", response.getBody());
+        assertEquals(true, response.getBody().contains(contains));
     }
 }

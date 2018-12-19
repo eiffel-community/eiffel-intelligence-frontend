@@ -255,7 +255,8 @@
                           </excludes>
                           <includes>
                               <!-- <include>**/TestAuthNoSecurityRunner.java</include> -->
-                              <include>**/TestDownloadRunner.java</include>
+                              <!-- <include>**/TestDownloadRunner.java</include> -->
+                              <include>**/TestSubscriptionsRunner.java</include>
                           </includes>
                       </configuration>
                   </execution>
