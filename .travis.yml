@@ -24,4 +24,4 @@ deploy:
   github-token: $GITHUB_TOKEN
   local_dir: docs/
   on:
-    branch: travis-test
+    branch: master
