@@ -13,10 +13,11 @@ before_install:
 script:
 - mvn test
 
-# TODO: clean up and put into deploy job
-- rm -rf docs
-- mvn site
-- mvn clean
+stage: deploy
+  script:
+    - rm -rf docs
+    - mvn site
+    - mvn clean
 
 deploy:
   skip_cleanup: true
@@ -24,4 +25,4 @@ deploy:
   github-token: $GITHUB_TOKEN
   local_dir: docs/
   on:
-    branch: master
+    branch: travis-test
