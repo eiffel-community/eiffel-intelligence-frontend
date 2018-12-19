@@ -13,11 +13,11 @@ before_install:
 script:
 - mvn test
 
-stage: deploy
-  script:
-    - rm -rf docs
-    - mvn site
-    - mvn clean
+
+script:
+  - rm -rf docs
+  - mvn site
+  - mvn clean
 
 deploy:
   skip_cleanup: true
