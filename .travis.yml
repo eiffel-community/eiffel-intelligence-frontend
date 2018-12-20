@@ -2,13 +2,26 @@ sudo: required
 
 language: java
 
-services: 
+services:
 
 jdk:
-  - oraclejdk8
-  
+- oraclejdk8
+
 before_install:
-  - chmod +x pom.xml
-  
+- chmod +x pom.xml
+
 script:
   - mvn test
+
+before_deploy:
+  - rm -rf docs
+  - mvn site
+  - mvn clean
+
+deploy:
+  skip_cleanup: true
+  provider: pages
+  github-token: $GITHUB_TOKEN
+  local_dir: docs/
+  on:
+    branch: master
