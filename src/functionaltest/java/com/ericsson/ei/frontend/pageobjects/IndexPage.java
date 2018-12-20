@@ -1,11 +1,8 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -35,13 +32,7 @@ public class IndexPage extends PageBaseClass {
         return this;
     }
 
-    public void loadPageLDAP(String responseAuth, String responseUser) throws ClientProtocolException, IOException {
-        CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
-        CloseableHttpResponse responseDataUser = this.createMockedHTTPResponse(responseUser, 200);
-        Mockito.doReturn(responseDataAuth).when(mockedHttpClient).execute(
-                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth")));
-        Mockito.doReturn(responseDataUser).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth/login")));
+    public void loadPageLDAP() throws ClientProtocolException, IOException {
         driver.get(baseUrl);
         waitForJQueryToLoad();
     }
@@ -68,12 +59,7 @@ public class IndexPage extends PageBaseClass {
         return subscriptionPage;
     }
 
-    public void clickReloadButton(String responseData) throws IOException {
-        CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-        //Checks that argument in the request contains "subscriptions" endpoint
-        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                (request).getURI().toString().contains("subscriptions")));
-
+    public void clickReloadButton() throws IOException {
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();
     }

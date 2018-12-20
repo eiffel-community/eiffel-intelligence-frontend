@@ -1,11 +1,8 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.io.IOException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -42,10 +39,7 @@ public class SubscriptionPage extends PageBaseClass {
         cancelBtn.click();
     }
 
-    public void clickBulkDelete(String response) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
+    public void clickBulkDelete() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("check-all")));
         WebElement checkbox = driver.findElement(By.id("check-all"));
         checkbox.click();
@@ -60,29 +54,20 @@ public class SubscriptionPage extends PageBaseClass {
         confirmBtn.click();
     }
 
-    public void clickReload(String response) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
+    public void clickReload() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         WebElement reloadBtn = driver.findElement(By.id("reloadButton"));
         reloadBtn.click();
     }
 
-    public void clickGetTemplate(String response) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
+    public void clickGetTemplate() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
         WebElement getTemplateBtn = driver.findElement(By.id("getTemplateButton"));
         getTemplateBtn.click();
     }
 
-    public void clickFormsSaveBtn(String response) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
+    public void clickFormsSaveBtn() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("btnSave")));
         WebElement saveBtn = driver.findElement(By.id("btnSave"));
         saveBtn.click();
@@ -153,11 +138,7 @@ public class SubscriptionPage extends PageBaseClass {
         ele.sendKeys(value);
     }
 
-    public void clickUploadSubscriptionFunctionality(String filePath, String subUploadResponse) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(subUploadResponse, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("subscriptions")));
-
+    public void clickUploadSubscriptionFunctionality(String filePath) throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("upload_sub")));
         WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
@@ -173,10 +154,7 @@ public class SubscriptionPage extends PageBaseClass {
         }
     }
 
-    public void clickDownloadGetTemplate(String responseData) throws IOException {
-        CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-        Mockito.doReturn(response).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptionsTemplate")));
+    public void clickDownloadGetTemplate() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.className("get_subscription_template")));
         WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
@@ -263,13 +241,7 @@ public class SubscriptionPage extends PageBaseClass {
         return true;
     }
 
-    public void clickReloadLDAP(String response, String responseAuth) throws IOException {
-        CloseableHttpResponse responseData = this.createMockedHTTPResponse(response, 200);
-        CloseableHttpResponse responseDataAuth = this.createMockedHTTPResponse(responseAuth, 200);
-        Mockito.doReturn(responseData).when(mockedHttpClient).execute(
-                Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("subscriptions")));
-        Mockito.doReturn(responseDataAuth).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> ((HttpRequestBase) request).getURI().toString().endsWith("auth")));
+    public void clickReloadLDAP() throws IOException {
         WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
@@ -327,6 +299,15 @@ public class SubscriptionPage extends PageBaseClass {
             driver.findElement(By.xpath(Xpath1)).click();
             return;
         } catch (Exception e) {
+        }
+    }
+
+    public boolean noPresenceOfHeader(String loc) {
+        try {
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.id(loc)));
+            return true;
+        } catch ( TimeoutException e) {
+            return false;
         }
     }
 

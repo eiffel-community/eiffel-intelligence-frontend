@@ -32,7 +32,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -53,7 +52,8 @@ import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
-    private static final String X_PATH_NAME = "X-Auth-Token";
+    private static final String X_PATH_NAME = "x-auth-token";
+    List<String> HEADERS_TO_COPY = new ArrayList<>(Arrays.asList(X_PATH_NAME, "authorization"));
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
@@ -153,20 +153,16 @@ public class EIRequestsController {
         String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
 
-        LOG.debug("Forwarding request to: " + eiRequest.getURI().toString());
-        System.out.println("Making request to: " + eiRequest.getURI().toString());
+        String url = eiRequest.getURI().toString();
+        LOG.debug("Forwarding request to: " + url);
         try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(eiRequest)) {
             if(eiResponse.getEntity() != null) {
                 responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             }
 
-            headers = getHeadersFromResponse(eiResponse, request);
+            headers = getHeadersFromResponse(headers, eiResponse, request);
             statusCode = eiResponse.getStatusLine().getStatusCode();
 
-            responseBody = "{\"statusCode\": " + statusCode + ", \"message\": \"My test message\"}";
-            System.out.println("EI Http response status code: " + statusCode
-                    + "\nEI Received response body:\n" + responseBody
-                    + "\nForwarding response back to EI Frontend WebUI.");
             LOG.debug("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
@@ -181,51 +177,61 @@ public class EIRequestsController {
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
     }
 
-    private HttpHeaders getHeadersFromResponse(CloseableHttpResponse eiResponse, HttpServletRequest request) {
-        HttpHeaders headers = new HttpHeaders();
+    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse, HttpServletRequest request) {
         List<String> headerNameList = new ArrayList<String>();
-        List<String> accepted = new ArrayList<>(Arrays.asList(
-                X_PATH_NAME, "authorization"));
+        List<String> notCopiedHeaderNameList = new ArrayList<>();
 
         for (Header header : eiResponse.getAllHeaders()) {
             if (header.getName().equalsIgnoreCase(X_PATH_NAME)) {
                 LOG.debug("Adding '" + X_PATH_NAME + "' to current session.");
                 request.getSession().setAttribute(X_PATH_NAME, header.getValue());
             }
-            if (accepted.contains(header.getName())) {
+
+            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(header.getName().toLowerCase());
+            if (headerShouldBeCopied) {
+                headerNameList.add(header.getName());
                 headers.add(header.getName(), header.getValue());
             } else {
-                headerNameList.add(header.getName());
+                notCopiedHeaderNameList.add(header.getName());
             }
-            headers.add(header.getName(), header.getValue());
         }
-        System.out.println("Headers in response: "+ headerNameList.toString());
-        LOG.debug("Headers in response: "+ headerNameList.toString());
+
+        LOG.debug("Headers processed returning response: "+
+                "\nHeaders copied to the response: " + headerNameList.toString() +
+                "\nHeaders not copied to the response: " + notCopiedHeaderNameList.toString());
         return headers;
     }
 
     private HttpRequestBase addHeadersToRequest(HttpRequestBase eiRequest, HttpServletRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         List<String> headerNameList = new ArrayList<>();
-        List<String> accepted = new ArrayList<>(Arrays.asList(
-                X_PATH_NAME, "authorization"));
+        List<String> notCopiedHeaderNameList = new ArrayList<>();
 
         while(headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            if (accepted.contains(headerName)) {
+            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(headerName.toLowerCase());
+            if (headerShouldBeCopied) {
                 eiRequest.addHeader(headerName, request.getHeader(headerName));
+                headerNameList.add(headerName);
             } else {
-                headerNameList.add("\nName: " +headerName+ " Value: " + request.getHeader(headerName));
+                notCopiedHeaderNameList.add(headerName);
             }
         }
 
         if (request.getSession().getAttribute(X_PATH_NAME) != null) {
             LOG.debug("Adding '" + X_PATH_NAME + "' to the request header.");
             eiRequest.addHeader(X_PATH_NAME, request.getSession().getAttribute(X_PATH_NAME).toString());
+
+            boolean userLoggingOut = request.getRequestURL().toString().contains("logout");
+            if (userLoggingOut) {
+                LOG.debug("Removing '" + X_PATH_NAME + "' from current session.");
+                request.getSession().setAttribute(X_PATH_NAME, null);
+            }
         }
 
-        LOG.debug("Headers added to request: "+ headerNameList.toString());
-        System.out.println("Headers added to request: "+ headerNameList.toString());
+        LOG.debug("Headers processed before making request: "+
+                "\nHeaders copied to the request: " + headerNameList.toString() +
+                "\nHeaders not copied to the request: " + notCopiedHeaderNameList.toString());
 
         return eiRequest;
     }

@@ -46,22 +46,14 @@ public class TestRulesPage extends PageBaseClass {
         }
     }
 
-    public void clickDownloadRulesTemplate(String responseData) throws IOException {
-        CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                (request).getURI().toString().contains("/rulesTemplate")));
-
+    public void clickDownloadRulesTemplate() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.className("download_rules_template")));
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
     }
 
-    public void clickDownloadEventsTemplate(String responseData) throws IOException {
-        CloseableHttpResponse response = this.createMockedHTTPResponse(responseData, 200);
-        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                (request).getURI().toString().contains("/eventsTemplate")));
-
+    public void clickDownloadEventsTemplate() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.className("download_events_template")));
         WebElement downloadEventsTemplateButton = driver.findElement(By.className("download_events_template"));
@@ -129,11 +121,8 @@ public class TestRulesPage extends PageBaseClass {
         removeEventButton.click();
     }
 
-    public void clickFindAggregatedObject(String findAggregatedObjectResponse) throws IOException {
+    public void clickFindAggregatedObject() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("find_aggregated_object")));
-        CloseableHttpResponse response = this.createMockedHTTPResponse(findAggregatedObjectResponse, 200);
-        Mockito.doReturn(response).when(mockedHttpClient).execute(Mockito.argThat(request ->
-                (request).getURI().toString().contains("/aggregation")));
 
         WebElement findAggregatedObjectButton = driver.findElement(By.className("find_aggregated_object"));
         findAggregatedObjectButton.click();
