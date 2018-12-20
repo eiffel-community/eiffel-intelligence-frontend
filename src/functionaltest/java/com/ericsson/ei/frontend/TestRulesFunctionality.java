@@ -54,8 +54,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
-        // Load index page and wait for it to load
-        //IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
         indexPageObject.loadPage();
 
         // Verify that we can navigate to test rules page
