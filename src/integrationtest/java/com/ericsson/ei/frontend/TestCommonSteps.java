@@ -3,8 +3,13 @@ package com.ericsson.ei.frontend;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -23,9 +28,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import com.ericsson.ei.config.Utils;
+import com.ericsson.ei.utils.AMQPCommunication;
 import com.ericsson.ei.utils.HttpRequest;
 import com.ericsson.ei.utils.HttpRequest.HttpMethod;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -39,46 +49,53 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     int frontendPort;
+
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
     private String hostName = "localhost";
-    //private static String PROPERTIES_PATH = "/integration-test.properties";
-    //private static String backendPort;
+
+    private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
+    private static String PROPERTIES_PATH = "/integration-test.properties";
+    private static int backendPort;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestCommonSteps.class);
 
-    /*
     @Before
     public void beforeTest() {
         String filePath = this.getClass().getResource(PROPERTIES_PATH).getFile();
         final Properties properties = Utils.getProperties(filePath);
-        backendPort = properties.getProperty("ei.it.backend-port");
+        backendPort = Integer.valueOf(properties.getProperty("ei.it.backend-port"));
         LOGGER.debug("Back-end port: {}", backendPort);
     }
-    */
 
     @Given("^frontend is up and running$")
     public void frontend_running() {
         LOGGER.info("Front-end port: {}", frontendPort);
+        assertEquals(true, frontendPort != 0);
+    }
+
+    @Given("^an aggregated object exists$")
+    public void aggregated_object_exists() throws IOException {
+        LOGGER.debug("Sending Eiffel events for aggregation.");
+        List<String> eventNames = getEventNamesToSend();
+        String filePath = this.getClass().getResource(EIFFEL_EVENTS_JSON_PATH).getFile();
+        String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
+        JsonNode node = new ObjectMapper().readTree(fileContent);
+
+        String exchange = "ei-exchange";
+        String key = "#";
+        AMQPCommunication amqp = new AMQPCommunication("localhost", 5672);
+        for (String eventName : eventNames) {
+            String message = node.get(eventName).toString();
+            assertEquals(true, amqp.produceMessage(message, exchange, key));
+        }
+        LOGGER.debug("Eiffel events sent.");
     }
 
     @When("^a \'(\\w+)\' request is prepared for REST API \'(.*)\'$")
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
         LOGGER.info("Method: {}, Endpoint: {}", method, endpoint);
-        switch (method) {
-        case "POST":
-            httpRequest = new HttpRequest(HttpMethod.POST);
-            break;
-        case "GET":
-            httpRequest = new HttpRequest(HttpMethod.GET);
-            break;
-        case "PUT":
-            httpRequest = new HttpRequest(HttpMethod.PUT);
-            break;
-        case "DELETE":
-            httpRequest = new HttpRequest(HttpMethod.DELETE);
-            break;
-        }
+        httpRequest = new HttpRequest(HttpMethod.valueOf(method));
         httpRequest.setHost(hostName).setPort(frontendPort).setEndpoint(endpoint);
     }
 
@@ -87,11 +104,16 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
         String endpoint = httpRequest.getEndpoint() + append;
         httpRequest.setEndpoint(endpoint);
     }
-    
+
+    @When("^param key \'(.*)\' with value \'(.*)\' is added$")
+    public void add_param(String key, String value) throws Throwable {
+        httpRequest.addParam(key, value);
+    }
+
     @When("^body is set to file \'(.*)\'$")
     public void set_body(String filename) throws Throwable {
         String path = "/bodies/";
-        String filePath = this.getClass().getResource(path+filename).getFile();
+        String filePath = this.getClass().getResource(path + filename).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
@@ -99,15 +121,20 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
     @When("^aggregation is prepared with rules file \'(.*)\' and events file \'(.*)\'$")
     public void aggregation_is_prepared(String rulesFileName, String eventsFileName) throws Throwable {
         String path = "/bodies/";
-        String rulesPath = this.getClass().getResource(path+rulesFileName).getFile();
-        String eventsPath = this.getClass().getResource(path+eventsFileName).getFile();
+        String rulesPath = this.getClass().getResource(path + rulesFileName).getFile();
+        String eventsPath = this.getClass().getResource(path + eventsFileName).getFile();
         String rules = FileUtils.readFileToString(new File(rulesPath), "UTF-8");
-        String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8"); 
-        String body = new JSONObject()
-                .put("listRulesJson", new JSONArray(rules))
-                .put("listEventsJson", new JSONArray(events))
-                .toString();
+        String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8");
+        String body = new JSONObject().put("listRulesJson", new JSONArray(rules))
+                .put("listEventsJson", new JSONArray(events)).toString();
         httpRequest.setBody(body);
+    }
+
+    @When("^username \"(\\w+)\" and password \"(\\w+)\" is used as credentials$")
+    public void with_credentials(String username, String password) throws Throwable {
+        String auth = username + ":" + password;
+        String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
+        httpRequest.addHeader("Authorization", "Basic " + encodedAuth);
     }
 
     @When("^request is sent$")
@@ -126,20 +153,32 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
         LOGGER.info("Response body: {}", response.getBody());
         assertEquals(body, response.getBody());
     }
-    
+
     @Then("^response body from file \'(.*)\' is received$")
     public void get_response_body_from_file(String filename) throws Throwable {
         String path = "/responses/";
-        String filePath = this.getClass().getResource(path+filename).getFile();
+        String filePath = this.getClass().getResource(path + filename).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
-        assertEquals(fileContent.replaceAll("\\s+",""), response.getBody().replaceAll("\\s+",""));
+        assertEquals(fileContent.replaceAll("\\s+", ""), response.getBody().replaceAll("\\s+", ""));
     }
 
     @Then("^body contains \'(.*)\'$")
     public void response_body_contains(String contains) throws Throwable {
         LOGGER.info("Response body: {}", response.getBody());
         assertEquals(true, response.getBody().contains(contains));
+    }
+
+    /**
+     * Events used in the aggregation.
+     */
+    protected List<String> getEventNamesToSend() {
+        List<String> eventNames = new ArrayList<>();
+        eventNames.add("event_EiffelArtifactCreatedEvent_3");
+        eventNames.add("event_EiffelTestCaseTriggeredEvent_3");
+        eventNames.add("event_EiffelTestCaseStartedEvent_3");
+        eventNames.add("event_EiffelTestCaseFinishedEvent_3");
+        return eventNames;
     }
 }

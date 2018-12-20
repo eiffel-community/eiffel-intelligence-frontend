@@ -16,4 +16,4 @@ Feature: Rules test
     And aggregation is prepared with rules file 'listRules.json' and events file 'listEvents.json'
     And request is sent
     Then response code 200 is received
-    And response body from file 'aggregationResult.json' is received
+    And response body from file 'rulesAggregation.json' is received

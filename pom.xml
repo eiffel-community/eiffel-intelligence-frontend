@@ -153,6 +153,12 @@
             <version>1.2.5</version>
             <scope>test</scope>
         </dependency>
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -254,11 +260,12 @@
                               <exclude>**/functionaltest/*</exclude>
                           </excludes>
                           <includes>
-                              <!-- <include>**/TestAuthNoSecurityRunner.java</include> -->
-                              <!-- <include>**/TestDownloadRunner.java</include> -->
-                              <!-- <include>**/TestSubscriptionsRunner.java</include> -->
-                              <!-- <include>**/TestInformationRunner.java</include> -->
+                              <include>**/TestAuthRunner.java</include>
+                              <include>**/TestDownloadRunner.java</include>
+                              <include>**/TestSubscriptionsRunner.java</include>
+                              <include>**/TestInformationRunner.java</include>
                               <include>**/TestRulesRunner.java</include>
+                              <include>**/TestQueryRunner.java</include>
                           </includes>
                       </configuration>
                   </execution>
