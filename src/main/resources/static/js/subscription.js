@@ -5,7 +5,6 @@ var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 var timerInterval;
-var statusIntervalTime = 150000;
 
 jQuery(document).ready(function () {
 
@@ -30,7 +29,6 @@ jQuery(document).ready(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, textStatus, errorThrown);
-                window.logMessages(XMLHttpRequest.responseText);
             },
             success: function (data, textStatus) {
                 callback.success(data, textStatus);
@@ -90,7 +88,7 @@ jQuery(document).ready(function () {
 
     // Check if EI Backend Server is online every X seconds
     if (timerInterval == null){
-        timerInterval = window.setInterval(function () { checkBackendStatus(); }, statusIntervalTime);
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
     }
 
     // Check if buttons should be enabled or disabled
@@ -553,11 +551,10 @@ jQuery(document).ready(function () {
                 reload_table();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages(XMLHttpRequest.responseText);
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reson: [" + responseJSON[i].reason + "]");
                 }
             },
             complete: function () {
@@ -1079,22 +1076,20 @@ jQuery(document).ready(function () {
             },
             success: function (data, textStatus) {
                 var returnData = [data];
-                console.log("Response: " + textStatus.text );
                 if (returnData.length > 0) {
                     $('#modal_form').modal('hide');
                     reload_table();
                     // Clear ObservableArray
                     vm.subscription([]);
                 }
-                console.log("Done!");
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log("ERROR !! Response: " + XMLHttpRequest );
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {
                     errors = errors + "\n" + responseJSON[i].reason;
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                    // Errors are displayed in the form.
+                    // $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
                 }
                 $('#serverError').text(errors);
                 $('#serverError').show();
@@ -1121,10 +1116,11 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                $.jGrowl('Subscription deleted!', {
-                    sticky: false,
-                    theme: 'Notify'
-                });
+                // The user should see the subscription dissapear and this should be confirmation enough.
+                //$.jGrowl('Subscription deleted!', {
+                //    sticky: false,
+                //    theme: 'Notify'
+                //});
 
                 //if success reload ajax table
                 $('#modal_form').modal('hide');
@@ -1140,7 +1136,7 @@ jQuery(document).ready(function () {
 
         $.confirm({
             title: 'Confirm!',
-            content: 'Are you sure delete this subscription?',
+            content: 'Please confirm before deleting subscription!',
             buttons: {
                 confirm: function () {
                     var ajaxHttpSender = new AjaxHttpSender();
