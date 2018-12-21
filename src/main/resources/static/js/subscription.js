@@ -542,10 +542,6 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                $.jGrowl('Subscriptions deleted!', {
-                    sticky: false,
-                    theme: 'Notify'
-                });
                 //if success reload ajax table
                 $('#modal_form').modal('hide');
                 reload_table();
@@ -554,7 +550,7 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reson: [" + responseJSON[i].reason + "]");
+                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
             },
             complete: function () {
@@ -645,19 +641,19 @@ jQuery(document).ready(function () {
                 if (returnData.length > 0) {
                     $.jGrowl("Subscriptions were successfully created.", {
                         sticky: false,
-                        theme: 'Error'
+                        theme: 'Notify'
                     });
                     reload_table();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failed to create Subscriptions.");
+                var errorMessage = "";
                 reload_table();
-                $.jGrowl("Failed to create Subscriptions.", { sticky: false, theme: 'Error' });
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason +"\n";
                 }
+                window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
             },
             complete: function () {
             }
@@ -1088,8 +1084,6 @@ jQuery(document).ready(function () {
                 var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {
                     errors = errors + "\n" + responseJSON[i].reason;
-                    // Errors are displayed in the form.
-                    // $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
                 }
                 $('#serverError').text(errors);
                 $('#serverError').show();
@@ -1116,12 +1110,6 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                // The user should see the subscription dissapear and this should be confirmation enough.
-                //$.jGrowl('Subscription deleted!', {
-                //    sticky: false,
-                //    theme: 'Notify'
-                //});
-
                 //if success reload ajax table
                 $('#modal_form').modal('hide');
                 reload_table();

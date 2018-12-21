@@ -52,8 +52,8 @@ import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
-    private static final String X_PATH_NAME = "x-auth-token";
-    List<String> HEADERS_TO_COPY = new ArrayList<>(Arrays.asList(X_PATH_NAME, "authorization"));
+    private static final String X_AUTH_TOKEN = "x-auth-token";
+    List<String> HEADERS_TO_COPY = new ArrayList<>(Arrays.asList(X_AUTH_TOKEN, "authorization"));
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
@@ -67,11 +67,11 @@ public class EIRequestsController {
         "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
-        HttpGet eiRequest = new HttpGet(eiRequestUrl);
+        HttpGet outgoingRequest = new HttpGet(eiRequestUrl);
 
-        eiRequest = (HttpGet) addHeadersToRequest(eiRequest, request);
+        outgoingRequest = (HttpGet) addHeadersToRequest(outgoingRequest, request);
 
-        return getResponse(eiRequest, request);
+        return getResponse(outgoingRequest, request);
     }
 
     /**
@@ -79,13 +79,13 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
-    public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> postRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         String requestBody = "";
 
         try {
         	// Replaces \r with nothing in case system is run on windows \r may disturb tests. \r does not affect EI functionality.
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -94,13 +94,13 @@ public class EIRequestsController {
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
-        HttpPost eiRequest = new HttpPost(eiRequestUrl);
-        eiRequest.setEntity(inputReqJsonEntity);
+        HttpPost outgoingRequest = new HttpPost(eiRequestUrl);
+        outgoingRequest.setEntity(inputReqJsonEntity);
 
-        eiRequest = (HttpPost) addHeadersToRequest(eiRequest, request);
-        eiRequest.setHeader("Content-type", "application/json");
+        outgoingRequest = (HttpPost) addHeadersToRequest(outgoingRequest, incomingRequest);
+        outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(eiRequest, request);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
     /**
@@ -109,12 +109,12 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
-    public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> putRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         String requestBody = "";
 
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -123,13 +123,13 @@ public class EIRequestsController {
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
-        HttpPut eiRequest = new HttpPut(eiRequestUrl);
-        eiRequest.setEntity(inputReqJsonEntity);
+        HttpPut outgoingRequest = new HttpPut(eiRequestUrl);
+        outgoingRequest.setEntity(inputReqJsonEntity);
 
-        eiRequest = (HttpPut) addHeadersToRequest(eiRequest, request);
-        eiRequest.setHeader("Content-type", "application/json");
+        outgoingRequest = (HttpPut) addHeadersToRequest(outgoingRequest, incomingRequest);
+        outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(eiRequest, request);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
     /**
@@ -138,29 +138,29 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
 
-        HttpDelete eiRequest = new HttpDelete(eiRequestUrl);
+        HttpDelete outgoingRequest = new HttpDelete(eiRequestUrl);
 
-        eiRequest = (HttpDelete) addHeadersToRequest(eiRequest, request);
+        outgoingRequest = (HttpDelete) addHeadersToRequest(outgoingRequest, incomingRequest);
 
-        return getResponse(eiRequest, request);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
-    private ResponseEntity<String> getResponse(HttpRequestBase eiRequest, HttpServletRequest request) {
+    private ResponseEntity<String> getResponse(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
         HttpHeaders headers = new HttpHeaders();
         String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
 
-        String url = eiRequest.getURI().toString();
+        String url = outgoingRequest.getURI().toString();
         LOG.debug("Forwarding request to: " + url);
-        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(eiRequest)) {
+        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(outgoingRequest)) {
             if(eiResponse.getEntity() != null) {
                 responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             }
 
-            headers = getHeadersFromResponse(headers, eiResponse, request);
+            headers = getHeadersFromResponse(headers, eiResponse, incomingRequest);
             statusCode = eiResponse.getStatusLine().getStatusCode();
 
             LOG.debug("EI Http response status code: " + statusCode
@@ -177,14 +177,14 @@ public class EIRequestsController {
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
     }
 
-    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse, HttpServletRequest request) {
+    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse, HttpServletRequest incomingRequest) {
         List<String> headerNameList = new ArrayList<String>();
         List<String> notCopiedHeaderNameList = new ArrayList<>();
 
         for (Header header : eiResponse.getAllHeaders()) {
-            if (header.getName().equalsIgnoreCase(X_PATH_NAME)) {
-                LOG.debug("Adding '" + X_PATH_NAME + "' to current session.");
-                request.getSession().setAttribute(X_PATH_NAME, header.getValue());
+            if (header.getName().equalsIgnoreCase(X_AUTH_TOKEN)) {
+                LOG.debug("Adding '" + X_AUTH_TOKEN + "' to current session.");
+                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, header.getValue());
             }
 
             boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(header.getName().toLowerCase());
@@ -202,8 +202,8 @@ public class EIRequestsController {
         return headers;
     }
 
-    private HttpRequestBase addHeadersToRequest(HttpRequestBase eiRequest, HttpServletRequest request) {
-        Enumeration<String> headerNames = request.getHeaderNames();
+    private HttpRequestBase addHeadersToRequest(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
+        Enumeration<String> headerNames = incomingRequest.getHeaderNames();
         List<String> headerNameList = new ArrayList<>();
         List<String> notCopiedHeaderNameList = new ArrayList<>();
 
@@ -211,21 +211,21 @@ public class EIRequestsController {
             String headerName = headerNames.nextElement();
             boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(headerName.toLowerCase());
             if (headerShouldBeCopied) {
-                eiRequest.addHeader(headerName, request.getHeader(headerName));
+                outgoingRequest.addHeader(headerName, incomingRequest.getHeader(headerName));
                 headerNameList.add(headerName);
             } else {
                 notCopiedHeaderNameList.add(headerName);
             }
         }
 
-        if (request.getSession().getAttribute(X_PATH_NAME) != null) {
-            LOG.debug("Adding '" + X_PATH_NAME + "' to the request header.");
-            eiRequest.addHeader(X_PATH_NAME, request.getSession().getAttribute(X_PATH_NAME).toString());
+        if (incomingRequest.getSession().getAttribute(X_AUTH_TOKEN) != null) {
+            LOG.debug("Adding '" + X_AUTH_TOKEN + "' to the request header.");
+            outgoingRequest.addHeader(X_AUTH_TOKEN, incomingRequest.getSession().getAttribute(X_AUTH_TOKEN).toString());
 
-            boolean userLoggingOut = request.getRequestURL().toString().contains("logout");
+            boolean userLoggingOut = incomingRequest.getRequestURL().toString().contains("logout");
             if (userLoggingOut) {
-                LOG.debug("Removing '" + X_PATH_NAME + "' from current session.");
-                request.getSession().setAttribute(X_PATH_NAME, null);
+                LOG.debug("Removing '" + X_AUTH_TOKEN + "' from current session.");
+                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, null);
             }
         }
 
@@ -233,6 +233,6 @@ public class EIRequestsController {
                 "\nHeaders copied to the request: " + headerNameList.toString() +
                 "\nHeaders not copied to the request: " + notCopiedHeaderNameList.toString());
 
-        return eiRequest;
+        return outgoingRequest;
     }
 }
