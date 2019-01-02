@@ -40,7 +40,6 @@
         <skipTests>false</skipTests>
         <skipITs>${skipTests}</skipITs>
         <skipUTs>${skipTests}</skipUTs>
-        <ei.it.backend-port>8090</ei.it.backend-port>
     </properties>
 
     <dependencies>
@@ -232,6 +231,7 @@
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
+                        <exclude>**/integrationtest/*</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
                     </excludes>
                     <includes>
