@@ -55,18 +55,8 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
     private String hostName = "localhost";
 
     private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
-    private static String PROPERTIES_PATH = "/integration-test.properties";
-    private static int backendPort;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestCommonSteps.class);
-
-    @Before
-    public void beforeTest() {
-        String filePath = this.getClass().getResource(PROPERTIES_PATH).getFile();
-        final Properties properties = Utils.getProperties(filePath);
-        backendPort = Integer.valueOf(properties.getProperty("ei.it.backend-port"));
-        LOGGER.debug("Back-end port: {}", backendPort);
-    }
 
     @Given("^frontend is up and running$")
     public void frontend_running() {

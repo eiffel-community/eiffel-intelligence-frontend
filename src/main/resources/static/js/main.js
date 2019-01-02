@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("subscription.html");
+            $("#mainFrame").load("subscriptionpage.html");
         },
         'test-rules': function () {
             updateBackEndInstanceList();

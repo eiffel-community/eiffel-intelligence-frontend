@@ -39,7 +39,7 @@ public class WebController {
         return "index";
     }
 
-    @RequestMapping("/subscription.html")
+    @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         return "subscription";
