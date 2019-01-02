@@ -231,7 +231,12 @@
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
-                        <exclude>**/integrationtest/*</exclude>
+                        <exclude>**/TestAuthRunner.java</exclude>
+                        <exclude>**/TestDownloadRunner.java</exclude>
+                        <exclude>**/TestSubscriptionsRunner.java</exclude>
+                        <exclude>**/TestInformationRunner.java</exclude>
+                        <exclude>**/TestRulesRunner.java</exclude>
+                        <exclude>**/TestQueryRunner.java</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
                     </excludes>
                     <includes>
