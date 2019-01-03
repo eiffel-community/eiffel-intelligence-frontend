@@ -23,7 +23,7 @@ before_install:
   - cd ../..
   
 script:
-  - mvn verify -DskipUTs
+  - mvn test
   
 after_script:
   - cd eiffel-intelligence
