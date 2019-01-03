@@ -8,7 +8,7 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/integrationtest/resources/features/auth.feature", glue = {
         "com.ericsson.ei.frontend" }, plugin = {
-                "html:target/cucumber-reports/TestAuthRunner" })
-public class TestAuthRunner {
+                "html:target/cucumber-reports/AuthRunnerIT" })
+public class AuthRunnerIT {
 
 }

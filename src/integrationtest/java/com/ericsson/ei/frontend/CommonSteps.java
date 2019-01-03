@@ -44,8 +44,8 @@ import cucumber.api.java.en.When;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EIFrontendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = EIFrontendApplication.class, loader = SpringBootContextLoader.class)
-@TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class, TestCommonSteps.class })
-public class TestCommonSteps extends AbstractTestExecutionListener {
+@TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class, CommonSteps.class })
+public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     int frontendPort;
@@ -56,7 +56,7 @@ public class TestCommonSteps extends AbstractTestExecutionListener {
 
     private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestCommonSteps.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
 
     @Given("^frontend is up and running$")
     public void frontend_running() {

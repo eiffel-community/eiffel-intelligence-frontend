@@ -231,12 +231,7 @@
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
-                        <exclude>**/TestAuthRunner.java</exclude>
-                        <exclude>**/TestDownloadRunner.java</exclude>
-                        <exclude>**/TestSubscriptionsRunner.java</exclude>
-                        <exclude>**/TestInformationRunner.java</exclude>
-                        <exclude>**/TestRulesRunner.java</exclude>
-                        <exclude>**/TestQueryRunner.java</exclude>
+                        <exclude>**/*IT.java</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
                     </excludes>
                     <includes>
@@ -260,18 +255,6 @@
                       <configuration>
                           <skipTests>${skipTests}</skipTests>
                           <skipITs>${skipITs}</skipITs>
-                          <excludes>
-                              <exclude>**/test/*</exclude>
-                              <exclude>**/functionaltest/*</exclude>
-                          </excludes>
-                          <includes>
-                              <include>**/TestAuthRunner.java</include>
-                              <include>**/TestDownloadRunner.java</include>
-                              <include>**/TestSubscriptionsRunner.java</include>
-                              <include>**/TestInformationRunner.java</include>
-                              <include>**/TestRulesRunner.java</include>
-                              <include>**/TestQueryRunner.java</include>
-                          </includes>
                       </configuration>
                   </execution>
               </executions>
