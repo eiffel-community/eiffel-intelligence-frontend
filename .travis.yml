@@ -3,12 +3,29 @@ sudo: required
 language: java
 
 services: 
+  - docker
 
 jdk:
   - oraclejdk8
   
+env:
+  - MONGODB_PORT=27017 RABBITMQ_AMQP_PORT=5672 RABBITMQ_WEB_PORT=15672 EIFFEL_ER_PORT=8084 JENKINS_PORT=8081 MAIL_SMTP_PORT=1025 MAIL_WEB_PORT=8025
+  
 before_install:
   - chmod +x pom.xml
+  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+  - cd eiffel-intelligence
+  - docker-compose up -d
+  - mvn install -DskipTests
+  - cd target
+  - export EIFFEL_WAR=$(ls *.war)
+  - java -Dspring.config.location=file:../../src/integrationtest/resources/integration-test.properties -jar ${EIFFEL_WAR} &
+  - cd ../..
   
 script:
-  - mvn test
+  - mvn verify -DskipUTs
+  
+after_script:
+  - cd eiffel-intelligence
+  - docker-compose down
+  - fuser -k 8090/tcp
