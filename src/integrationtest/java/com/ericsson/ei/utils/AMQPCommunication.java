@@ -271,6 +271,17 @@ public class AMQPCommunication {
     }
 
     /**
+     * Set username and password to use when connecting to the broker
+     *
+     * @param username  the username to use
+     * @param password  the password to use
+     */
+    public void setCredentials(final String username, final String password) {
+        this.factory.setUsername(username);
+        this.factory.setPassword(password);
+    }
+
+    /**
      * @return current host name
      */
     public String getHost() {

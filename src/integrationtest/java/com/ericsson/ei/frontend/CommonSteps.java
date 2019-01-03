@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -28,14 +27,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.ericsson.ei.config.Utils;
 import com.ericsson.ei.utils.AMQPCommunication;
 import com.ericsson.ei.utils.HttpRequest;
 import com.ericsson.ei.utils.HttpRequest.HttpMethod;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -72,9 +69,14 @@ public class CommonSteps extends AbstractTestExecutionListener {
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         JsonNode node = new ObjectMapper().readTree(fileContent);
 
+        String host = "localhost";
+        int port = 5672;
+        String username = "myuser";
+        String password = "myuser";
         String exchange = "ei-exchange";
         String key = "#";
-        AMQPCommunication amqp = new AMQPCommunication("localhost", 5672);
+        AMQPCommunication amqp = new AMQPCommunication(host, port);
+        amqp.setCredentials(username, password);
         for (String eventName : eventNames) {
             String message = node.get(eventName).toString();
             assertEquals(true, amqp.produceMessage(message, exchange, key));
