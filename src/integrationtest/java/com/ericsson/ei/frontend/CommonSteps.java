@@ -45,11 +45,10 @@ import cucumber.api.java.en.When;
 public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
-    int frontendPort;
-
+    private int frontendPort;
+    private String host = "localhost";
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
-    private String hostName = "localhost";
 
     private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
 
@@ -69,8 +68,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         JsonNode node = new ObjectMapper().readTree(fileContent);
 
-        String host = "localhost";
-        int port = 5672;
+        int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
         String username = "myuser";
         String password = "myuser";
         String exchange = "ei-exchange";
@@ -88,7 +86,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
         LOGGER.info("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
-        httpRequest.setHost(hostName).setPort(frontendPort).setEndpoint(endpoint);
+        httpRequest.setHost(host).setPort(frontendPort).setEndpoint(endpoint);
     }
 
     @When("^\'(.*)\' is appended to endpoint$")
