@@ -29,3 +29,16 @@ after_script:
   - cd eiffel-intelligence
   - docker-compose down
   - fuser -k ${EI_BACKEND_PORT}/tcp
+
+before_deploy:
+  - rm -rf docs
+  - mvn site
+  - mvn clean
+
+deploy:
+  skip_cleanup: true
+  provider: pages
+  github-token: $GITHUB_TOKEN
+  local_dir: docs/
+  on:
+    branch: master

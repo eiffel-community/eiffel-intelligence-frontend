@@ -48,3 +48,4 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 1. [**Test Rules User Guide**](./wiki/markdown/Test-Rules.md)
 1. [**Front-end With CURL**](./wiki/markdown/Front-end_with_curl.md)
     - [**Examples, using CURL through EI Front-End**](./wiki/markdown/Front-end_with_curl.md#Curl-Examples)
+1. [**Docker**](./wiki/markdown/docker.md)
