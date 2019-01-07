@@ -1,13 +1,21 @@
 package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -16,6 +24,10 @@ import com.ericsson.ei.frontend.pageobjects.IndexPage;
 import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestRulesFunctionality extends SeleniumBaseClass {
+
+    private static MockServerClient mockClient;
+    private static ClientAndServer mockServer;
+    private static final String BASE_URL = "localhost";
 
     private static final String DOWNLOADED_RULES_TEMPLATE_FILE_PATH = String.join(
             File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(), "rulesTemplate.json");
@@ -35,9 +47,13 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
-        initBaseMocks(mockedHttpClient);
-        // Load index page and wait for it to load
-        IndexPage indexPageObject = new IndexPage(mockedHttpClient, driver, baseUrl);
+        // Set up
+        int portServer = mockServer.getLocalPort();
+        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
+
+        // Open indexpage and verify that it is opened
+        IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
         indexPageObject.loadPage();
 
         // Verify that we can navigate to test rules page
@@ -47,15 +63,12 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         // Verify that "download rules template" button works
         String downloadedRulesTemplate = "";
         String mockedResponse = getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
+        mockClient.when(request().withMethod("GET").withPath("/download/rulesTemplate"))
+                .respond(response().withStatusCode(200).withBody(mockedResponse));
 
-        // On windows this may require more then one try due to timing issues.
-        int i = 0;
-        while (!downloadedRulesTemplate.equals(mockedResponse) && i <= 5) {
-            i++;
-            testRulesPage.clickDownloadRulesTemplate(mockedResponse);
-            new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
-            downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
-        }
+        testRulesPage.clickDownloadRulesTemplate();
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
+        downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
 
         assertEquals(mockedResponse, downloadedRulesTemplate);
 
@@ -65,6 +78,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         assertEquals(true, downloadedRulesTemplate.contains(firstRule));
 
         // Verify that it is possible to download rules
+        mockClient.when(request().withMethod("GET").withPath("/download/rules"))
+                .respond(response().withStatusCode(200).withBody(downloadedRulesTemplate));
         testRulesPage.clickDownloadRulesButton();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_FILE_PATH)));
         String downloadedRules = getJSONStringFromFile(DOWNLOADED_RULES_FILE_PATH);
@@ -79,7 +94,10 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
         // Verify that "download events template" button works
         String downloadEventsTemplateMockedResponse = getJSONStringFromFile(EVENTS_TEMPLATE_FILE_PATH);
-        testRulesPage.clickDownloadEventsTemplate(downloadEventsTemplateMockedResponse);
+        mockClient.when(request().withMethod("GET").withPath("/download/eventsTemplate"))
+                .respond(response().withStatusCode(200).withBody(downloadEventsTemplateMockedResponse));
+
+        testRulesPage.clickDownloadEventsTemplate();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH)));
         String downloadedEventsTemplate = getJSONStringFromFile(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH);
         assertEquals(downloadEventsTemplateMockedResponse, downloadedEventsTemplate);
@@ -98,7 +116,23 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
         // Verify that find aggregated object button works
         String findAggregatedObjectResponse = getJSONStringFromFile(AGGREGATED_OBJECT_FILE_PATH);
-        testRulesPage.clickFindAggregatedObject(findAggregatedObjectResponse);
+        mockClient.when(request().withMethod("POST").withPath("/rules/rule-check/aggregation"))
+                .respond(response().withStatusCode(200).withBody(findAggregatedObjectResponse));
+
+        testRulesPage.clickFindAggregatedObject();
         assertEquals(findAggregatedObjectResponse, testRulesPage.getAggregatedResultData());
     }
+
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
+        mockServer = startClientAndServer();
+        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
+    }
+
+    @AfterClass
+    public static void tearDownMocks() throws IOException {
+        mockClient.stop();
+        mockServer.stop();
+    }
+
 }

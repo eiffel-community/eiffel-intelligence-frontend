@@ -14,11 +14,16 @@
 package com.ericsson.ei.frontend;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -27,7 +32,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -48,8 +52,8 @@ import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
-
-    private CloseableHttpClient client = HttpClientBuilder.create().build();
+    private static final String X_AUTH_TOKEN = "x-auth-token";
+    List<String> HEADERS_TO_COPY = new ArrayList<>(Arrays.asList(X_AUTH_TOKEN, "authorization"));
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
@@ -63,14 +67,11 @@ public class EIRequestsController {
         "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
         String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
-        HttpGet eiRequest = new HttpGet(eiRequestUrl);
-        String header = request.getHeader("Authorization");
+        HttpGet outgoingRequest = new HttpGet(eiRequestUrl);
 
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        outgoingRequest = (HttpGet) addHeadersToRequest(outgoingRequest, request);
 
-        return getResponse(eiRequest);
+        return getResponse(outgoingRequest, request);
     }
 
     /**
@@ -78,13 +79,13 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
-    public ResponseEntity<String> postRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> postRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         String requestBody = "";
 
         try {
         	// Replaces \r with nothing in case system is run on windows \r may disturb tests. \r does not affect EI functionality.
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -93,16 +94,13 @@ public class EIRequestsController {
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
-        HttpPost eiRequest = new HttpPost(eiRequestUrl);
-        eiRequest.setEntity(inputReqJsonEntity);
-        eiRequest.setHeader("Content-type", "application/json");
+        HttpPost outgoingRequest = new HttpPost(eiRequestUrl);
+        outgoingRequest.setEntity(inputReqJsonEntity);
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        outgoingRequest = (HttpPost) addHeadersToRequest(outgoingRequest, incomingRequest);
+        outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(eiRequest);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
     /**
@@ -111,12 +109,12 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
-    public ResponseEntity<String> putRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> putRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         String requestBody = "";
 
         try {
-            requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -125,16 +123,13 @@ public class EIRequestsController {
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
-        HttpPut eiRequest = new HttpPut(eiRequestUrl);
-        eiRequest.setEntity(inputReqJsonEntity);
-        eiRequest.setHeader("Content-type", "application/json");
+        HttpPut outgoingRequest = new HttpPut(eiRequestUrl);
+        outgoingRequest.setEntity(inputReqJsonEntity);
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        outgoingRequest = (HttpPut) addHeadersToRequest(outgoingRequest, incomingRequest);
+        outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(eiRequest);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
     /**
@@ -143,27 +138,31 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
 
-        HttpDelete eiRequest = new HttpDelete(eiRequestUrl);
+        HttpDelete outgoingRequest = new HttpDelete(eiRequestUrl);
 
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            eiRequest.addHeader("Authorization", header);
-        }
+        outgoingRequest = (HttpDelete) addHeadersToRequest(outgoingRequest, incomingRequest);
 
-        return getResponse(eiRequest);
+        return getResponse(outgoingRequest, incomingRequest);
     }
 
-    private ResponseEntity<String> getResponse(HttpRequestBase request) {
+    private ResponseEntity<String> getResponse(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
+        HttpHeaders headers = new HttpHeaders();
         String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
-        try (CloseableHttpResponse eiResponse = client.execute(request)) {
+
+        String url = outgoingRequest.getURI().toString();
+        LOG.debug("Forwarding request to: " + url);
+        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(outgoingRequest)) {
             if(eiResponse.getEntity() != null) {
                 responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             }
+
+            headers = getHeadersFromResponse(headers, eiResponse, incomingRequest);
             statusCode = eiResponse.getStatusLine().getStatusCode();
+
             LOG.debug("EI Http response status code: " + statusCode
                     + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
@@ -172,9 +171,68 @@ public class EIRequestsController {
             responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: " + String.valueOf(e) + "\"}";
             LOG.error("Forward Request Errors: " + e);
         }
-        HttpHeaders headers = new HttpHeaders();
+
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
+    }
+
+    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse, HttpServletRequest incomingRequest) {
+        List<String> headerNameList = new ArrayList<String>();
+        List<String> notCopiedHeaderNameList = new ArrayList<>();
+
+        for (Header header : eiResponse.getAllHeaders()) {
+            if (header.getName().equalsIgnoreCase(X_AUTH_TOKEN)) {
+                LOG.debug("Adding '" + X_AUTH_TOKEN + "' to current session.");
+                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, header.getValue());
+            }
+
+            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(header.getName().toLowerCase());
+            if (headerShouldBeCopied) {
+                headerNameList.add(header.getName());
+                headers.add(header.getName(), header.getValue());
+            } else {
+                notCopiedHeaderNameList.add(header.getName());
+            }
+        }
+
+        LOG.debug("Headers processed returning response: "+
+                "\nHeaders copied to the response: " + headerNameList.toString() +
+                "\nHeaders not copied to the response: " + notCopiedHeaderNameList.toString());
+        return headers;
+    }
+
+    private HttpRequestBase addHeadersToRequest(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
+        Enumeration<String> headerNames = incomingRequest.getHeaderNames();
+        List<String> headerNameList = new ArrayList<>();
+        List<String> notCopiedHeaderNameList = new ArrayList<>();
+
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(headerName.toLowerCase());
+            if (headerShouldBeCopied) {
+                outgoingRequest.addHeader(headerName, incomingRequest.getHeader(headerName));
+                headerNameList.add(headerName);
+            } else {
+                notCopiedHeaderNameList.add(headerName);
+            }
+        }
+
+        if (incomingRequest.getSession().getAttribute(X_AUTH_TOKEN) != null) {
+            LOG.debug("Adding '" + X_AUTH_TOKEN + "' to the request header.");
+            outgoingRequest.addHeader(X_AUTH_TOKEN, incomingRequest.getSession().getAttribute(X_AUTH_TOKEN).toString());
+
+            boolean userLoggingOut = incomingRequest.getRequestURL().toString().contains("logout");
+            if (userLoggingOut) {
+                LOG.debug("Removing '" + X_AUTH_TOKEN + "' from current session.");
+                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, null);
+            }
+        }
+
+        LOG.debug("Headers processed before making request: "+
+                "\nHeaders copied to the request: " + headerNameList.toString() +
+                "\nHeaders not copied to the request: " + notCopiedHeaderNameList.toString());
+
+        return outgoingRequest;
     }
 }
