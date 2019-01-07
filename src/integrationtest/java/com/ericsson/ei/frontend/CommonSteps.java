@@ -46,10 +46,17 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     private int frontendPort;
-    private String host = "localhost";
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
 
+    private static final String HOST = "localhost";
+    private static final String RABBIT_USERNAME = "myuser";
+    private static final String RABBIT_PASSWORD = "myuser";
+    private static final String RABBIT_EXCHANGE = "ei-exchange";
+    private static final String RABBIT_KEY = "#";
+
+    private static final String BODIES_PATH = "/bodies/";
+    private static final String RESPONSES_PATH = "/responses/";
     private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
@@ -60,24 +67,20 @@ public class CommonSteps extends AbstractTestExecutionListener {
         assertEquals(true, frontendPort != 0);
     }
 
-    @Given("^an aggregated object exists$")
-    public void aggregated_object_exists() throws IOException {
+    @Given("^an aggregated object is created$")
+    public void aggregated_object_created() throws IOException {
         LOGGER.debug("Sending Eiffel events for aggregation.");
         List<String> eventNames = getEventNamesToSend();
-        String filePath = this.getClass().getResource(EIFFEL_EVENTS_JSON_PATH).getFile();
-        String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
-        JsonNode node = new ObjectMapper().readTree(fileContent);
+        String eventsFilePath = this.getClass().getResource(EIFFEL_EVENTS_JSON_PATH).getFile();
+        String eventsFileContent = FileUtils.readFileToString(new File(eventsFilePath), "UTF-8");
+        JsonNode eventsNode = new ObjectMapper().readTree(eventsFileContent);
 
         int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
-        String username = "myuser";
-        String password = "myuser";
-        String exchange = "ei-exchange";
-        String key = "#";
-        AMQPCommunication amqp = new AMQPCommunication(host, port);
-        amqp.setCredentials(username, password);
+        AMQPCommunication amqp = new AMQPCommunication(HOST, port);
+        amqp.setCredentials(RABBIT_USERNAME, RABBIT_PASSWORD);
         for (String eventName : eventNames) {
-            String message = node.get(eventName).toString();
-            assertEquals(true, amqp.produceMessage(message, exchange, key));
+            String message = eventsNode.get(eventName).toString();
+            assertEquals(true, amqp.produceMessage(message, RABBIT_EXCHANGE, RABBIT_KEY));
         }
         LOGGER.debug("Eiffel events sent.");
     }
@@ -86,7 +89,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
         LOGGER.info("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
-        httpRequest.setHost(host).setPort(frontendPort).setEndpoint(endpoint);
+        httpRequest.setHost(HOST).setPort(frontendPort).setEndpoint(endpoint);
     }
 
     @When("^\'(.*)\' is appended to endpoint$")
@@ -102,17 +105,15 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @When("^body is set to file \'(.*)\'$")
     public void set_body(String filename) throws Throwable {
-        String path = "/bodies/";
-        String filePath = this.getClass().getResource(path + filename).getFile();
+        String filePath = this.getClass().getResource(BODIES_PATH + filename).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
 
     @When("^aggregation is prepared with rules file \'(.*)\' and events file \'(.*)\'$")
     public void aggregation_is_prepared(String rulesFileName, String eventsFileName) throws Throwable {
-        String path = "/bodies/";
-        String rulesPath = this.getClass().getResource(path + rulesFileName).getFile();
-        String eventsPath = this.getClass().getResource(path + eventsFileName).getFile();
+        String rulesPath = this.getClass().getResource(BODIES_PATH + rulesFileName).getFile();
+        String eventsPath = this.getClass().getResource(BODIES_PATH + eventsFileName).getFile();
         String rules = FileUtils.readFileToString(new File(rulesPath), "UTF-8");
         String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8");
         String body = new JSONObject().put("listRulesJson", new JSONArray(rules))
@@ -146,8 +147,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Then("^response body from file \'(.*)\' is received$")
     public void get_response_body_from_file(String filename) throws Throwable {
-        String path = "/responses/";
-        String filePath = this.getClass().getResource(path + filename).getFile();
+        String filePath = this.getClass().getResource(RESPONSES_PATH + filename).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
