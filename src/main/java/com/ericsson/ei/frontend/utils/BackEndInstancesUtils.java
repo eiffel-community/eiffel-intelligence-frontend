@@ -113,10 +113,10 @@ public class BackEndInstancesUtils {
     public boolean hasDefaultBackend() {
         for (BackEndInformation backendInformation : backEndInformationList) {
             if (backendInformation.isDefaultBackend()) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**
