@@ -17,8 +17,7 @@
 package com.ericsson.ei.frontend.utils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +46,8 @@ public class BackEndInstancesUtils {
     public static final String CONTEXT_PATH = "contextPath";
     public static final String HTTPS = "https";
     public static final String DEFAULT = "defaultBackend";
+    public static final List<String> ALLOWED_JSON_KEYS = Arrays.asList("name",
+            "host", "port", "contextPath", "https", "defaultBackend");
 
     private static final long SECONDS_BETWEEN_PARSING = 20;
 
@@ -63,6 +64,42 @@ public class BackEndInstancesUtils {
     private boolean isRunningTests = false;
     private long nextTimeToParse = 0;
     private boolean savedSinceLastParsing = false;
+
+    /**
+     * Checks that all required keys exist in the incoming json object.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean hasRequiredJsonKeys(JsonObject instance) {
+        if (instance.has(HOST) && instance.has(PORT) && instance.has(NAME)
+                && instance.has(CONTEXT_PATH) && instance.has(HTTPS)
+                && instance.has(DEFAULT)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks that the incoming json data does not contain additional keys. Any
+     * unrecognized keys are logged.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean containsAdditionalKeys(JsonObject instance) {
+        if (instance.size() > ALLOWED_JSON_KEYS.size()) {
+            for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
+
+                // compare keys with list of valid keys
+                if (!ALLOWED_JSON_KEYS.contains(e.getKey())) {
+                    LOG.debug("Unrecognized key " + e.getKey());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Returns true or false depending if instance host, port, contextPath or https already exist.
@@ -107,7 +144,6 @@ public class BackEndInstancesUtils {
     /**
      * Returns true or false depending if default instance exist.
      *
-     * @param instance
      * @return boolean
      */
     public boolean hasDefaultBackend() {
@@ -122,7 +158,7 @@ public class BackEndInstancesUtils {
     /**
      * Returns the BackEndInformation based on input name.
      *
-     * @param String name
+     * @param String backEndName
      * @return backendInformation if exist null if no backendInformation exist
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
@@ -205,7 +241,7 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Tunction that may be used to set default back end.
+     * Function that may be used to set default back end.
      *
      * @param name
      * @param host

@@ -61,6 +61,29 @@ public class BackendInstancesUtilsTest {
     }
 
     @Test
+    public void testHasRequiredJsonKeys() {
+        // removing required key port and the json object should not be valid
+        instance.remove("port");
+        assertEquals(false, utils.hasRequiredJsonKeys(instance));
+
+        // adding the key port again and it should pass
+        instance.addProperty("port", 1234);
+        assertEquals(true, utils.hasRequiredJsonKeys(instance));
+
+    }
+
+    @Test
+    public void testContainsAdditionalKeysTrue() {
+        // add extra random keys here
+        instance.addProperty("randomKey", "randomValue");
+        instance.addProperty("additionalKey", 1234);
+        assertEquals(true, utils.containsAdditionalKeys(instance));
+
+        // clean up here to make the other tests pass?
+        System.out.println("cleanup needed? " + instance.toString());
+    }
+
+    @Test
     public void testCheckIfInstanceAlreadyExistTrue() {
         boolean result;
         when(fileUtils.getInstancesFromFile()).thenReturn(instances);

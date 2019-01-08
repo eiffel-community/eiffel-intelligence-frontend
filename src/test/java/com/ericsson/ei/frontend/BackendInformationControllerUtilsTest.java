@@ -14,6 +14,7 @@
 package com.ericsson.ei.frontend;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,8 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,15 +42,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInfoirmationControllerUtils;
+import com.ericsson.ei.frontend.utils.BackEndInformationControllerUtils;
 import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -70,7 +64,7 @@ public class BackendInformationControllerUtilsTest {
     private BackEndInstancesUtils backEndInstancesUtils;
 
     @Autowired
-    private BackEndInfoirmationControllerUtils backendInfoContrUtils;
+    private BackEndInformationControllerUtils backendInfoContrUtils;
 
     private JsonObject instance;
     private JsonArray instances;
@@ -166,13 +160,33 @@ public class BackendInformationControllerUtilsTest {
         // Test successfully added.
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
                 "{\"message\": \"Back-end instance with name 'someName' was successfully added to the back-end instance list.\"}",
                 HttpStatus.OK);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
 
+        // Test with missing keys
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(false);
+        expectedResponse = createExpectedResponse(
+                "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                HttpStatus.BAD_REQUEST);
+        response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
+        assertEquals(expectedResponse, response);
+
+        // Test with additional unrecognized keys
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(true);
+        expectedResponse = createExpectedResponse(
+                "{\"message\": \"Back-end instance contains unrecognized JSON keys.\"}",
+                HttpStatus.BAD_REQUEST);
+        response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
+        assertEquals(expectedResponse, response);
+
         // Test back end name already exist
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
                 "{\"message\": \"Back-end instance with name 'someName' already exists.\"}", HttpStatus.BAD_REQUEST);
@@ -180,6 +194,8 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test instance already exist
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(true);
         expectedResponse = createExpectedResponse("{\"message\": \"Back-end instance with given values already exist.\"}",
@@ -188,6 +204,8 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test failure to add new default instance.
+        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.hasDefaultBackend()).thenReturn(true);

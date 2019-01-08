@@ -37,9 +37,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Component
-public class BackEndInfoirmationControllerUtils {
+public class BackEndInformationControllerUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInfoirmationControllerUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationControllerUtils.class);
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
@@ -133,6 +133,22 @@ public class BackEndInfoirmationControllerUtils {
             String newInstanceAsString = request.getReader().lines()
                     .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
+
+            final boolean hasRequiredKeys = backEndInstancesUtils.hasRequiredJsonKeys(instance);
+            if (!hasRequiredKeys) {
+                LOG.debug("Json data is missing required keys");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
+            final boolean containsUnrecognizedKeys = backEndInstancesUtils.containsAdditionalKeys(instance);
+            if (containsUnrecognizedKeys) {
+                LOG.debug("JSON data contains unrecognized keys");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance contains unrecognized JSON keys.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
 
             final boolean instanceNameAlreadyExist = backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance);
             if (instanceNameAlreadyExist) {
