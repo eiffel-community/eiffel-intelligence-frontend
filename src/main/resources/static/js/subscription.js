@@ -789,17 +789,9 @@ jQuery(document).ready(function () {
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
             loadTooltip();
             $('#modal_form').modal('show');
-            if (save_method_in === "edit") {
-                title_ = 'Edit Subscription';
-                addEditMode();
-            } else if (save_method_in === "add") {
 
-                title_ = 'Add Subscription';
-                addEditMode();
-            } else {
-                title_ = 'View Subscription';
-                viewMode();
-            }
+            setViewMode(save_method_in);
+
             $('.modal-title').text(title_);
             save_method = save_method_in;
             $('#modal_form').on('hidden.bs.modal', function() {
@@ -808,11 +800,26 @@ jQuery(document).ready(function () {
         }
     }
 
-    function addEditMode() {
+    function setViewMode(save_method_in) {
+        if (save_method_in === "edit") {
+            title_ = 'Edit Subscription';
+            enableAllForms();
+            $('#subscriptionNameInput').prop('disabled', true);
+        } else if (save_method_in === "add") {
+            title_ = 'Add Subscription';
+            enableAllForms();
+        } else {
+            title_ = 'View Subscription';
+            disableAllForms();
+        }
+    }
+
+    function enableAllForms() {
         $('#modal_form :button').show();
         $('#modal_form :input').prop("disabled", false);
     }
-    function viewMode() {
+
+    function disableAllForms() {
         $('#modal_form :button').hide();
         $('#modal_form :input').prop("disabled", true);
         $('#modal_form .close').show();
