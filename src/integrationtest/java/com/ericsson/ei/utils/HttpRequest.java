@@ -63,14 +63,14 @@ public class HttpRequest {
         }
     }
     
-    /*
+    /**
      * Function that clean parameters field only.
      */
     public void cleanParams() {
         params.clear();
     }
     
-    /*
+    /**
      * Function that resets the HTTP Request object so it can be reused.
      * 
      */
@@ -79,7 +79,7 @@ public class HttpRequest {
         request.reset();
     }
 
-    /*
+    /**
      * Function for adding headers to the http request.
      * 
      * @param key , the key of the header
@@ -92,7 +92,7 @@ public class HttpRequest {
         return this;
     }
 
-    /*
+    /**
      * Function for adding parameters to the http request.
      * 
      * @param key , the key of the parameter
@@ -105,7 +105,7 @@ public class HttpRequest {
         return this;
     }
 
-    /*
+    /**
      * Function that set the body of the http request.
      * 
      * @param body , the body to be set in the http request.
@@ -117,7 +117,7 @@ public class HttpRequest {
         return this;
     }
 
-    /*
+    /**
      * Function that set the body of the http request.
      * 
      * @param body , the file with body content to be set in the http request.
@@ -127,12 +127,12 @@ public class HttpRequest {
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to read file: {}.\nError: {}", file.getAbsolutePath(), e.getMessage());
         }
         setBody(fileContent);
     }
 
-    /*
+    /**
      * Function that execute http request.
      * 
      * @return ResponseEntity<String> , the response of the performed http request.

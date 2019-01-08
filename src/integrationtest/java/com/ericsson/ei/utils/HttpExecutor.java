@@ -44,7 +44,7 @@ public final class HttpExecutor {
             try {
                 this.client.close();
             } catch (IOException e) {
-                LOGGER.error("Error: {}", e.getMessage());
+                LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
             }
         }
         this.client = HttpClientBuilder.create().build();

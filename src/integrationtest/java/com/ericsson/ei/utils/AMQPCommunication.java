@@ -84,13 +84,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to produce the message.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return false;
     }
@@ -117,13 +111,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to consume the message.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return "";
     }
@@ -148,13 +136,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to delete the queue.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return success;
     }
@@ -179,13 +161,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to declare the queue.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return success;
     }
@@ -210,13 +186,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occurred when trying to declare the exchange.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return success;
     }
@@ -245,13 +215,7 @@ public class AMQPCommunication {
         } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to bind the queue.\nError: {}", e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close connection.\nError {}", e.getMessage());
-                }
-            }
+            closeConnection(connection);
         }
         return success;
     }
@@ -265,7 +229,23 @@ public class AMQPCommunication {
             try {
                 this.factory.useSslProtocol(SSLContext.getDefault());
             } catch (NoSuchAlgorithmException e) {
-                LOGGER.info("Failed to get SSL context.\nError {}", e.getMessage());
+                LOGGER.info("Failed to get SSL context.\nError: {}", e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Closes an AMQP connection.
+     *
+     * @param connection
+     *            connection to be closed
+     */
+    public final void closeConnection(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (IOException e) {
+                LOGGER.error("Failed to close connection.\nError: {}", e.getMessage());
             }
         }
     }
@@ -273,8 +253,10 @@ public class AMQPCommunication {
     /**
      * Set username and password to use when connecting to the broker
      *
-     * @param username  the username to use
-     * @param password  the password to use
+     * @param username
+     *            the username to use
+     * @param password
+     *            the password to use
      */
     public void setCredentials(final String username, final String password) {
         this.factory.setUsername(username);
