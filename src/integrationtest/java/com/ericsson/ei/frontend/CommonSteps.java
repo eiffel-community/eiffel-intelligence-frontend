@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -31,8 +29,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.ericsson.ei.utils.AMQPCommunication;
 import com.ericsson.ei.utils.HttpRequest;
 import com.ericsson.ei.utils.HttpRequest.HttpMethod;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -58,7 +54,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     private static final String BODIES_PATH = "/bodies/";
     private static final String RESPONSES_PATH = "/responses/";
-    private static final String EIFFEL_EVENTS_JSON_PATH = "/eiffel_events_for_test.json";
+    private static final String EIFFEL_EVENT_PATH = "/eiffel_event.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
 
@@ -71,17 +67,12 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @Given("^an aggregated object is created$")
     public void aggregated_object_created() throws IOException, TimeoutException {
         LOGGER.debug("Sending Eiffel events for aggregation.");
-        List<String> eventNames = getEventNamesToSend();
-        String eventsFilePath = this.getClass().getResource(EIFFEL_EVENTS_JSON_PATH).getFile();
-        String eventsFileContent = FileUtils.readFileToString(new File(eventsFilePath), "UTF-8");
-        JsonNode eventsNode = new ObjectMapper().readTree(eventsFileContent);
+        String eventFilePath = this.getClass().getResource(EIFFEL_EVENT_PATH).getFile();
+        String eventFileContent = FileUtils.readFileToString(new File(eventFilePath), "UTF-8");
 
         int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
         AMQPCommunication amqp = new AMQPCommunication(HOST, port, RABBIT_USERNAME, RABBIT_PASSWORD);
-        for (String eventName : eventNames) {
-            String message = eventsNode.get(eventName).toString();
-            assertEquals(true, amqp.produceMessage(message, RABBIT_EXCHANGE, RABBIT_KEY));
-        }
+        assertEquals(true, amqp.produceMessage(eventFileContent, RABBIT_EXCHANGE, RABBIT_KEY));
         amqp.closeConnection();
         LOGGER.debug("Eiffel events sent.");
     }
@@ -159,17 +150,5 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void response_body_contains(String contains) throws Throwable {
         LOGGER.info("Response body: {}", response.getBody());
         assertEquals(true, response.getBody().contains(contains));
-    }
-
-    /**
-     * Events used in the aggregation.
-     */
-    protected List<String> getEventNamesToSend() {
-        List<String> eventNames = new ArrayList<>();
-        eventNames.add("event_EiffelArtifactCreatedEvent_3");
-        eventNames.add("event_EiffelTestCaseTriggeredEvent_3");
-        eventNames.add("event_EiffelTestCaseStartedEvent_3");
-        eventNames.add("event_EiffelTestCaseFinishedEvent_3");
-        return eventNames;
     }
 }
