@@ -3,8 +3,10 @@ package com.ericsson.ei.frontend;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -15,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -44,18 +47,18 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     private int frontendPort;
-    private HttpRequest httpRequest;
-    private ResponseEntity<String> response;
 
     private static final String HOST = "localhost";
     private static final String RABBIT_USERNAME = "myuser";
     private static final String RABBIT_PASSWORD = "myuser";
-    private static final String RABBIT_EXCHANGE = "ei-exchange";
-    private static final String RABBIT_KEY = "#";
+
+    private HttpRequest httpRequest;
+    private ResponseEntity<String> response;
 
     private static final String BODIES_PATH = "/bodies/";
     private static final String RESPONSES_PATH = "/responses/";
     private static final String EIFFEL_EVENT_PATH = "/eiffel_event.json";
+    private static final String BACKEND_PROPERTIES_FILE = "/integration-test.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
 
@@ -73,7 +76,14 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
         int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
         AMQPCommunication amqp = new AMQPCommunication(HOST, port, RABBIT_USERNAME, RABBIT_PASSWORD);
-        assertEquals(true, amqp.produceMessage(eventFileContent, RABBIT_EXCHANGE, RABBIT_KEY));
+
+        Properties properties = new Properties();
+        String propertiesFilePath = this.getClass().getResource(BACKEND_PROPERTIES_FILE).getFile();
+        properties.load(new FileInputStream(new File(propertiesFilePath)));
+        String rabbitExchange = properties.getProperty("rabbitmq.exchange.name");
+        String rabbitKey = properties.getProperty("rabbitmq.binding.key");
+
+        assertEquals(true, amqp.produceMessage(eventFileContent, rabbitExchange, rabbitKey));
         amqp.closeConnection();
         LOGGER.debug("Eiffel events sent.");
     }
