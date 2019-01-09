@@ -269,7 +269,8 @@ jQuery(document).ready(function () {
             ]);
         self.authenticationType_in = ko.observableArray([
                 { "text": "NO_AUTH", value: "NO_AUTH" },
-                { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
+                { "text": "BASIC_AUTH", value: "BASIC_AUTH" },
+                { "text": "BASIC_AUTH_JENKINS", value: "BASIC_AUTH_JENKINS" }
             ]);
         self.repeat_in = ko.observableArray([
                 { "value": true, "label": "Activate Repeat" }

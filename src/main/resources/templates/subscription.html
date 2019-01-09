@@ -251,7 +251,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="p-1 border form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
+                            <div class="p-1 border form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH' || authenticationType() == 'BASIC_AUTH_JENKINS' ">
                                 <label class="pt-1 control-label font-weight-bold">Username</label>
                                 <div>
                                     <input id="userNameInput" title="Enter user name" data-bind="textInput:userName" name="userName"
@@ -259,16 +259,16 @@
                                     <span class="help-block"></span>
                                 </div>
 
-                                <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Password*</label>
+                                <label data-bind="visible: $root.showPassword(), text: authenticationType() == 'BASIC_AUTH' ? 'Password*' : 'API-token'" class="pl-1 control-label font-weight-bold"></label>
                                 <div>
                                     <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password"
                                         name="password" placeholder="password" class="form-control" type="password" />
 
                                 </div>
 
-                                <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Token</label>
+                                <label data-bind="visible: $root.showPassword() && authenticationType() == 'BASIC_AUTH_JENKINS'" class="pl-1 control-label font-weight-bold">Job token</label>
                                 <div>
-                                    <input id="tokenInput" title="Enter token" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.token"
+                                    <input id="tokenInput" title="Enter token" data-bind="visible: authenticationType() == 'BASIC_AUTH_JENKINS' && $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.token"
                                         name="token" placeholder="token"class="form-control" type="password" />
                                 </div>
 
@@ -276,7 +276,7 @@
                                     <div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
                                         <button data-bind="click: function(){$root.showPassword(true);}" class="btn btn-warning">
                                             <i class="glyphicon glyphicon-trash"></i>
-                                            Change password/token
+                                            Change credentials
                                         </button>
                                     </div>
                                     <span class="help-block"></span>
