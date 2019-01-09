@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.gson.JsonNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,14 +62,18 @@ public class BackendInstancesUtilsTest {
     }
 
     @Test
-    public void testHasRequiredJsonKeys() {
+    public void testHasRequiredJsonData() {
         // removing required key port and the json object should not be valid
         instance.remove("port");
-        assertEquals(false, utils.hasRequiredJsonKeys(instance));
+        assertEquals(false, utils.hasRequiredJsonData(instance));
 
-        // adding the key port again and it should pass
+        // add key but with null value and it should not be valid data
+        instance.add("port", JsonNull.INSTANCE);
+        assertEquals(false, utils.hasRequiredJsonData(instance));
+
+        // adding the key port with a value and it should pass
         instance.addProperty("port", 1234);
-        assertEquals(true, utils.hasRequiredJsonKeys(instance));
+        assertEquals(true, utils.hasRequiredJsonData(instance));
     }
 
     @Test

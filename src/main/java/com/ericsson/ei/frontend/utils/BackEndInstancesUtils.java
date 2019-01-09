@@ -19,6 +19,7 @@ package com.ericsson.ei.frontend.utils;
 import java.io.IOException;
 import java.util.*;
 
+import com.google.gson.JsonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,11 +72,22 @@ public class BackEndInstancesUtils {
      * @param JsonObject instance
      * @return boolean
      * */
-    public boolean hasRequiredJsonKeys(JsonObject instance) {
+    public boolean hasRequiredJsonData(JsonObject instance) {
+        boolean hasNullValues = false;
+
+        // ensure required keys are present
         if (instance.has(HOST) && instance.has(PORT) && instance.has(NAME)
                 && instance.has(CONTEXT_PATH) && instance.has(HTTPS)
                 && instance.has(DEFAULT)) {
-            return true;
+
+            // ensure JSON values are not null
+            for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
+                if ((e.getValue().isJsonNull()) || e.getValue() == null) {
+                    hasNullValues = true;
+                }
+            }
+            // if no null values were found we return true
+            return (!hasNullValues) ? true : false;
         }
         return false;
     }

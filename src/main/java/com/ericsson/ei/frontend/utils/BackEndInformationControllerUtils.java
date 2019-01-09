@@ -134,11 +134,11 @@ public class BackEndInformationControllerUtils {
                     .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
-            final boolean hasRequiredKeys = backEndInstancesUtils.hasRequiredJsonKeys(instance);
-            if (!hasRequiredKeys) {
+            final boolean hasRequiredData = backEndInstancesUtils.hasRequiredJsonData(instance);
+            if (!hasRequiredData) {
                 LOG.debug("Json data is missing required keys");
                 return new ResponseEntity<>(
-                        "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                        "{\"message\": \"Back-end instance is missing required JSON data.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 

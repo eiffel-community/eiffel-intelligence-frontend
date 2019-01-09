@@ -157,7 +157,7 @@ public class BackendInformationControllerUtilsTest {
         // Test successfully added.
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
                 "{\"message\": \"Back-end instance with name 'someName' was successfully added to the back-end instance list.\"}",
                 HttpStatus.OK);
@@ -165,7 +165,7 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test with missing keys
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(false);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(false);
         expectedResponse = createExpectedResponse(
                 "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
                 HttpStatus.BAD_REQUEST);
@@ -173,7 +173,7 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test with additional unrecognized keys
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(true);
         when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
                 "{\"message\": \"Back-end instance contains unrecognized JSON keys.\"}",
@@ -182,7 +182,7 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test back end name already exist
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(true);
         when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(true);
         expectedResponse = createExpectedResponse(
@@ -191,7 +191,7 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test instance already exist
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(true);
         when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(true);
@@ -201,7 +201,7 @@ public class BackendInformationControllerUtilsTest {
         assertEquals(expectedResponse, response);
 
         // Test failure to add new default instance.
-        when(backEndInstancesUtils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(true);
         when(backEndInstancesUtils.containsAdditionalKeys(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceNameAlreadyExist(any())).thenReturn(false);
         when(backEndInstancesUtils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
