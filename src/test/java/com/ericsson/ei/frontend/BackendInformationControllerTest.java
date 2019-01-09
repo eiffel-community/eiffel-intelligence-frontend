@@ -97,6 +97,8 @@ public class BackendInformationControllerTest {
 
     @Test
     public void testAddInstance() throws Exception {
+        when(utils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(utils.containsAdditionalKeys(any())).thenReturn(false);
         when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
         when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
         mockMvc.perform(MockMvcRequestBuilders.post(PATH_FOR_BACK_END_INFORMATION)
