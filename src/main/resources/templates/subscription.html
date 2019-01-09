@@ -133,17 +133,17 @@
                                         </label>
                                     </div>
                                 </div>
-                                <!-- Form post emailSubject field -->                            
+                                <!-- Form post emailSubject field -->
                               <div class="form-group" data-bind="visible: !$root.restPost()">
                                 <label class="h5 control-label font-weight-bold">Subject</label>
                                 <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
                                     title=
                                         "This will be the subject of the email,<br>
                                          which will be sent as a subscription notification. <br>
-                                         Default value is set by admin in property file" />                                   
+                                         Default value is set by admin in property file" />
                                 <div>
                                     <input id="emailSubjectID" data-bind="textInput:$data.emailSubject, onChange"
-                                        name="emailSubject" placeholder="emailSubject" class="form-control" type="text"/>                                    
+                                        name="emailSubject" placeholder="emailSubject" class="form-control" type="text"/>
                                 </div>
                               </div>
 
@@ -165,7 +165,7 @@
                                             <span data-bind="text: label"></span>
                                         </label>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="form-group">
@@ -260,15 +260,23 @@
                                 </div>
 
                                 <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Password*</label>
+                                <div>
+                                    <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password"
+                                        name="password" placeholder="password" class="form-control" type="password" />
+
+                                </div>
+
+                                <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Token</label>
+                                <div>
+                                    <input id="tokenInput" title="Enter token" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.token"
+                                        name="token" placeholder="token"class="form-control" type="password" />
+                                </div>
 
                                 <div>
-                                    <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password" name="password" placeholder="password"
-                                        class="form-control" type="password" />
-
                                     <div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
                                         <button data-bind="click: function(){$root.showPassword(true);}" class="btn btn-warning">
                                             <i class="glyphicon glyphicon-trash"></i>
-                                            Change password
+                                            Change password/token
                                         </button>
                                     </div>
                                     <span class="help-block"></span>

@@ -171,14 +171,19 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String userNameID = "userNameInput";
         String password = "password";
         String passwordID = "passwordInput";
+        String token = "token";
+        String tokenID = "tokenInput";
         subscriptionPage.selectDropdown(selectAuthID, authValue);
         subscriptionPage.addFieldValue(userNameID, userName);
         subscriptionPage.addFieldValue(passwordID, password);
+        subscriptionPage.addFieldValue(tokenID, password);
 
         String foundUsername = subscriptionPage.getValueFromElement(userNameID);
         assertEquals(userName, foundUsername);
         String foundPassword = subscriptionPage.getValueFromElement(passwordID);
         assertEquals(password, foundPassword);
+        String foundToken = subscriptionPage.getValueFromElement(tokenID);
+        assertEquals(token, foundToken);
 
         // Test "Repeat" checkbox: verify unchecked, then checked.
         // NOTE: repeat checkbox is covered by a span, we click span
