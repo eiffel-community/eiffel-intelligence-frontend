@@ -84,7 +84,7 @@ public class AMQPCommunication {
             LOGGER.info("Message being sent.");
             return true;
         } catch (IOException e) {
-            LOGGER.error("An error occured when trying to produce the message.\nError: {}", e.getMessage());
+            LOGGER.error("An error occured when trying to produce the message.", e);
         }
         return false;
     }
@@ -97,7 +97,7 @@ public class AMQPCommunication {
             try {
                 this.connection.close();
             } catch (IOException e) {
-                LOGGER.error("Failed to close connection.\nError: {}", e.getMessage());
+                LOGGER.error("Failed to close connection.", e);
             }
         }
     }

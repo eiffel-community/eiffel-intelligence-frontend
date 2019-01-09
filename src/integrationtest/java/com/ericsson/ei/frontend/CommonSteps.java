@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -97,15 +98,15 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @When("^body is set to file \'(.*)\'$")
     public void set_body(String filename) throws Throwable {
-        String filePath = this.getClass().getResource(BODIES_PATH + filename).getFile();
+        String filePath = this.getClass().getResource(Paths.get(BODIES_PATH, filename).toString()).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
 
     @When("^aggregation is prepared with rules file \'(.*)\' and events file \'(.*)\'$")
     public void aggregation_is_prepared(String rulesFileName, String eventsFileName) throws Throwable {
-        String rulesPath = this.getClass().getResource(BODIES_PATH + rulesFileName).getFile();
-        String eventsPath = this.getClass().getResource(BODIES_PATH + eventsFileName).getFile();
+        String rulesPath = this.getClass().getResource(Paths.get(BODIES_PATH, rulesFileName).toString()).getFile();
+        String eventsPath = this.getClass().getResource(Paths.get(BODIES_PATH, eventsFileName).toString()).getFile();
         String rules = FileUtils.readFileToString(new File(rulesPath), "UTF-8");
         String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8");
         String body = new JSONObject().put("listRulesJson", new JSONArray(rules))
@@ -139,7 +140,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Then("^response body from file \'(.*)\' is received$")
     public void get_response_body_from_file(String filename) throws Throwable {
-        String filePath = this.getClass().getResource(RESPONSES_PATH + filename).getFile();
+        String filePath = this.getClass().getResource(Paths.get(RESPONSES_PATH, filename).toString()).getFile();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
