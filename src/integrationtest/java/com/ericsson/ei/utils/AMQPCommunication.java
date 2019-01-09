@@ -16,7 +16,6 @@ import com.rabbitmq.client.ConnectionFactory;
 public class AMQPCommunication {
     ConnectionFactory factory;
     Connection connection;
-    Channel channel;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AMQPCommunication.class);
 
@@ -36,7 +35,6 @@ public class AMQPCommunication {
         this.factory.setHost(host);
         this.factory.setPort(port);
         this.connection = this.factory.newConnection();
-        this.channel = this.connection.createChannel();
     }
 
     /**
@@ -54,10 +52,12 @@ public class AMQPCommunication {
         LOGGER.info("Preparing to produce message -> Host: {}, Exchange: {}, RoutingKey: {}\nMessage: {}",
                 factory.getHost() + ":" + factory.getPort(), exchange, key, message);
         try {
+            Channel channel = connection.createChannel();
             channel.basicPublish(exchange, key, null, message.getBytes());
+            channel.close();
             LOGGER.info("Message being sent.");
             return true;
-        } catch (IOException e) {
+        } catch (IOException | TimeoutException e) {
             LOGGER.error("An error occured when trying to produce the message.\nError: {}", e.getMessage());
         }
         return false;
@@ -67,9 +67,9 @@ public class AMQPCommunication {
      * Closes an AMQP connection.
      */
     public final void closeConnection() {
-        if (connection != null) {
+        if (this.connection != null) {
             try {
-                connection.close();
+                this.connection.close();
             } catch (IOException e) {
                 LOGGER.error("Failed to close connection.\nError: {}", e.getMessage());
             }
