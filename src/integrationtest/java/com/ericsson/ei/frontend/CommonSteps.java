@@ -77,8 +77,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         JsonNode eventsNode = new ObjectMapper().readTree(eventsFileContent);
 
         int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
-        AMQPCommunication amqp = new AMQPCommunication(HOST, port);
-        amqp.setCredentials(RABBIT_USERNAME, RABBIT_PASSWORD);
+        AMQPCommunication amqp = new AMQPCommunication(HOST, port, RABBIT_USERNAME, RABBIT_PASSWORD);
         for (String eventName : eventNames) {
             String message = eventsNode.get(eventName).toString();
             assertEquals(true, amqp.produceMessage(message, RABBIT_EXCHANGE, RABBIT_KEY));

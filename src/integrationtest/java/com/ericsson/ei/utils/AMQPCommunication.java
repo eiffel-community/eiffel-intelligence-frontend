@@ -16,6 +16,7 @@ import com.rabbitmq.client.ConnectionFactory;
 public class AMQPCommunication {
     ConnectionFactory factory;
     Connection connection;
+    Channel channel;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AMQPCommunication.class);
 
@@ -35,6 +36,33 @@ public class AMQPCommunication {
         this.factory.setHost(host);
         this.factory.setPort(port);
         this.connection = this.factory.newConnection();
+        this.channel = connection.createChannel();
+    }
+
+    /**
+     * AMQPCommunication constructor.
+     *
+     * @param host
+     *            host name
+     * @param port
+     *            port number
+     * @param username
+     *            the username to use
+     * @param password
+     *            the password to use
+     * @throws IOException
+     * @throws TimeoutException
+     */
+    public AMQPCommunication(final String host, final int port, final String username, final String password)
+            throws IOException, TimeoutException {
+        LOGGER.info("Setting up RabbitMQ connection to '{}:{}'", host, port);
+        this.factory = new ConnectionFactory();
+        this.factory.setHost(host);
+        this.factory.setPort(port);
+        this.factory.setUsername(username);
+        this.factory.setPassword(password);
+        this.connection = this.factory.newConnection();
+        this.channel = connection.createChannel();
     }
 
     /**
@@ -52,12 +80,10 @@ public class AMQPCommunication {
         LOGGER.info("Preparing to produce message -> Host: {}, Exchange: {}, RoutingKey: {}\nMessage: {}",
                 factory.getHost() + ":" + factory.getPort(), exchange, key, message);
         try {
-            Channel channel = connection.createChannel();
-            channel.basicPublish(exchange, key, null, message.getBytes());
-            channel.close();
+            this.channel.basicPublish(exchange, key, null, message.getBytes());
             LOGGER.info("Message being sent.");
             return true;
-        } catch (IOException | TimeoutException e) {
+        } catch (IOException e) {
             LOGGER.error("An error occured when trying to produce the message.\nError: {}", e.getMessage());
         }
         return false;
@@ -74,18 +100,5 @@ public class AMQPCommunication {
                 LOGGER.error("Failed to close connection.\nError: {}", e.getMessage());
             }
         }
-    }
-
-    /**
-     * Set username and password to use when connecting to the broker
-     *
-     * @param username
-     *            the username to use
-     * @param password
-     *            the password to use
-     */
-    public void setCredentials(final String username, final String password) {
-        this.factory.setUsername(username);
-        this.factory.setPassword(password);
     }
 }
