@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -68,7 +69,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     }
 
     @Given("^an aggregated object is created$")
-    public void aggregated_object_created() throws IOException {
+    public void aggregated_object_created() throws IOException, TimeoutException {
         LOGGER.debug("Sending Eiffel events for aggregation.");
         List<String> eventNames = getEventNamesToSend();
         String eventsFilePath = this.getClass().getResource(EIFFEL_EVENTS_JSON_PATH).getFile();
@@ -82,6 +83,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
             String message = eventsNode.get(eventName).toString();
             assertEquals(true, amqp.produceMessage(message, RABBIT_EXCHANGE, RABBIT_KEY));
         }
+        amqp.closeConnection();
         LOGGER.debug("Eiffel events sent.");
     }
 
