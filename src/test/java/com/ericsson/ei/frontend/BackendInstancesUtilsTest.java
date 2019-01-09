@@ -69,18 +69,17 @@ public class BackendInstancesUtilsTest {
         // adding the key port again and it should pass
         instance.addProperty("port", 1234);
         assertEquals(true, utils.hasRequiredJsonKeys(instance));
-
     }
 
     @Test
     public void testContainsAdditionalKeysTrue() {
-        // add extra random keys here
+        // add extra random key
         instance.addProperty("randomKey", "randomValue");
-        instance.addProperty("additionalKey", 1234);
         assertEquals(true, utils.containsAdditionalKeys(instance));
 
-        // clean up here to make the other tests pass?
-        System.out.println("cleanup needed? " + instance.toString());
+        // clean up of excess JSON key
+        instance.remove("randomKey");
+        assertEquals(false, utils.containsAdditionalKeys(instance));
     }
 
     @Test

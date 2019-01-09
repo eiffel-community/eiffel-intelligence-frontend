@@ -91,7 +91,7 @@ public class BackEndInstancesUtils {
         if (instance.size() > ALLOWED_JSON_KEYS.size()) {
             for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
 
-                // compare keys with list of valid keys
+                // compare keys with valid keys
                 if (!ALLOWED_JSON_KEYS.contains(e.getKey())) {
                     LOG.debug("Unrecognized key " + e.getKey());
                     return true;
