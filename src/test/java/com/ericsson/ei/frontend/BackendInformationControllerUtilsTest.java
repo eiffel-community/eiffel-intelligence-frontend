@@ -167,7 +167,7 @@ public class BackendInformationControllerUtilsTest {
         // Test with missing keys
         when(backEndInstancesUtils.hasRequiredJsonData(any())).thenReturn(false);
         expectedResponse = createExpectedResponse(
-                "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                "{\"message\": \"Back-end instance is missing required JSON data.\"}",
                 HttpStatus.BAD_REQUEST);
         response = backendInfoContrUtils.handleRequestToAddBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
