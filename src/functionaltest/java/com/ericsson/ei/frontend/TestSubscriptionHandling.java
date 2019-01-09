@@ -176,7 +176,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         subscriptionPage.selectDropdown(selectAuthID, authValue);
         subscriptionPage.addFieldValue(userNameID, userName);
         subscriptionPage.addFieldValue(passwordID, password);
-        subscriptionPage.addFieldValue(tokenID, password);
+        subscriptionPage.addFieldValue(tokenID, token);
 
         String foundUsername = subscriptionPage.getValueFromElement(userNameID);
         assertEquals(userName, foundUsername);
