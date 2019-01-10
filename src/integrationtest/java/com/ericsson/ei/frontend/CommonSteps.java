@@ -3,10 +3,8 @@ package com.ericsson.ei.frontend;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -17,7 +15,6 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -34,6 +31,7 @@ import com.ericsson.ei.utils.AMQPCommunication;
 import com.ericsson.ei.utils.HttpRequest;
 import com.ericsson.ei.utils.HttpRequest.HttpMethod;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -47,10 +45,13 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     private int frontendPort;
-
-    private static final String HOST = "localhost";
-    private static final String RABBIT_USERNAME = "myuser";
-    private static final String RABBIT_PASSWORD = "myuser";
+    private String frontendHost = "localhost";
+    private String rabbitHost;
+    private int rabbitPort;
+    private String rabbitUsername;
+    private String rabbitPassword;
+    private String rabbitExchange;
+    private String rabbitKey;
 
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
@@ -58,9 +59,18 @@ public class CommonSteps extends AbstractTestExecutionListener {
     private static final String BODIES_PATH = "/bodies/";
     private static final String RESPONSES_PATH = "/responses/";
     private static final String EIFFEL_EVENT_PATH = "/eiffel_event.json";
-    private static final String BACKEND_PROPERTIES_FILE = "/integration-test.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
+
+    @Before("@QueryByIdScenario, @QueryFreestyleScenario")
+    public void beforeQueryScenario() {
+        rabbitHost = System.getProperty("rabbit.host");
+        rabbitPort = Integer.getInteger("rabbit.port");
+        rabbitUsername = System.getProperty("rabbit.username");
+        rabbitPassword = System.getProperty("rabbit.password");
+        rabbitExchange = System.getProperty("rabbit.exchange");
+        rabbitKey = System.getProperty("rabbit.key");
+    }
 
     @Given("^frontend is up and running$")
     public void frontend_running() {
@@ -74,15 +84,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         String eventFilePath = this.getClass().getResource(EIFFEL_EVENT_PATH).getFile();
         String eventFileContent = FileUtils.readFileToString(new File(eventFilePath), "UTF-8");
 
-        int port = Integer.parseInt(System.getenv("RABBITMQ_AMQP_PORT"));
-        AMQPCommunication amqp = new AMQPCommunication(HOST, port, RABBIT_USERNAME, RABBIT_PASSWORD);
-
-        Properties properties = new Properties();
-        String propertiesFilePath = this.getClass().getResource(BACKEND_PROPERTIES_FILE).getFile();
-        properties.load(new FileInputStream(new File(propertiesFilePath)));
-        String rabbitExchange = properties.getProperty("rabbitmq.exchange.name");
-        String rabbitKey = properties.getProperty("rabbitmq.binding.key");
-
+        AMQPCommunication amqp = new AMQPCommunication(rabbitHost, rabbitPort, rabbitUsername, rabbitPassword);
         assertEquals(true, amqp.produceMessage(eventFileContent, rabbitExchange, rabbitKey));
         amqp.closeConnection();
         LOGGER.debug("Eiffel events sent.");
@@ -92,7 +94,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
         LOGGER.info("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
-        httpRequest.setHost(HOST).setPort(frontendPort).setEndpoint(endpoint);
+        httpRequest.setHost(frontendHost).setPort(frontendPort).setEndpoint(endpoint);
     }
 
     @When("^\'(.*)\' is appended to endpoint$")

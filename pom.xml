@@ -241,23 +241,21 @@
             </plugin>
 
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-failsafe-plugin</artifactId>
-              <version>3.0.0-M1</version>
-              <executions>
-                  <execution>
-                      <id>integration-test</id>
-                      <goals>
-                          <goal>integration-test</goal>
-                          <goal>verify</goal>
-                      </goals>
-                      <phase>integration-test</phase>
-                      <configuration>
-                          <skipTests>${skipTests}</skipTests>
-                          <skipITs>${skipITs}</skipITs>
-                      </configuration>
-                  </execution>
-              </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                    <skipITs>${skipITs}</skipITs>
+                    <systemPropertyVariables>
+                        <rabbit.host>localhost</rabbit.host>
+                        <rabbit.port>5672</rabbit.port>
+                        <rabbit.username>myuser</rabbit.username>
+                        <rabbit.password>myuser</rabbit.password>
+                        <rabbit.exchange>ei-exchange</rabbit.exchange>
+                        <rabbit.key>#</rabbit.key>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
 
             <plugin>
