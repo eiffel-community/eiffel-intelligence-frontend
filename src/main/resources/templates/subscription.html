@@ -232,7 +232,9 @@
                                 <div class="form-group">
                                     <label class="h5 pl-1 control-label font-weight-bold">NotificationMeta</label>
                                     <img class="cursor-pointer" id="notificationMetaInfo" alt="NotificationMeta Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
-                                        title="The specific point to notify. Example: my@mail.com or host.com/endpoint"/>
+                                        title=
+                                            "The specific point to notify. Example: my@mail.com or host.com/endpoint<br>
+                                            Jenkins: As a jenkins user this is where you may set a job-token. Not to be mistaken for the API token that is used as a password for authentication against the entire jenkins instance." />
                                     <div>
                                         <span class="text-danger font-small" id="invalidNotificationMeta"></span>
                                         <textarea id="notificationMeta" data-bind="textInput:$data.notificationMeta, onChange"
@@ -251,7 +253,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="p-1 border form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH' || authenticationType() == 'BASIC_AUTH_JENKINS' ">
+                            <div class="p-1 border form-group" data-bind="visible: authenticationType() == 'BASIC_AUTH'">
                                 <label class="pt-1 control-label font-weight-bold">Username</label>
                                 <div>
                                     <input id="userNameInput" title="Enter user name" data-bind="textInput:userName" name="userName"
@@ -259,24 +261,21 @@
                                     <span class="help-block"></span>
                                 </div>
 
-                                <label data-bind="visible: $root.showPassword(), text: authenticationType() == 'BASIC_AUTH' ? 'Password*' : 'API-token'" class="pl-1 control-label font-weight-bold"></label>
+                                <label data-bind="visible: $root.showPassword()" class="pl-1 control-label font-weight-bold">Password/Token*</label>
+                                <img class="cursor-pointer popup-large" id="restPostMediaTypeInfo" alt="RestPostMediaType Info" src="assets/images/information.png" data-toggle="tooltip" data-placement="top"
+                                    title=
+                                        "This is the password that will be used for authentication against a rest service. <br>
+                                        Jenkins: As a jenkins user it is recommended that you set this as an API token and not user password. Not to be mistaken for the job token that is set for a single job." />
                                 <div>
                                     <input id="passwordInput" title="Enter password" data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password"
                                         name="password" placeholder="password" class="form-control" type="password" />
-
-                                </div>
-
-                                <label data-bind="visible: $root.showPassword() && authenticationType() == 'BASIC_AUTH_JENKINS'" class="pl-1 control-label font-weight-bold">Job token</label>
-                                <div>
-                                    <input id="tokenInput" title="Enter token" data-bind="visible: authenticationType() == 'BASIC_AUTH_JENKINS' && $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.token"
-                                        name="token" placeholder="token"class="form-control" type="password" />
                                 </div>
 
                                 <div>
                                     <div data-bind="visible: !$root.showPassword() && $root.mode() == 'edit'" class="showPasswordButton" >
                                         <button data-bind="click: function(){$root.showPassword(true);}" class="btn btn-warning">
                                             <i class="glyphicon glyphicon-trash"></i>
-                                            Change credentials
+                                            Change password/token
                                         </button>
                                     </div>
                                     <span class="help-block"></span>
