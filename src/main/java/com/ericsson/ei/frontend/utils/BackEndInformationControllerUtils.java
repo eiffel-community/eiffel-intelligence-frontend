@@ -134,11 +134,19 @@ public class BackEndInformationControllerUtils {
                     .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
-            final boolean hasRequiredData = backEndInstancesUtils.hasRequiredJsonData(instance);
+            final boolean hasRequiredData = backEndInstancesUtils.hasRequiredJsonKeys(instance);
             if (!hasRequiredData) {
                 LOG.debug("Json data is missing required keys");
                 return new ResponseEntity<>(
-                        "{\"message\": \"Back-end instance is missing required JSON data.\"}",
+                        "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
+            final boolean hasNullValues = backEndInstancesUtils.containsNullValues(instance);
+            if (hasNullValues) {
+                LOG.debug("Json data contains null values");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance can not have null values.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 
@@ -176,7 +184,6 @@ public class BackEndInformationControllerUtils {
                 return new ResponseEntity<>(
                         "{\"message\": \"Back-end instance with given values already exist.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
-
             }
 
             backEndInstancesUtils.addNewBackEnd(instance);

@@ -97,7 +97,8 @@ public class BackendInformationControllerTest {
 
     @Test
     public void testAddInstance() throws Exception {
-        when(utils.hasRequiredJsonData(any())).thenReturn(true);
+        when(utils.hasRequiredJsonKeys(any())).thenReturn(true);
+        when(utils.containsNullValues(any())).thenReturn(false);
         when(utils.containsAdditionalKeys(any())).thenReturn(false);
         when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
         when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());

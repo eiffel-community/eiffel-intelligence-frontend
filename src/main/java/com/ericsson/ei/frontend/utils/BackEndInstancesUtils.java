@@ -19,7 +19,9 @@ package com.ericsson.ei.frontend.utils;
 import java.io.IOException;
 import java.util.*;
 
-import com.google.gson.JsonNull;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,6 @@ import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -72,22 +71,26 @@ public class BackEndInstancesUtils {
      * @param JsonObject instance
      * @return boolean
      * */
-    public boolean hasRequiredJsonData(JsonObject instance) {
-        boolean hasNullValues = false;
-
-        // ensure required keys are present
+    public boolean hasRequiredJsonKeys(JsonObject instance) {
         if (instance.has(HOST) && instance.has(PORT) && instance.has(NAME)
-                && instance.has(CONTEXT_PATH) && instance.has(HTTPS)
-                && instance.has(DEFAULT)) {
+                && instance.has(CONTEXT_PATH) && instance.has(HTTPS)) {
+            return true;
+        }
+        return false;
+    }
 
-            // ensure JSON values are not null
-            for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
-                if ((e.getValue().isJsonNull()) || e.getValue() == null) {
-                    hasNullValues = true;
-                }
+    /**
+     * Checks if json values in backend instance are null.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean containsNullValues(JsonObject instance) {
+        for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
+            if (e.getValue().isJsonNull() || e.getValue() == null) {
+                LOG.debug(e.toString() + " can not be null!");
+                return true;
             }
-            // if no null values were found we return true
-            return (!hasNullValues) ? true : false;
         }
         return false;
     }
@@ -103,8 +106,8 @@ public class BackEndInstancesUtils {
         if (instance.size() > ALLOWED_JSON_KEYS.size()) {
             for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
 
-                // compare keys with valid keys
-                if (!ALLOWED_JSON_KEYS.contains(e.getKey())) {
+                boolean hasUnrecognizedKeys = !ALLOWED_JSON_KEYS.contains(e.getKey());
+                if (hasUnrecognizedKeys) {
                     LOG.debug("Unrecognized key " + e.getKey());
                     return true;
                 }
@@ -204,13 +207,9 @@ public class BackEndInstancesUtils {
      *
      * @param instance back end information as JsonObject
      */
-    public void addNewBackEnd(JsonObject instance) {
+    public void addNewBackEnd(JsonObject instance) throws IOException {
         parseBackEndInstances();
-        try {
-            backEndInformationList.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
-        } catch (IOException e) {
-            LOG.error("Failure when trying to add instance " + e.getMessage());
-        }
+        backEndInformationList.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
         saveBackEndInformationList();
     }
 
