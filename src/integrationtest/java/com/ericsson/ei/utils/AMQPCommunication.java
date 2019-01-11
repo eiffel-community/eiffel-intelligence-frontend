@@ -27,25 +27,6 @@ public class AMQPCommunication {
      *            host name
      * @param port
      *            port number
-     * @throws TimeoutException
-     * @throws IOException
-     */
-    public AMQPCommunication(final String host, final int port) throws IOException, TimeoutException {
-        LOGGER.info("Setting up RabbitMQ connection to '{}:{}'", host, port);
-        this.factory = new ConnectionFactory();
-        this.factory.setHost(host);
-        this.factory.setPort(port);
-        this.connection = this.factory.newConnection();
-        this.channel = connection.createChannel();
-    }
-
-    /**
-     * AMQPCommunication constructor.
-     *
-     * @param host
-     *            host name
-     * @param port
-     *            port number
      * @param username
      *            the username to use
      * @param password
