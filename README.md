@@ -42,7 +42,9 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 
 # Documentation
 
-1. [**GUI Overview**](./wiki/GUI-Overview.md)
-1. [**Subscription Handling**](./wiki/Subscription-Handling.md)
-    -  [**Add Subscription**](./wiki/Add-Subscription.md)
-1. [**Test Rules User Guide**](./wiki/Test-Rules.md)
+1. [**GUI Overview**](./wiki/markdown/GUI-Overview.md)
+1. [**Subscription Handling**](./wiki/markdown/Subscription-Handling.md)
+    -  [**Add Subscription**](./wiki/markdown/Add-Subscription.md)
+1. [**Test Rules User Guide**](./wiki/markdown/Test-Rules.md)
+1. [**CURL examples**](./wiki/markdown/curl-examples.md)
+1. [**Docker**](./wiki/markdown/docker.md)

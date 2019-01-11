@@ -1,0 +1,54 @@
+<project name="Eiffel Intelligence Frontend">
+    <custom>
+        <fluidoSkin>
+            <topBarEnabled>true</topBarEnabled>
+            <topBarIcon>
+                <name>Eiffel Intelligence Frontend</name>
+                <href>/</href>
+            </topBarIcon>
+            <navBarStyle>navbar-inverse</navBarStyle> <!-- black design on top navbar-->
+            <!-- To enable wider side bar, sum of span must be 12 -->
+            <leftColumnClass>span3</leftColumnClass>
+            <bodyColumnClass>span9</bodyColumnClass>
+            <sideBarEnabled>true</sideBarEnabled>
+            <breadcrumbDivider>-</breadcrumbDivider>
+        </fluidoSkin>
+    </custom>
+
+    <bannerLeft>
+        <name>Eiffel Intelligence Frontend</name>
+    </bannerLeft>
+
+    <!-- skin config here -->
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.5</version>
+    </skin>
+
+    <publishDate position="right" />
+    <version position="right" />
+
+    <poweredBy/>
+
+    <body>
+        <head/>
+        <breadcrumbs>
+            <item name="Home" href="index.html" />
+        </breadcrumbs>
+
+        <menu name="Overview">
+            <item name="Home" href="index.html" />
+            <item name="Add Subscription" href="Add-Subscription.html" />
+            <item name="GUI overview" href="GUI-Overview.html" />
+            <item name="Subscription handling" href="Subscription-Handling.html" />
+            <item name="Test rules" href="Test-Rules.html" />
+            <item name="Curl Examples" href="curl-examples.html" />
+            <item name="Docker" href="docker.html" />
+        </menu>
+
+        <footer/>
+
+    </body>
+
+</project>

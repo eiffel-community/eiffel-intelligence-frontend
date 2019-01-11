@@ -8,38 +8,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.codec.binary.StringUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.google.gson.JsonParser;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-public class TestSubscriptionCRUD {
+public class TestSubscriptionCRUD extends TestBaseClass {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
@@ -51,34 +33,17 @@ public class TestSubscriptionCRUD {
     private String responseBodyDelete;
     private String encodedAuth;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
-
-    @Autowired
-    private BackEndInstanceFileUtils backEndInstanceFileUtils;
-
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this);
 
     private MockServerClient mockServerClient;
 
+    @Override
     @Before
     public void init() throws Exception {
-    	File tempFile = File.createTempFile("tempfile", ".json");
-        tempFile.deleteOnExit();
-
-        String filePath = tempFile.getAbsolutePath().toString();
-        Files.write(Paths.get(filePath), "[]".getBytes());
-        backEndInstanceFileUtils.setEiInstancesPath(filePath);
-
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
+        subscriptionRequestBody = getJSONStringFromFile(SUBSCRIPTION_FILE_PATH);
 
-        subscriptionRequestBody = FileUtils.readFileToString(new File(SUBSCRIPTION_FILE_PATH), "UTF-8");
-        subscriptionRequestBody = subscriptionRequestBody.replaceAll("\r", "");
         String auth = ADMIN + ":" + ADMIN;
         encodedAuth = StringUtils.newStringUtf8(Base64.encodeBase64(auth.getBytes()));
         responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}")
@@ -178,10 +143,5 @@ public class TestSubscriptionCRUD {
                         .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .respond(response().withBody(subscriptionRequestBody).withStatusCode(200)
                         .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
-    }
-
-    @After
-    public void after() throws IOException {
-    	backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 }

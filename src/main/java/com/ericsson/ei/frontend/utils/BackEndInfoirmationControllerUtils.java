@@ -89,9 +89,9 @@ public class BackEndInfoirmationControllerUtils {
                     "{\"message\": \"Backend instance with name '" + selectedInstanceName + "' was selected.\"}",
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Internal error" + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Error while switching instance: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -115,9 +115,9 @@ public class BackEndInfoirmationControllerUtils {
                     + objectToDelete.get("name").getAsString() + "' was deleted.\"}",
                     getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Internal error" + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Error while deleting instance: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -134,31 +134,45 @@ public class BackEndInfoirmationControllerUtils {
                     .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
-            if (backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance)) {
+            final boolean instanceNameAlreadyExist = backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance);
+            if (instanceNameAlreadyExist) {
                 LOG.debug("Not a unique name.");
                 return new ResponseEntity<>(
-                        "{\"message\": \"Backend instance with name '"
+                        "{\"message\": \"Back-end instance with name '"
                         + instance.get("name").getAsString() + "' already exists.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 
-            if (!backEndInstancesUtils.checkIfInstanceAlreadyExist(instance)) {
-                backEndInstancesUtils.addNewBackEnd(instance);
-                LOG.debug("Added new back end.");
-                return new ResponseEntity<>(
-                        "{\"message\": \"Backend instance with name '"
-                        + instance.get("name").getAsString() + "' was added.\"}",
-                        getHeaders(), HttpStatus.OK);
-            } else {
-                LOG.debug("Back end already exist.");
-                return new ResponseEntity<>(
-                        "{\"message\": \"Backend instance already exist.\"}",
-                        getHeaders(), HttpStatus.BAD_REQUEST);
+            final boolean instanceHasDefaultFlag = instance.has(BackEndInstancesUtils.DEFAULT);
+            if(instanceHasDefaultFlag && instance.get(BackEndInstancesUtils.DEFAULT).getAsBoolean()) {
+                final boolean defaultBackEndExist = backEndInstancesUtils.hasDefaultBackend();
+                if (defaultBackEndExist) {
+                    LOG.debug("Default back-end instance already exists.");
+                    return new ResponseEntity<>(
+                            "{\"message\": \"A default back-end instance already exists.\"}",
+                            getHeaders(), HttpStatus.BAD_REQUEST);
+                }
             }
-        } catch (Exception e) {
+
+            final boolean instanceValuesAlreadyExist = backEndInstancesUtils.checkIfInstanceAlreadyExist(instance);
+            if (instanceValuesAlreadyExist) {
+                LOG.debug("Back-end values already exist.");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance with given values already exist.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+
+            }
+
+            backEndInstancesUtils.addNewBackEnd(instance);
+            LOG.debug("Added new back-end.");
             return new ResponseEntity<>(
-                    "Internal error, " + e.getMessage(),
-                    getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    "{\"message\": \"Back-end instance with name '"
+                    + instance.get("name").getAsString() + "' was successfully added to the back-end instance list.\"}",
+                    getHeaders(), HttpStatus.OK);
+        } catch (Exception e) {
+            LOG.error("Error while adding instances: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -171,7 +185,7 @@ public class BackEndInfoirmationControllerUtils {
 
     private JsonArray setActiveInstance(JsonArray allAvailableInstances, String activeInstance) {
         if (allAvailableInstances.size() == 0) {
-            throw new NoSuchElementException ("No Available instances.");
+            throw new NoSuchElementException ("No Available instances, back end instance list is empty!");
         }
         for (JsonElement element : allAvailableInstances) {
             if (activeInstance == null && element.getAsJsonObject().get("defaultBackend").getAsBoolean()) {

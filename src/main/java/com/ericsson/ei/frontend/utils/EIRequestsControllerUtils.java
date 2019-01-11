@@ -16,6 +16,7 @@
 */
 package com.ericsson.ei.frontend.utils;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -56,6 +57,7 @@ public class EIRequestsControllerUtils {
      *
      * @param request
      * @return String
+     * @throws IOException
      */
     public String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
@@ -67,6 +69,7 @@ public class EIRequestsControllerUtils {
             List<NameValuePair> params = getParameters(requestQuery);
             requestUrl = extractUrlFromParameters(params);
             requestQuery = removeBackendDataFromQueryString(params);
+            LOG.info(BACKEND_KEY_NAME + " key detected, forwarding request to url '" + requestUrl + "'.");
         } else {
             BackEndInformation backEndInformation = getEIBackendInformation(request);
             requestUrl = backEndInformation.getUrlAsString();

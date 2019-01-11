@@ -16,6 +16,10 @@
 */
 package com.ericsson.ei.frontend.utils;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,29 +40,38 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WebControllerUtils {
 
-    @Value("${ei.frontendServiceHost}")
+    @Value("${ei.frontendServiceHost:#{null}}")
     private String frontendServiceHost;
 
-    @Value("${ei.frontendServicePort}")
+    @Value("${ei.frontendServicePort:#{null}}")
     private int frontendServicePort;
 
-    @Value("${ei.frontendContextPath}")
+    @Value("${ei.frontendContextPath:#{null}}")
     private String frontendContextPath;
 
-    @Value("${ei.useSecureHttpFrontend}")
+    @Value("${ei.useSecureHttpFrontend:#{null}}")
     private boolean useSecureHttpFrontend;
 
-    @Value("${ei.eiffelDocumentationUrls}")
+    @Value("${ei.eiffelDocumentationUrls:#{null}}")
     private String eiffelDocumentationUrls;
 
-    @Value("${spring.application.name}")
-    private String applicationName;
+    @Value("${build.version:#{null}}")
+    private String applicationPropertiesVersion;
 
-    @Value("${build.version}")
     private String version;
+
+    private String applicationName;
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
+
+    @PostConstruct
+    public void init() throws IOException {
+        Properties properties = new Properties();
+        properties.load(WebControllerUtils.class.getResourceAsStream("/default-application.properties"));
+        version = properties.getProperty("version");
+        applicationName = properties.getProperty("artifactId");
+    }
 
     /**
      * Formats the parameters in the class to an URL as String.

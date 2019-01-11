@@ -4,6 +4,7 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
+var timerInterval;
 
 jQuery(document).ready(function () {
 
@@ -28,7 +29,6 @@ jQuery(document).ready(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 callback.error(XMLHttpRequest, textStatus, errorThrown);
-                window.logMessages(XMLHttpRequest.responseText);
             },
             success: function (data, textStatus) {
                 callback.success(data, textStatus);
@@ -87,7 +87,9 @@ jQuery(document).ready(function () {
     }
 
     // Check if EI Backend Server is online every X seconds
-    window.setInterval(function () { checkBackendStatus(); }, 15000);
+    if (timerInterval == null){
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    }
 
     // Check if buttons should be enabled or disabled
     // Toggle warning text on and off
@@ -135,7 +137,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
-        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'}); 
+        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'});
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -245,7 +247,8 @@ jQuery(document).ready(function () {
                 { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
-        
+
+
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.restPost = ko.observable(false);
@@ -540,20 +543,15 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                $.jGrowl('Subscriptions deleted!', {
-                    sticky: false,
-                    theme: 'Notify'
-                });
                 //if success reload ajax table
                 $('#modal_form').modal('hide');
                 reload_table();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages(XMLHttpRequest.responseText);
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
             },
             complete: function () {
@@ -644,19 +642,19 @@ jQuery(document).ready(function () {
                 if (returnData.length > 0) {
                     $.jGrowl("Subscriptions were successfully created.", {
                         sticky: false,
-                        theme: 'Error'
+                        theme: 'Notify'
                     });
                     reload_table();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failed to create Subscriptions.");
+                var errorMessage = "";
                 reload_table();
-                $.jGrowl("Failed to create Subscriptions.", { sticky: false, theme: 'Error' });
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
+                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason +"\n";
                 }
+                window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
             },
             complete: function () {
             }
@@ -792,17 +790,9 @@ jQuery(document).ready(function () {
             vm.subscription()[0].restPostBodyMediaType.valueHasMutated();
             loadTooltip();
             $('#modal_form').modal('show');
-            if (save_method_in === "edit") {
-                title_ = 'Edit Subscription';
-                addEditMode();
-            } else if (save_method_in === "add") {
 
-                title_ = 'Add Subscription';
-                addEditMode();
-            } else {
-                title_ = 'View Subscription';
-                viewMode();
-            }
+            setViewMode(save_method_in);
+
             $('.modal-title').text(title_);
             save_method = save_method_in;
             $('#modal_form').on('hidden.bs.modal', function() {
@@ -811,11 +801,26 @@ jQuery(document).ready(function () {
         }
     }
 
-    function addEditMode() {
+    function setViewMode(save_method_in) {
+        if (save_method_in === "edit") {
+            title_ = 'Edit Subscription';
+            enableAllForms();
+            $('#subscriptionNameInput').prop('disabled', true);
+        } else if (save_method_in === "add") {
+            title_ = 'Add Subscription';
+            enableAllForms();
+        } else {
+            title_ = 'View Subscription';
+            disableAllForms();
+        }
+    }
+
+    function enableAllForms() {
         $('#modal_form :button').show();
         $('#modal_form :input').prop("disabled", false);
     }
-    function viewMode() {
+
+    function disableAllForms() {
         $('#modal_form :button').hide();
         $('#modal_form :input').prop("disabled", true);
         $('#modal_form .close').show();
@@ -1087,7 +1092,6 @@ jQuery(document).ready(function () {
                 var errors = "";
                 for (var i = 0; i < responseJSON.length; i++) {
                     errors = errors + "\n" + responseJSON[i].reason;
-                    $.jGrowl(responseJSON[i].subscription + " :: " + responseJSON[i].reason, { sticky: true, theme: 'Error' });
                 }
                 $('#serverError').text(errors);
                 $('#serverError').show();
@@ -1114,11 +1118,6 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                $.jGrowl('Subscription deleted!', {
-                    sticky: false,
-                    theme: 'Notify'
-                });
-
                 //if success reload ajax table
                 $('#modal_form').modal('hide');
                 reload_table();
@@ -1133,7 +1132,7 @@ jQuery(document).ready(function () {
 
         $.confirm({
             title: 'Confirm!',
-            content: 'Are you sure delete this subscription?',
+            content: 'Please confirm before deleting subscription!',
             buttons: {
                 confirm: function () {
                     var ajaxHttpSender = new AjaxHttpSender();

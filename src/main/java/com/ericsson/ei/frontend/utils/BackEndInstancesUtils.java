@@ -23,7 +23,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
@@ -66,8 +65,9 @@ public class BackEndInstancesUtils {
     private boolean savedSinceLastParsing = false;
 
     /**
-     * Function to check weather an instance host, port, context path and https is
-     * unique.
+     * Returns true or false depending if instance host, port, contextPath or https already exist.
+     * Will return true if all values are the same, false if any value is different, thus input instance
+     * details are unique.
      *
      * @param JsonObject
      * @return boolean
@@ -88,7 +88,7 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Returns whether the name is unique, the name is an identifier thus must be
+     * Returns true or false depending if the name is unique, the name is an identifier thus must be
      * unique.
      *
      * @param JsonObject
@@ -102,7 +102,21 @@ public class BackEndInstancesUtils {
             }
         }
         return false;
+    }
 
+    /**
+     * Returns true or false depending if default instance exist.
+     *
+     * @param instance
+     * @return boolean
+     */
+    public boolean hasDefaultBackend() {
+        for (BackEndInformation backendInformation : backEndInformationList) {
+            if (backendInformation.isDefaultBackend()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
