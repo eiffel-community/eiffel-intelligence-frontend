@@ -20,7 +20,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import com.google.gson.JsonNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +73,7 @@ public class BackendInstancesUtilsTest {
 
     @Test
     public void testContainsNullValuesTrue() {
-        instance.add("port", JsonNull.INSTANCE);
+        instance.add("port", null);
         assertEquals(true, utils.containsNullValues(instance));
     }
 

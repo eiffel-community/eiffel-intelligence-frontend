@@ -138,7 +138,7 @@ public class BackEndInformationControllerUtils {
             if (!hasRequiredData) {
                 LOG.debug("Json data is missing required keys");
                 return new ResponseEntity<>(
-                        "{\"message\": \"Back-end instance is missing required JSON keys.\"}",
+                        "{\"message\": \"Back-end instance is missing required data.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
             }
 

@@ -86,9 +86,9 @@ public class BackEndInstancesUtils {
      * @return boolean
      * */
     public boolean containsNullValues(JsonObject instance) {
-        for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
-            if (e.getValue().isJsonNull() || e.getValue() == null) {
-                LOG.debug(e.toString() + " can not be null!");
+        for (Map.Entry<String, JsonElement> entrySet : instance.entrySet()) {
+            if (entrySet.getValue().isJsonNull() || entrySet.getValue() == null) {
+                LOG.debug(entrySet.toString() + " can not be null!");
                 return true;
             }
         }
@@ -104,11 +104,11 @@ public class BackEndInstancesUtils {
      * */
     public boolean containsAdditionalKeys(JsonObject instance) {
         if (instance.size() > ALLOWED_JSON_KEYS.size()) {
-            for (Map.Entry<String, JsonElement> e : instance.entrySet()) {
+            for (Map.Entry<String, JsonElement> entrySet : instance.entrySet()) {
 
-                boolean hasUnrecognizedKeys = !ALLOWED_JSON_KEYS.contains(e.getKey());
+                boolean hasUnrecognizedKeys = !ALLOWED_JSON_KEYS.contains(entrySet.getKey());
                 if (hasUnrecognizedKeys) {
-                    LOG.debug("Unrecognized key " + e.getKey());
+                    LOG.debug("Unrecognized key " + entrySet.getKey());
                     return true;
                 }
             }
