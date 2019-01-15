@@ -24,7 +24,7 @@ Feature: Subscriptions test
     And '/Subscription_Test' is appended to endpoint
     And request is sent
     Then response code 200 is received
-    And body contains 'MAIL'
+    And resource body contains 'MAIL'
 
   @DeleteSubscriptionScenario
   Scenario: Delete subscription
