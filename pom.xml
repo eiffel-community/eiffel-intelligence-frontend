@@ -37,6 +37,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <output-relative-path>src/main/java</output-relative-path>
+        <skipTests>false</skipTests>
+        <skipITs>${skipTests}</skipITs>
+        <skipUTs>${skipTests}</skipUTs>
     </properties>
 
     <dependencies>
@@ -130,6 +133,31 @@
             <artifactId>jarchivelib</artifactId>
             <version>0.7.1</version>
         </dependency>
+        <!-- Cucumber -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,6 +177,15 @@
                 </excludes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>src/integrationtest/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -176,6 +213,8 @@
                             <sources>
                                 <source>src/functionaltest/java</source>
                                 <source>src/functionaltest/resources</source>
+                                <source>src/integrationtest/java</source>
+                                <source>src/integrationtest/resources</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -187,16 +226,46 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.20</version>
                 <configuration>
+                    <skipTests>${skipUTs}</skipTests>
                     <forkCount>2.5C</forkCount>
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
+                        <exclude>**/*IT.java</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
                     </excludes>
                     <includes>
                         <include>${someModule.test.includes}</include>
                     </includes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                    <skipITs>${skipITs}</skipITs>
+                    <systemPropertyVariables>
+                        <rabbit.host>localhost</rabbit.host>
+                        <rabbit.port>5672</rabbit.port>
+                        <rabbit.username>myuser</rabbit.username>
+                        <rabbit.password>myuser</rabbit.password>
+                        <rabbit.exchange>ei-exchange</rabbit.exchange>
+                        <rabbit.key>#</rabbit.key>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
