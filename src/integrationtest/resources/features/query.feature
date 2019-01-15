@@ -18,7 +18,7 @@ Feature: Query test
     And param key 'ID' with value '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43' is added
     And request is sent
     Then response code 200 is received
-    And body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'
+    And response body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'
 
   @QueryFreestyleScenario
   Scenario: Query aggregated object with freestyle criteria
@@ -28,4 +28,4 @@ Feature: Query test
     And body is set to file 'queryFreestyle.json'
     And request is sent
     Then response code 200 is received
-    And body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'
+    And response body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'

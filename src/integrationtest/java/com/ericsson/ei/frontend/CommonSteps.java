@@ -159,7 +159,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         assertEquals(fileContent.replaceAll("\\s+", ""), response.getBody().replaceAll("\\s+", ""));
     }
 
-    @Then("^body contains \'(.*)\'$")
+    @Then("^response body contains \'(.*)\'$")
     public void response_body_contains(String contains) throws Throwable {
         LOGGER.info("Response body: {}", response.getBody());
         assertEquals(true, response.getBody().contains(contains));
