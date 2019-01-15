@@ -61,6 +61,34 @@ public class BackendInstancesUtilsTest {
     }
 
     @Test
+    public void testHasRequiredJsonKeys() {
+        // removing required key port and the json object should not be valid
+        instance.remove("port");
+        assertEquals(false, utils.hasRequiredJsonKeys(instance));
+
+        // adding the key port with a value and it should pass
+        instance.addProperty("port", 1234);
+        assertEquals(true, utils.hasRequiredJsonKeys(instance));
+    }
+
+    @Test
+    public void testContainsNullValuesTrue() {
+        instance.add("port", null);
+        assertEquals(true, utils.containsNullValues(instance));
+    }
+
+    @Test
+    public void testContainsAdditionalKeysTrue() {
+        // add extra random key
+        instance.addProperty("randomKey", "randomValue");
+        assertEquals(true, utils.containsAdditionalKeys(instance));
+
+        // clean up of excess JSON key
+        instance.remove("randomKey");
+        assertEquals(false, utils.containsAdditionalKeys(instance));
+    }
+
+    @Test
     public void testCheckIfInstanceAlreadyExistTrue() {
         boolean result;
         when(fileUtils.getInstancesFromFile()).thenReturn(instances);
@@ -135,7 +163,7 @@ public class BackendInstancesUtilsTest {
     }
 
     @Test
-    public void testAddNewBackEnd() {
+    public void testAddNewBackEnd() throws IOException {
         when(fileUtils.getInstancesFromFile()).thenReturn(new JsonArray());
         utils.addNewBackEnd(instance);
         assertEquals(instance, utils.getBackEndInformationList().get(0).getAsJsonObject());

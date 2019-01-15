@@ -17,9 +17,11 @@
 package com.ericsson.ei.frontend.utils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,6 @@ import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +46,8 @@ public class BackEndInstancesUtils {
     public static final String CONTEXT_PATH = "contextPath";
     public static final String HTTPS = "https";
     public static final String DEFAULT = "defaultBackend";
+    public static final List<String> ALLOWED_JSON_KEYS = Arrays.asList("name",
+            "host", "port", "contextPath", "https", "defaultBackend");
 
     private static final long SECONDS_BETWEEN_PARSING = 20;
 
@@ -63,6 +64,57 @@ public class BackEndInstancesUtils {
     private boolean isRunningTests = false;
     private long nextTimeToParse = 0;
     private boolean savedSinceLastParsing = false;
+
+    /**
+     * Checks that all required keys exist in the incoming json object.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean hasRequiredJsonKeys(JsonObject instance) {
+        if (instance.has(HOST) && instance.has(PORT) && instance.has(NAME)
+                && instance.has(CONTEXT_PATH) && instance.has(HTTPS)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if json values in backend instance are null.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean containsNullValues(JsonObject instance) {
+        for (Map.Entry<String, JsonElement> entrySet : instance.entrySet()) {
+            if (entrySet.getValue().isJsonNull() || entrySet.getValue() == null) {
+                LOG.debug(entrySet.toString() + " can not be null!");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks that the incoming json data does not contain additional keys. Any
+     * unrecognized keys are logged.
+     *
+     * @param JsonObject instance
+     * @return boolean
+     * */
+    public boolean containsAdditionalKeys(JsonObject instance) {
+        if (instance.size() > ALLOWED_JSON_KEYS.size()) {
+            for (Map.Entry<String, JsonElement> entrySet : instance.entrySet()) {
+
+                boolean hasUnrecognizedKeys = !ALLOWED_JSON_KEYS.contains(entrySet.getKey());
+                if (hasUnrecognizedKeys) {
+                    LOG.debug("Unrecognized key " + entrySet.getKey());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Returns true or false depending if instance host, port, contextPath or https already exist.
@@ -107,7 +159,6 @@ public class BackEndInstancesUtils {
     /**
      * Returns true or false depending if default instance exist.
      *
-     * @param instance
      * @return boolean
      */
     public boolean hasDefaultBackend() {
@@ -122,7 +173,7 @@ public class BackEndInstancesUtils {
     /**
      * Returns the BackEndInformation based on input name.
      *
-     * @param String name
+     * @param String backEndName
      * @return backendInformation if exist null if no backendInformation exist
      */
     public BackEndInformation getBackEndInformationByName(String backEndName) {
@@ -156,13 +207,9 @@ public class BackEndInstancesUtils {
      *
      * @param instance back end information as JsonObject
      */
-    public void addNewBackEnd(JsonObject instance) {
+    public void addNewBackEnd(JsonObject instance) throws IOException {
         parseBackEndInstances();
-        try {
-            backEndInformationList.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
-        } catch (IOException e) {
-            LOG.error("Failure when trying to add instance " + e.getMessage());
-        }
+        backEndInformationList.add(new ObjectMapper().readValue(instance.toString(), BackEndInformation.class));
         saveBackEndInformationList();
     }
 
@@ -205,7 +252,7 @@ public class BackEndInstancesUtils {
     }
 
     /**
-     * Tunction that may be used to set default back end.
+     * Function that may be used to set default back end.
      *
      * @param name
      * @param host

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ericsson.ei.frontend.utils.BackEndInfoirmationControllerUtils;
+import com.ericsson.ei.frontend.utils.BackEndInformationControllerUtils;
 
 @Controller
 public class BackEndInformationController {
@@ -37,7 +37,7 @@ public class BackEndInformationController {
     public static final Logger LOG = LoggerFactory.getLogger(BackEndInformationController.class);
 
     @Autowired
-    private BackEndInfoirmationControllerUtils backEndInfoContUtils;
+    private BackEndInformationControllerUtils backEndInfoContUtils;
 
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.GET)

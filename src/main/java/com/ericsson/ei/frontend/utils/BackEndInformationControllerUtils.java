@@ -37,9 +37,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Component
-public class BackEndInfoirmationControllerUtils {
+public class BackEndInformationControllerUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInfoirmationControllerUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationControllerUtils.class);
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
@@ -134,6 +134,30 @@ public class BackEndInfoirmationControllerUtils {
                     .collect(Collectors.joining(System.lineSeparator()));
             JsonObject instance = new JsonParser().parse(newInstanceAsString).getAsJsonObject();
 
+            final boolean hasRequiredData = backEndInstancesUtils.hasRequiredJsonKeys(instance);
+            if (!hasRequiredData) {
+                LOG.debug("Json data is missing required keys");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance is missing required data.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
+            final boolean hasNullValues = backEndInstancesUtils.containsNullValues(instance);
+            if (hasNullValues) {
+                LOG.debug("Json data contains null values");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance can not have null values.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
+            final boolean containsUnrecognizedKeys = backEndInstancesUtils.containsAdditionalKeys(instance);
+            if (containsUnrecognizedKeys) {
+                LOG.debug("JSON data contains unrecognized keys");
+                return new ResponseEntity<>(
+                        "{\"message\": \"Back-end instance contains unrecognized JSON keys.\"}",
+                        getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+
             final boolean instanceNameAlreadyExist = backEndInstancesUtils.checkIfInstanceNameAlreadyExist(instance);
             if (instanceNameAlreadyExist) {
                 LOG.debug("Not a unique name.");
@@ -160,7 +184,6 @@ public class BackEndInfoirmationControllerUtils {
                 return new ResponseEntity<>(
                         "{\"message\": \"Back-end instance with given values already exist.\"}",
                         getHeaders(), HttpStatus.BAD_REQUEST);
-
             }
 
             backEndInstancesUtils.addNewBackEnd(instance);
