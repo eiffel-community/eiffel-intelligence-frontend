@@ -56,9 +56,10 @@ public class CommonSteps extends AbstractTestExecutionListener {
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
 
-    private static final String BODIES_PATH = "/bodies/";
-    private static final String RESPONSES_PATH = "/responses/";
-    private static final String EIFFEL_EVENT_PATH = "/eiffel_event.json";
+    private static final String RESOURCE_PATH = "src/integrationtest/resources/";
+    private static final String BODIES_PATH = "bodies/";
+    private static final String RESPONSES_PATH = "responses/";
+    private static final String EIFFEL_EVENT_FILE = "eiffel_event.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
 
@@ -81,7 +82,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @Given("^an aggregated object is created$")
     public void aggregated_object_created() throws IOException, TimeoutException {
         LOGGER.debug("Sending Eiffel events for aggregation.");
-        String eventFilePath = this.getClass().getResource(EIFFEL_EVENT_PATH).getFile();
+        String eventFilePath = Paths.get(RESOURCE_PATH, EIFFEL_EVENT_FILE).toString();
         String eventFileContent = FileUtils.readFileToString(new File(eventFilePath), "UTF-8");
 
         AMQPCommunication amqp = new AMQPCommunication(rabbitHost, rabbitPort, rabbitUsername, rabbitPassword);
@@ -110,15 +111,15 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @When("^body is set to file \'(.*)\'$")
     public void set_body(String filename) throws Throwable {
-        String filePath = this.getClass().getResource(Paths.get(BODIES_PATH, filename).toString()).getFile();
+        String filePath = Paths.get(RESOURCE_PATH, BODIES_PATH, filename).toString();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         httpRequest.addHeader("Content-type", "application/json").setBody(fileContent);
     }
 
     @When("^aggregation is prepared with rules file \'(.*)\' and events file \'(.*)\'$")
     public void aggregation_is_prepared(String rulesFileName, String eventsFileName) throws Throwable {
-        String rulesPath = this.getClass().getResource(Paths.get(BODIES_PATH, rulesFileName).toString()).getFile();
-        String eventsPath = this.getClass().getResource(Paths.get(BODIES_PATH, eventsFileName).toString()).getFile();
+        String rulesPath = Paths.get(RESOURCE_PATH, BODIES_PATH, rulesFileName).toString();
+        String eventsPath = Paths.get(RESOURCE_PATH, BODIES_PATH, eventsFileName).toString();
         String rules = FileUtils.readFileToString(new File(rulesPath), "UTF-8");
         String events = FileUtils.readFileToString(new File(eventsPath), "UTF-8");
         String body = new JSONObject().put("listRulesJson", new JSONArray(rules))
@@ -152,7 +153,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Then("^response body from file \'(.*)\' is received$")
     public void get_response_body_from_file(String filename) throws Throwable {
-        String filePath = this.getClass().getResource(Paths.get(RESPONSES_PATH, filename).toString()).getFile();
+        String filePath = Paths.get(RESOURCE_PATH, RESPONSES_PATH, filename).toString();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.info("File path: {}", filePath);
         LOGGER.info("Response body: {}", response.getBody());
