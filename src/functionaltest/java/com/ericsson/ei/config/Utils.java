@@ -48,7 +48,7 @@ public class Utils {
      *            string containing a destination path.
      */
     public static void extractBZip2InDir(final String firefoxBZip2FilePath, String destinationPath) {
-        LOGGER.info("Extracting firefox BZip2 archive...");
+        LOGGER.debug("Extracting firefox BZip2 archive...");
         try (TarArchiveInputStream fileInput = new TarArchiveInputStream(
                 new BZip2CompressorInputStream(new FileInputStream(firefoxBZip2FilePath)))) {
             TarArchiveEntry entry;
@@ -86,7 +86,7 @@ public class Utils {
 
         try {
             urlObj = new URL(url);
-            LOGGER.info("Downloading file.\nSource: {}\nDestination: {}", url, destination);
+            LOGGER.debug("Downloading file.\nSource: {}\nDestination: {}", url, destination);
             FileUtils.copyURLToFile(urlObj, file);
         } catch (MalformedURLException e) {
             LOGGER.error("Failed to create URL object.\nURL: {}\nError: {}", url, e.getMessage());
@@ -103,7 +103,7 @@ public class Utils {
      */
     public static void makeBinFileExecutable(final File binFile) {
         if (binFile.isFile()) {
-            LOGGER.info("Changing bin file to be executable.\nPath: {}", binFile.getPath());
+            LOGGER.debug("Changing bin file to be executable.\nPath: {}", binFile.getPath());
             binFile.setExecutable(true);
         } else {
             LOGGER.error("Path is not a file.\nPath: {}", binFile.getPath());
