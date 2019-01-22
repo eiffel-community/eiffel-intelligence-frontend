@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -139,6 +140,16 @@ public class CommonSteps extends AbstractTestExecutionListener {
         response = httpRequest.performRequest();
     }
 
+    @When("^request is sent til body \'(.*)\' is not received$")
+    public void request_sent_body_not_received(String received) throws Throwable {
+        response = httpRequest.performRequest();
+        long stopTime = System.currentTimeMillis() + 30000;
+        while (response.getBody().equalsIgnoreCase(received) && stopTime > System.currentTimeMillis()) {
+            response = httpRequest.performRequest();
+        }
+        assertEquals(true, !response.getBody().equalsIgnoreCase(received));
+    }
+
     @Then("^response code (\\d+) is received$")
     public void get_response_code(int statusCode) throws Throwable {
         LOGGER.debug("Response code: {}", response.getStatusCode());
@@ -163,6 +174,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @Then("^response body contains \'(.*)\'$")
     public void response_body_contains(String contains) throws Throwable {
         LOGGER.debug("Response body: {}", response.getBody());
+        LOGGER.debug("Contains: {}", contains);
         assertEquals(true, response.getBody().contains(contains));
     }
 }

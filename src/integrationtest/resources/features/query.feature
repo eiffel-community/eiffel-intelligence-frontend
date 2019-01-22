@@ -16,7 +16,7 @@ Feature: Query test
     And an aggregated object is created
     When a 'GET' request is prepared for REST API '/queryAggregatedObject'
     And param key 'ID' with value '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43' is added
-    And request is sent
+    And request is sent til body '{"responseEntity":"[]"}' is not received
     Then response code 200 is received
     And response body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'
 
@@ -26,6 +26,6 @@ Feature: Query test
     And an aggregated object is created
     When a 'POST' request is prepared for REST API '/query'
     And body is set to file 'queryFreestyle.json'
-    And request is sent
+    And request is sent til body '[]' is not received
     Then response code 200 is received
     And response body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'
