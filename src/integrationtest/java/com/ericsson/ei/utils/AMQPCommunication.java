@@ -36,7 +36,7 @@ public class AMQPCommunication {
      */
     public AMQPCommunication(final String host, final int port, final String username, final String password)
             throws IOException, TimeoutException {
-        LOGGER.info("Setting up RabbitMQ connection to '{}:{}'", host, port);
+        LOGGER.debug("Setting up RabbitMQ connection to '{}:{}'", host, port);
         this.factory = new ConnectionFactory();
         this.factory.setHost(host);
         this.factory.setPort(port);
@@ -58,11 +58,11 @@ public class AMQPCommunication {
      * @return true if message was sent, false otherwise
      */
     public boolean produceMessage(final String message, final String exchange, final String key) {
-        LOGGER.info("Preparing to produce message -> Host: {}, Exchange: {}, RoutingKey: {}\nMessage: {}",
+        LOGGER.debug("Preparing to produce message -> Host: {}, Exchange: {}, RoutingKey: {}\nMessage: {}",
                 factory.getHost() + ":" + factory.getPort(), exchange, key, message);
         try {
             this.channel.basicPublish(exchange, key, null, message.getBytes());
-            LOGGER.info("Message being sent.");
+            LOGGER.debug("Message being sent.");
             return true;
         } catch (IOException e) {
             LOGGER.error("An error occured when trying to produce the message.", e);

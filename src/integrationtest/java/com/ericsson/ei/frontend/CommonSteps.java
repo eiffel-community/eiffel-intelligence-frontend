@@ -75,7 +75,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Given("^frontend is up and running$")
     public void frontend_running() {
-        LOGGER.info("Front-end port: {}", frontendPort);
+        LOGGER.debug("Front-end port: {}", frontendPort);
         assertEquals(true, frontendPort != 0);
     }
 
@@ -93,7 +93,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @When("^a \'(\\w+)\' request is prepared for REST API \'(.*)\'$")
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
-        LOGGER.info("Method: {}, Endpoint: {}", method, endpoint);
+        LOGGER.debug("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
         httpRequest.setHost(frontendHost).setPort(frontendPort).setEndpoint(endpoint);
     }
@@ -141,13 +141,13 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Then("^response code (\\d+) is received$")
     public void get_response_code(int statusCode) throws Throwable {
-        LOGGER.info("Response code: {}", response.getStatusCode());
+        LOGGER.debug("Response code: {}", response.getStatusCode());
         assertEquals(HttpStatus.valueOf(statusCode), response.getStatusCode());
     }
 
     @Then("^response body \'(.*)\' is received$")
     public void get_response_body(String body) throws Throwable {
-        LOGGER.info("Response body: {}", response.getBody());
+        LOGGER.debug("Response body: {}", response.getBody());
         assertEquals(body, response.getBody());
     }
 
@@ -155,14 +155,14 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void get_response_body_from_file(String filename) throws Throwable {
         String filePath = Paths.get(RESOURCE_PATH, RESPONSES_PATH, filename).toString();
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
-        LOGGER.info("File path: {}", filePath);
-        LOGGER.info("Response body: {}", response.getBody());
+        LOGGER.debug("File path: {}", filePath);
+        LOGGER.debug("Response body: {}", response.getBody());
         assertEquals(fileContent.replaceAll("\\s+", ""), response.getBody().replaceAll("\\s+", ""));
     }
 
     @Then("^response body contains \'(.*)\'$")
     public void response_body_contains(String contains) throws Throwable {
-        LOGGER.info("Response body: {}", response.getBody());
+        LOGGER.debug("Response body: {}", response.getBody());
         assertEquals(true, response.getBody().contains(contains));
     }
 }
