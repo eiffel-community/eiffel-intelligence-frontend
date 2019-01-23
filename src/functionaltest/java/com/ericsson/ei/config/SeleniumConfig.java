@@ -107,12 +107,8 @@ public class SeleniumConfig {
      *
      * */
     private static void setFirefoxLogFileProperty() {
-        // Removes ALL logs from FirefoxDriver ...
-        // System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "/dev/null");
-
         File tempLogDir = Files.createTempDir();
         File logFile = new File(tempLogDir + "webdriver.logs");
-
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile.toString());
 
         LOGGER.debug("Setting Firefox driver log file to: "
