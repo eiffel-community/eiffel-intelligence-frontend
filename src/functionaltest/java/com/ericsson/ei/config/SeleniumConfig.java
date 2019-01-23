@@ -107,11 +107,9 @@ public class SeleniumConfig {
      *
      * */
     private static void setFirefoxLogFileProperty() {
-        File tempLogDir = Files.createTempDir();
-        File logFile = new File(tempLogDir + "webdriver.logs");
+        File logFile = new File("webdriver.logs");
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile.toString());
-
-        LOGGER.debug("Setting Firefox driver log file to: "
+        LOGGER.debug("Redirecting Firefox driver logs to: "
                 + System.getProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE));
     }
 
