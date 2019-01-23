@@ -23,7 +23,7 @@ Feature: Subscriptions test
   Scenario: Get subscription
     Given frontend is up and running
     When a 'GET' request is prepared for REST API '/subscriptions'
-    And '/Subscription_Test' is appended to endpoint
+    And '/Subscription_IT' is appended to endpoint
     And username "gauss" and password "password" is used as credentials
     And request is sent
     Then response code 200 is received
@@ -33,7 +33,7 @@ Feature: Subscriptions test
   Scenario: Delete subscription
     Given frontend is up and running
     When a 'DELETE' request is prepared for REST API '/subscriptions'
-    And '/Subscription_Test' is appended to endpoint
+    And '/Subscription_IT' is appended to endpoint
     And username "gauss" and password "password" is used as credentials
     And request is sent
     Then response code 200 is received
