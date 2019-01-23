@@ -58,7 +58,7 @@ public class SeleniumConfig {
             throw new OSNotSupportedException();
         }
 
-        setFirefoxLogFileProperty();
+        //setFirefoxLogFileProperty();
         driver = new FirefoxDriver(firefoxOptions);
 
         //Make sure all firefox browsers are closed after all tests have finished
