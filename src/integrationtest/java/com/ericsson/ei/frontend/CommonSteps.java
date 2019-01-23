@@ -140,14 +140,13 @@ public class CommonSteps extends AbstractTestExecutionListener {
         response = httpRequest.performRequest();
     }
 
-    @When("^request is sent til body \'(.*)\' is not received$")
-    public void request_sent_body_not_received(String received) throws Throwable {
-        response = httpRequest.performRequest();
-        long stopTime = System.currentTimeMillis() + 30000;
-        while (response.getBody().equalsIgnoreCase(received) && stopTime > System.currentTimeMillis()) {
+    @When("^request is sent for (\\d+) seconds until reponse code no longer matches (\\d+)$")
+    public void request_sent_body_not_received(int seconds, int statusCode) throws Throwable {
+        long stopTime = System.currentTimeMillis() + seconds * 1000;
+        do {
             response = httpRequest.performRequest();
-        }
-        assertEquals(true, !response.getBody().equalsIgnoreCase(received));
+        } while (response.getStatusCode().value() == statusCode && stopTime > System.currentTimeMillis());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Then("^response code (\\d+) is received$")
