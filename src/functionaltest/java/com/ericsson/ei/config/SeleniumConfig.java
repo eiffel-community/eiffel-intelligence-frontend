@@ -58,7 +58,7 @@ public class SeleniumConfig {
             throw new OSNotSupportedException();
         }
 
-        //setFirefoxLogFileProperty();
+        setFirefoxLogFileProperty();
         driver = new FirefoxDriver(firefoxOptions);
 
         //Make sure all firefox browsers are closed after all tests have finished
@@ -107,7 +107,7 @@ public class SeleniumConfig {
      *
      * */
     private static void setFirefoxLogFileProperty() {
-        File logFile = new File("webdriver.logs");
+        File logFile = new File("/tmp/mozilla.log");
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile.toString());
         LOGGER.debug("Redirecting Firefox driver logs to: "
                 + System.getProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE));
