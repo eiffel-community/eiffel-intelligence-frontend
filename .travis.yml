@@ -32,7 +32,7 @@ after_script:
 
 before_deploy:
   - rm -rf docs
-  - mvn site
+  - mvn site -B
   - mvn clean
 
 deploy:
