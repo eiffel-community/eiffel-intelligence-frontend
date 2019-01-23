@@ -4,10 +4,7 @@ import com.ericsson.ei.frontend.exception.OSNotSupportedException;
 import com.ericsson.ei.frontend.exception.PropertiesNotLoadedException;
 import com.google.common.io.Files;
 import org.apache.commons.lang3.SystemUtils;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +44,7 @@ public class SeleniumConfig {
         if (!successfullyLoadedProperties) {
             LOGGER.error("Properties was not properly loaded.");
             throw new PropertiesNotLoadedException();
-        };
+        }
 
         if (SystemUtils.IS_OS_LINUX) {
             FirefoxBinary firefoxBinary = installFirefoxBinary();
@@ -61,6 +58,7 @@ public class SeleniumConfig {
             throw new OSNotSupportedException();
         }
 
+        setFirefoxLogFileProperty();
         driver = new FirefoxDriver(firefoxOptions);
 
         //Make sure all firefox browsers are closed after all tests have finished
@@ -103,4 +101,22 @@ public class SeleniumConfig {
             return true;
         }
     }
+
+    /**
+     * Redirecting the Firefox web driver logs to a temporary log file.
+     *
+     * */
+    private static void setFirefoxLogFileProperty() {
+        // Removes ALL logs from FirefoxDriver ...
+        // System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "/dev/null");
+
+        File tempLogDir = Files.createTempDir();
+        File logFile = new File(tempLogDir + "webdriver.logs");
+
+        System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile.toString());
+
+        LOGGER.debug("Setting Firefox driver log file to: "
+                + System.getProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE));
+    }
+
 }
