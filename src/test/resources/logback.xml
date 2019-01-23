@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- Removing logs of expected HTTP requests and responses -->
+    <logger name="org.mockserver.mock" level ="ERROR" />
+
+    <!-- Removing chatty logs from selenium firefox driver addons -->
+    <logger name="org.openqa.selenium" level="OFF" />
+
+    <root level="OFF" />
+
+</configuration>
