@@ -31,14 +31,12 @@ public class SeleniumConfig {
             return driver;
         }
 
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.download.folderList", 2);
-        firefoxProfile.setPreference("browser.download.dir", tempDownloadDirectory.getPath());
-        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
-
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                .setHeadless(true)
-                .setProfile(firefoxProfile);
+                .setHeadless(true);
+
+        firefoxOptions.setCapability("browser.download.folderList", 2);
+        firefoxOptions.setCapability("browser.download.dir", tempDownloadDirectory.getPath());
+        firefoxOptions.setCapability("browser.helperApps.neverAsk.saveToDisk", "application/json");
 
         boolean successfullyLoadedProperties = loadProperties();
         if (!successfullyLoadedProperties) {
@@ -58,7 +56,6 @@ public class SeleniumConfig {
             throw new OSNotSupportedException();
         }
 
-        setFirefoxLogFileProperty();
         driver = new FirefoxDriver(firefoxOptions);
 
         //Make sure all firefox browsers are closed after all tests have finished
@@ -100,17 +97,6 @@ public class SeleniumConfig {
             LOGGER.debug("Properties have been loaded.");
             return true;
         }
-    }
-
-    /**
-     * Redirecting the Firefox web driver logs to a temporary log file.
-     *
-     * */
-    private static void setFirefoxLogFileProperty() {
-        File logFile = new File("/tmp/mozilla.log");
-        System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile.toString());
-        LOGGER.debug("Redirecting Firefox driver logs to: "
-                + System.getProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE));
     }
 
 }

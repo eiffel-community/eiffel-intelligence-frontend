@@ -31,9 +31,6 @@ after_script:
   - fuser -k ${EI_BACKEND_PORT}/tcp
   - cd ..
 
-after_failure:
-  - cat /tmp/mozilla.log
-
 before_deploy:
   - rm -rf docs
   - mvn site -B
