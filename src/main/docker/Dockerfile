@@ -8,6 +8,6 @@ RUN echo echo Bulding Eiffel-Intelligence Front-end image based on artifact url:
 RUN ["rm", "-fr", "/usr/local/tomcat/webapps/ROOT"]
 ADD ${URL} /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 8092 8778 9779
+EXPOSE 8080
 
 CMD ["catalina.sh", "run"]

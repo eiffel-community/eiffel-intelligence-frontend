@@ -33,7 +33,7 @@ Now docker image has build with tag "eiffel-intelligence-frontend:0.1"
 To run the produced docker image on the local Docker host, execute this command: 
 
 
-`docker run -p 8034:8091 --expose 8091 -e server.port=8091 -e logging.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG eiffel-intelligence-backend:0.1`
+`docker run -p 8071:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG eiffel-intelligence-frontend:0.0.19`
 
 # Some info of all flags to this command
 
@@ -41,7 +41,7 @@ To run the produced docker image on the local Docker host, execute this command:
 ## Eiffel Intelligence Spring Properties
 
 
-<B>"-e server.port=8091"</B> - Is the Spring property setting for Eiffel-Intelligence applications web port.
+<B>"-e server.port=8080"</B> - Is the Spring property setting for Eiffel-Intelligence applications web port.
 
 
 <B>"-e logging.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e 
@@ -57,16 +57,16 @@ It is possible to set all Spring available properties via docker environment "-e
 ## Docker flags
 
 
-<B>"--expose 8091"</B> - this Docker flag tells that containers internal port shall be exposed to outside of the Docker Host. This flag do not set which port that should be allocated outside Docker Host on the actual server/machine.
+<B>"--expose 8080"</B> - this Docker flag tells that containers internal port shall be exposed to outside of the Docker Host. This flag do not set which port that should be allocated outside Docker Host on the actual server/machine.
 
 
-<B>"-p 8034:8091"</B> - this Docker flag is mapping the containers external port 8034 to the internal exposed port 8091. Port 8034 will be allocated outside Docker host and user will be able to access the containers service via port 8034.
+<B>"-p 8071:8080"</B> - this Docker flag is mapping the containers external port 8034 to the internal exposed port 8091. Port 8034 will be allocated outside Docker host and user will be able to access the containers service via port 8034.
 
 
-When Eiffel-Intelligence container is running on your local Docker host Eiffel-Intelligence should be reachable with address "localhost:8091/\<Rest End-Point\>" or "\<docker host ip\>:8091/\<Rest End-Point\>"
+When Eiffel-Intelligence container is running on your local Docker host Eiffel-Intelligence should be reachable with address "localhost:8071/\<Rest End-Point\>" or "\<docker host ip\>:8071/\<Rest End-Point\>"
 
 
-In web-browser use url with docker host ip number: "\<docker host ip\>:8091/"
+In web-browser use url with docker host ip number: "\<docker host ip\>:8071/"
 
 Swich-backend functionality do not work when "localhost" address is used.
 
