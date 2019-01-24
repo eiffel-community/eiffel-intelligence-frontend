@@ -150,6 +150,11 @@ public class HttpRequest {
         return executor.executeRequest(request);
     }
 
+    /**
+     * Takes a headder key as input and removes that key and value from the list of headers.
+     *
+     * @param headerKey
+     */
     public void removeHeader(String headerKey) {
         request.removeHeaders(headerKey);
     }
