@@ -41,6 +41,3 @@ deploy:
   local_dir: docs/
   on:
     branch: master
-
-after_deploy:
-  - mvn clean
