@@ -33,7 +33,6 @@ after_script:
 before_deploy:
   - rm -rf docs
   - mvn site -B
-  - mvn clean
 
 deploy:
   skip_cleanup: true
