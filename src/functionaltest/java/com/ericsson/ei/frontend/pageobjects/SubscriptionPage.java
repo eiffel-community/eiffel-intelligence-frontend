@@ -54,17 +54,10 @@ public class SubscriptionPage extends PageBaseClass {
         confirmBtn.click();
     }
 
-    public void clickReload() throws IOException {
+    public void clickReload() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         WebElement reloadBtn = driver.findElement(By.id("reloadButton"));
         reloadBtn.click();
-    }
-
-    public void clickGetTemplate() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
-        WebElement getTemplateBtn = driver.findElement(By.id("getTemplateButton"));
-        getTemplateBtn.click();
     }
 
     public void clickFormsSaveBtn() throws IOException {
@@ -117,14 +110,6 @@ public class SubscriptionPage extends PageBaseClass {
                 .until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
     }
 
-    public String getValueFromSelect(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
-        WebElement selectNotificationType = driver.findElement(By.id(id));
-        Select dropdown = new Select(selectNotificationType);
-        return dropdown.getFirstSelectedOption().getText();
-    }
-
     public String getValueFromElement(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement metaTxt = driver.findElement(By.id(id));
@@ -147,25 +132,18 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean presenceOfClickGetTemplateButton() {
         try {
-            driver.findElement(By.className("get_subscription_template"));
+            driver.findElement(By.id("getTemplateButton"));
             return true;
         } catch (NoSuchElementException e) {
             return false;
         }
     }
 
-    public void clickDownloadGetTemplate() throws IOException {
+    public void clickGetTemplate() {
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.className("get_subscription_template")));
-        WebElement getTemplateButton = driver.findElement(By.className("get_subscription_template"));
+                .until(ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
+        WebElement getTemplateButton = driver.findElement(By.id("getTemplateButton"));
         getTemplateButton.click();
-    }
-
-    public void clickViewBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View')]")));
-        WebElement viewBtn = driver.findElement(By.xpath("//button[contains(text(),'View')]"));
-        viewBtn.click();
     }
 
     public void clickFormCloseBtn() {
@@ -280,7 +258,7 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public int countElements(String id) {
-    	return driver.findElements(By.id(id)).size();
+        return driver.findElements(By.id(id)).size();
     }
 
     public void clickViewButtonByXPath(String XPath) {

@@ -57,7 +57,6 @@ public class SeleniumConfig {
         }
 
         driver = new FirefoxDriver(firefoxOptions);
-        System.out.println("Gecko driver version: " + driver.getCapabilities().getVersion());
 
         //Make sure all firefox browsers are closed after all tests have finished
         Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));

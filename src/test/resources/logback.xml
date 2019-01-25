@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml" />
 
     <!-- Removing logs of expected HTTP requests and responses -->
-    <logger name="org.mockserver.mock" level ="ERROR" />
+    <logger name="org.mockserver.mock.HttpStateHandler" level ="ERROR" />
 
     <root level="OFF" />
 
