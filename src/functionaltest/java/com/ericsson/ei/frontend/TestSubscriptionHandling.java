@@ -87,8 +87,6 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfClickGetTemplateButton());
         subscriptionPage.clickGetTemplate();
 
-        Thread.sleep(1000);
-
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_TEMPLATE_FILE_PATH)));
         String getSubscriptionsTemplate = getJSONStringFromFile(DOWNLOADED_TEMPLATE_FILE_PATH);
         assertEquals(mockedTemplateResponse, getSubscriptionsTemplate);

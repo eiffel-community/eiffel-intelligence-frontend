@@ -34,9 +34,9 @@ public class SeleniumConfig {
         FirefoxOptions firefoxOptions = new FirefoxOptions()
                 .setHeadless(true);
 
-        firefoxOptions.setCapability("browser.download.folderList", 2);
-        firefoxOptions.setCapability("browser.download.dir", tempDownloadDirectory.getPath());
-        firefoxOptions.setCapability("browser.helperApps.neverAsk.saveToDisk", "application/json");
+        firefoxOptions.addPreference("browser.download.folderList", 2);
+        firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
+        firefoxOptions.addPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
 
         boolean successfullyLoadedProperties = loadProperties();
         if (!successfullyLoadedProperties) {
