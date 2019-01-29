@@ -32,7 +32,8 @@ public class SeleniumConfig {
         }
 
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                .setHeadless(true);
+                .setHeadless(true)
+                .setLogLevel(FirefoxDriverLogLevel.ERROR);
 
         firefoxOptions.addPreference("browser.download.folderList", 2);
         firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
