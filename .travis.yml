@@ -29,7 +29,6 @@ after_script:
   - cd eiffel-intelligence
   - docker-compose down
   - fuser -k ${EI_BACKEND_PORT}/tcp
-  - cd ..
 
 before_deploy:
   - rm -rf docs
