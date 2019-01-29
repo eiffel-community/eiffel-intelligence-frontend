@@ -54,7 +54,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "Subscription_Template_Jenkins_Pipline_Trigger"
+                    "subscriptionName" : "Subscription_Template_Jenkins_Pipeline_Trigger"
                 }];
 
 
