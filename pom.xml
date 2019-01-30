@@ -315,6 +315,9 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/wiki/markdown/images</directory>
+                                    <includes>
+                                    	<include>*.png</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
