@@ -314,7 +314,7 @@
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/wiki/images</directory>
+                                    <directory>${basedir}/wiki/markdown/images</directory>
                                 </resource>
                             </resources>
                         </configuration>
