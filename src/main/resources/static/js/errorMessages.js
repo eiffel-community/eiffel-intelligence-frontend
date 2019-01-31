@@ -40,18 +40,19 @@ function viewModel (data) {
         self.newMessagesLength(storedNew.length);
     }
     self.expandMessage = function (event) {
-        if(event.target.classList.contains("white-space-normal")) {
-            event.target.classList.remove("white-space-normal");
+        console.log(event);
+        if(event.target.classList.contains("expand")) {
+            event.target.classList.remove("expand");
         } else {
             self.resetExpandMessage();
-            event.target.classList.add("white-space-normal");
+            event.target.classList.add("expand");
         }
     }
     self.resetExpandMessage = function () {
-        $(".alert-message").removeClass("white-space-normal");
+        $(".alert-message").removeClass("expand");
     }
     self.stopPropagation = function () {
-        $('.alerts-container').on('click', function (event) {
+        $('.alert-menu').on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
         });

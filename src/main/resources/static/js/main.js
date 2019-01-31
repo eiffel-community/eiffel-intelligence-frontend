@@ -24,35 +24,35 @@ jQuery(document).ready(function() {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("subscriptionpage.html");
+            $(".main").load("subscriptionpage.html");
         },
         'test-rules': function () {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("testRules.html");
+            $(".main").load("testRules.html");
         },
         'ei-info': function () {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("eiInfo.html");
+            $(".main").load("eiInfo.html");
         },
         'switch-backend': function () {
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").invisible();
-            $("#mainFrame").load("switch-backend.html");
+            $(".main").load("switch-backend.html");
         },
         'add-backend': function () {
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").invisible();
-            $("#mainFrame").load("add-instances.html");
+            $(".main").load("add-instances.html");
         },
         'login': function () {
             updateBackEndInstanceList();
             $("#navbarResponsive").removeClass("show");
             $("#selectInstances").visible();
-            $("#mainFrame").load("login.html");
+            $(".main").load("login.html");
         },
         '*': function () {
             router.navigate('subscriptions');
@@ -92,13 +92,15 @@ jQuery(document).ready(function() {
     function loadDocumentLinks(){
         // eiffelDocumentationUrlLinks variable is configure in application.properties
         var linksList = JSON.parse(eiffelDocumentationUrlLinks);
-        var docLinksDoc = document.getElementById('collapseDocPages');
+        var docLinksDoc = document.getElementById('docLinks');
         var liTag = null;
         var aTag = null;
 
         Object.keys(linksList).forEach(function(linkKey) {
             liTag = document.createElement('li');
+            liTag.classList.add('nav-item');
             aTag = document.createElement('a');
+            aTag.classList.add('nav-link');
             aTag.innerHTML = linkKey;
             aTag.setAttribute('href', linksList[linkKey]);
             aTag.setAttribute('target', '_blanc');
