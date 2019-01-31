@@ -69,7 +69,7 @@ public class EIRequestsControllerUtils {
             List<NameValuePair> params = getParameters(requestQuery);
             requestUrl = extractUrlFromParameters(params);
             requestQuery = removeBackendDataFromQueryString(params);
-            LOG.info(BACKEND_KEY_NAME + " key detected, forwarding request to url '" + requestUrl + "'.");
+            LOG.debug(BACKEND_KEY_NAME + " key detected, forwarding request to url '" + requestUrl + "'.");
         } else {
             BackEndInformation backEndInformation = getEIBackendInformation(request);
             requestUrl = backEndInformation.getUrlAsString();

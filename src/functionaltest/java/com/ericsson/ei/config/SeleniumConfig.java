@@ -4,10 +4,7 @@ import com.ericsson.ei.frontend.exception.OSNotSupportedException;
 import com.ericsson.ei.frontend.exception.PropertiesNotLoadedException;
 import com.google.common.io.Files;
 import org.apache.commons.lang3.SystemUtils;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,20 +31,19 @@ public class SeleniumConfig {
             return driver;
         }
 
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.download.folderList", 2);
-        firefoxProfile.setPreference("browser.download.dir", tempDownloadDirectory.getPath());
-        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
-
         FirefoxOptions firefoxOptions = new FirefoxOptions()
                 .setHeadless(true)
-                .setProfile(firefoxProfile);
+                .setLogLevel(FirefoxDriverLogLevel.ERROR);
+
+        firefoxOptions.addPreference("browser.download.folderList", 2);
+        firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
+        firefoxOptions.addPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
 
         boolean successfullyLoadedProperties = loadProperties();
         if (!successfullyLoadedProperties) {
             LOGGER.error("Properties was not properly loaded.");
             throw new PropertiesNotLoadedException();
-        };
+        }
 
         if (SystemUtils.IS_OS_LINUX) {
             FirefoxBinary firefoxBinary = installFirefoxBinary();
@@ -103,4 +99,5 @@ public class SeleniumConfig {
             return true;
         }
     }
+
 }

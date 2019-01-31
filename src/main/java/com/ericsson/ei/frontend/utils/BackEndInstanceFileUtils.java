@@ -63,16 +63,16 @@ public class BackEndInstanceFileUtils {
             File eiInstancesListFile = new File(eiInstancesListFilePath.toString());
 
             if (eiInstancesListFile.exists() && eiInstancesListFile.length() != 0) {
-                LOG.info("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
+                LOG.debug("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
                         "\nWill use that EI Instances List file.");
             }
             else {
                 if (eiInstancesListFile.exists() && eiInstancesListFile.length() == 0) {
-                    LOG.info("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
+                    LOG.debug("EI Instances List file path is not provided, but found a file in path: "  + eiInstancesPath +
                             "\nThat EI Instances List file is empty!. Will try to create a default EI Instances List in that file.");
                 }
                 else {
-                    LOG.info("EI Instances List file path is not provided! " +
+                    LOG.debug("EI Instances List file path is not provided! " +
                             "Will create a default EI Instances List file at file path: " + eiInstancesPath);
                 }
                 parseAndSetEiInstancesList();
@@ -81,12 +81,12 @@ public class BackEndInstanceFileUtils {
         } else {
             setEiInstancesPath(Paths.get(backendInstancesFilePath).toString());
             if (!(new File(eiInstancesPath).isFile())) {
-                LOG.info("EI Instances List file don' exist! Creating file with given or "
+                LOG.debug("EI Instances List file don' exist! Creating file with given or "
                         + "default EI instances list content. File path: " + eiInstancesPath);
                 createFileWithDirs();
                 parseAndSetEiInstancesList();
             } else {
-                LOG.info("EI-Backend instances list file that will be used: " + eiInstancesPath);
+                LOG.debug("EI-Backend instances list file that will be used: " + eiInstancesPath);
             }
         }
     }
@@ -206,12 +206,12 @@ public class BackEndInstanceFileUtils {
         File eiInstancesParentFolder = Paths.get(eiInstancesPath).getParent().toFile();
 
         if (!(eiInstancesParentFolder.isDirectory())) {
-            LOG.info(String.format("Parentdir(s) for %s does not exist! Trying to create necessary parent dirs.",
+            LOG.debug(String.format("Parentdir(s) for %s does not exist! Trying to create necessary parent dirs.",
                     backendInstancesFilePath));
             eiInstancesParentFolder.mkdirs();
         }
 
-        LOG.info("File does not exist! Trying to create file.");
+        LOG.debug("File does not exist! Trying to create file.");
         Files.createFile(Paths.get(eiInstancesPath));
         Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
     }
