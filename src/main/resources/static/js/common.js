@@ -3,7 +3,8 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 function doIfUserLoggedIn(user) {
     localStorage.removeItem("currentUser");
     localStorage.setItem("currentUser", user);
-    $("#ldapUserName").show();
+    $("#userItem").show();
+    $("#userItem").addClass("user-login");
     $("#ldapUserName").text(user);
     $("#loginBlock").hide();
     $("#logoutBlock").show();
@@ -12,7 +13,8 @@ function doIfUserLoggedIn(user) {
 
 function doIfUserLoggedOut() {
     localStorage.removeItem("currentUser");
-    $("#ldapUserName").show();
+    $("#userItem").show();
+    $("#userItem").removeClass("user-login");
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
@@ -21,9 +23,8 @@ function doIfUserLoggedOut() {
 }
 
 function doIfSecurityOff() {
+    $("#userItem").hide();
     $("#ldapUserName").text("");
-    $("#loginBlock").hide();
-    $("#logoutBlock").hide();
 }
 
 function checkBackendSecured() {

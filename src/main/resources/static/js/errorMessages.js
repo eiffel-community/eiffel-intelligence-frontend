@@ -60,8 +60,8 @@ function viewModel (data) {
 }
 var vm = new viewModel();
 vm.init();
-ko.cleanNode($("#alertsParent")[0]);
-ko.applyBindings(vm,$("#alertsParent")[0]);
+ko.cleanNode($("#alertsItem")[0]);
+ko.applyBindings(vm,$("#alertsItem")[0]);
 vm.stopPropagation();
 
 function logMessages (message) {
@@ -71,7 +71,7 @@ function logMessages (message) {
     vm.stopPropagation();
 }
 
-$('#alertsDropdown').on('click', function (event) {
+$('#alertsLink').on('click', function (event) {
     vm.resetExpandMessage();
     vm.mergeErrorMessages();
 });

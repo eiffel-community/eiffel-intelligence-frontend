@@ -52,6 +52,9 @@ body {
     max-width: 600px;
     min-width: 10%;
 }
+.app-header.header-bar-hidden .header-bar {
+    visibility: hidden;
+}
 .app-header .nav-item {
     min-width: 40px;
 }
@@ -92,6 +95,9 @@ body {
 .app-header .alert-menu .alert-list .alert-remove .fa:hover {
     color: #2f353a;
 }
+.app-header .alert-menu .alert-list .dropdown-item:hover {
+    background-color: #f7f7f7;
+}
 .app-header .alert-menu .alert-list .dropdown-item:active .alert-remove .fa {
     color: #fff;
 }
@@ -101,7 +107,11 @@ body {
 }
 .app-header .user-menu .user-item-list {
     list-style-type: none;
+    padding: 0;
+}
+.app-header .user-menu .user-item-list .nav-item {
     padding: 0 10px 0 10px;
+    cursor: pointer;
 }
 .app-header .user-menu .user-item-list .nav-item .nav-link {
     color: #212529;
@@ -109,8 +119,11 @@ body {
 .app-header .user-menu .user-item-list .nav-item .nav-link .fa {
     margin-right: 10px;
 }
+.app-header .user-menu .user-item-list .nav-item:hover {
+    background-color: #f7f7f7;
+}
 .app-header .user-menu .user-item-list .nav-item:hover .nav-link .fa {
-    color: #2f353a;
+    color: #adacac;
 }
 .app-header .nav-item.dropdown .badge {
     position: absolute;
@@ -136,7 +149,7 @@ body {
     border-top: 1px solid #c8ced3;
 }
 .app-header .nav-item.dropdown .dropdown-item:active {
-    background-color: #777777 !important;
+    background-color: #c1c1c1 !important;
 }
 .app-header .nav-item.dropdown .dropdown-item .fa {
     display: flex;
@@ -193,13 +206,13 @@ body {
     color: #c1c1c1;
     transition: 100ms;
 }
-.nav-item.user-login .nav-link > .fa {
+.nav-item.user-login > .nav-link > .fa {
     color: #37AD05;
 }
-.nav-item.user-login:hover .nav-link > .fa {
+.nav-item.user-login:hover > .nav-link > .fa {
     color: #4FFD05;
 }
-.app-header .nav-item.user-login .nav-link[aria-expanded="true"] > .fa {
+.app-header .nav-item.user-login > .nav-link[aria-expanded="true"] > .fa {
     color: #4FFD05;
 }
 .sidebar .nav-item.dropdown .nav-link[aria-expanded="true"] {
@@ -247,9 +260,10 @@ body {
     width: 40px;
     height: 40px;
 }
-.sidebar .sidebar-nav .nav > .nav-item span {
+.sidebar .sidebar-nav .nav > .nav-item > .nav-link > span {
     display: flex;
     align-items: center;
+    padding: 5px 0 5px 0;
     width: 160px;
 }
 .sidebar-minimizer {
@@ -375,16 +389,23 @@ body {
 
 @media (max-width: 768px) {
     .app-header {
-        align-items: flex-end;
+        align-items: flex-start;
         height: 80px;
+        padding-top: 15px;
+    }
+    .app-header.header-bar-hidden {
+        height: 55px;
     }
     .main {
         height: calc(100vh - 80px);
     }
+    .app-header.header-bar-hidden .main {
+        height: calc(100vh - 55px);
+    }
     .app-header .navbar-logo {
         order: 2;
         position: absolute;
-        top: 5px;
+        top: 10px;
         left: 50%;
         margin-left: -100px;
     }
@@ -393,6 +414,7 @@ body {
     }
     .app-header .header-bar {
         order: 4;
+        align-self: flex-end;
         max-width: 100%;
         width: 100%;
         margin: 0 10px 10px 10px;
@@ -413,18 +435,25 @@ body {
     .app-header .nav-item.dropdown .dropdown-menu .dropdown-header {
         border-radius: 0.25rem 0.25rem 0 0;
     }
-    .app-header .nav-item.dropdown .dropdown-menu .dropdown-item {
+    .app-header .nav-item.dropdown .dropdown-menu .dropdown-item:last-child {
+        border-radius: 0 0 0.25rem 0.25rem;
+    }
+    .app-header .alert-menu .alert-list .dropdown-item {
         background-color: #fff;
     }
     .app-header .alert-menu .alert-empty {
         border-radius: 0 0 0.25rem 0.25rem;
         background-color: #fff;
     }
-    .app-header .nav-item.dropdown .dropdown-menu .dropdown-item:last-child {
+    .app-header .user-menu .user-item-list .nav-item {
         border-radius: 0 0 0.25rem 0.25rem;
+        background-color: #fff;
     }
     .app-body {
         margin-top: 80px;
+    }
+    .app-header.header-bar-hidden + .app-body {
+        margin-top: 55px;
     }
     .sidebar.sidebar-show + .main {
         margin-left: 0;
@@ -445,7 +474,7 @@ body {
     .app-header .navbar-logo:hover {
         text-decoration: none;
     }
-    .nav-item.user-login:hover .nav-link > .fa {
+    .nav-item.user-login:hover > .nav-link > .fa {
         color: #37AD05;
     }
     .nav-item .fa:hover {

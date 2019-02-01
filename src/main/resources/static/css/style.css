@@ -239,14 +239,3 @@ button.rules_info:focus {
         max-width: 480px;
     }
 }
-@media (max-width: 992px) {
-    #alertsParent {
-        width: 100%;
-    }
-    #alerts {
-        width: 100%;
-    }
-    .alerts-container {
-        max-height: 185px;
-    }
-}

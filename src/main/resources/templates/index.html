@@ -34,8 +34,8 @@
     </button>
     <select class="header-bar" id="selectInstances" data-bind="optionsCaption: 'Choose backend instance', options: instances, optionsText: 'information', optionsValue: 'name', value: selectedActive, event: {change: onChange}"></select>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown" id="alertsParent">
-        <a class="nav-link" id="alertsDropdown" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+      <li class="nav-item dropdown" id="alertsItem">
+        <a class="nav-link" id="alertsLink" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
           aria-expanded="false">
           <i class="fa fa-bell" aria-hidden="true"></i>
           <span class="badge badge-pill badge-danger" data-bind="visible: $root.newMessagesLength() > 0, text: $root.newMessagesLength()"></span>
@@ -55,22 +55,24 @@
           </div>
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" id="userItem">
         <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-user-circle" aria-hidden="true"></i>
         </a>
         <div class="user-menu dropdown-menu">
           <div class="dropdown-header text-center">
-            <strong>Anonymous</strong>
+            <strong id="ldapUserName"></strong>
           </div>
           <ul class="user-item-list">
             <li class="nav-item" id="loginBlock" style="display: none">
               <a class="nav-link" id="loginBtn" href="#login" data-navigo>
-                <i class="fa fa-sign-in"></i>Login</a>
+                <i class="fa fa-sign-in"></i>Login
+              </a>
             </li>
             <li class="nav-item" id="logoutBlock" style="display: none">
-              <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                <i class="fa fa-sign-out"></i>Logout</a>
+              <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
+                <i class="fa fa-sign-out"></i>Logout
+              </a>
             </li>
           </ul>
         </div>
