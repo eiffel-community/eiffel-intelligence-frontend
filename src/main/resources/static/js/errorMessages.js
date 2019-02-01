@@ -1,16 +1,16 @@
-function messageModel (message) {
+function messageModel(message) {
     this.message = ko.observable(message);
 }
-function viewModel (data) {
+function viewModel(data) {
     var self = this;
     self.errorMessages = ko.observableArray([]);
     var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
     var storedNew = JSON.parse(sessionStorage.getItem('ei.errorMessagesNew') || '[]');
     self.newMessagesLength = ko.observable(storedNew.length);
 
-    self.init = function() {
+    self.init = function () {
         var json = storedOld.concat(storedNew);
-        for(var i = 0; i < json.length; i++) {
+        for (var i = 0; i < json.length; i++) {
             self.addErrorMessage(json[i].message);
         }
     }
@@ -21,11 +21,11 @@ function viewModel (data) {
     self.removeErrorMessage = function (index) {
         var length = self.errorMessages.length;
         var realIndex = length - 1 - index;
-        self.errorMessages.splice(realIndex,1);
+        self.errorMessages.splice(realIndex, 1);
         self.mergeErrorMessages();
     }
     self.storeErrorMessage = function (data) {
-        storedNew.push({"message": data})
+        storedNew.push({ "message": data })
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
         self.updateNewMessagesLength();
     }
@@ -41,7 +41,7 @@ function viewModel (data) {
     }
     self.expandMessage = function (event) {
         console.log(event);
-        if(event.target.classList.contains("expand")) {
+        if (event.target.classList.contains("expand")) {
             event.target.classList.remove("expand");
         } else {
             self.resetExpandMessage();
@@ -61,11 +61,11 @@ function viewModel (data) {
 var vm = new viewModel();
 vm.init();
 ko.cleanNode($("#alertsItem")[0]);
-ko.applyBindings(vm,$("#alertsItem")[0]);
+ko.applyBindings(vm, $("#alertsItem")[0]);
 vm.stopPropagation();
 
-function logMessages (message) {
-    $.jGrowl(message, {sticky: false, theme: 'Error', position:'center'});
+function logMessages(message) {
+    $.jGrowl(message, { sticky: false, theme: 'Error', position: 'center' });
     vm.addErrorMessage(message);
     vm.storeErrorMessage(message);
     vm.stopPropagation();

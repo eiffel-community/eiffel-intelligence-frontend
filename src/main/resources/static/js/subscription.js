@@ -67,7 +67,7 @@ jQuery(document).ready(function () {
                 }
             },
             success: function (data, textStatus) {
-                if(backendStatus == false) {
+                if (backendStatus == false) {
                     checkBackendSecured();
                 }
                 EIConnBtn.style.background = green;
@@ -87,7 +87,7 @@ jQuery(document).ready(function () {
     }
 
     // Check if EI Backend Server is online every X seconds
-    if (timerInterval == null){
+    if (timerInterval == null) {
         timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
     }
 
@@ -95,13 +95,13 @@ jQuery(document).ready(function () {
     // Toggle warning text on and off
     // Check backend status to shrink or increase space for warning to show
     function toggleOnBackendStatus(backendStatus) {
-        if(!backendStatus && !$("#back_end_down_warning").is(":visible")) {
+        if (!backendStatus && !$("#back_end_down_warning").is(":visible")) {
             $("#subTitle").parent().removeClass("col-md-9");
             $("#btnEIContainer").parent().removeClass("col-md-3");
             $("#subTitle").parent().addClass("col-md-4");
             $("#btnEIContainer").parent().addClass("col-md-2");
         }
-        if(backendStatus && $("#back_end_down_warning").is(":visible")) {
+        if (backendStatus && $("#back_end_down_warning").is(":visible")) {
             $("#subTitle").parent().removeClass("col-md-4");
             $("#btnEIContainer").parent().removeClass("col-md-2");
             $("#subTitle").parent().addClass("col-md-9");
@@ -137,7 +137,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
-        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'});
+        this.emailSubject = ko.observable(data.emailSubject).extend({ notify: 'always' });
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -243,10 +243,10 @@ jQuery(document).ready(function () {
         var self = this;
         self.subscription = ko.observableArray([]);
         self.subscription_templates_in = ko.observableArray([
-                { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
-                { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
-                { "text": "Mail Trigger", value: "templateEmailTrigger" }
-            ]);
+            { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
+            { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
+            { "text": "Mail Trigger", value: "templateEmailTrigger" }
+        ]);
 
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
@@ -254,25 +254,25 @@ jQuery(document).ready(function () {
         self.formpostkeyvaluepairs = ko.observable(false);
         self.mode = ko.observable("");
         self.showPassword = ko.observable(false);
-        self.setShowPassword = function (boolean){
+        self.setShowPassword = function (boolean) {
             self.showPassword(boolean);
         }
         self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in = ko.observableArray([
-                {"value": "REST_POST", "label": "REST_POST", "id": "restPostRadio"},
-                {"value": "MAIL", "label": "MAIL", "id": "mailRadio"}
-            ]);
+            { "value": "REST_POST", "label": "REST_POST", "id": "restPostRadio" },
+            { "value": "MAIL", "label": "MAIL", "id": "mailRadio" }
+        ]);
         self.restPostBodyMediaType_in = ko.observableArray([
-                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio"},
-                {"value": "application/json", "label": "RAW BODY: JSON",  "id": "appJsonRadio"}
-            ]);
+            { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio" },
+            { "value": "application/json", "label": "RAW BODY: JSON", "id": "appJsonRadio" }
+        ]);
         self.authenticationType_in = ko.observableArray([
-                { "text": "NO_AUTH", value: "NO_AUTH" },
-                { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
-            ]);
+            { "text": "NO_AUTH", value: "NO_AUTH" },
+            { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
+        ]);
         self.repeat_in = ko.observableArray([
-                { "value": true, "label": "Activate Repeat" }
-            ]);
+            { "value": true, "label": "Activate Repeat" }
+        ]);
 
         self.add_requirement = function (data, event) {
             var conditions_array = [];
@@ -302,15 +302,15 @@ jQuery(document).ready(function () {
             var date = new Date(epochtime);
             var resolvedOptions = Intl.DateTimeFormat().resolvedOptions();
             var options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    hour12: false,
-                    timeZone: resolvedOptions.timeZone,
-                    timeZoneName: 'short'
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false,
+                timeZone: resolvedOptions.timeZone,
+                timeZoneName: 'short'
             };
             return date.toLocaleDateString(resolvedOptions.locale, options);  // Is now a date (in client time zone)
         }
@@ -497,7 +497,7 @@ jQuery(document).ready(function () {
     };
     checkSecurityAndDrawTable();
 
-    $(".sidebar-minimizer").click(function() {
+    $(".sidebar-minimizer").click(function () {
         table.responsive.rebuild();
         table.responsive.recalc();
     });
@@ -579,7 +579,7 @@ jQuery(document).ready(function () {
         req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
         req.responseType = "application/json;charset=utf-8";
         req.onload = function (event) {
-            if (this.responseText == ""){
+            if (this.responseText == "") {
                 window.logMessages("Failed to download template, Error: Could not contact the backend server.");
             } else {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
@@ -651,7 +651,7 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason +"\n";
+                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason + "\n";
                 }
                 window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
             },
@@ -745,7 +745,7 @@ jQuery(document).ready(function () {
     function populate_json(data, save_method_in) {
         vm.mode(save_method_in);
 
-        if (save_method_in == "edit" || save_method_in == "view"){
+        if (save_method_in == "edit" || save_method_in == "view") {
             vm.showPassword(false);
         } else {
             vm.showPassword(true);
@@ -773,7 +773,7 @@ jQuery(document).ready(function () {
                     item[0].notificationMessageKeyValues[0].formkey == "");
                 if (notificationMessageRawJsonShouldBeReplacedWithFormValue) {
                     item[0].notificationMessageRawJson = item[0].notificationMessageKeyValues[0].formvalue;
-                    item[0].notificationMessageKeyValues[0] = new formdata_model({"formkey":"","formvalue":""});
+                    item[0].notificationMessageKeyValues[0] = new formdata_model({ "formkey": "", "formvalue": "" });
                 } else {
                     item[0].notificationMessageRawJson = "";
                     for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
@@ -794,7 +794,7 @@ jQuery(document).ready(function () {
 
             $('.modal-title').text(title_);
             save_method = save_method_in;
-            $('#modal_form').on('hidden.bs.modal', function() {
+            $('#modal_form').on('hidden.bs.modal', function () {
                 $('.text-danger').hide();
             });
         }

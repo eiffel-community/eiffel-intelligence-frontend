@@ -1,27 +1,27 @@
 
-jQuery(document).ready(function() {
-    var router = new Navigo(null, true, '#');
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
+jQuery(document).ready(function () {
+	var router = new Navigo(null, true, '#');
+	var frontendServiceUrl = $('#frontendServiceUrl').text();
 
-    function checkBackendSecured() {
-        $.ajax({
-            url: frontendServiceUrl + "/auth",
-            type: "GET",
-            contentType: "application/string; charset=utf-8",
-            error: function (data) {
-                router.navigate('subscriptions');
-            },
-            success: function (data) {
-                var currentUser = localStorage.getItem("currentUser");
-                var isSecured = JSON.parse(ko.toJSON(data)).security;
-                if (isSecured == false || (isSecured == true && currentUser != null)) {
-                    router.navigate('subscriptions');
-                }
-            }
-        });
-    }
+	function checkBackendSecured() {
+		$.ajax({
+			url: frontendServiceUrl + "/auth",
+			type: "GET",
+			contentType: "application/string; charset=utf-8",
+			error: function (data) {
+				router.navigate('subscriptions');
+			},
+			success: function (data) {
+				var currentUser = localStorage.getItem("currentUser");
+				var isSecured = JSON.parse(ko.toJSON(data)).security;
+				if (isSecured == false || (isSecured == true && currentUser != null)) {
+					router.navigate('subscriptions');
+				}
+			}
+		});
+	}
 
-    checkBackendSecured();
+	checkBackendSecured();
 
 	// /Start ## Knockout ####################################################
 	function loginModel() {
@@ -31,9 +31,9 @@ jQuery(document).ready(function() {
 		};
 		this.remember = ko.observable(false);
 
-		this.login = function(userState, remember) {
+		this.login = function (userState, remember) {
 			var dataJSON = ko.toJSON(userState);
-			if(JSON.parse(dataJSON).ldapUserName == "" || JSON.parse(dataJSON).password == "") {
+			if (JSON.parse(dataJSON).ldapUserName == "" || JSON.parse(dataJSON).password == "") {
 				window.logMessages("Username and password fields cannot be empty");
 			} else {
 				var token = window.btoa(JSON.parse(dataJSON).ldapUserName + ":" + JSON.parse(dataJSON).password);
@@ -42,21 +42,21 @@ jQuery(document).ready(function() {
 		}
 	}
 
-	function sendLoginRequest (url, type, token) {
+	function sendLoginRequest(url, type, token) {
 		$.ajax({
-			url : url,
-			type : type,
-			contentType : 'application/json; charset=utf-8',
+			url: url,
+			type: type,
+			contentType: 'application/json; charset=utf-8',
 			cache: false,
-			beforeSend : function (request) {
+			beforeSend: function (request) {
 				request.setRequestHeader("Authorization", "Basic " + token);
 			},
-			error : function (request, textStatus, errorThrown) {
-			    window.logMessages("Bad credentials");
+			error: function (request, textStatus, errorThrown) {
+				window.logMessages("Bad credentials");
 			},
-			success : function (responseData, textStatus) {
+			success: function (responseData, textStatus) {
 				var currentUser = JSON.parse(ko.toJSON(responseData)).user;
-				$.jGrowl("Welcome " + currentUser, { sticky : false, theme : 'Notify' });
+				$.jGrowl("Welcome " + currentUser, { sticky: false, theme: 'Notify' });
 				doIfUserLoggedIn(currentUser);
 				router.navigate('subscriptions');
 			}
@@ -72,7 +72,7 @@ jQuery(document).ready(function() {
 	// /Start ## Cookies functions ###########################################
 	function setCookie(name, value) {
 		var expiry = new Date(new Date().getTime() + 1800 * 1000); // plus 30 min
-		if(window.location.protocol == "https:") {
+		if (window.location.protocol == "https:") {
 			document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString() + "; secure; HttpOnly";
 		} else {
 			document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();

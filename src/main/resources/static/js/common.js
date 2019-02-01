@@ -48,14 +48,14 @@ function checkBackendSecured() {
 
 function checkLoggedInUser() {
     $.ajax({
-        url : frontendServiceUrl + "/auth/login",
-        type : "GET",
-        contentType : 'application/string; charset=utf-8',
+        url: frontendServiceUrl + "/auth/login",
+        type: "GET",
+        contentType: 'application/string; charset=utf-8',
         cache: false,
-        error : function (request, textStatus, errorThrown) {
+        error: function (request, textStatus, errorThrown) {
             doIfUserLoggedOut();
         },
-        success : function (responseData, textStatus) {
+        success: function (responseData, textStatus) {
             var user = JSON.parse(ko.toJSON(responseData)).user;
             doIfUserLoggedIn(user);
         }

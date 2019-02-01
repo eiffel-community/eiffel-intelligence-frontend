@@ -13,7 +13,6 @@
 .card-standard {
     width: 25rem;
 }
-
 .sticky-button-bar{
     position: -webkit-sticky; /* Safari */
     position: sticky;
@@ -21,7 +20,6 @@
     z-index: 10;
     max-width: 88%;
 }
-
 .footer-buttons{
     position: sticky;
     z-index: 10;
@@ -196,7 +194,6 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
-
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -206,7 +203,6 @@ input:checked + .slider:before {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-
 button.rules_info {
     text-align: center;
     max-height: auto;
@@ -216,16 +212,13 @@ button.rules_info {
     background: white;
     border: none;
 }
-
 button.rules_info:active {
     outline: none;
 }
-
 button.rules_info:focus {
     outline:0;
     outline:none;
 }
-
 #infoContent{
     font: 16px "Calibri";
 }
