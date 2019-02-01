@@ -1,19 +1,12 @@
 package com.ericsson.ei.systemtest.artifactflow;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
-import org.json.JSONException;
 import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
-import org.xml.sax.SAXException;
 
 import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.JenkinsManager;
@@ -46,7 +39,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     }
 
     @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
-    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws URISyntaxException, JSONException, IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
         StepsUtils.a_jenkins_job_from_is_created(jenkinsJobName, scriptFileName, config.getJenkinsBaseUrl(), config.getJenkinsUsername(), config.getJenkinsPassword(), JENKINS_TOKEN);
     }
 
