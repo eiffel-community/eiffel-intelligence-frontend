@@ -4,7 +4,7 @@ Feature: Artifact system test
   @ArtifactFlowScenario
   Scenario: Artifact Flow Scenario
     Given configurations are provided
-    And some subscriptions are set up in another story etc
+    And some subscriptions are set up
     And a jenkins job '"ArtC2Job"' from '"src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt"' is created
     And a jenkins job '"TCTJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCTScript.txt"' is created
     And a jenkins job '"TCS&TCTJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCS&TCTScript.txt"' is created
