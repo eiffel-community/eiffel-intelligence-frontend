@@ -7,7 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
@@ -30,10 +35,7 @@ public class HttpRequest {
 
     @Getter
     @Setter
-    protected int port;
-    @Getter
-    @Setter
-    protected String host;
+    protected String jenkinsBaseUrl;
 
     @Getter
     @Setter
@@ -62,17 +64,17 @@ public class HttpRequest {
             break;
         }
     }
-    
+
     /*
      * Function that clean parameters field only.
      */
     public void cleanParams() {
         params.clear();
     }
-    
+
     /*
      * Function that resets the HTTP Request object so it can be reused.
-     * 
+     *
      */
     public void resetHttpRequestObject() {
         this.cleanParams();
@@ -81,10 +83,10 @@ public class HttpRequest {
 
     /*
      * Function for adding headers to the http request.
-     * 
+     *
      * @param key , the key of the header
      * @param value, the value of the header
-     * 
+     *
      * @return HTTPRequest
      */
     public HttpRequest addHeader(String key, String value) {
@@ -94,10 +96,10 @@ public class HttpRequest {
 
     /*
      * Function for adding parameters to the http request.
-     * 
+     *
      * @param key , the key of the parameter
      * @param value, the value of the parameter
-     * 
+     *
      * @return HTTPRequest
      */
     public HttpRequest addParam(String key, String value) {
@@ -107,9 +109,9 @@ public class HttpRequest {
 
     /*
      * Function that set the body of the http request.
-     * 
+     *
      * @param body , the body to be set in the http request.
-     * 
+     *
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body) {
@@ -119,7 +121,7 @@ public class HttpRequest {
 
     /*
      * Function that set the body of the http request.
-     * 
+     *
      * @param body , the file with body content to be set in the http request.
      */
     public void setBody(File file) {
@@ -127,19 +129,19 @@ public class HttpRequest {
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to read the Request body file:" + file.getPath() + ". Message: " + e.getMessage(), e);
         }
         setBody(fileContent);
     }
 
     /*
      * Function that execute http request.
-     * 
+     *
      * @return ResponseEntity<String> , the response of the performed http request.
      */
     public ResponseEntity<String> performRequest() throws URISyntaxException {
 
-        URIBuilder builder = new URIBuilder("http://" + host + ":" + port + endpoint);
+        URIBuilder builder = new URIBuilder(jenkinsBaseUrl + endpoint);
 
         if (!params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {

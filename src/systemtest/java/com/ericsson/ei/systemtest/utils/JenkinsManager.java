@@ -13,14 +13,17 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.ericsson.ei.utils.HttpRequest;
-import com.ericsson.ei.utils.HttpRequest.HttpMethod;
+import com.ericsson.ei.systemtest.utils.HttpRequest.HttpMethod;
+
 
 public class JenkinsManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JenkinsManager.class);
 
     private static final String JENKINS_JOB_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "systemtest",
             "resources", "jenkinsJobTemplate.xml");
@@ -28,27 +31,24 @@ public class JenkinsManager {
     private static final String DEFAULT_SCRIPT = "echo &quot;Test&quot;";
     private static final String DEFAULT_JOB_NAME = "test_job";
 
-    private String host;
-    private int port;
+    private String jenkinsBaseUrl;
     private String encoding;
     private String crumb;
 
     /**
      * Constructor, takes jenkins host, port, username and password.
-     * @param host
-     * @param port
+     * @param jenkinsBaseUrl
      * @param username
      * @param password   **  Jenkins password or API-token
      * @throws UnsupportedEncodingException
      * @throws URISyntaxException
      * @throws JSONException
      */
-    public JenkinsManager(String host, int port, String username, String password)
+    public JenkinsManager(String jenkinsBaseUrl, String username, String password)
             throws UnsupportedEncodingException, URISyntaxException, JSONException {
         String authString = String.join(":", username, password);
 
-        this.host = host;
-        this.port = port;
+        this.jenkinsBaseUrl = jenkinsBaseUrl;
         this.encoding = DatatypeConverter.printBase64Binary(authString.getBytes("utf-8"));
         this.crumb = getCrumb();
     }
@@ -95,12 +95,16 @@ public class JenkinsManager {
             jobName = DEFAULT_JOB_NAME;
         }
 
-        httpRequest.setHost(host).setPort(port).addHeader("Authorization", "Basic " + encoding)
+        httpRequest.setJenkinsBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding)
                 .addHeader("Content-type", MediaType.APPLICATION_XML_VALUE).addHeader("Jenkins-Crumb", crumb)
                 .addParam("name", jobName).setBody(jobXmlData).setEndpoint("/createItem");
 
         ResponseEntity<String> response = httpRequest.performRequest();
         success = response.getStatusCode() == HttpStatus.OK;
+
+        if(!success) {
+            LOGGER.error("Failed to create a jenkins job. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
+        }
 
         return success;
     }
@@ -123,12 +127,17 @@ public class JenkinsManager {
 
         String endpoint = "/job/" + jobName + "/build";
 
-        httpRequest.setHost(host).setPort(port).addHeader("Authorization", "Basic " + encoding)
+        httpRequest.setJenkinsBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding)
                 .addHeader("Content-type", MediaType.APPLICATION_JSON_VALUE).addParam("token", job_token)
                 .setEndpoint(endpoint);
 
         ResponseEntity<String> response = httpRequest.performRequest();
         success = response.getStatusCode() == HttpStatus.CREATED;
+
+        if(!success) {
+            LOGGER.error("Failed to trigger a jenkins job. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
+        }
+
         return success;
     }
 
@@ -149,12 +158,17 @@ public class JenkinsManager {
 
         String endpoint = "/job/" + jobName + "/1/api/json";
 
-        httpRequest.setHost(host).setPort(port).addHeader("Authorization", "Basic " + encoding)
+        httpRequest.setJenkinsBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding)
                 .addHeader("Content-type", MediaType.APPLICATION_JSON_VALUE)
                 .setEndpoint(endpoint);
 
         ResponseEntity<String> response = httpRequest.performRequest();
         isTriggered = response.getStatusCode() == HttpStatus.OK;
+
+        if(!isTriggered) {
+            LOGGER.error("Failed to check if job was triggered. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
+        }
+
         return isTriggered;
     }
 
@@ -176,12 +190,17 @@ public class JenkinsManager {
 
         String endpoint = "/job/" + jobName + "/doDelete";
 
-        httpRequest.setHost(host).setPort(port).addHeader("Authorization", "Basic " + encoding)
+        httpRequest.setJenkinsBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding)
                 .addHeader("Content-type", MediaType.APPLICATION_JSON_VALUE).addHeader("Jenkins-Crumb", crumb)
                 .setEndpoint(endpoint);
 
         ResponseEntity<String> response = httpRequest.performRequest();
         isDeleted = response.getStatusCode() == HttpStatus.FOUND;
+
+        if(!isDeleted) {
+            LOGGER.error("Failed to delete jenkins job. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
+        }
+
         return isDeleted;
     }
 
@@ -189,7 +208,7 @@ public class JenkinsManager {
         String crumb = "";
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
 
-        httpRequest.setHost(host).setPort(port).addHeader("Authorization", "Basic " + encoding)
+        httpRequest.setJenkinsBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding)
                 .addHeader("Content-type", MediaType.APPLICATION_JSON_VALUE).setEndpoint("/crumbIssuer/api/json");
 
         ResponseEntity<String> response = httpRequest.performRequest();
@@ -198,7 +217,10 @@ public class JenkinsManager {
         if (success) {
             JSONObject jsonObj = new JSONObject(response.getBody());
             crumb = jsonObj.getString("crumb");
+        } else {
+            LOGGER.error("Failed to get jenkins crumb. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
         }
+
         return crumb;
     }
 

@@ -1,7 +1,5 @@
 package com.ericsson.ei.systemtest.artifactflow;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -17,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.xml.sax.SAXException;
 
+import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.JenkinsManager;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
 
@@ -29,26 +28,16 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
 
+    Config config = new Config();
     private JenkinsManager jenkinsManager;
-    private String jenkinsHost;
-    private int jenkinsPort;
-    private String jenkinsUsername;
-    private String jenkinsPassword;
 
     DocumentBuilderFactory xmlDocumentFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder xmlDocumentBuilder;
 
     @Given("^configurations are provided$")
     public void configurations_are_provided() {
-        jenkinsHost = System.getProperty("JENKINS_HOST");
-        jenkinsPort = Integer.parseInt(System.getProperty("JENKINS_PORT"));
-        jenkinsUsername = System.getProperty("JENKINS_USERNAME");
-        jenkinsPassword = System.getProperty("JENKINS_PASSWORD");
-
-        assertNotNull(jenkinsHost);
-        assertNotNull(jenkinsPort);
-        assertNotNull(jenkinsUsername);
-        assertNotNull(jenkinsPassword);
+        //Temporary for my change(done in another PR)
+        config.initJenkinsConfig();
     }
 
     @Given("^some subscriptions are set up in another story etc$")
@@ -58,7 +47,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
     public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws URISyntaxException, JSONException, IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        StepsUtils.a_jenkins_job_from_is_created(jenkinsJobName, scriptFileName, jenkinsHost, jenkinsPort, jenkinsUsername, jenkinsPassword, JENKINS_TOKEN);
+        StepsUtils.a_jenkins_job_from_is_created(jenkinsJobName, scriptFileName, config.getJenkinsBaseUrl(), config.getJenkinsUsername(), config.getJenkinsPassword(), JENKINS_TOKEN);
     }
 
     @When("^next story happens$")
