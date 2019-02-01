@@ -30,6 +30,7 @@ body {
 .main {
     height: calc(100vh - 55px);
     overflow-y: scroll;
+    overflow-x: hidden;
     padding: 10px;
     margin-left: 200px;
     transition: margin-left 0ms;
@@ -40,6 +41,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding-left: 10px;
+    outline: 0;
 }
 .app-header .navbar-logo:hover {
     text-decoration: none;
