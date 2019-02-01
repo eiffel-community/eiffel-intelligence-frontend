@@ -33,7 +33,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         config.initJenkinsConfig();
     }
 
-    @Given("^some subscriptions are set up in another story etc$")
+    @Given("^some subscriptions are set up$")
     public void some_subscriptions_are_set_up_in_another_story_etc() {
         // Write code here that turns the phrase above into concrete actions
     }
