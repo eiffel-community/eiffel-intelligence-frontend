@@ -497,7 +497,7 @@ jQuery(document).ready(function () {
     };
     checkSecurityAndDrawTable();
 
-    $("#sidenavCollapse").click(function() {
+    $("#.sidebar-minimizer").click(function() {
         table.responsive.rebuild();
         table.responsive.recalc();
     });

@@ -370,14 +370,14 @@ body {
     .app-body .sidebar {
         margin-left: -200px;
     }
-    .sidebar .sidebar-minimizer {
-        display: none;
-    }
     .sidebar.sidebar-show {
         margin-left: 0;
     }
     .sidebar + .main {
         margin-left: 0;
+    }
+    .sidebar .sidebar-minimizer {
+        display: none;
     }
     .sidebar.sidebar-show + .main {
         margin-left: 200px;
@@ -387,7 +387,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     .app-header {
         align-items: flex-start;
         height: 80px;

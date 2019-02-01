@@ -38,8 +38,12 @@ $(document).on('click', '.sidebar-minimizer', function () {
 $(document).click(function (event) {
     var sidebarShow = document.querySelectorAll(".sidebar.sidebar-show");
     var target = $(event.target);
-    if (target.closest('.navbar-toggler').length == 0 && target.closest('.sidebar').length == 0 && sidebarShow.length > 0) {
-        classRemoveAll(sidebarShow, "sidebar-show");
+    var intViewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    if (intViewportWidth < 992) {
+        if (target.closest('.navbar-toggler').length == 0 && target.closest('.sidebar').length == 0 && sidebarShow.length > 0) {
+            classRemoveAll(sidebarShow, "sidebar-show");
+        }
     }
 });
 
@@ -47,7 +51,11 @@ $(document).click(function (event) {
 //Dropdown menus don't count as links.
 $(document).on('click', '.sidebar-show .sidebar-nav .nav-item:not(.dropdown) > .nav-link', function (e) {
     var sidebar = document.getElementsByClassName("sidebar");
-    classToggleAll(sidebar, "sidebar-show");
+    var intViewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    if (intViewportWidth < 992) {
+        classToggleAll(sidebar, "sidebar-show");
+    }
 });
 
 //In medium or lower views the sidebar will hide if the user presses a header dropdown.
