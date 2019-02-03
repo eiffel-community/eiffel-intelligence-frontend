@@ -167,6 +167,7 @@ body {
 }
 .nav-item[type="button"] {
     outline: 0;
+    line-height: 0;
 }
 .nav-item[type="button"]:hover .fa {
     color: #fff;
@@ -228,6 +229,11 @@ body {
 }
 .nav-item.dropdown ul .nav-link {
     padding: 5px 5px 5px 0;
+    color: #fff;
+    font-size: 90%;
+}
+.nav-item.dropdown ul .nav-link:hover {
+    color: #fff;
 }
 .sidebar .sidebar-nav {
     flex: auto;
@@ -250,7 +256,7 @@ body {
     color: #fff;
     text-transform: uppercase;
 }
-.sidebar .sidebar-nav .nav-link {
+.sidebar .sidebar-nav .nav > .nav-item > .nav-link {
     display: flex;
     font-size: 90%;
     color: #fff;
@@ -426,7 +432,7 @@ body {
     }
     .app-header .nav-item.dropdown .dropdown-menu {
         position: fixed !important;
-        top: 45px !important;
+        top: 42px !important;
         width:100%;
         padding: 0 10px 10px 10px;
         border: 0;
