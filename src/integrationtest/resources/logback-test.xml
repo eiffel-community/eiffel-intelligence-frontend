@@ -8,16 +8,7 @@
         </encoder>
     </appender>
 
-    <!-- configuring spring logging?
-    <logger name="org.springframework.core" level="error" />
-    <logger name="org.springframework.context" level="error" />
-    <logger name="org.springframework.web" level="error" />
-    <logger name="org.springframework.test" level="error" />
-    <logger name="org.springframework.boot" level="error" />
-    -->
-
-    <!-- These configurations work during functional tests -->
-    <logger name="org.hibernate.validator" level="error" />
+    <!-- Reducing logs from mock requests during tests -->
     <logger name="io.netty" level="error" />
     <logger name="org.mockserver.mock" level="error" />
 
