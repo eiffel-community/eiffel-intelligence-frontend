@@ -25,15 +25,12 @@ body {
     margin-left: 0;
     background-color: #2f353a;
     z-index: 1020;
-    transition: all 0ms;
 }
 .main {
     height: calc(100vh - 55px);
-    overflow-y: scroll;
     overflow-x: hidden;
     padding: 10px;
     margin-left: 200px;
-    transition: margin-left 0ms;
 }
 .app-header .navbar-logo {
     display: flex;
@@ -302,9 +299,6 @@ body {
     }
     .sidebar.sidebar-minimized.sidebar-hidden {
         margin-left: -50px;
-    }
-    .sidebar + .main {
-        margin-left: 200px;
     }
     .sidebar.sidebar-minimized + .main {
         margin-left: 50px;
