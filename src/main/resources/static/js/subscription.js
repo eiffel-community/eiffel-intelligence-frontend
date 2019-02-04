@@ -498,9 +498,20 @@ jQuery(document).ready(function () {
     checkSecurityAndDrawTable();
 
     $(".sidebar-minimizer").click(function () {
-        table.responsive.rebuild();
-        table.responsive.recalc();
+        redrawTable();
     });
+
+    $(".navbar-toggler").click(function () {
+        redrawTable();
+    });
+
+    function redrawTable() {
+        setTimeout(
+            function () {
+                table.responsive.rebuild();
+                table.responsive.recalc();
+            }, 0);
+    }
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################
