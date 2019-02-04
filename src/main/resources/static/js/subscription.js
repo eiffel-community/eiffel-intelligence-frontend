@@ -497,21 +497,11 @@ jQuery(document).ready(function () {
     };
     checkSecurityAndDrawTable();
 
-    $(".sidebar-minimizer").click(function () {
-        redrawTable();
+    $(".main").on('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function () {
+        table.responsive.rebuild();
+        table.responsive.recalc();
     });
 
-    $(".navbar-toggler").click(function () {
-        redrawTable();
-    });
-
-    function redrawTable() {
-        setTimeout(
-            function () {
-                table.responsive.rebuild();
-                table.responsive.recalc();
-            }, 0);
-    }
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################
