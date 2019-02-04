@@ -25,7 +25,6 @@ body {
     margin-left: 0;
     background-color: #2f353a;
     z-index: 1020;
-    transition: all 1ms;
 }
 .main {
     height: calc(100vh - 55px);
@@ -52,6 +51,7 @@ body {
     visibility: visible;
     max-width: 600px;
     min-width: 10%;
+    outline: 0;
 }
 .app-header.header-bar-hidden .header-bar {
     visibility: hidden;

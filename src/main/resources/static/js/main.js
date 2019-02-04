@@ -22,35 +22,29 @@ jQuery(document).ready(function () {
     router.on({
         'subscriptions': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").removeClass("header-bar-hidden");
             $(".main").load("subscriptionpage.html");
         },
         'test-rules': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").removeClass("header-bar-hidden");
             $(".main").load("testRules.html");
         },
         'ei-info': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").removeClass("header-bar-hidden");
             $(".main").load("eiInfo.html");
         },
         'switch-backend': function () {
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").addClass("header-bar-hidden");
             $(".main").load("switch-backend.html");
         },
         'add-backend': function () {
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").addClass("header-bar-hidden");
             $(".main").load("add-instances.html");
         },
         'login': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
             $(".app-header").removeClass("header-bar-hidden");
             $(".main").load("login.html");
         },

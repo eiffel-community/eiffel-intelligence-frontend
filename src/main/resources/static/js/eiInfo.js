@@ -146,7 +146,7 @@ jQuery(document).ready(function () {
                 generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
                 generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
                 generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
+                generateEIInformationBasedOnList([data.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
                 generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
                 generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
             },
