@@ -26,7 +26,7 @@ $(document).on('click', '.sidebar-minimizer', function () {
         classToggleAll(sidebar, "sidebar-minimized");
 
         var collapsable = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse");
-        sidebarCollapseAttribute(collapsable, "data-toggle", "");
+        sidebarCollapseAttribute(collapsable, "data-toggle", "button");
         sidebarCollapseAttribute(collapsable, "aria-expanded", "false");
 
         var collapseShow = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse.show");
@@ -88,7 +88,7 @@ window.addEventListener('resize', function () {
         var collapsable = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse");
         if (widthCurrent > breakpoint && widthTransition <= breakpoint) {
             widthTransition = widthCurrent;
-            sidebarCollapseAttribute(collapsable, "data-toggle", "");
+            sidebarCollapseAttribute(collapsable, "data-toggle", "button");
             sidebarCollapseAttribute(collapsable, "aria-expanded", "false");
 
             var collapseShow = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse.show");
