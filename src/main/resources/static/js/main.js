@@ -154,7 +154,7 @@ jQuery(document).ready(function () {
                     }
                 });
             } else {
-                $.jGrowl("Please chose backend instance", { sticky: false, theme: 'Error' });
+                $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
             }
         }
     }
