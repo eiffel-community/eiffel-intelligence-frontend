@@ -1,41 +1,58 @@
 # Test Rules User Guide
 
-<p>Clicking on the Test Rules element in the navigator window opens an interface in the work window and interacts with the /rules/rule-check end point of Eiffel Intelligence. This interface can be used to test rules on events.</p>
+Clicking on the Test Rules element in the navigator window opens an
+interface in the work window and interacts with the `/rules/rule-check`
+end point of Eiffel Intelligence. This interface can be used to test
+rules on events.
 
-<h2>“Test Rules” Graphical User Interface</h2>
+## “Test Rules” Graphical User Interface ##
 
-<p>The graphical user interface for testing rules consists of two panes. Left pane is intended to add the rules and right pane is intended for adding the Eiffel events.</p>
+The graphical user interface for testing rules consists of two panes.
+Left pane is intended to add the rules and right pane is intended for
+adding the Eiffel events.
 
 <img src="images/GUI_TestRules.png" />
 
-<h3>Add</h3>
+### Add ###
 
-<p>Add buttons are for adding new rules/events. When you click on one of them, a new text area will show up. Then you can write or paste rule/event into it. There can be only one JSON object per text area. This means that it is not allowed to have more than one rule/event per text area.</p>
+Add buttons are for adding new rules/events. When you click on one of
+them, a new text area will show up. Then you can write or paste rule/event
+into it. There can be only one JSON object per text area. This means
+that it is not allowed to have more than one rule/event per text area.
 
-<h3>Load From File</h3>
+### Load From File ###
 
-<p>Load buttons are for loading rules/events from external files. The file content should be formatted as JSON objects in a JSON list, ex. [{Object1}, {Object2}]. After clicking on the button, it is possible to choose between replacing and appending to already written rules/events. A pop-up window with those two options shows up.</p>
+Load buttons are for loading rules/events from external files. The file
+content should be formatted as JSON objects in a JSON list, ex.
+`[{Object1}, {Object2}]`. After clicking on the button, it is possible
+to choose between replacing and appending to already written rules/events.
+A pop-up window with those two options shows up.
 
 <img src="images/GUI_TestRules_Replace_Append.png" />
 
-<p>After that, you need to choose from which file you want to load rules/events.</p>
+After that, you need to choose from which file you want to load rules/events.
 
 <img src="images/GUI_TestRules_Browse_File.png" />
 
-<p>When the file has been chosen, rules or events are loaded into text areas. In this example events template was loaded and the result can be seen on the image below.</p>
+When the file has been chosen, rules or events are loaded into text areas.
+In this example events template was loaded and the result can be seen on
+the image below.
 
 <img src="images/GUI_TestRules_Events.png" />
 
-<h3>Download</h3>
+### Download ###
 
-<p>Download buttons are for downloading edited rules/events. This enables to edit rules/events locally and then upload them using above mentioned “Load From File” buttons.</p>
+Download buttons are for downloading edited rules/events. This enables to
+edit rules/events locally and then upload them using above mentioned
+“Load From File” buttons.
 
-<h3>Get Template</h3>
+### Get Template ###
 
-<p>By clicking on "Get Template" buttons you will download rules respective events template. Rule´s template contains 3 rules and event´s template contains 3 events.</p>
+By clicking on "Get Template" buttons you will download rules respective
+events template. Rule´s template contains 3 rules and event´s template
+contains 3 events.
 
-
-Rules Template
+**Rules Template**
 
     [
       {
@@ -96,7 +113,7 @@ Rules Template
     ]
 
 
-Events Template
+**Events Template**
 
     [
       {
@@ -235,29 +252,37 @@ Events Template
     ]
 
 
-<h3>Clear All Rules/Clear All Events</h3>
+### Clear All Rules/Clear All Events ###
 
-<p>"Clear All" buttons remove all rules respective events. After clicking on button, a pop-up window shows up and asks for confirmation. After confirming all rules or events are removed.</p>
+"Clear All" buttons remove all rules respective events. After clicking on
+button, a pop-up window shows up and asks for confirmation. After confirming
+all rules or events are removed.
 
 <img src="images/GUI_TestRules_Clear_All.png" />
 
-<h3>Trash Can Button</h3>
+### Trash Can Button ###
 
-<p>It is possible to remove single rule/event by clicking on trash can button next to specific text area.</p>
+It is possible to remove a single rule/event by clicking on trash can
+button next to specific text area.
 
-<h3>Find Aggregated Object</h3>
+### Find Aggregated Object ###
 
-<p>Clicking on "Find Aggregated Object" button will start the aggregation process. If rules and events are correct, a pop-up window with the aggregated object will show up on the screen.</p>
+Clicking on "Find Aggregated Object" button will start the aggregation
+process. If rules and events are correct, a pop-up window with the
+aggregated object will show up on the screen.
 
 <img src="images/GUI_TestRules_Aggregated_Object.png" />
 
-<h2>Curl</h2>
+## Curl ##
 
-<p>It is possible to use curl to get required information. To get information about test rules status, if this functionality is enabled in back end or not, you can execute command below.</p>
+It is possible to use curl to get required information. To get information
+about test rules status, if this functionality is enabled in back end or
+not, you can execute command below.
 
     curl -X GET http://<host>:8080/rules/rule-check/testRulePageEnabled?backendurl="http://127.0.0.1:8090/"
 
-<p>To execute rules on specific events with curl, you need to create a JSON file with rules and events. File should contain:</p>
+To execute rules on specific events with curl, you need to create a JSON
+file with rules and events. File should contain:
 
     {
         "listEventsJson": [
@@ -272,9 +297,9 @@ Events Template
         ]
     }
 
-<p>And then run curl command below.</p>
+And then run curl command below.
 
     curl -X POST -d "@<path to file>" -H "Content-Type: application/json" http://<host>:8080/rules/rule-check/aggregation?backendurl="http://127.0.0.1:8090/"
 
 ---
-**_More information about how to write rules can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/Rules.md)._**
+**_More information about how to write rules can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/rules.md)._**
