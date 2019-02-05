@@ -21,13 +21,13 @@ $(document).on('click', '.sidebar-minimizer', function () {
         classToggleAll(sidebar, "sidebar-minimized");
 
         var collapsable = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse");
-        setSidebarCollapse(collapsable, "data-toggle", "collapse");
+        sidebarCollapseAttribute(collapsable, "data-toggle", "collapse");
     } else {
         classToggleAll(sidebar, "sidebar-minimized");
 
         var collapsable = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse");
-        setSidebarCollapse(collapsable, "data-toggle", "");
-        setSidebarCollapse(collapsable, "aria-expanded", "false");
+        sidebarCollapseAttribute(collapsable, "data-toggle", "");
+        sidebarCollapseAttribute(collapsable, "aria-expanded", "false");
 
         var collapseShow = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse.show");
         classRemoveAll(collapseShow, "show");
@@ -71,6 +71,12 @@ for (var i = 0; i < navbarItems.length; i++) {
     }, true);
 }
 
+//Whenever a menu item is clicked any collapsed sub menus will hide.
+$(document).on('click', '.sidebar-nav > .nav > .nav-item > .nav-link', function (e) {
+    var collapseShow = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse.show");
+    sidebarCollapseToggle(collapseShow);
+});
+
 //When a transition for medium to large or the reverse is made then collapse toggle should
 //be either added or removed depending on the sidebar-minimized class toggle.
 var widthTransition = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -82,14 +88,14 @@ window.addEventListener('resize', function () {
         var collapsable = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse");
         if (widthCurrent > breakpoint && widthTransition <= breakpoint) {
             widthTransition = widthCurrent;
-            setSidebarCollapse(collapsable, "data-toggle", "");
-            setSidebarCollapse(collapsable, "aria-expanded", "false");
+            sidebarCollapseAttribute(collapsable, "data-toggle", "");
+            sidebarCollapseAttribute(collapsable, "aria-expanded", "false");
 
             var collapseShow = document.querySelectorAll(".sidebar-nav .nav .nav-item.dropdown .collapse.show");
             classRemoveAll(collapseShow, "show");
         } else if (widthCurrent < breakpoint && widthTransition > breakpoint) {
             widthTransition = widthCurrent;
-            setSidebarCollapse(collapsable, "data-toggle", "collapse");
+            sidebarCollapseAttribute(collapsable, "data-toggle", "collapse");
         }
     }
 }, true);
@@ -112,10 +118,18 @@ function classRemoveAll(items, className) {
     }
 }
 
-function setSidebarCollapse(items, attribute, value) {
+function sidebarCollapseAttribute(items, attribute, value) {
     if (items.length > 0) {
         for (var i = 0; i < items.length; i++) {
             items[i].previousElementSibling.setAttribute(attribute, value);
+        }
+    }
+}
+
+function sidebarCollapseToggle(items) {
+    if (items.length > 0) {
+        for (var i = 0; i < items.length; i++) {
+            $(items[i]).collapse("toggle");
         }
     }
 }
