@@ -23,7 +23,7 @@
 .footer-buttons{
     position: sticky;
     z-index: 10;
-    bottom: 20px;
+    bottom: 10px;
     display: flex;
     justify-content: center;
     padding-top: 10px;
@@ -227,6 +227,11 @@ button.rules_info:focus {
     max-height: 370px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+    left: 30%;
+    border: none;
+    box-shadow: 0 0 0 transparent;
 }
 @media (max-width: 576px) {
     .container {
