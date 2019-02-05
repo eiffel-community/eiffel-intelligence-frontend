@@ -292,7 +292,7 @@ body {
     color: green;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     .sidebar.sidebar-hidden {
         margin-left: -200px;
     }
@@ -367,7 +367,7 @@ body {
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 767.98px) {
     .app-body .sidebar {
         margin-left: -200px;
     }
@@ -383,12 +383,6 @@ body {
     .sidebar.sidebar-show + .main {
         margin-left: 200px;
     }
-    .sidebar-minimized .nav-title {
-        display: inherit;
-    }
-}
-
-@media (max-width: 767.98px) {
     .app-header {
         align-items: flex-start;
         height: 80px;
