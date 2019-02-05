@@ -332,11 +332,15 @@ jQuery(document).ready(function () {
         request.open("GET", frontendServiceUrl + '/download/' + name, true);
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
-            if (this.responseText == "") {
-                window.logMessages("Failed to download template, Error: Could not contact the backend server.");
-            } else {
-                var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
-                downloadFile(jsonData, "application/json;charset=utf-8", name + ".json");
+            if (this.responseText != "") {
+                var jsonData = JSON.parse(request.response);
+                var jsonString = JSON.stringify(jsonData, null, 2);
+                var statusCode = jsonData['statusCode'];
+                if(statusCode != undefined && statusCode == 500) {
+                    window.logMessages("Failed to download template, Error: Could not contact the backend server.");
+                } else {
+                    downloadFile(jsonString, "application/json;charset=utf-8", name + ".json");
+                }
             }
         };
         request.send();
