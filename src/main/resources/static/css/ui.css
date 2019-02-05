@@ -204,7 +204,7 @@ body {
 }
 .nav-item.dropdown ul {
     width: 100%;
-    list-style-type: disc;
+    list-style-type: none;
     color: #c1c1c1;
     transition: 100ms;
 }
@@ -222,9 +222,6 @@ body {
 }
 .nav-item.dropdown .nav-link[aria-expanded="true"] + ul {
     background-color: #222222;
-}
-.nav-item.dropdown .nav-link[aria-expanded="true"] + ul .nav-item:hover {
-    color: #fff;
 }
 .nav-item.dropdown ul .nav-link {
     padding: 5px 5px 5px 0;
@@ -488,9 +485,6 @@ body {
         color: #c1c1c1;
     }
     .nav-link:hover .fa {
-        color: #c1c1c1;
-    }
-    .nav-item.dropdown .nav-link[aria-expanded="true"] + ul .nav-item:hover {
         color: #c1c1c1;
     }
     .sidebar .sidebar-nav .nav > .nav-item:hover {
