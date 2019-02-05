@@ -41,7 +41,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                     "notificationMessageKeyValues" : [
                     {
                         "formkey" : "json",
-                        "formvalue" : "{parameter: [{ name: jsonparams, value : to_string(@) }, { name: runpipeline, value : mybuildstep }]}"
+                        "formvalue" : "{parameter: [{ name: jsonparams, value : to_string(@) }, { name: runpipeline, value : 'mybuildstep' }]}"
                     }
                     ],
                     "repeat" : false,
@@ -54,7 +54,7 @@ template_vars["templatejenkinsPipelineParameterizedBuildTrigger"] =
                         ]
                     }
                 ],
-                    "subscriptionName" : "Subscription_Template_Jenkins_Pipline_Trigger"
+                    "subscriptionName" : "Subscription_Template_Jenkins_Pipeline_Trigger"
                 }];
 
 
