@@ -4,7 +4,10 @@ Clicking on the Subscription Handling element will display some buttons in main
 page which help perform a number of subscription related actions. A table may
 become visible, which is populated by the information about the stored (if any)
 subscriptions in the connected database. This view is also the default view of
-the Eiffel Intelligence Frontend, once the authentication (if enabled)is done.
+the Eiffel Intelligence Frontend, once the authentication (if enabled) is done.
+
+<img src="images/subscription_handling.png">
+</img>
 
 #### _Add Subscription_
 This button opens a form with a number of fields to create a subscription
@@ -23,8 +26,6 @@ This button help uploads a subscription by opening a file explorer
 This button indicates, through its color, whether a backend instance is
 connected with frontend or not. The green color means backend is connected
 while red means no instance is connected.
-#### _Search_
-To search subscriptions with matching names in the database (displayed in the
-table).
+
 
 **_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscriptions.md)_**
