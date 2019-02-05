@@ -64,12 +64,14 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
         assertEquals("new_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
 
+        indexPageObject.clickAdminBackendInstancesBtn();
         indexPageObject.clickSwitchBackendInstanceBtn();
         switchBackendPage.switchToBackendInstance(0);
         indexPageObject.clickSubscriptionPage();
         assertEquals("default_instance_subscription", subscriptionPage.getSubscriptionNameFromSubscription());
 
         // Test that backend instance can be removed
+        indexPageObject.clickAdminBackendInstancesBtn();
         indexPageObject.clickSwitchBackendInstanceBtn();
         switchBackendPage.removeInstanceNumber(1);
         assertEquals("switchBackendPage.presenceOfInstance returned true when it should have been false", false,
