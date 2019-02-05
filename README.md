@@ -42,7 +42,7 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 
 # Documentation
 
-1. [**Introduction**](.wiki/markdown/index.md)
+1. [**Introduction**](./wiki/markdown/index.md)
 1. [**Run in Docker**](./wiki/markdown/docker.md)
 1. [**GUI Overview**](./wiki/markdown/GUI-overview.md)
 1. [**Subscription Handling**](./wiki/markdown/subscription-handling.md)
