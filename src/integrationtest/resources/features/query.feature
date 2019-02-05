@@ -8,7 +8,7 @@ Feature: Query test
     And param key 'SubscriptionName' with value 'NonExistingSubscription' is added
     And request is sent
     Then response code 200 is received
-    And response body '{"queryResponseEntity":"[]"}' is received
+    And response body '{"queryResponseEntity":{}}' is received
 
   @QueryByIdScenario
   Scenario: Query aggregated object by ID
