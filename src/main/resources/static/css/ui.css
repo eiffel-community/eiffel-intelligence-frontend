@@ -225,7 +225,7 @@ body {
 }
 .nav-item.dropdown ul .nav-link {
     padding: 5px 5px 5px 0;
-    color: #fff;
+    color: #c1c1c1;
     font-size: 90%;
 }
 .nav-item.dropdown ul .nav-link:hover {
@@ -255,6 +255,12 @@ body {
 .sidebar .sidebar-nav .nav > .nav-item > .nav-link {
     display: flex;
     font-size: 90%;
+    color: #c1c1c1;
+}
+.sidebar .sidebar-nav .nav > .nav-item > .nav-link:hover {
+    color: #fff;
+}
+.sidebar .sidebar-nav .nav > .nav-item > .nav-link[aria-expanded="true"] {
     color: #fff;
 }
 .sidebar .sidebar-nav .nav > .nav-item .fa {
