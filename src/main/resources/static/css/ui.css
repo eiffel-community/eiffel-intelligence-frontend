@@ -335,6 +335,7 @@ body {
         background-color: #222222;
     }
     .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item:hover > .nav-link > span {
+        padding-left: 5px;
         overflow-x: hidden;
         text-overflow: ellipsis;
         color: #fff;
@@ -350,6 +351,9 @@ body {
     }
     .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item:hover span {
         width: 200px;
+    }
+    .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item.dropdown ul {
+        padding-left: 10px;
     }
     .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item:hover ul {
         position: absolute;
