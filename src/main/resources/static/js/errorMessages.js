@@ -40,7 +40,6 @@ function viewModel(data) {
         self.newMessagesLength(storedNew.length);
     }
     self.expandMessage = function (event) {
-        console.log(event);
         if (event.target.classList.contains("expand")) {
             event.target.classList.remove("expand");
         } else {
