@@ -1,16 +1,16 @@
-function messageModel (message) {
+function messageModel(message) {
     this.message = ko.observable(message);
 }
-function viewModel (data) {
+function viewModel(data) {
     var self = this;
     self.errorMessages = ko.observableArray([]);
     var storedOld = JSON.parse(sessionStorage.getItem('ei.errorMessages') || '[]');
     var storedNew = JSON.parse(sessionStorage.getItem('ei.errorMessagesNew') || '[]');
     self.newMessagesLength = ko.observable(storedNew.length);
 
-    self.init = function() {
+    self.init = function () {
         var json = storedOld.concat(storedNew);
-        for(var i = 0; i < json.length; i++) {
+        for (var i = 0; i < json.length; i++) {
             self.addErrorMessage(json[i].message);
         }
     }
@@ -21,11 +21,11 @@ function viewModel (data) {
     self.removeErrorMessage = function (index) {
         var length = self.errorMessages.length;
         var realIndex = length - 1 - index;
-        self.errorMessages.splice(realIndex,1);
+        self.errorMessages.splice(realIndex, 1);
         self.mergeErrorMessages();
     }
     self.storeErrorMessage = function (data) {
-        storedNew.push({"message": data})
+        storedNew.push({ "message": data })
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
         self.updateNewMessagesLength();
     }
@@ -40,18 +40,18 @@ function viewModel (data) {
         self.newMessagesLength(storedNew.length);
     }
     self.expandMessage = function (event) {
-        if(event.target.classList.contains("white-space-normal")) {
-            event.target.classList.remove("white-space-normal");
+        if (event.target.classList.contains("expand")) {
+            event.target.classList.remove("expand");
         } else {
             self.resetExpandMessage();
-            event.target.classList.add("white-space-normal");
+            event.target.classList.add("expand");
         }
     }
     self.resetExpandMessage = function () {
-        $(".alert-message").removeClass("white-space-normal");
+        $(".alert-message").removeClass("expand");
     }
     self.stopPropagation = function () {
-        $('.alerts-container').on('click', function (event) {
+        $('.alert-menu').on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
         });
@@ -59,18 +59,18 @@ function viewModel (data) {
 }
 var vm = new viewModel();
 vm.init();
-ko.cleanNode($("#alertsParent")[0]);
-ko.applyBindings(vm,$("#alertsParent")[0]);
+ko.cleanNode($("#alertsItem")[0]);
+ko.applyBindings(vm, $("#alertsItem")[0]);
 vm.stopPropagation();
 
-function logMessages (message) {
-    $.jGrowl(message, {sticky: false, theme: 'Error', position:'center'});
+function logMessages(message) {
+    $.jGrowl(message, { sticky: false, theme: 'Error', position: 'center' });
     vm.addErrorMessage(message);
     vm.storeErrorMessage(message);
     vm.stopPropagation();
 }
 
-$('#alertsDropdown').on('click', function (event) {
+$('#alertsLink').on('click', function (event) {
     vm.resetExpandMessage();
     vm.mergeErrorMessages();
 });
