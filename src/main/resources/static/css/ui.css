@@ -71,6 +71,10 @@ body {
     width: 360px;
     padding: 0;
 }
+.app-header .alert-menu .alert-empty {
+    padding: 5px 0 5px 0;
+    font-size: 90%;
+}
 .app-header .alert-menu .alert-list {
     max-height: 370px;
     overflow-y: auto;
