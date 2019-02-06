@@ -200,7 +200,7 @@ public class JenkinsManager {
         if(!isDeleted) {
             LOGGER.error("Failed to delete jenkins job. Status code: " + response.getStatusCodeValue() + ". Reason: " + response.getBody());
         }
-
+        
         return isDeleted;
     }
 

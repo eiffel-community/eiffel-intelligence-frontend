@@ -2,7 +2,17 @@
 <project>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>EVENT_ID</name>
+          <description></description>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <scm class="hudson.scm.NullSCM"/>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -12,9 +22,10 @@
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
-    <hudson.tasks.Shell>
-      <command>${shell.script}</command>
-    </hudson.tasks.Shell>
+    <com.ericsson.eiffel.fem.buildstep.GroovyBuildStep plugin="eiffel-fem@0.0.86">
+	  <groovyBuildStepFile/>
+      <script>${shell.script}</script>
+    </com.ericsson.eiffel.fem.buildstep.GroovyBuildStep>
   </builders>
   <publishers/>
   <buildWrappers/>

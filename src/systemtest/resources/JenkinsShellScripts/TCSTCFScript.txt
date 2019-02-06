@@ -1,0 +1,97 @@
+import groovy.json.JsonSlurper
+def baseUrl = "http://10.0.2.15:8096";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////TCS1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathTCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelTestCaseStartedEvent';
+def jsonTCS1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelTestCaseStartedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        },
+        "security": {
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "executor": ""
+      },
+      "links": [
+        {
+          "type": "TEST_CASE_EXECUTION",
+          "target": \\""""+ env.EVENT_ID + """\\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathTCS1, jsonTCS1);
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////TCF1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathTCF1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelTestCaseFinishedEvent';
+def jsonTCF1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelTestCaseFinishedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        },
+        "security": {
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "outcome": {
+          "verdict": "PASSED",
+          "conclusion": "SUCCESSFUL",
+          "description": ""
+        }
+      },
+      "links": [
+        {
+          "type": "TEST_CASE_EXECUTION",
+          "target": \\""""+ env.EVENT_ID + """\\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathTCF1, jsonTCF1);
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

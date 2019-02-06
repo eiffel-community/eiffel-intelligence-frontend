@@ -1,1 +1,60 @@
-echo "progress ongoing"
+import groovy.json.JsonSlurper
+def baseUrl = "<REMREM_BASE_URL>";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////CLM1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathArtP1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactPublishedEvent';
+def jsonArtP1 = """
+	{
+	  "msgParams": {
+	    "meta": {
+	      "type": "EiffelArtifactPublishedEvent",
+	      "version": "1.1.0",
+	      "tags": [],
+	      "source": {
+	        "domainId": "",
+	        "host": "",
+	        "name": "",
+	        "uri": ""
+	      },
+	      "security": {
+	      }
+	    }
+	  },
+	  "eventParams": {
+	    "data": {
+	      "locations": [
+	        {
+	          "type": "ARTIFACTORY",
+	          "uri": "required"
+	        }
+	      ]
+	    },
+	    "links": [
+	      {
+	        "type": "ARTIFACT",
+	        "target": \\"""" + env.EVENT_ID + """\\"
+	      }
+	    ]
+	  }
+	}
+""";
+
+generateEiffelEventAndPublish(uriPathArtP1, jsonArtP1);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

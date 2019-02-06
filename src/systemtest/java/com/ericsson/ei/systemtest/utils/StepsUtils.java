@@ -26,10 +26,12 @@ public class StepsUtils {
     * @throws URISyntaxException
     * @throws IOException
     */
-    public static void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken) throws URISyntaxException, JSONException, IOException {
+    public static void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String remremBaseUrl) throws URISyntaxException, JSONException, IOException {
         JenkinsManager jenkinsManager;
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
         String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
+        script = script.replace("<REMREM_BASE_URL>", remremBaseUrl);
+
         String xmlJobData = jenkinsManager.getXmlJobData(jenkinsToken, script);
         jenkinsManager.createJob(jenkinsJobName, xmlJobData);
     }

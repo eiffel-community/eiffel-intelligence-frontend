@@ -31,6 +31,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     public void configurations_are_provided() {
         //Temporary for my change(done in another PR)
         config.initJenkinsConfig();
+        config.initRemRemConfig();
     }
 
     @Given("^some subscriptions are set up$")
@@ -40,7 +41,15 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
     public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
-        StepsUtils.a_jenkins_job_from_is_created(jenkinsJobName, scriptFileName, config.getJenkinsBaseUrl(), config.getJenkinsUsername(), config.getJenkinsPassword(), JENKINS_TOKEN);
+        StepsUtils.a_jenkins_job_from_is_created(
+                jenkinsJobName,
+                scriptFileName,
+                config.getJenkinsBaseUrl(),
+                config.getJenkinsUsername(),
+                config.getJenkinsPassword(),
+                JENKINS_TOKEN,
+                config.getRemremBaseUrl()
+         );
     }
 
     @When("^next story happens$")
