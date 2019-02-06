@@ -92,7 +92,7 @@ jQuery(document).ready(function () {
 
         Object.keys(linksList).forEach(function (linkKey) {
             liTag = document.createElement('li');
-            liTag.classList.add('nav-item-sub');
+            liTag.classList.add('nav-item');
             aTag = document.createElement('a');
             aTag.classList.add('nav-link');
             aTag.innerHTML = linkKey;

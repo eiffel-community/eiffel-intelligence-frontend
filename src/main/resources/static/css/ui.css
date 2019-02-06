@@ -491,6 +491,12 @@ body {
     .nav-link:hover .fa {
         color: #c1c1c1;
     }
+    .sidebar .sidebar-nav .nav > .nav-item > .nav-link:hover {
+        color: #c1c1c1;
+    }
+    .sidebar .sidebar-nav .nav > .nav-item > .nav-link:hover[aria-expanded="true"] {
+        color: #fff;
+    }
     .sidebar .sidebar-nav .nav > .nav-item:hover {
         background-color: #2f353a;
     }
