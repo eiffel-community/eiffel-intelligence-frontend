@@ -7,7 +7,12 @@
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
           <name>EVENT_ID</name>
-          <description></description>
+          <description>Optional</description>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TEST_CASE_NAME</name>
+          <description>Optional</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>

@@ -27,7 +27,7 @@ def jsonTCT1 = """
       "data": {
         "testCase": {
           "tracker": "",
-          "id": "required",
+          "id": \\""""+ env.TEST_CASE_NAME + """\\",
           "uri": "",
           "version": ""
         },
