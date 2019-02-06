@@ -98,6 +98,7 @@ jQuery(document).ready(function () {
             aTag.innerHTML = linkKey;
             aTag.setAttribute('href', linksList[linkKey]);
             aTag.setAttribute('target', '_blanc');
+            aTag.setAttribute('rel', 'noopener noreferrer');
             liTag.appendChild(aTag);
             docLinksDoc.appendChild(liTag);
         });
