@@ -221,7 +221,13 @@ button.rules_info:focus {
     outline:none;
 }
 #infoContent{
-    font: 16px "Calibri";
+    font-family: Calibri;
+}
+@-moz-document url-prefix() {
+    #infoContent{
+        font-family: Calibri;
+        font-size: smaller;
+    }
 }
 .alerts-container {
     max-height: 370px;
