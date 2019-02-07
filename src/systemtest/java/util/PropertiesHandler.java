@@ -23,10 +23,8 @@ public class PropertiesHandler {
             String key = entry.getKey()
                               .toString();
             String valueInFile = entry.getValue()
-                                .toString();
-            System.out.println("ValueInFile +++++++++++++++++++++++++++++" + valueInFile);
+                                      .toString();
             String value = getPeriorityValue(key, valueInFile);
-            System.out.println("value +++++++++++++++++++++++++++++" + value);
             System.setProperty(key, value);
         }
     }
