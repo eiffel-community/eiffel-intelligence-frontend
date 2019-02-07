@@ -17,6 +17,6 @@ function downloadFileChromeFirefox(data, type, title) {
 }
 
 function downloadFileMSExplorer(data, type, title) {
-    var blob = new Blob([ data ], {type : type});
+    var blob = new Blob([data], { type: type });
     window.navigator.msSaveOrOpenBlob(blob, title);
 }

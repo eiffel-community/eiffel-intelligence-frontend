@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -54,6 +56,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     private String rabbitExchange;
     private String rabbitKey;
 
+    private List<HttpRequest> httpRequestList = new ArrayList<>();
     private HttpRequest httpRequest;
     private ResponseEntity<String> response;
 
@@ -64,7 +67,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
 
-    @Before("@QueryByIdScenario, @QueryFreestyleScenario")
+    @Before("@QueryByIdScenario or @QueryFreestyleScenario")
     public void beforeQueryScenario() {
         rabbitHost = System.getProperty("rabbit.host");
         rabbitPort = Integer.getInteger("rabbit.port");
@@ -97,6 +100,11 @@ public class CommonSteps extends AbstractTestExecutionListener {
         LOGGER.debug("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
         httpRequest.setHost(frontendHost).setPort(frontendPort).setEndpoint(endpoint);
+    }
+
+    @When("^\'(.*)\' endpoint is set in request list at index (\\d+)$")
+    public void endpoint_set_to(String endpoint, int index) throws Throwable {
+        httpRequestList.get(index).setEndpoint(endpoint);
     }
 
     @When("^\'(.*)\' is appended to endpoint$")
@@ -140,6 +148,11 @@ public class CommonSteps extends AbstractTestExecutionListener {
         response = httpRequest.performRequest();
     }
 
+    @When("^request is performed from request list at index (\\d+)$")
+    public void request_sent_using_list(int index) throws Throwable {
+        response = httpRequestList.get(index).performRequest();
+    }
+
     @When("^request is sent for (\\d+) seconds until reponse code no longer matches (\\d+)$")
     public void request_sent_body_not_received(int seconds, int statusCode) throws Throwable {
         long stopTime = System.currentTimeMillis() + (seconds * 1000);
@@ -147,6 +160,12 @@ public class CommonSteps extends AbstractTestExecutionListener {
             response = httpRequest.performRequest();
         } while (response.getStatusCode().value() == statusCode && stopTime > System.currentTimeMillis());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Then("^request is saved to request list at index (\\d+)$")
+    public void request_is_saved_to_list(int index) throws Throwable {
+        httpRequestList.add(index, httpRequest);
+        httpRequest.resetHttpRequestObject();
     }
 
     @Then("^response code (\\d+) is received$")
@@ -176,4 +195,10 @@ public class CommonSteps extends AbstractTestExecutionListener {
         LOGGER.debug("Contains: {}", contains);
         assertEquals(true, response.getBody().contains(contains));
     }
+
+    @Then("^remove \'(.*)\' from request headers at list index (\\d+)$")
+    public void remove_key_from_request_headers_at_list_index(String headerKey, int index) {
+        httpRequestList.get(index).removeHeader(headerKey);
+    }
+
 }

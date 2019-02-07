@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
     var frontEndVersion = $('#frontEndVersion').text();
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
         body.appendChild(label);
 
         var div = document.createElement('div');
-        div.setAttribute('class','table-responsive');
+        div.setAttribute('class', 'table-responsive');
 
         var tbl = createTable();
 
@@ -86,7 +86,7 @@ jQuery(document).ready(function() {
 
     function generateEIInformationBasedOnList(dataList, tableLabel) {
         var div = document.createElement('div');
-        div.setAttribute('class','table-responsive');
+        div.setAttribute('class', 'table-responsive');
 
         var label = createLabel(tableLabel);
         body.appendChild(label);
@@ -94,11 +94,11 @@ jQuery(document).ready(function() {
         var tbdy = null;
         var tbl = null;
 
-        dataList.forEach(function(dataSubList) {
+        dataList.forEach(function (dataSubList) {
             tbdy = document.createElement('tbody');
             tbl = createTable();
 
-            Object.keys(dataSubList).forEach(function(dataKey) {
+            Object.keys(dataSubList).forEach(function (dataKey) {
                 value = dataSubList[dataKey];
                 var tr = createTableRow(dataKey, value);
                 tbdy.appendChild(tr);
@@ -126,15 +126,15 @@ jQuery(document).ready(function() {
     function getInstanceInfo() {
         $.ajax({
             url: frontEndServiceUrl + "/information",
-            contentType : 'application/json;charset=UTF-8',
+            contentType: 'application/json;charset=UTF-8',
             type: 'GET',
-            error : function (XMLHttpRequest, textStatus, errorThrown) {
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var label = createLabel(generalEIInfoLabel);
                 body.appendChild(label);
                 var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
                 body.appendChild(element);
             },
-            success : function (data, textStatus, xhr) {
+            success: function (data, textStatus, xhr) {
                 var eiInfoContainer = document.getElementById('eiInfoContainer');
                 var data = JSON.parse(xhr.responseText);
                 createGeneralEIInfo(data);
@@ -146,11 +146,11 @@ jQuery(document).ready(function() {
                 generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
                 generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
                 generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
+                generateEIInformationBasedOnList([data.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
                 generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
                 generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
             },
-            complete: function (XMLHttpRequest, textStatus) {}
+            complete: function (XMLHttpRequest, textStatus) { }
         });
     }
 

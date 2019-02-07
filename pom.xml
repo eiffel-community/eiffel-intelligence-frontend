@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-intelligence-frontend</artifactId>
-    <version>0.0.19</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
     <parent>
@@ -113,12 +113,12 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-firefox-driver</artifactId>
-            <version>3.9.1</version>
+            <version>3.141.0</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>3.9.1</version>
+            <version>3.141.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-client-java -->
         <dependency>
@@ -283,7 +283,7 @@
                 <configuration>
                     <!-- This is where site.xml is located -->
                     <siteDirectory>${basedir}/wiki</siteDirectory>
-                    <!-- Github pages only generates documentation from docs 
+                    <!-- Github pages only generates documentation from docs
                         directory -->
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -308,32 +308,21 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- plugin requires all resources to exist within 
+                            <!-- plugin requires all resources to exist within
                                 resources/ directory -->
                             <!-- but we don't want to break links in documentation -->
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/wiki/images</directory>
+                                    <directory>${basedir}/wiki/markdown/images</directory>
+                                    <includes>
+                                        <include>*.png</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-                <!-- We want to remove duplicate/copied resources from site 
-                    generation -->
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/wiki/resources</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
 
         </plugins>
