@@ -248,7 +248,6 @@ jQuery(document).ready(function () {
                 { "text": "Mail Trigger", value: "templateEmailTrigger" }
             ]);
 
-
         self.choosen_subscription_template = ko.observable();
         self.authenticationType = ko.observable();
         self.restPost = ko.observable(false);

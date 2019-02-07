@@ -372,9 +372,9 @@
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>2.22.0</version>
 						<configuration>
-						<systemPropertyVariables>
-                            <propertiesFile>${systemtestsProperties}</propertiesFile>
-                         </systemPropertyVariables>
+							<systemPropertyVariables>
+								<propertiesFile>${systemtestsProperties}</propertiesFile>
+							</systemPropertyVariables>
 							<excludes>
 								<exclude>**/frontend/*</exclude>
 							</excludes>
