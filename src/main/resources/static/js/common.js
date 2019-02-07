@@ -3,7 +3,8 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 function doIfUserLoggedIn(user) {
     localStorage.removeItem("currentUser");
     localStorage.setItem("currentUser", user);
-    $("#ldapUserName").show();
+    $("#userItem").show();
+    $("#userItem").addClass("user-login");
     $("#ldapUserName").text(user);
     $("#loginBlock").hide();
     $("#logoutBlock").show();
@@ -12,7 +13,8 @@ function doIfUserLoggedIn(user) {
 
 function doIfUserLoggedOut() {
     localStorage.removeItem("currentUser");
-    $("#ldapUserName").show();
+    $("#userItem").show();
+    $("#userItem").removeClass("user-login");
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
@@ -21,9 +23,8 @@ function doIfUserLoggedOut() {
 }
 
 function doIfSecurityOff() {
+    $("#userItem").hide();
     $("#ldapUserName").text("");
-    $("#loginBlock").hide();
-    $("#logoutBlock").hide();
 }
 
 function checkBackendSecured() {
@@ -47,14 +48,14 @@ function checkBackendSecured() {
 
 function checkLoggedInUser() {
     $.ajax({
-        url : frontendServiceUrl + "/auth/login",
-        type : "GET",
-        contentType : 'application/string; charset=utf-8',
+        url: frontendServiceUrl + "/auth/login",
+        type: "GET",
+        contentType: 'application/string; charset=utf-8',
         cache: false,
-        error : function (request, textStatus, errorThrown) {
+        error: function (request, textStatus, errorThrown) {
             doIfUserLoggedOut();
         },
-        success : function (responseData, textStatus) {
+        success: function (responseData, textStatus) {
             var user = JSON.parse(ko.toJSON(responseData)).user;
             doIfUserLoggedIn(user);
         }

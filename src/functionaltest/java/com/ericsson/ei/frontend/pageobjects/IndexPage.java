@@ -42,8 +42,8 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("testRulesBtn")));
-        WebElement testRulesBtn = driver.findElement(By.id("testRulesBtn"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#test-rules']")));
+        WebElement testRulesBtn = driver.findElement(By.xpath("//a[@href='#test-rules']"));
         testRulesBtn.click();
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
@@ -51,8 +51,8 @@ public class IndexPage extends PageBaseClass {
     }
 
     public SubscriptionPage clickSubscriptionPage() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("subscriptionBtn")));
-        WebElement subscriptionBtn = driver.findElement(By.id("subscriptionBtn"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#subscriptions']")));
+        WebElement subscriptionBtn = driver.findElement(By.xpath("//a[@href='#subscriptions']"));
         subscriptionBtn.click();
         SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
@@ -66,14 +66,14 @@ public class IndexPage extends PageBaseClass {
 
 
     public void clickAdminBackendInstancesBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("adminBackendInstancesBtn")));
-        WebElement adminBackendInstancesBtn = driver.findElement(By.id("adminBackendInstancesBtn"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#confBackend']")));
+        WebElement adminBackendInstancesBtn = driver.findElement(By.xpath("//a[@href='#confBackend']"));
         adminBackendInstancesBtn.click();
     }
 
     public AddBackendPage clickAddBackendInstanceBtn() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addInstanceBtn")));
-        WebElement addInstanceBtn = driver.findElement(By.id("addInstanceBtn"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#add-backend']")));
+        WebElement addInstanceBtn = driver.findElement(By.xpath("//a[@href='#add-backend']"));
         addInstanceBtn.click();
         AddBackendPage addBackendPage = new AddBackendPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
@@ -81,33 +81,26 @@ public class IndexPage extends PageBaseClass {
     }
 
     public SwitchBackendPage clickSwitchBackendInstanceBtn() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcherBtn")));
-        WebElement addInstanceBtn = driver.findElement(By.id("switcherBtn"));
-        addInstanceBtn.click();
-        SwitchBackendPage addBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#switch-backend']")));
+        WebElement switchBackendBtn = driver.findElement(By.xpath("//a[@href='#switch-backend']"));
+        switchBackendBtn.click();
+        SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
-        return addBackendPage;
+        return switchBackendPage;
     }
 
     public InfoPage clickEiInfoBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("eiInfoBtn")));
-        WebElement eiInfoBtn = driver.findElement(By.id("eiInfoBtn"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#ei-info']")));
+        WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#ei-info']"));
         eiInfoBtn.click();
         InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();
         return infoPage;
     }
 
-    public void clickSwitchBackendButton() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcherBtn")));
-        WebElement switcherBtn = driver.findElement(By.id("switcherBtn"));
-        switcherBtn.click();
-        waitForJQueryToLoad();
-    }
-
     public void clickAlarmButton(){
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsDropdown")));
-        WebElement alarmBtn = driver.findElement(By.id("alertsDropdown"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsLink")));
+        WebElement alarmBtn = driver.findElement(By.id("alertsLink"));
         alarmBtn.click();
         waitForJQueryToLoad();
     }

@@ -1,12 +1,12 @@
-jQuery(document).ready(function() {
-    (function($) {
-        $.fn.invisible = function() {
-            return this.each(function() {
+jQuery(document).ready(function () {
+    (function ($) {
+        $.fn.invisible = function () {
+            return this.each(function () {
                 $(this).css("visibility", "hidden");
             });
         };
-        $.fn.visible = function() {
-            return this.each(function() {
+        $.fn.visible = function () {
+            return this.each(function () {
                 $(this).css("visibility", "visible");
             });
         };
@@ -22,50 +22,44 @@ jQuery(document).ready(function() {
     router.on({
         'subscriptions': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").visible();
-            $("#mainFrame").load("subscriptionpage.html");
+            $(".app-header").removeClass("header-bar-hidden");
+            $(".main").load("subscriptionpage.html");
         },
         'test-rules': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").visible();
-            $("#mainFrame").load("testRules.html");
+            $(".app-header").removeClass("header-bar-hidden");
+            $(".main").load("testRules.html");
         },
         'ei-info': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").visible();
-            $("#mainFrame").load("eiInfo.html");
+            $(".app-header").removeClass("header-bar-hidden");
+            $(".main").load("eiInfo.html");
         },
         'switch-backend': function () {
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").invisible();
-            $("#mainFrame").load("switch-backend.html");
+            $(".app-header").addClass("header-bar-hidden");
+            $(".main").load("switch-backend.html");
         },
         'add-backend': function () {
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").invisible();
-            $("#mainFrame").load("add-instances.html");
+            $(".app-header").addClass("header-bar-hidden");
+            $(".main").load("add-instances.html");
         },
         'login': function () {
             updateBackEndInstanceList();
-            $("#navbarResponsive").removeClass("show");
-            $("#selectInstances").visible();
-            $("#mainFrame").load("login.html");
+            $(".app-header").removeClass("header-bar-hidden");
+            $(".main").load("login.html");
         },
         '*': function () {
             router.navigate('subscriptions');
         }
     }).resolve();
 
-    $("#logoutBtn").click(function() {
+    $("#logoutBtn").click(function () {
         $.ajax({
-            url : frontendServiceUrl + "/auth/logout",
-            type : "GET",
-            contentType : 'application/json; charset=utf-8',
+            url: frontendServiceUrl + "/auth/logout",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
             cache: false,
-            complete : function (XMLHttpRequest, textStatus) {
+            complete: function (XMLHttpRequest, textStatus) {
                 doIfUserLoggedOut();
                 router.navigate('*');
             }
@@ -84,24 +78,27 @@ jQuery(document).ready(function() {
             success: function (responseData, XMLHttpRequest, textStatus) {
                 var observableObject = $("#selectInstances")[0];
                 ko.cleanNode(observableObject);
-                ko.applyBindings(new viewModel(responseData),observableObject);
+                ko.applyBindings(new viewModel(responseData), observableObject);
             }
         });
     }
 
-    function loadDocumentLinks(){
+    function loadDocumentLinks() {
         // eiffelDocumentationUrlLinks variable is configure in application.properties
         var linksList = JSON.parse(eiffelDocumentationUrlLinks);
-        var docLinksDoc = document.getElementById('collapseDocPages');
+        var docLinksDoc = document.getElementById('docLinks');
         var liTag = null;
         var aTag = null;
 
-        Object.keys(linksList).forEach(function(linkKey) {
+        Object.keys(linksList).forEach(function (linkKey) {
             liTag = document.createElement('li');
+            liTag.classList.add('nav-item');
             aTag = document.createElement('a');
+            aTag.classList.add('nav-link');
             aTag.innerHTML = linkKey;
             aTag.setAttribute('href', linksList[linkKey]);
             aTag.setAttribute('target', '_blanc');
+            aTag.setAttribute('rel', 'noopener noreferrer');
             liTag.appendChild(aTag);
             docLinksDoc.appendChild(liTag);
         });
@@ -116,12 +113,12 @@ jQuery(document).ready(function() {
 
     function singleInstanceModel(name, host, port, contextPath, https, active) {
         this.name = ko.observable(name),
-        this.host = ko.observable(host),
-        this.port = ko.observable(port),
-        this.contextPath = ko.observable(contextPath),
-        this.https = ko.observable(https),
-        this.active = ko.observable(active),
-        this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
+            this.host = ko.observable(host),
+            this.port = ko.observable(port),
+            this.contextPath = ko.observable(contextPath),
+            this.https = ko.observable(https),
+            this.active = ko.observable(active),
+            this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
     }
 
     function viewModel(data) {
@@ -130,17 +127,17 @@ jQuery(document).ready(function() {
         self.instances = ko.observableArray();
         var json = JSON.parse(ko.toJSON(data));
         var oldSelectedActive = self.selectedActive;
-        for(var i = 0; i < json.length; i++) {
+        for (var i = 0; i < json.length; i++) {
             var obj = json[i];
             var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.contextPath, obj.https, obj.active);
             self.instances.push(instance);
-            if(obj.active == true){
+            if (obj.active == true) {
                 currentName = obj.name;
             }
         }
         self.selectedActive = ko.observable(currentName);
-        self.onChange = function(){
-            if(typeof self.selectedActive() !== "undefined"){
+        self.onChange = function () {
+            if (typeof self.selectedActive() !== "undefined") {
                 $.ajax({
                     url: frontendServiceUrl + frontendServiceBackEndPath,
                     type: "PUT",
@@ -158,8 +155,8 @@ jQuery(document).ready(function() {
                     }
                 });
             } else {
-                $.jGrowl("Please chose backend instance", {sticky: false, theme: 'Error'});
-              }
+                $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
+            }
         }
     }
 
