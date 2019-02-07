@@ -110,6 +110,21 @@ jQuery(document).ready(function () {
         }
         $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
+        toggleCheckboxesDisabled(!backendStatus);
+    }
+
+    function toggleCheckboxesDisabled(disabled) {
+        $('#check-all').prop("disabled", disabled);
+        $('.data-check').prop("disabled", disabled);
+    }
+
+    function toggleButtonsDisabled(disabled) {
+        $('#addSubscription').prop("disabled", disabled);
+        $('#bulkDelete').prop("disabled", disabled);
+        $('#uploadSubscription').prop("disabled", disabled);
+        $('#getTemplateButton').prop("disabled", disabled);
+        $('#reloadButton').prop("disabled", disabled);
+        $('.table-btn').prop("disabled", disabled);
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -1144,15 +1159,6 @@ jQuery(document).ready(function () {
         });
     });
     // /Stop ## Delete Subscription #########################################
-
-    function toggleButtonsDisabled(disabled) {
-        $('#addSubscription').prop("disabled", disabled);
-        $('#bulkDelete').prop("disabled", disabled);
-        $('#uploadSubscription').prop("disabled", disabled);
-        $('#getTemplateButton').prop("disabled", disabled);
-        $('#reloadButton').prop("disabled", disabled);
-        $('.table-btn').prop("disabled", disabled);
-    }
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
