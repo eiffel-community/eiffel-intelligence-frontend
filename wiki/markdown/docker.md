@@ -12,6 +12,10 @@ With the Docker image user can try-out the Eiffel-Intelligence frontend on a Doc
   
   Windows: https://docs.docker.com/docker-for-windows/install/
 
+- Docker Compose
+  
+  Linux and Windows:  https://docs.docker.com/compose/install/
+
 ## Follow these step to build the Docker image.
 
 1. Build the Eiffel-Intelligence frontend war file: 
@@ -60,7 +64,7 @@ It is possible to set all Spring available properties via docker environment "-e
 <B>"--expose 8080"</B> - this Docker flag tells that containers internal port shall be exposed to outside of the Docker Host. This flag do not set which port that should be allocated outside Docker Host on the actual server/machine.
 
 
-<B>"-p 8071:8080"</B> - this Docker flag is mapping the containers external port 8034 to the internal exposed port 8091. Port 8034 will be allocated outside Docker host and user will be able to access the containers service via port 8034.
+<B>"-p 8071:8080"</B> - this Docker flag is mapping the containers external port 8071 to the internal exposed port 8080. Port 8071 will be allocated outside Docker host and user will be able to access the containers service via port 8071.
 
 
 When Eiffel-Intelligence container is running on your local Docker host Eiffel-Intelligence should be reachable with address "localhost:8071/\<Rest End-Point\>" or "\<docker host ip\>:8071/\<Rest End-Point\>"
