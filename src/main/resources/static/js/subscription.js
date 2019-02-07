@@ -562,7 +562,6 @@ jQuery(document).ready(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 reload_table();
-                console.log(XMLHttpRequest);
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
@@ -578,7 +577,6 @@ jQuery(document).ready(function () {
             var ajaxHttpSender = new AjaxHttpSender();
             // replace all /n with comma
             subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-            console.log("URL: " + frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString);
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
         });
         $('#confirm-delete').modal('show');
@@ -1139,6 +1137,7 @@ jQuery(document).ready(function () {
         };
 
         $('#confirm-delete .modal-body').text(id);
+        $('#confirm-delete .btn-danger').unbind();
         $('#confirm-delete .btn-danger').click(function () {
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
