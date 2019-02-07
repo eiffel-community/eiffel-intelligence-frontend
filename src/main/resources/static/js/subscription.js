@@ -571,16 +571,16 @@ jQuery(document).ready(function () {
             }
         };
 
-        $('#confirm-delete .modal-body').text(subscriptionsToDeleteString);
-        $('#confirm-delete .btn-danger').unbind();
-        $('#confirm-delete .btn-danger').click(function () {
+        $('.confirm-delete .modal-body').text(subscriptionsToDeleteString);
+        $('.confirm-delete .btn-danger').unbind();
+        $('.confirm-delete .btn-danger').click(function () {
             $("#check-all").prop('checked', false);
             var ajaxHttpSender = new AjaxHttpSender();
             // replace all /n with comma
             subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
         });
-        $('#confirm-delete').modal('show');
+        $('.confirm-delete').modal('show');
     });
     // /Stop ## Bulk delete##################################################
 
@@ -1122,13 +1122,13 @@ jQuery(document).ready(function () {
             }
         };
 
-        $('#confirm-delete .modal-body').text(id);
-        $('#confirm-delete .btn-danger').unbind();
-        $('#confirm-delete .btn-danger').click(function () {
+        $('.confirm-delete .modal-body').text(id);
+        $('.confirm-delete .btn-danger').unbind();
+        $('.confirm-delete .btn-danger').click(function () {
             var ajaxHttpSender = new AjaxHttpSender();
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
         });
-        $('#confirm-delete').modal('show');
+        $('.confirm-delete').modal('show');
     });
     // /Stop ## Delete Subscription #########################################
 
