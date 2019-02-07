@@ -1,7 +1,7 @@
 [
   {
     "created": "2017-07-26",
-    "notificationMeta": "http://127.0.0.1:3000/ei/test_subscription_rest",
+    "notificationMeta": "test@some-email.com",
     "notificationType": "MAIL",
     "restPostBodyMediaType": "application/x-www-form-urlencoded",
     "notificationMessageKeyValues": [

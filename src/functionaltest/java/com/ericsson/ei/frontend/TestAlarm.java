@@ -34,6 +34,6 @@ public class TestAlarm extends SeleniumBaseClass {
         for (int i = 0; i < 5; i++) {
             indexPageObject.clickAlarmButton();
         }
-        assertTrue(driver.findElements(By.className("dropdown-item")).size() >= 2);
+        assertTrue(driver.findElements(By.cssSelector(".alert-list .dropdown-item")).size() >= 2);
     }
 }
