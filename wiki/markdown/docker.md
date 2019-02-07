@@ -88,7 +88,7 @@ This docker-compose file includes these components, [docker-compose.yml](https:/
 - RabbitMq
 - ER
 - EI-Backend
-- EI-Frotend (Using the local EI-Frontend Docker image build from previous steps)
+- EI-Frontend (Using the local EI-Frontend Docker image build from previous steps)
 
 If you have used a different image tag when you build the EI Frontend docker image,
 then you need to update docker-compose.yml file.
