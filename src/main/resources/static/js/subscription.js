@@ -574,6 +574,7 @@ jQuery(document).ready(function () {
         $('#confirm-delete .modal-body').text(subscriptionsToDeleteString);
         $('#confirm-delete .btn-danger').unbind();
         $('#confirm-delete .btn-danger').click(function () {
+            $("#check-all").prop('checked', false);
             var ajaxHttpSender = new AjaxHttpSender();
             // replace all /n with comma
             subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
@@ -634,11 +635,11 @@ jQuery(document).ready(function () {
         }
     }
 
-    var pom = document.getElementById('upload_sub');
-    pom.onchange = function uploadFinished() {
-        var subscriptionFile = pom.files[0];
+    $('#upload_sub').change(function () {
+        var subscriptionFile = document.getElementById('upload_sub').files[0];
+        $('#upload_sub').val("");
         validateJsonAndCreateSubscriptions(subscriptionFile);
-    };
+    });
     function tryToCreateSubscription(subscriptionJson) {
         // Send Subscription JSON file to Spring MVC
         // AJAX Callback handling
@@ -675,22 +676,7 @@ jQuery(document).ready(function () {
     // /Start ## upload_subscriptions #################################################
     $("#uploadSubscription").click(function () {
         function createUploadWindow() {
-            //            var pom = document.createElement('input');
-            //            pom.setAttribute('id', 'uploadFile');
-            //            pom.setAttribute('type', 'file');
-            //            pom.setAttribute('name', 'upFile');
-            //            pom.onchange = function uploadFinished() {
-            //            	var subscriptionFile = pom.files[0];
-            //            	validateJsonAndCreateSubscriptions(subscriptionFile);
-            //        	};
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            }
-            else {
-                pom.click();
-            }
+            $('#upload_sub').click();
         }
 
         function createUploadWindowMSExplorer() {
