@@ -90,8 +90,7 @@ This docker-compose file includes these components, [docker-compose.yml](https:/
 - EI-Backend
 - EI-Frontend (Using the local EI-Frontend Docker image build from previous steps)
 
-If you have used a different image tag when you build the EI Frontend docker image,
-then you need to update docker-compose.yml file.
+If you have used a different image tag when you build the EI Frontend docker image, then you need to update docker-compose.yml file.
 
 This line need to changed, in ei_backend service section:
 
@@ -106,12 +105,12 @@ Then run following docker-compose command to startup all components:
 `docker-compose -f src/main/docker/docker-compose.yml up -d`
 
 It will take some minutes until all components has started. When all components has loaded, you should be able to access EI-Frotend web page with address:
-http://localhost:8080/
+http://localhost:8081/
 
-Curl command can be used to make request via EI-Frontend bridge to EI-Back-end rest-api, example for getting all subscriptions:
+Curl command can be used to make request via EI-Frontend bridge to EI Back-end Rest-Api, example for getting all subscriptions:
 
 
-`curl -X GET http://localhost:8080/subscriptions`
+`curl -X GET http://localhost:8081/subscriptions`
 
 It is also possible to access these Rest-Api addresses in web-browser and get result present in a Json view in web-browser.
 
