@@ -558,12 +558,11 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
                 reload_table();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 reload_table();
+                console.log(XMLHttpRequest);
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
@@ -573,20 +572,16 @@ jQuery(document).ready(function () {
             }
         };
 
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Are you sure you want to delete these subscriptions?<pre>' + subscriptionsToDeleteString,
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    // replace all /n with comma
-                    subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
+        $('#confirm-delete .modal-body').text(subscriptionsToDeleteString);
+        $('#confirm-delete .btn-danger').unbind();
+        $('#confirm-delete .btn-danger').click(function () {
+            var ajaxHttpSender = new AjaxHttpSender();
+            // replace all /n with comma
+            subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+            console.log("URL: " + frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString);
+            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
         });
+        $('#confirm-delete').modal('show');
     });
     // /Stop ## Bulk delete##################################################
 
@@ -1133,8 +1128,6 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
                 reload_table();
 
             },
@@ -1145,18 +1138,12 @@ jQuery(document).ready(function () {
             }
         };
 
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Please confirm before deleting subscription!',
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
+        $('#confirm-delete .modal-body').text(id);
+        $('#confirm-delete .btn-danger').click(function () {
+            var ajaxHttpSender = new AjaxHttpSender();
+            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
         });
+        $('#confirm-delete').modal('show');
     });
     // /Stop ## Delete Subscription #########################################
 
