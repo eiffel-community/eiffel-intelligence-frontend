@@ -78,3 +78,53 @@ Another option to configure Eiffel-Intelligence Front-end is to provide the appl
 2. Put application.properties file in a different folder in container and tell EI where the application.properties is located in the container:
 
 `docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties eiffel-intelligence-frontend:0.0.19`
+
+
+# Run Docker image with provided docker-compose file
+This docker-compose file includes these components, [docker-compose.yml](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/docker-compose.yml):
+- MongoDb
+- RabbitMq
+- ER
+- EI-Backend
+- EI-Frotend (Using the local EI-Frontend Docker image build from previous steps)
+
+If you have used a different image tag when you build the EI Frontend docker image,
+then you need to update docker-compose.yml file.
+
+This line need to changed, in ei_backend service section:
+
+"image: eiffel-intelligence-frontend:0.0.19"
+
+To:
+
+"image: \<your image tag\>"
+
+Then run following docker-compose command to startup all components:
+
+`docker-compose -f src/main/docker/docker-compose.yml up -d`
+
+It will take some minutes until all components has started. When all components has loaded, you should be able to access EI-Frotend web page with address:
+http://localhost:8080/
+
+Curl command can be used to make request via EI-Frontend bridge to EI-Back-end rest-api, example for getting all subscriptions:
+
+
+`curl -X GET http://localhost:8080/subscriptions`
+
+It is also possible to access these Rest-Api addresses in web-browser and get result present in a Json view in web-browser.
+
+Following command can be used to get the logs from the EI-Frontend container/service:
+
+`docker-compose -f src/main/docker/docker-compose.yml logs ei_frontend`
+
+All service names can be retreived with following command:
+
+`docker-compose -f src/main/docker/docker-compose.yml config --services`
+
+It is also possible to retrieve the logs by only using "docker logs <container_id or container_name>" command:
+
+`docker logs <container_id or container_name>`
+
+Container id can be retrieved with docker command:
+
+`docker ps`
