@@ -24,6 +24,11 @@ function viewModel(data) {
         self.errorMessages.splice(realIndex, 1);
         self.mergeErrorMessages();
     }
+    self.removeAllErrorMessages = function () {
+        self.errorMessages([]);
+        sessionStorage.setItem('ei.errorMessages', '[]');
+        sessionStorage.setItem('ei.errorMessagesNew', '[]');
+    }
     self.storeErrorMessage = function (data) {
         storedNew.push({ "message": data })
         sessionStorage.setItem('ei.errorMessagesNew', JSON.stringify(storedNew));
