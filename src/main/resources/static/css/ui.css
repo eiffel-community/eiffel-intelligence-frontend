@@ -97,13 +97,37 @@ body {
     justify-content: flex-end;
     padding: 0;
 }
+.app-header .alert-menu .alert-list .alert-remove .fa {
+    color: #6c757d;
+}
 .app-header .alert-menu .alert-list .alert-remove .fa:hover {
-    color: #2f353a;
+    color: #5a6268;
 }
 .app-header .alert-menu .alert-list .dropdown-item:hover {
+    background-color: inherit;
+}
+.app-header .alert-menu .alert-list .dropdown-item:active {
+    color: inherit;
+}
+.app-header .alert-menu .alert-list .dropdown-item .alert-message:hover {
     background-color: #f7f7f7;
 }
-.app-header .alert-menu .alert-list .dropdown-item:active .alert-remove .fa {
+.app-header .alert-menu .alert-list .dropdown-item .alert-message:active {
+    background-color: #c1c1c1;
+    color: #fff;
+}
+.app-header .alert-menu .alert-clear {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #c8ced3;
+    padding: 5px 5px 5px 5px;
+    background: #e4e7ea;
+    font-size: 0.875rem;
+}
+.app-header .alert-menu .alert-clear .alert-clear-button {
+    padding: 2px 0 0 5px;
+}
+.app-header .alert-menu .alert-clear .fa {
     color: #fff;
 }
 .app-header .user-menu {
@@ -153,13 +177,9 @@ body {
 .app-header .nav-item.dropdown .dropdown-item:not(:first-child) {
     border-top: 1px solid #c8ced3;
 }
-.app-header .nav-item.dropdown .dropdown-item:active {
-    background-color: #c1c1c1 !important;
-}
 .app-header .nav-item.dropdown .dropdown-item .fa {
     display: flex;
     align-items: center;
-    margin: 0 10px 0 10px;
 }
 .nav-item .fa {
     font-size: large !important;
@@ -444,12 +464,13 @@ body {
     .app-header .nav-item.dropdown .dropdown-menu .dropdown-header {
         border-radius: 0.25rem 0.25rem 0 0;
     }
-    .app-header .nav-item.dropdown .dropdown-menu .dropdown-item:last-child {
-        border-radius: 0 0 0.25rem 0.25rem;
-    }
-    .app-header .alert-menu .alert-list .dropdown-item {
+    .app-header .nav-item.dropdown .dropdown-menu .dropdown-item {
         background-color: #fff;
     }
+    .app-header .alert-menu .alert-clear {
+        border-radius: 0 0 0.25rem 0.25rem;
+    }
+
     .app-header .alert-menu .alert-empty {
         border-radius: 0 0 0.25rem 0.25rem;
         background-color: #fff;
