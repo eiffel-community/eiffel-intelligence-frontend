@@ -44,7 +44,7 @@
           <div class="dropdown-header text-center">
             <strong>Messages</strong>
           </div>
-          <div class="alert-empty text-center" data-bind="if: $root.errorMessages().length == 0">No messages</div>
+          <div class="alert-empty text-center" data-bind="visible: $root.errorMessages().length == 0">No messages</div>
           <div class="alert-list" id="alerts" data-bind="foreach: errorMessages.slice(0).reverse()">
             <div class="dropdown-item">
               <div class="col-10 alert-message" data-bind="text: message, click: function(data, event) {$root.expandMessage(event)}"></div>
