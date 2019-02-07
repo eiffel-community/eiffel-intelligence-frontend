@@ -397,6 +397,11 @@ jQuery(document).ready(function () {
             success: function (data) {
                 isSecured = JSON.parse(ko.toJSON(data)).security;
                 drawTable(isSecured);
+            },
+            complete: function() {
+                $("#check-all").click(function () {
+                    $(".data-check").prop('checked', $(this).prop('checked'));
+                });
             }
         });
     }
@@ -501,9 +506,6 @@ jQuery(document).ready(function () {
                 if (isSecured == false) {
                     table.column(2).visible(false);
                 }
-                $("#check-all").click(function () {
-                    $(".data-check").prop('checked', $(this).prop('checked'));
-                });
                 $(".control").click(function () {
                     setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
                 });
