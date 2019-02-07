@@ -104,17 +104,17 @@ Then run following docker-compose command to startup all components:
 
 `docker-compose -f src/main/docker/docker-compose.yml up -d`
 
-It will take some minutes until all components has started. When all components has loaded, you should be able to access EI-Frotend web page with address:
+It will take some minutes until all components has started. When all components has loaded, you should be able to access EI Front-end web page with address:
 http://localhost:8081/
 
-Curl command can be used to make request via EI-Frontend bridge to EI Back-end Rest-Api, example for getting all subscriptions:
+Curl command can be used to make request via EI Front-end bridge to EI Back-end Rest-Api, example for getting all subscriptions:
 
 
 `curl -X GET http://localhost:8081/subscriptions`
 
-It is also possible to access these Rest-Api addresses in web-browser and get result present in a Json view in web-browser.
+It is also possible to access these Rest-Api addresses in web-browser and get result presented in a Json view in web-browser.
 
-Following command can be used to get the logs from the EI-Frontend container/service:
+Following command can be used to get the logs from the EI Front-end container/service:
 
 `docker-compose -f src/main/docker/docker-compose.yml logs ei_frontend`
 
