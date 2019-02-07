@@ -4,11 +4,16 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StepsUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
 
+    private static JenkinsManager jenkinsManager;
     /**
     *
     * This function creates a job in jenkins with an attached script
@@ -20,19 +25,37 @@ public class StepsUtils {
     * @param jenkinsPassword - Password to the jenkins machine
     * @param jenkinsToken - Token to the jenkins job.
     *
-    * @return
+    * @return boolean - If the creation was a success or not
     *
     * @throws JSONException
     * @throws URISyntaxException
     * @throws IOException
     */
-    public static void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String remremBaseUrl) throws URISyntaxException, JSONException, IOException {
-        JenkinsManager jenkinsManager;
+    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String remremBaseUrl) throws URISyntaxException, JSONException, IOException {
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
         String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
         script = script.replace("<REMREM_BASE_URL>", remremBaseUrl);
 
         String xmlJobData = jenkinsManager.getXmlJobData(jenkinsToken, script);
-        jenkinsManager.createJob(jenkinsJobName, xmlJobData);
+        return jenkinsManager.createJob(jenkinsJobName, xmlJobData);
+    }
+
+    /**
+     *
+     * This is a function that removed the jenkins jobs after the testing is done.
+     * @param jenkinsJobNames - A list with the jobs to remove from jenkins
+     *
+     * @return
+     * @throws URISyntaxException
+     */
+    public static void deleteJenkinsJobs(ArrayList<String> jenkinsJobNames) throws URISyntaxException {
+        for (int i = 0; i < jenkinsJobNames.size(); i++) {
+            String jenkinsJobName = jenkinsJobNames.get(i);
+            boolean success = jenkinsManager.deleteJob(jenkinsJobName);
+
+            if (!success) {
+                LOGGER.error("Failed to remove job: \"" + jenkinsJobName+ "\" from jenkins");
+            }
+        }
     }
 }

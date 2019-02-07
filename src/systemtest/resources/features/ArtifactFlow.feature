@@ -12,4 +12,5 @@ Feature: Artifact system test
     And a jenkins job '"ArtP"' from '"src/systemtest/resources/JenkinsShellScripts/ArtPScript.txt"' is created
     When next story happens
     Then all is good
+    And subscriptions and jenkins jobs should be removed
 
