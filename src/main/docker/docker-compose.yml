@@ -164,5 +164,26 @@ services:
       - WAIT_MB_HOSTS=rabbitmq:15672
       - WAIT_DB_HOSTS=mongodb:27017
 
+  ei_frontend:
+    restart: always
+    image: eiffel-intelligence-frontend:0.0.19
+    expose:
+      - "8080"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - ei_backend_allevents
+    networks:
+          eiffel_2.0_1:
+            aliases:
+              - ${EIFFEL2_EI_FRONTEND}
+    environment:      # Overrides settings in application config file
+      - spring.application.name=ei-frontend
+      - server.port=8080
+      - ei.frontendServiceHost=${HOST}
+      - ei.frontendServicePort=8081
+      - ei.backendInstancesListJsonContent=${EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST}
+      - ei.backendInstancesFilePath=/tmp/ei-instances-list.conf
+
 networks:
   eiffel_2.0_1:
