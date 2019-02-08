@@ -29,7 +29,7 @@ This will produce a war file in the "target" folder.
 
 `docker build -t eiffel-intelligence-frontend:0.0.19 --build-arg URL=./target/eiffel-intelligence-frontend-0.0.19.war -f src/main/docker/Dockerfile .` 
 
-Now docker image has build with tag "eiffel-intelligence-frontend:0.1"
+Now docker image has build with tag "eiffel-intelligence-frontend:0.0.19"
 
 ## Run Docker image on local Docker Host
 To run the produced docker image on the local Docker host, execute this command:
@@ -99,6 +99,21 @@ This line need to changed, in ei_backend service section:
 To:
 
 "image: \<your image tag\>"
+
+Two variables need to be before we can start up all services with docker-compose tool.
+Set Docker host ip to the HOST variable. 
+If on Linux:
+
+`export HOST=$(hostname -I | tr " " "\n"| head -1)`
+
+If on Windows, get Docker Host ip with command: `dockermachine ip`
+
+Set that Docker ip to HOST environment varaible.
+
+Currently we need to provide EI Back-end instances list outside of docker-compose.yml file.
+
+`export EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST="[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "localhost", "https": false, "defaultBackend": true}]"
+`
 
 Then run following docker-compose command to startup all components:
 
