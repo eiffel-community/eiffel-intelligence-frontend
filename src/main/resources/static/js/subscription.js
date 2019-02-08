@@ -547,7 +547,7 @@ jQuery(document).ready(function () {
     // /Stop ## Reload Table#################################################
 
     // /Start ## Bulk delete#################################################
-    function deleteSubscription(subscriptionsToDeleteString) {
+    function deleteSubscriptions(subscriptionsToDeleteString) {
         var callback = {
             beforeSend: function () {
             },
@@ -558,7 +558,7 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
+                    window.logMessages("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
             },
             complete: function () {
