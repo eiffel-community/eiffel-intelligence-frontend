@@ -100,7 +100,7 @@ To:
 
 "image: \<your image tag\>"
 
-Two variables need to be before we can start up all services with docker-compose tool.
+Two variables need to be set before we can start up all services with docker-compose tool.
 Set Docker host ip to the HOST variable. 
 If on Linux:
 
@@ -108,12 +108,11 @@ If on Linux:
 
 If on Windows, get Docker Host ip with command: `dockermachine ip`
 
-Set that Docker ip to HOST environment varaible.
+Set that Docker host ip to HOST environment varaible.
 
 Currently we need to provide EI Back-end instances list outside of docker-compose.yml file.
 
-`export EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST="[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "localhost", "https": false, "defaultBackend": true}]"
-`
+`export EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST=$(echo [{ \"contextPath\": \"\", \"port\": \"8080\", \"name\": \"EI-Backend\", \"host\": \"ei-backend\", \"https\": false, \"defaultBackend\": true}])`
 
 Then run following docker-compose command to startup all components:
 
