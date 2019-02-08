@@ -547,26 +547,7 @@ jQuery(document).ready(function () {
     // /Stop ## Reload Table#################################################
 
     // /Start ## Bulk delete#################################################
-    $("#bulkDelete").click(function () {
-        var subscriptionsToDelete = [];
-        var data = table.rows().nodes();
-        $.each(data, function (index, value) {
-            if ($(this).find('input').prop('checked') == true) {
-                subscriptionsToDelete.push(table.row(index).data().subscriptionName)
-            }
-        });
-
-        // Check if no Subscription has been marked to be deleted.
-        if (subscriptionsToDelete.length < 1) {
-            window.logMessages("No subscriptions has been marked to be deleted.");
-            return;
-        }
-
-        var subscriptionsToDeleteString = "";
-        for (i = 0; i < subscriptionsToDelete.length; i++) {
-            subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
-        }
-
+    function deleteSubscription(subscriptionsToDeleteString) {
         var callback = {
             beforeSend: function () {
             },
@@ -590,10 +571,35 @@ jQuery(document).ready(function () {
             $("#check-all").prop('checked', false);
             var ajaxHttpSender = new AjaxHttpSender();
             // replace all /n with comma
-            subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+            if(/\n/.exec(subscriptionsToDeleteString)) {
+                subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+            }
             ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
         });
         $('.confirm-delete').modal('show');
+    };
+
+    $("#bulkDelete").click(function () {
+        var subscriptionsToDelete = [];
+        var data = table.rows().nodes();
+        $.each(data, function (index, value) {
+            if ($(this).find('input').prop('checked') == true) {
+                subscriptionsToDelete.push(table.row(index).data().subscriptionName)
+            }
+        });
+
+        // Check if no Subscription has been marked to be deleted.
+        if (subscriptionsToDelete.length < 1) {
+            window.logMessages("No subscriptions has been marked to be deleted.");
+            return;
+        }
+
+        var subscriptionsToDeleteString = "";
+        for (i = 0; i < subscriptionsToDelete.length; i++) {
+            subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
+        }
+
+        deleteSubscription(subscriptionsToDeleteString);
     });
     // /Stop ## Bulk delete##################################################
 
@@ -1120,28 +1126,9 @@ jQuery(document).ready(function () {
         event.stopPropagation();
         event.preventDefault();
         // Get tag that contains subscriptionName
-        var id = $(this).attr("id").split("-")[1];
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                reload_table();
+        var subscription = $(this).attr("id").split("-")[1];
 
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Error: " + XMLHttpRequest.responseText);
-            },
-            complete: function () {
-            }
-        };
-
-        $('.confirm-delete .modal-body').text(id);
-        $('.confirm-delete .btn-danger').unbind();
-        $('.confirm-delete .btn-danger').click(function () {
-            var ajaxHttpSender = new AjaxHttpSender();
-            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
-        });
-        $('.confirm-delete').modal('show');
+        deleteSubscription(subscription);
     });
     // /Stop ## Delete Subscription #########################################
 
