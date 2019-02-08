@@ -74,6 +74,11 @@ jQuery(document).ready(function () {
                 backendStatus = true;
             },
             complete: function () {
+                if(table != undefined && table.rows().data().length == 0) {
+                    toggleCheckboxesDisabled(true);
+                } else {
+                    toggleCheckboxesDisabled(!backendStatus);
+                }
                 toggleOnBackendStatus(backendStatus);
                 setTimeout(loadSubButtons, 800);
             }
@@ -110,7 +115,6 @@ jQuery(document).ready(function () {
         }
         $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
-        toggleCheckboxesDisabled(!backendStatus);
     }
 
     function toggleCheckboxesDisabled(disabled) {
@@ -422,7 +426,14 @@ jQuery(document).ready(function () {
                 "url": frontendServiceUrl + "/subscriptions",
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
-                "error": function () { }
+                "error": function () { },
+                "complete": function(data) {
+                    if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
+                        toggleCheckboxesDisabled(false);
+                    } else {
+                        toggleCheckboxesDisabled(true);
+                    }
+                }
             },
             //Set column definition initialisation properties.
             "columnDefs": [
