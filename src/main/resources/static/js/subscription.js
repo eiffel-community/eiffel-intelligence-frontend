@@ -599,7 +599,7 @@ jQuery(document).ready(function () {
             subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
         }
 
-        deleteSubscription(subscriptionsToDeleteString);
+        deleteSubscriptions(subscriptionsToDeleteString);
     });
     // /Stop ## Bulk delete##################################################
 
@@ -1128,7 +1128,7 @@ jQuery(document).ready(function () {
         // Get tag that contains subscriptionName
         var subscription = $(this).attr("id").split("-")[1];
 
-        deleteSubscription(subscription);
+        deleteSubscriptions(subscription);
     });
     // /Stop ## Delete Subscription #########################################
 
