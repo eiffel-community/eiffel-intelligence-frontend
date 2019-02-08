@@ -325,7 +325,7 @@
 								<rabbit.key>#</rabbit.key>
 							</systemPropertyVariables>
 							<excludes>
-								<exclude>**/systemtest/*</exclude>
+								<exclude>**/systemtests/*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
