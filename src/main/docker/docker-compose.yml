@@ -161,6 +161,9 @@ services:
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
       - er.url=eiffel-er:8082
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.ei=ERROR
       - WAIT_MB_HOSTS=rabbitmq:15672
       - WAIT_DB_HOSTS=mongodb:27017
 
