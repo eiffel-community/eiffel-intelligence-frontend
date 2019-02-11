@@ -42,7 +42,7 @@ public class StepsUtils {
 
     /**
      *
-     * This is a function that removed the jenkins jobs after the testing is done.
+     * This is a function that removes the jenkins jobs after the testing is done.
      * @param jenkinsJobNames - A list with the jobs to remove from jenkins
      *
      * @return
