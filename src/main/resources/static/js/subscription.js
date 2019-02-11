@@ -74,6 +74,11 @@ jQuery(document).ready(function () {
                 backendStatus = true;
             },
             complete: function () {
+                if(table != undefined && table.rows().data().length == 0) {
+                    toggleCheckboxesDisabled(true);
+                } else {
+                    toggleCheckboxesDisabled(!backendStatus);
+                }
                 toggleOnBackendStatus(backendStatus);
                 setTimeout(loadSubButtons, 800);
             }
@@ -110,6 +115,20 @@ jQuery(document).ready(function () {
         }
         $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
+    }
+
+    function toggleCheckboxesDisabled(disabled) {
+        $('#check-all').prop("disabled", disabled);
+        $('.data-check').prop("disabled", disabled);
+    }
+
+    function toggleButtonsDisabled(disabled) {
+        $('#addSubscription').prop("disabled", disabled);
+        $('#bulkDelete').prop("disabled", disabled);
+        $('#uploadSubscription').prop("disabled", disabled);
+        $('#getTemplateButton').prop("disabled", disabled);
+        $('#reloadButton').prop("disabled", disabled);
+        $('.table-btn').prop("disabled", disabled);
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -382,6 +401,11 @@ jQuery(document).ready(function () {
             success: function (data) {
                 isSecured = JSON.parse(ko.toJSON(data)).security;
                 drawTable(isSecured);
+            },
+            complete: function() {
+                $("#check-all").click(function () {
+                    $(".data-check").prop('checked', $(this).prop('checked'));
+                });
             }
         });
     }
@@ -402,7 +426,14 @@ jQuery(document).ready(function () {
                 "url": frontendServiceUrl + "/subscriptions",
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
-                "error": function () { }
+                "error": function () { },
+                "complete": function(data) {
+                    if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
+                        toggleCheckboxesDisabled(false);
+                    } else {
+                        toggleCheckboxesDisabled(true);
+                    }
+                }
             },
             //Set column definition initialisation properties.
             "columnDefs": [
@@ -486,9 +517,6 @@ jQuery(document).ready(function () {
                 if (isSecured == false) {
                     table.column(2).visible(false);
                 }
-                $("#check-all").click(function () {
-                    $(".data-check").prop('checked', $(this).prop('checked'));
-                });
                 $(".control").click(function () {
                     setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
                 });
@@ -519,6 +547,38 @@ jQuery(document).ready(function () {
     // /Stop ## Reload Table#################################################
 
     // /Start ## Bulk delete#################################################
+    function deleteSubscriptions(subscriptionsToDeleteString) {
+        var callback = {
+            beforeSend: function () {
+            },
+            success: function (data, textStatus) {
+                reload_table();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                reload_table();
+                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                for (var i = 0; i < responseJSON.length; i++) {
+                    window.logMessages("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
+                }
+            },
+            complete: function () {
+            }
+        };
+
+        $('.confirm-delete .modal-body').text(subscriptionsToDeleteString);
+        $('.confirm-delete .btn-danger').unbind();
+        $('.confirm-delete .btn-danger').click(function () {
+            $("#check-all").prop('checked', false);
+            var ajaxHttpSender = new AjaxHttpSender();
+            // replace all /n with comma
+            if(/\n/.exec(subscriptionsToDeleteString)) {
+                subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+            }
+            ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
+        });
+        $('.confirm-delete').modal('show');
+    };
+
     $("#bulkDelete").click(function () {
         var subscriptionsToDelete = [];
         var data = table.rows().nodes();
@@ -539,39 +599,7 @@ jQuery(document).ready(function () {
             subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
         }
 
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
-                reload_table();
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
-                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                for (var i = 0; i < responseJSON.length; i++) {
-                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
-                }
-            },
-            complete: function () {
-            }
-        };
-
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Are you sure you want to delete these subscriptions?<pre>' + subscriptionsToDeleteString,
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    // replace all /n with comma
-                    subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
-        });
+        deleteSubscriptions(subscriptionsToDeleteString);
     });
     // /Stop ## Bulk delete##################################################
 
@@ -626,11 +654,11 @@ jQuery(document).ready(function () {
         }
     }
 
-    var pom = document.getElementById('upload_sub');
-    pom.onchange = function uploadFinished() {
-        var subscriptionFile = pom.files[0];
+    $('#upload_sub').change(function () {
+        var subscriptionFile = document.getElementById('upload_sub').files[0];
+        $('#upload_sub').val("");
         validateJsonAndCreateSubscriptions(subscriptionFile);
-    };
+    });
     function tryToCreateSubscription(subscriptionJson) {
         // Send Subscription JSON file to Spring MVC
         // AJAX Callback handling
@@ -667,22 +695,7 @@ jQuery(document).ready(function () {
     // /Start ## upload_subscriptions #################################################
     $("#uploadSubscription").click(function () {
         function createUploadWindow() {
-            //            var pom = document.createElement('input');
-            //            pom.setAttribute('id', 'uploadFile');
-            //            pom.setAttribute('type', 'file');
-            //            pom.setAttribute('name', 'upFile');
-            //            pom.onchange = function uploadFinished() {
-            //            	var subscriptionFile = pom.files[0];
-            //            	validateJsonAndCreateSubscriptions(subscriptionFile);
-            //        	};
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            }
-            else {
-                pom.click();
-            }
+            $('#upload_sub').click();
         }
 
         function createUploadWindowMSExplorer() {
@@ -1113,46 +1126,11 @@ jQuery(document).ready(function () {
         event.stopPropagation();
         event.preventDefault();
         // Get tag that contains subscriptionName
-        var id = $(this).attr("id").split("-")[1];
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
-                reload_table();
+        var subscription = $(this).attr("id").split("-")[1];
 
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Error: " + XMLHttpRequest.responseText);
-            },
-            complete: function () {
-            }
-        };
-
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Please confirm before deleting subscription!',
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
-        });
+        deleteSubscriptions(subscription);
     });
     // /Stop ## Delete Subscription #########################################
-
-    function toggleButtonsDisabled(disabled) {
-        $('#addSubscription').prop("disabled", disabled);
-        $('#bulkDelete').prop("disabled", disabled);
-        $('#uploadSubscription').prop("disabled", disabled);
-        $('#getTemplateButton').prop("disabled", disabled);
-        $('#reloadButton').prop("disabled", disabled);
-        $('.table-btn').prop("disabled", disabled);
-    }
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
