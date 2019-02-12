@@ -303,7 +303,7 @@
                     <execution>
                         <id>copy-resources</id>
                         <!-- here the phase you need -->
-                        <phase>site</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
