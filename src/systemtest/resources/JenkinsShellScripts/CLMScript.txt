@@ -35,7 +35,7 @@ def jsonCLM1 = """
       "links": [
         {
           "type": "SUBJECT",
-          "target": \\"""" + env.EVENT_ID + """\\"
+          "target": \"""" + build.environment.EVENT_ID + """\"
         }
       ]
     }

@@ -35,7 +35,7 @@ def jsonArtP1 = """
 	    "links": [
 	      {
 	        "type": "ARTIFACT",
-	        "target": \\"""" + env.EVENT_ID + """\\"
+	        "target": \"""" + build.environment.EVENT_ID + """\"
 	      }
 	    ]
 	  }

@@ -30,7 +30,7 @@ def jsonTCS1 = """
       "links": [
         {
           "type": "TEST_CASE_EXECUTION",
-          "target": \\""""+ env.EVENT_ID + """\\"
+          "target": \""""+ build.environment.EVENT_ID + """\"
         }
       ]
     }
@@ -73,7 +73,7 @@ def jsonTCF1 = """
       "links": [
         {
           "type": "TEST_CASE_EXECUTION",
-          "target": \\""""+ env.EVENT_ID + """\\"
+          "target": \""""+ build.environment.EVENT_ID + """\"
         }
       ]
     }
