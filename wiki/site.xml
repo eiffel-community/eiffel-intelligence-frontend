@@ -41,9 +41,8 @@
             <item name="Home" href="index.html" />
             <item name="Run in Docker" href="docker.html" />
             <item name="GUI overview" href="GUI-overview.html" />
-            <item collapse="true" name="Subscription handling" href="subscription-handling.html">
-                <item name="Add Subscription" href="add-subscription.html" />
-            </item>
+            <item collapse="true" name="Subscription handling" href="subscription-handling.html" />
+            <item name="Add Subscription" href="add-subscription.html" />
             <item name="Test rules" href="test-rules.html" />
             <item name="Curl Examples" href="curl-examples.html" />
         </menu>
