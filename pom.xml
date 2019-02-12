@@ -165,10 +165,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>com.github.eiffel-community</groupId>
-          <artifactId>eiffel-commons</artifactId>
-          <version>master-SNAPSHOT</version>
-        </dependency> 
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>eiffel-commons</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
