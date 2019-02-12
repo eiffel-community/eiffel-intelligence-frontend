@@ -6,7 +6,7 @@ become visible, which is populated by the information about the stored (if any)
 subscriptions in the connected database. This view is also the default view of
 the Eiffel Intelligence Frontend, once the authentication (if enabled) is done.
 
-<img src="images/subscription_handling.png">
+<img src="images/subscription_overview.png">
 </img>
 
 #### _Add Subscription_
