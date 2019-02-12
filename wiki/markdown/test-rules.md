@@ -11,7 +11,7 @@ The graphical user interface for testing rules consists of two panes.
 Left pane is intended to add the rules and right pane is intended for
 adding the Eiffel events.
 
-<img src="images/GUI_TestRules.png" />
+<img src="images/testrules_overview.png" />
 
 ### Add ###
 
@@ -28,17 +28,17 @@ content should be formatted as JSON objects in a JSON list, ex.
 to choose between replacing and appending to already written rules/events.
 A pop-up window with those two options shows up.
 
-<img src="images/GUI_TestRules_Replace_Append.png" />
+<img src="images/testrules_replace_append.png" />
 
 After that, you need to choose from which file you want to load rules/events.
 
-<img src="images/GUI_TestRules_Browse_File.png" />
+<img src="images/testrules_browse_file.png" />
 
 When the file has been chosen, rules or events are loaded into text areas.
 In this example events template was loaded and the result can be seen on
 the image below.
 
-<img src="images/GUI_TestRules_Events.png" />
+<img src="images/testrules_events.png" />
 
 ### Download ###
 
@@ -258,7 +258,7 @@ contains 3 events.
 button, a pop-up window shows up and asks for confirmation. After confirming
 all rules or events are removed.
 
-<img src="images/GUI_TestRules_Clear_All.png" />
+<img src="images/testrules_clear_all.png" />
 
 ### Trash Can Button ###
 
@@ -271,7 +271,7 @@ Clicking on "Find Aggregated Object" button will start the aggregation
 process. If rules and events are correct, a pop-up window with the
 aggregated object will show up on the screen.
 
-<img src="images/GUI_TestRules_Aggregated_Object.png" />
+<img src="images/testrules_aggregated_object.png" />
 
 ## Curl ##
 
