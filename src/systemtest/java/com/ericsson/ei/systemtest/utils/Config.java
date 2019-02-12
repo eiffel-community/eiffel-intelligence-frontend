@@ -4,15 +4,14 @@ import static org.junit.Assert.assertNotNull;
 
 import lombok.Getter;
 
+@Getter
 public class Config {
 
-    @Getter
     private String jenkinsBaseUrl;
-    @Getter
     private String jenkinsUsername;
-    @Getter
     private String jenkinsPassword;
 
+    private String remremBaseUrl;
     /**
     *
     * This method retrieves the jenkins properties from the system properties.
@@ -27,5 +26,17 @@ public class Config {
         assertNotNull(jenkinsBaseUrl);
         assertNotNull(jenkinsUsername);
         assertNotNull(jenkinsPassword);
+    }
+
+    /**
+    *
+    * This method retrieves the remrem properties from the system properties.
+    *
+    * @return
+    */
+    public void initRemRemConfig() {
+        remremBaseUrl = System.getProperty("REMREM_BASE_URL");
+
+        assertNotNull(remremBaseUrl);
     }
 }

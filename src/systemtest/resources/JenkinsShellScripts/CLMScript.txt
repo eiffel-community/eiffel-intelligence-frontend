@@ -1,1 +1,60 @@
-echo "progress ongoing"
+import groovy.json.JsonSlurper
+def baseUrl = "<REMREM_BASE_URL>";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////CLM1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathCLM1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelConfidenceLevelModifiedEvent';
+def jsonCLM1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelConfidenceLevelModifiedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "name": "required",
+        "value": "SUCCESS",
+        "issuer": {
+          "name": "",
+          "email": "",
+          "id": "",
+          "group": ""
+        }
+      },
+      "links": [
+        {
+          "type": "SUBJECT",
+          "target": \\"""" + env.EVENT_ID + """\\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathCLM1, jsonCLM1);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

@@ -1,7 +1,6 @@
 package com.ericsson.ei.systemtest.artifactflow;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.ericsson.ei.systemtest.utils.Config;
-import com.ericsson.ei.systemtest.utils.JenkinsManager;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
 
 import cucumber.api.java.en.Given;
@@ -21,16 +19,14 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
 
-    Config config = new Config();
-    private JenkinsManager jenkinsManager;
-
-    DocumentBuilderFactory xmlDocumentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder xmlDocumentBuilder;
+    private ArrayList<String> jenkinsJobNames = new ArrayList<String>();
+    private Config config = new Config();
 
     @Given("^configurations are provided$")
     public void configurations_are_provided() {
         //Temporary for my change(done in another PR)
         config.initJenkinsConfig();
+        config.initRemRemConfig();
     }
 
     @Given("^some subscriptions are set up$")
@@ -40,7 +36,19 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
     public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
-        StepsUtils.a_jenkins_job_from_is_created(jenkinsJobName, scriptFileName, config.getJenkinsBaseUrl(), config.getJenkinsUsername(), config.getJenkinsPassword(), JENKINS_TOKEN);
+        boolean success = StepsUtils.createJenkinsJob(
+                jenkinsJobName,
+                scriptFileName,
+                config.getJenkinsBaseUrl(),
+                config.getJenkinsUsername(),
+                config.getJenkinsPassword(),
+                JENKINS_TOKEN,
+                config.getRemremBaseUrl()
+         );
+
+        if (success) {
+            jenkinsJobNames.add(jenkinsJobName);
+        }
     }
 
     @When("^next story happens$")
@@ -51,5 +59,10 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     @Then("^all is good$")
     public void all_is_good() {
         // Write code here that turns the phrase above into concrete actions
+    }
+
+    @Then("^subscriptions and jenkins jobs should be removed$")
+    public void subscriptions_and_jenkins_jobs_should_be_removed() throws Throwable {
+        StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
     }
 }
