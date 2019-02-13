@@ -8,6 +8,9 @@ import java.util.Properties;
 
 public class PropertiesHandler {
 
+    /**
+     * Function that set the properties.
+     */
     public static void setProperties() throws Throwable {
         final String systemTestFilePath;
 
@@ -24,12 +27,24 @@ public class PropertiesHandler {
                               .toString();
             String valueInFile = entry.getValue()
                                       .toString();
-            String value = getPeriorityValue(key, valueInFile);
+            String value = getPriorityValue(key, valueInFile);
             System.setProperty(key, value);
         }
     }
 
-    public static String getPeriorityValue(String key, String value) {
+    /**
+     * Function for to check if system or environment properties exists, if yes then
+     * override the value with the preference order property in file < system
+     * property < environment property
+     *
+     * @param key,
+     *            property name
+     * @param value,property
+     *            value from the input file
+     *
+     * @return property value
+     */
+    public static String getPriorityValue(String key, String value) {
         if ((System.getProperty(key) != null) || (System.getenv(key) != null)) {
             return (System.getenv(key) != null) ? System.getenv(key) : System.getProperty(key);
         } else {
