@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ericsson.ec.JenkinsManager;
-import com.ericsson.ec.utils.Utils;
+import com.ericsson.eiffelcommons.JenkinsManager;
+import com.ericsson.eiffelcommons.utils.Utils;
+
+
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
@@ -36,10 +38,10 @@ public class StepsUtils {
             jenkinsManager.restartJenkins();
         }
         String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
-        script = script.replace("<REMREM_BASE_URL>", remremBaseUrl);
+        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
 
         String xmlJobData = Utils.getResourceFileAsString(jenkinsJobXml);
-        xmlJobData = xmlJobData.replace("${shell.script}", script);
+        xmlJobData = xmlJobData.replace("SCRIPT_TO_BE_REPLACED", script);
         return jenkinsManager.forceCreateJob(jenkinsJobName, xmlJobData);
     }
 

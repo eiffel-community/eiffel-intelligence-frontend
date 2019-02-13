@@ -30,7 +30,7 @@
     <hudson.plugins.groovy.SystemGroovy plugin="groovy@2.1">
       <source class="hudson.plugins.groovy.StringSystemScriptSource">
         <script plugin="script-security@1.51">
-          <script>${shell.script}</script>
+          <script>SCRIPT_TO_BE_REPLACED</script>
           <sandbox>false</sandbox>
         </script>
       </source>
