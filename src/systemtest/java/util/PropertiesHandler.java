@@ -12,14 +12,14 @@ public class PropertiesHandler {
      * Function that set the properties.
      */
     public static void setProperties() throws Throwable {
-        final String systemTestFilePath;
+        final String eiConfigPropertiesFilepath;
 
-        if (System.getProperty("propertiesFile") != null) {
-            systemTestFilePath = System.getProperty("propertiesFile");
+        if (System.getProperty("ei.config.properties.file.path") != null) {
+            eiConfigPropertiesFilepath = System.getProperty("ei.config.properties.file.path");
         } else {
-            systemTestFilePath = "src/test/resources/system_test.properties";
+            eiConfigPropertiesFilepath = "src/test/resources/system_test.properties";
         }
-        InputStream systemTestFileInputStream = new FileInputStream(new File(systemTestFilePath));
+        InputStream systemTestFileInputStream = new FileInputStream(new File(eiConfigPropertiesFilepath));
         Properties systemTestProperties = new Properties();
         systemTestProperties.load(systemTestFileInputStream);
         for (Entry entry : systemTestProperties.entrySet()) {
@@ -45,7 +45,8 @@ public class PropertiesHandler {
      * @return property value
      */
     public static String getPriorityValue(String key, String value) {
-        if ((System.getProperty(key) != null) || (System.getenv(key) != null)) {
+        boolean environmentOrSystemPropertyExist = (System.getProperty(key) != null) || (System.getenv(key) != null);
+        if (environmentOrSystemPropertyExist) {
             return (System.getenv(key) != null) ? System.getenv(key) : System.getProperty(key);
         } else {
             return value;

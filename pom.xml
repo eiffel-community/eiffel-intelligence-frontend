@@ -360,7 +360,7 @@
 						<version>2.22.0</version>
 						<configuration>
 							<systemPropertyVariables>
-								<propertiesFile>${systemtestsProperties}</propertiesFile>
+								<ei.config.properties.file.path>${systemtestsProperties}</ei.config.properties.file.path>
 							</systemPropertyVariables>
 							<excludes>
 								<exclude>**/frontend/*</exclude>
