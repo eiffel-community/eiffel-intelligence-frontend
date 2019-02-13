@@ -3,7 +3,7 @@
 This form is used to add subscription through frontend GUI. Here is a
 description of the elements available on this form.
 
-<img src="images/add_subscription_form1.png">
+<img src="images/subscription_add_form1.png">
 </img>
 
 **Load Subscription Template:** In this dropdown list, options are given to
@@ -37,7 +37,7 @@ Parameters such as a Jenkins job-token can be included in this field.
 **Note**: The job-token should not be mistaken for the API token that is
 used as a password for authentication against the entire jenkins instance.
 
-<img src="images/add_subscription_form2.png">
+<img src="images/subscription_add_form2.png">
 </img>
 
 **Authorization:** A list to select authorization type. Currently, only one
