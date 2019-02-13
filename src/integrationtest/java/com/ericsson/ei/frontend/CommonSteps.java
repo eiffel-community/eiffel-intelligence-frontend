@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
@@ -23,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,8 +29,9 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import com.ericsson.ei.utils.AMQPCommunication;
-import com.ericsson.ei.utils.HttpRequest;
-import com.ericsson.ei.utils.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.utils.HttpRequest;
+import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
 
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -49,6 +48,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @LocalServerPort
     private int frontendPort;
     private String frontendHost = "localhost";
+    private String baseURL;
     private String rabbitHost;
     private int rabbitPort;
     private String rabbitUsername;
@@ -58,7 +58,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     private List<HttpRequest> httpRequestList = new ArrayList<>();
     private HttpRequest httpRequest;
-    private ResponseEntity<String> response;
+    private ResponseEntity response;
 
     private static final String RESOURCE_PATH = "src/integrationtest/resources/";
     private static final String BODIES_PATH = "bodies/";
@@ -66,6 +66,11 @@ public class CommonSteps extends AbstractTestExecutionListener {
     private static final String EIFFEL_EVENT_FILE = "eiffel_event.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonSteps.class);
+
+    @Before
+    public void beforeAllScenarios() {
+        baseURL = String.join(":", frontendHost, String.valueOf(frontendPort));
+    }
 
     @Before("@QueryByIdScenario or @QueryFreestyleScenario")
     public void beforeQueryScenario() {
@@ -99,7 +104,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     public void request_to_rest_api(String method, String endpoint) throws Throwable {
         LOGGER.debug("Method: {}, Endpoint: {}", method, endpoint);
         httpRequest = new HttpRequest(HttpMethod.valueOf(method));
-        httpRequest.setHost(frontendHost).setPort(frontendPort).setEndpoint(endpoint);
+        httpRequest.setBaseUrl(baseURL).setEndpoint(endpoint);
     }
 
     @When("^\'(.*)\' endpoint is set in request list at index (\\d+)$")
@@ -158,7 +163,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         long stopTime = System.currentTimeMillis() + (seconds * 1000);
         do {
             response = httpRequest.performRequest();
-        } while (response.getStatusCode().value() == statusCode && stopTime > System.currentTimeMillis());
+        } while (response.getStatusCode() == statusCode && stopTime > System.currentTimeMillis());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
