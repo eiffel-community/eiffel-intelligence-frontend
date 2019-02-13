@@ -55,7 +55,7 @@ jobs:
       before_install: skip
       install: skip
       script:
-        - mvn test
+        - mvn test -B
       after_script: skip
     - stage: test
       name: integrationTests
