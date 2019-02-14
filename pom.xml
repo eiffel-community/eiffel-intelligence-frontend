@@ -27,7 +27,6 @@
         <forkCountTests>2.5C</forkCountTests>
     </properties>
 
-
     <!-- Reporting Plugins -->
     <reporting>
         <plugins>
@@ -286,6 +285,7 @@
                     </includes>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -293,7 +293,7 @@
                 <configuration>
                     <!-- This is where site.xml is located -->
                     <siteDirectory>${basedir}/wiki</siteDirectory>
-                    <!-- Github pages only generates documentation from docs
+                    <!-- Github pages only generates documentation from docs 
                         directory -->
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -317,7 +317,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- plugin requires all resources to exist within
+                            <!-- plugin requires all resources to exist within 
                                 resources/ directory -->
                             <!-- but we don't want to break links in documentation -->
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>

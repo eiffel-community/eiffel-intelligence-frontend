@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ericsson.ei.systemtest.utils.PropertiesHandler;
 import org.junit.Ignore;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.ericsson.ei.systemtest.utils.Config;
+import com.ericsson.ei.systemtest.utils.PropertiesHandler;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
 import com.ericsson.eiffelcommons.utils.ResponseEntity;
 

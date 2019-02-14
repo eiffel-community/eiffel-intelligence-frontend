@@ -17,14 +17,14 @@ Feature: Artifact system test
     Given subscription object "TCT1Subscription" is created which will trigger "TCTJob" with parameters
     When notification with key "EVENT_ID" and value "id" is added to "TCT1Subscription"
     And notification with key "TEST_CASE_NAME" and value "'Test1'" is added to "TCT1Subscription"
-    And condition with jmespath "gav.artifactId=='ArtC2'" is added to "TCT1Subscription"
+    And condition with jmespath "identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'" is added to "TCT1Subscription"
     Then we send the "TCT1Subscription" to eiffel intelligence for creation.
 
     #####Add TCT2Subscription to EI#####
     Given subscription object "TCT2Subscription" is created which will trigger "TCTJob" with parameters
     When notification with key "EVENT_ID" and value "id" is added to "TCT2Subscription"
     And notification with key "TEST_CASE_NAME" and value "'Test2'" is added to "TCT2Subscription"
-    And condition with jmespath "gav.artifactId=='ArtC2'" is added to "TCT2Subscription"
+    And condition with jmespath "identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'" is added to "TCT2Subscription"
     Then we send the "TCT2Subscription" to eiffel intelligence for creation.
 
     #####Add TCSTCF1Subscription to EI#####
@@ -49,7 +49,7 @@ Feature: Artifact system test
     #####Add ArtPSubscription to EI#####
     Given subscription object "ArtPSubscription" is created which will trigger "ArtPJob" with parameters
     When notification with key "EVENT_ID" and value "id" is added to "ArtPSubscription"
-    And condition with jmespath "gav.artifactId=='ArtC2'" is added to "ArtPSubscription"
+    And condition with jmespath "identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'" is added to "ArtPSubscription"
     Then we send the "ArtPSubscription" to eiffel intelligence for creation.
 
     #####Add FlowCompleteSubscription#####

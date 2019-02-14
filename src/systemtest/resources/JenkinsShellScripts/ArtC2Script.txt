@@ -10,7 +10,7 @@ def jsonSCC2 = """{
   "msgParams": {
     "meta": {
       "type": "EiffelSourceChangeCreatedEvent",
-      "version": "1.1.0",
+      "version": "4.0.0",
       "tags": [],
       "source": {
         "domainId": "",
@@ -69,7 +69,7 @@ def jsonSCC1 = """
     "msgParams": {
       "meta": {
         "type": "EiffelSourceChangeCreatedEvent",
-        "version": "1.1.0",
+        "version": "4.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -128,7 +128,7 @@ def jsonSCS1 = """
     "msgParams": {
       "meta": {
         "type": "EiffelSourceChangeSubmittedEvent",
-        "version": "1.1.0",
+        "version": "3.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -187,7 +187,7 @@ def jsonCDef1 = """
     "msgParams": {
       "meta": {
         "type": "EiffelCompositionDefinedEvent",
-        "version": "1.1.0",
+        "version": "3.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -224,7 +224,7 @@ def jsonArtC1 = """
     "msgParams": {
       "meta": {
         "type": "EiffelArtifactCreatedEvent",
-        "version": "1.1.0",
+        "version": "3.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -236,11 +236,7 @@ def jsonArtC1 = """
     },
     "eventParams": {
       "data": {
-        "gav": {
-          "groupId": "required",
-          "artifactId": "required",
-          "version": "required"
-        },
+        "identity": "pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0",
         "buildCommand": "",
         "name": ""
       },
@@ -266,7 +262,7 @@ def jsonCDef2 = """
     "msgParams": {
       "meta": {
         "type": "EiffelCompositionDefinedEvent",
-        "version": "1.1.0",
+        "version": "3.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -303,7 +299,7 @@ def jsonArtC2 = """
     "msgParams": {
       "meta": {
         "type": "EiffelArtifactCreatedEvent",
-        "version": "1.1.0",
+        "version": "3.0.0",
         "tags": [],
         "source": {
           "domainId": "",
@@ -315,11 +311,7 @@ def jsonArtC2 = """
     },
     "eventParams": {
       "data": {
-        "gav": {
-          "groupId": "required",
-          "artifactId": "ArtC2",
-          "version": "required"
-        },
+        "identity": "pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0",
         "buildCommand": "",
         "name": ""
       },
