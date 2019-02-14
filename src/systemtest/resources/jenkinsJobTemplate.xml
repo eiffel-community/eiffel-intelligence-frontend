@@ -27,10 +27,14 @@
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
-    <com.ericsson.eiffel.fem.buildstep.GroovyBuildStep plugin="eiffel-fem@0.0.86">
-	  <groovyBuildStepFile/>
-      <script>${shell.script}</script>
-    </com.ericsson.eiffel.fem.buildstep.GroovyBuildStep>
+    <hudson.plugins.groovy.SystemGroovy plugin="groovy@2.1">
+      <source class="hudson.plugins.groovy.StringSystemScriptSource">
+        <script plugin="script-security@1.51">
+          <script>SCRIPT_TO_BE_REPLACED</script>
+          <sandbox>false</sandbox>
+        </script>
+      </source>
+    </hudson.plugins.groovy.SystemGroovy>
   </builders>
   <publishers/>
   <buildWrappers/>

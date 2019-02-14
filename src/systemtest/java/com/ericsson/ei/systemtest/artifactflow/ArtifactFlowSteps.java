@@ -18,6 +18,7 @@ import cucumber.api.java.en.When;
 public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
+    private static final String JENKINS_JOB_XML = "jenkinsJobTemplate.xml";
 
     private ArrayList<String> jenkinsJobNames = new ArrayList<String>();
     private Config config = new Config();
@@ -43,6 +44,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
                 JENKINS_TOKEN,
+                JENKINS_JOB_XML,
                 config.getRemremBaseUrl()
          );
 
