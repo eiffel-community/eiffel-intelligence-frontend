@@ -1,5 +1,5 @@
 import groovy.json.JsonSlurper
-def baseUrl = "http://10.0.2.15:8096";
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////TCS1/////////////////////////////////////////////
@@ -30,7 +30,7 @@ def jsonTCS1 = """
       "links": [
         {
           "type": "TEST_CASE_EXECUTION",
-          "target": \\""""+ env.EVENT_ID + """\\"
+          "target": \""""+ build.environment.EVENT_ID + """\"
         }
       ]
     }
@@ -73,7 +73,7 @@ def jsonTCF1 = """
       "links": [
         {
           "type": "TEST_CASE_EXECUTION",
-          "target": \\""""+ env.EVENT_ID + """\\"
+          "target": \""""+ build.environment.EVENT_ID + """\"
         }
       ]
     }

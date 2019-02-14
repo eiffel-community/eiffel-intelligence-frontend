@@ -45,7 +45,7 @@
             </plugin>
         </plugins>
     </reporting>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -164,8 +164,20 @@
             <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>eiffel-commons</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
+    
+    <repositories>
+      <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+      </repository>
+    </repositories>
+    
     <build>
         <resources>
             <resource>
@@ -223,6 +235,8 @@
                                 <source>src/functionaltest/resources</source>
                                 <source>src/integrationtest/java</source>
                                 <source>src/integrationtest/resources</source>
+                                <source>src/systemtest/java</source>
+                                <source>src/systemtest/resources</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -239,6 +253,7 @@
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
+                        <exclude>**/systemtest/**</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
                         <exclude>**/*IT.java</exclude>
                         <exclude>TestBaseClass</exclude>
@@ -266,6 +281,9 @@
                         <rabbit.exchange>ei-exchange</rabbit.exchange>
                         <rabbit.key>#</rabbit.key>
                     </systemPropertyVariables>
+                    <excludes>
+					    <exclude>**/systemtest/**</exclude>
+					</excludes>
                 </configuration>
                 <executions>
                     <execution>

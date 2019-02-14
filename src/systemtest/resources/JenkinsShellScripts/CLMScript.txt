@@ -1,5 +1,5 @@
 import groovy.json.JsonSlurper
-def baseUrl = "<REMREM_BASE_URL>";
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////CLM1/////////////////////////////////////////////
@@ -35,7 +35,7 @@ def jsonCLM1 = """
       "links": [
         {
           "type": "SUBJECT",
-          "target": \\"""" + env.EVENT_ID + """\\"
+          "target": \"""" + build.environment.EVENT_ID + """\"
         }
       ]
     }
