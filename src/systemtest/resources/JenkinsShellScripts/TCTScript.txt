@@ -1,5 +1,5 @@
 import groovy.json.JsonSlurper
-def baseUrl = "<REMREM_BASE_URL>";
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////CLM1/////////////////////////////////////////////
@@ -27,16 +27,16 @@ def jsonTCT1 = """
       "data": {
         "testCase": {
           "tracker": "",
-          "id": \\""""+ env.TEST_CASE_NAME + """\\",
+          "id": \""""+ build.environment.TEST_CASE_NAME + """\",
           "uri": "",
           "version": ""
         },
-        "recipeId": \\""""+ env.EVENT_ID + """\\"
+        "recipeId": \""""+ build.environment.EVENT_ID + """\"
       },
       "links": [
         {
           "type": "IUT",
-          "target": \\""""+ env.EVENT_ID + """\\"
+          "target": \""""+ build.environment.EVENT_ID + """\"
         }
       ]
     }

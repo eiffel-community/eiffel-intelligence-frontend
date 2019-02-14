@@ -1,14 +1,16 @@
 package com.ericsson.ei.systemtest.utils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ericsson.eiffelcommons.JenkinsManager;
+import com.ericsson.eiffelcommons.utils.Utils;
+
+
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
@@ -26,18 +28,21 @@ public class StepsUtils {
     * @param jenkinsToken - Token to the jenkins job.
     *
     * @return boolean - If the creation was a success or not
-    *
-    * @throws JSONException
-    * @throws URISyntaxException
-    * @throws IOException
+     * @throws Exception
     */
-    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String remremBaseUrl) throws URISyntaxException, JSONException, IOException {
+    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String jenkinsJobXml, String remremBaseUrl) throws Exception {
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
-        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
-        script = script.replace("<REMREM_BASE_URL>", remremBaseUrl);
 
-        String xmlJobData = jenkinsManager.getXmlJobData(jenkinsToken, script);
-        return jenkinsManager.createJob(jenkinsJobName, xmlJobData);
+        if(!jenkinsManager.pluginExists("Groovy")) {
+            jenkinsManager.installPlugin("Groovy", "2.1");
+            jenkinsManager.restartJenkins();
+        }
+        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
+        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
+
+        String xmlJobData = Utils.getResourceFileAsString(jenkinsJobXml);
+        xmlJobData = xmlJobData.replace("SCRIPT_TO_BE_REPLACED", script);
+        return jenkinsManager.forceCreateJob(jenkinsJobName, xmlJobData);
     }
 
     /**
@@ -46,9 +51,9 @@ public class StepsUtils {
      * @param jenkinsJobNames - A list with the jobs to remove from jenkins
      *
      * @return
-     * @throws URISyntaxException
+     * @throws Exception
      */
-    public static void deleteJenkinsJobs(ArrayList<String> jenkinsJobNames) throws URISyntaxException {
+    public static void deleteJenkinsJobs(ArrayList<String> jenkinsJobNames) throws Exception {
         for (int i = 0; i < jenkinsJobNames.size(); i++) {
             String jenkinsJobName = jenkinsJobNames.get(i);
             boolean success = jenkinsManager.deleteJob(jenkinsJobName);

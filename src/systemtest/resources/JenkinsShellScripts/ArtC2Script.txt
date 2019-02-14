@@ -1,5 +1,5 @@
 import groovy.json.JsonSlurper
-def baseUrl = "<REMREM_BASE_URL>";
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////SCC2/////////////////////////////////////////////
@@ -109,7 +109,7 @@ def jsonSCC1 = """
       "links": [
         {
           "type": "PREVIOUS_VERSION",
-          "target": \\""""+ SCC2ID + """\\"
+          "target": \""""+ SCC2ID + """\"
         }
       ]
     }
@@ -168,7 +168,7 @@ def jsonSCS1 = """
       "links": [
         {
           "type": "CHANGE",
-          "target": \\""""+ SCC1ID + """\\"
+          "target": \""""+ SCC1ID + """\"
         }
       ]
     }
@@ -205,7 +205,7 @@ def jsonCDef1 = """
       "links": [
         {
           "type": "ELEMENT",
-          "target": \\""""+ SCS1ID + """\\"
+          "target": \""""+ SCS1ID + """\"
         }
       ]
     }
@@ -247,7 +247,7 @@ def jsonArtC1 = """
       "links": [
         {
           "type": "COMPOSITION",
-          "target": \\""""+ CDef1ID + """\\"
+          "target": \""""+ CDef1ID + """\"
         }
       ]
     }
@@ -284,7 +284,7 @@ def jsonCDef2 = """
       "links": [
         {
           "type": "ELEMENT",
-          "target": \\""""+ ArtC1ID + """\\"
+          "target": \""""+ ArtC1ID + """\"
         }
       ]
     }
@@ -326,7 +326,7 @@ def jsonArtC2 = """
       "links": [
         {
           "type": "COMPOSITION",
-          "target": \\""""+ CDef2ID + """\\"
+          "target": \""""+ CDef2ID + """\"
         }
       ]
     }
