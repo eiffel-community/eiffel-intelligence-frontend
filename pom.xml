@@ -257,6 +257,7 @@
                         <exclude>TestBaseClass</exclude>
                         <exclude>SeleniumBaseClass</exclude>
                         <exclude>CommonSteps</exclude>
+                        <exclude>**/systemtest/**</exclude>
                     </excludes>
                     <includes>
                         <include>${someModule.test.includes}</include>
@@ -340,7 +341,7 @@
                                 <rabbit.key>#</rabbit.key>
                             </systemPropertyVariables>
                             <excludes>
-                                <exclude>**/systemtest/*</exclude>
+                                <exclude>**/systemtest/**</exclude>
                             </excludes>
                         </configuration>
                         <executions>
