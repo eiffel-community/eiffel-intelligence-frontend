@@ -1,0 +1,183 @@
+[
+    {
+        "subscriptionName": "TestExecution_Subscription_01_ActT",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_02_ActF/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "EVENT_ID",
+                "formvalue": "activity_triggered_event_id"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "activity_started_event_id == null"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    },
+    {
+        "subscriptionName": "TestExecution_Subscription_02_ActF",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_03_TERCC/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "EVENT_ID",
+                "formvalue": "activity_triggered_event_id"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "activity_finished_event_id != null"
+                    },
+                    {
+                        "jmespath": "test_batches == null"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    },
+    {
+        "subscriptionName": "TestExecution_Subscription_03_TERCC",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_04_TSS/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "EVENT_ID",
+                "formvalue": "activity_triggered_event_id"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "test_batches != null"
+                    },
+                    {
+                        "jmespath": "test_suite == null"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    },
+    {
+        "subscriptionName": "TestExecution_Subscription_04_TSS",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_05_TCT/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "EVENT_ID",
+                "formvalue": "test_suite[0].test_suite_started_event_id"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "test_suite != null"
+                    },
+                    {
+                        "jmespath": "test_suite[0].test_case == null"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    },
+    {
+        "subscriptionName": "TestExecution_Subscription_05_TCT",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_06_TCF/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "EVENT_ID_CASE1",
+                "formvalue": "test_suite[0].test_case[0].test_case_triggered_event_id"
+            },
+            {
+                "formkey": "EVENT_ID_CASE2",
+                "formvalue": "test_suite[0].test_case[1].test_case_triggered_event_id"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "test_suite[0].test_case[1] != null"
+                    },
+                    {
+                        "jmespath": "test_suite[0].test_case[1].test_case_finished_event_id == null"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    },
+    {
+        "subscriptionName": "TestExecution_Subscription_06_TCF",
+        "repeat": false,
+        "created": 1550060154000,
+        "notificationType": "REST_POST",
+        "notificationMeta": "http://eiffel-jenkins1:8080/job/TestExecution_Job_07_End/buildWithParameters",
+        "restPostBodyMediaType": "application/x-www-form-urlencoded",
+        "notificationMessageKeyValues": [
+            {
+                "formkey": "TEST_CONCLUSION",
+                "formvalue": "test_suite[0].test_case[0].conclusion"
+            }
+        ],
+        "requirements": [
+            {
+                "conditions": [
+                    {
+                        "jmespath": "test_suite[0].test_case[0].conclusion == 'SUCCESSFUL'"
+                    },
+                    {
+                        "jmespath": "test_suite[0].test_case[1].conclusion == 'SUCCESSFUL'"
+                    }
+                ]
+            }
+        ],
+        "userName": "admin",
+        "password": "admin",
+        "notificationMessageKeyValuesAuth": [],
+        "authenticationType": "BASIC_AUTH"
+    }
+]
