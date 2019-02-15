@@ -34,11 +34,8 @@ install:
   - java -Dspring.config.location=file:../../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
   - cd ../..
 
-<<<<<<< HEAD
 script:
   - "mvn verify -P integrationTest -Dei.backendInstancesListJsonContent=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
-=======
->>>>>>> cc0d94ab122bba64466e66cfd556f4c0645cb2ec
 
 after_script:
   - cd eiffel-intelligence
