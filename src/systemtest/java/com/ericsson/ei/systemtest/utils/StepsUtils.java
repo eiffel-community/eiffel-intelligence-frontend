@@ -1,21 +1,24 @@
 package com.ericsson.ei.systemtest.utils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ericsson.eiffelcommons.JenkinsManager;
+import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
 import com.ericsson.eiffelcommons.utils.Utils;
-
-
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
 
     private static JenkinsManager jenkinsManager;
+    private static JSONObject subscriptions = new JSONObject();
     /**
     *
     * This function creates a job in jenkins with an attached script
@@ -62,5 +65,18 @@ public class StepsUtils {
                 LOGGER.error("Failed to remove job: \"" + jenkinsJobName+ "\" from jenkins");
             }
         }
+    }
+
+    public static void createSubscription(String subscriptionName, String nameOfTriggeredJob, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl) throws IOException, JSONException {
+        RestPostSubscriptionObject subscription = new RestPostSubscriptionObject(subscriptionName);
+        subscription.setRestPostBodyMediaType("application/x-www-form-urlencoded");
+        subscription.setBasicAuth(jenkinsUserame, jenkinsPassword);
+        subscription.setNotificationMeta(jenkinsBaseUrl + "/job/" + nameOfTriggeredJob + "/buildWithParameters");
+        subscriptions.put(subscriptionName, subscription);
+    }
+
+    public static void addNotificationToSubscription(String key, String value, String subscriptionName) throws JSONException {
+        RestPostSubscriptionObject subscription = (RestPostSubscriptionObject) subscriptions.get(subscriptionName);
+        subscription.addNotificationMessageKeyValue(key, value);
     }
 }
