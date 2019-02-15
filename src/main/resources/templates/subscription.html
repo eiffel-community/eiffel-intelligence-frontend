@@ -360,14 +360,30 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
+
+<div class="modal fade confirm-delete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">Do you really want to delete subscription(s)?</div>
+            <div class="modal-body pre"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End Bootstrap modal -->
+
+<!-- /.modal_instance -->
 <div id="modal_info" class="modal_instance">
     <div class="modal_info-content">
         <span class="close_instance">&times;</span>
         <pre id="info_text"></pre>
     </div>
 </div>
-<!-- End Bootstrap modal -->
+
 
 <script type="text/javascript" src="resources/subscription_templates.js"></script>
 <script type="text/javascript" src="js/subscription.js"></script>

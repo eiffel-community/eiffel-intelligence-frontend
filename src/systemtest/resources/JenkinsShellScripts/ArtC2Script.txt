@@ -1,0 +1,352 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////SCC2/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathSCC2 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeCreatedEvent";
+def jsonSCC2 = """{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelSourceChangeCreatedEvent",
+      "version": "1.1.0",
+      "tags": [],
+      "source": {
+        "domainId": "",
+        "host": "",
+        "name": "",
+        "uri": ""
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+      "author": {
+        "name": "",
+        "email": "",
+        "id": "",
+        "group": ""
+      },
+      "gitIdentifier": {
+        "commitId": "commitID",
+        "branch": "",
+        "repoName": "",
+        "repoUri": "required"
+      },
+      "svnIdentifier": {
+        "revision": "1",
+        "directory": "required",
+        "repoName": "",
+        "repoUri": "required"
+      },
+      "ccCompositeIdentifier": {
+        "vobs": [
+          "required if ccCompositeIdentifier present "
+        ],
+        "branch": "required",
+        "configSpec": "required"
+      },
+      "hgIdentifier": {
+        "commitId": "required",
+        "branch": "",
+        "repoName": "",
+        "repoUri": "required"
+      }
+    }
+  }
+}""";
+
+SCC2ID = generateEiffelEventAndPublish(uriPathSCC2, jsonSCC2);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////SCC1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathSCC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeCreatedEvent';
+def jsonSCC1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelSourceChangeCreatedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "author": {
+          "name": "",
+          "email": "",
+          "id": "",
+          "group": ""
+        },
+        "gitIdentifier": {
+          "commitId": "1",
+          "branch": "",
+          "repoName": "",
+          "repoUri": "required"
+        },
+        "svnIdentifier": {
+          "revision": "1",
+          "directory": "required",
+          "repoName": "",
+          "repoUri": "required"
+        },
+        "hgIdentifier": {
+          "commitId": "required",
+          "branch": "",
+          "repoName": "",
+          "repoUri": "required"
+        }
+      },
+      "links": [
+        {
+          "type": "PREVIOUS_VERSION",
+          "target": \""""+ SCC2ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+SCC1ID = generateEiffelEventAndPublish(uriPathSCC1, jsonSCC1);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////SCS1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathSCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeSubmittedEvent';
+def jsonSCS1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelSourceChangeSubmittedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "submitter": {
+          "name": "",
+          "email": "",
+          "id": "",
+          "group": ""
+        },
+        "gitIdentifier": {
+          "commitId": "required ",
+          "repoUri": "required",
+          "branch": "",
+          "repoName": ""
+        },
+        "svnIdentifier": {
+          "revision": "1",
+          "directory": "required",
+          "repoName": "",
+          "repoUri": "required"
+        },
+        "hgIdentifier": {
+          "commitId": "required",
+          "branch": "",
+          "repoName": "",
+          "repoUri": "required"
+        }
+      },
+      "links": [
+        {
+          "type": "CHANGE",
+          "target": \""""+ SCC1ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+SCS1ID = generateEiffelEventAndPublish(uriPathSCS1, jsonSCS1);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////CDef1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathCDef1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelCompositionDefinedEvent';
+def jsonCDef1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelCompositionDefinedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "name": "required",
+        "version": ""
+      },
+      "links": [
+        {
+          "type": "ELEMENT",
+          "target": \""""+ SCS1ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+CDef1ID = generateEiffelEventAndPublish(uriPathCDef1, jsonCDef1);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ArtC1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathArtC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactCreatedEvent';
+def jsonArtC1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelArtifactCreatedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "gav": {
+          "groupId": "required",
+          "artifactId": "required",
+          "version": "required"
+        },
+        "buildCommand": "",
+        "name": ""
+      },
+      "links": [
+        {
+          "type": "COMPOSITION",
+          "target": \""""+ CDef1ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+ArtC1ID = generateEiffelEventAndPublish(uriPathArtC1, jsonArtC1);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////CDef2/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathCDef2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelCompositionDefinedEvent';
+def jsonCDef2 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelCompositionDefinedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "name": "required",
+        "version": ""
+      },
+      "links": [
+        {
+          "type": "ELEMENT",
+          "target": \""""+ ArtC1ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+CDef2ID = generateEiffelEventAndPublish(uriPathCDef2, jsonCDef2);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ArtC2/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathArtC2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactCreatedEvent';
+def jsonArtC2 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelArtifactCreatedEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "gav": {
+          "groupId": "required",
+          "artifactId": "ArtC2",
+          "version": "required"
+        },
+        "buildCommand": "",
+        "name": ""
+      },
+      "links": [
+        {
+          "type": "COMPOSITION",
+          "target": \""""+ CDef2ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+ArtC2ID = generateEiffelEventAndPublish(uriPathArtC2, jsonArtC2);
+
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

@@ -49,8 +49,8 @@ public class SubscriptionPage extends PageBaseClass {
         bulkDeleteBtn.click();
         // Click confirm button to confirm delete
         new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'confirm')]")));
-        WebElement confirmBtn = driver.findElement(By.xpath("//button[contains(text(),'confirm')]"));
+                .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".confirm-delete .modal-footer .btn-danger")));
+        WebElement confirmBtn = driver.findElement(By.cssSelector(".confirm-delete .modal-footer .btn-danger"));
         confirmBtn.click();
     }
 

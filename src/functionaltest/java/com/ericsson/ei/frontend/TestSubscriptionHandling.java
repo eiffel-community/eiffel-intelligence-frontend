@@ -84,6 +84,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         // Verify that "get template" button works
         // Download subscription template
+        subscriptionPage.refreshPage();
         new WebDriverWait(driver, 10).until((webdriver) -> subscriptionPage.presenceOfClickGetTemplateButton());
         subscriptionPage.clickGetTemplate();
 

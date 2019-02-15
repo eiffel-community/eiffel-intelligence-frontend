@@ -1,0 +1,61 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////CLM1/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathTCT1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelTestCaseTriggeredEvent';
+def jsonTCT1 = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelTestCaseTriggeredEvent",
+        "version": "1.1.0",
+        "tags": [],
+        "source": {
+          "domainId": "",
+          "host": "",
+          "name": "",
+          "uri": ""
+        },
+        "security": {
+        }
+      }
+    },
+    "eventParams": {
+      "data": {
+        "testCase": {
+          "tracker": "",
+          "id": \""""+ build.environment.TEST_CASE_NAME + """\",
+          "uri": "",
+          "version": ""
+        },
+        "recipeId": \""""+ build.environment.EVENT_ID + """\"
+      },
+      "links": [
+        {
+          "type": "IUT",
+          "target": \""""+ build.environment.EVENT_ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathTCT1, jsonTCT1);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}
