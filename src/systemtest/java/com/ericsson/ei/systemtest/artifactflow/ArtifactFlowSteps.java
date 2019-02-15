@@ -1,12 +1,10 @@
 package com.ericsson.ei.systemtest.artifactflow;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONException;
 import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +12,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -32,6 +31,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     public void configurations_are_provided() {
         //Temporary for my change(done in another PR)
         config.initEIFrontend();
+        config.initEIBackend();
         config.initJenkinsConfig();
         config.initRemRemConfig();
     }
@@ -56,19 +56,9 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         assertTrue("Failed to create jenkins job.", success);
     }
 
-    @Then("^jenkins is set up with the following jobs$")
-    public void jenkins_is_set_up_with_the_following_jobs(List<String> jobs) {
-
-    }
-
-    @When("^next story happens$")
-    public void next_story_happens() {
-        // Write code here that turns the phrase above into concrete actions
-    }
-
-    @Then("^all is good$")
-    public void all_is_good() {
-        // Write code here that turns the phrase above into concrete actions
+    @Then("^we continue with the next step$")
+    public void we_continue_with_the_next_step() {
+        //Just for cucumber to make sence
     }
 
     @Then("^subscriptions and jenkins jobs should be removed$")
@@ -77,17 +67,39 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     }
 
     @Given("^subscription \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws IOException, JSONException {
+    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
         StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
     }
 
     @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
-    public void notification_with_key_and_value_is_added_to(String key, String value, String subscriptionName) throws JSONException {
+    public void notification_with_key_and_value_is_added_to(String key, String value, String subscriptionName) throws Throwable {
         StepsUtils.addNotificationToSubscription(key, value, subscriptionName);
     }
 
+    @When("^condition with jmespath \"([^\"]*)\" is added to \"([^\"]*)\"$")
+    public void condition_with_jmespath_is_added_to(String jmesPath, String subscriptionName) throws Throwable {
+        StepsUtils.addConditionToRequirement(jmesPath, subscriptionName);
+    }
+
     @Then("^we send the \"([^\"]*)\" to eiffel intelligence for creation\\.$")
-    public void we_send_the_to_eiffel_intelligence_for_creation(String subscriptionName) {
+    public void we_send_the_to_eiffel_intelligence_for_creation(String subscriptionName) throws Throwable {
+        ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
+
+        assertEquals("Failed to create subscription. Response: " + response.getBody(), response.getStatusCode(), 200);
+    }
+
+    @Given("^all previous tests passes\\.$")
+    public void all_previous_tests_passes() {
+        //Just for cucumber to make sence
+    }
+
+    @When("^future story is done\\.$")
+    public void future_story_is_done() {
+
+    }
+
+    @Then("^everything should be fine\\.$")
+    public void everything_should_be_fine() {
 
     }
 }

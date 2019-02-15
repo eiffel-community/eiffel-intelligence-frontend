@@ -1,10 +1,12 @@
 package com.ericsson.ei.systemtest.utils;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ericsson.eiffelcommons.JenkinsManager;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
+import com.ericsson.eiffelcommons.utils.HttpRequest;
+import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
 import com.ericsson.eiffelcommons.utils.Utils;
 
 public class StepsUtils {
@@ -67,6 +72,17 @@ public class StepsUtils {
         }
     }
 
+    /**
+     * Creates a subscription that later can be used to send to Eiffel intelligence.
+     *
+     * @param subscriptionName
+     * @param nameOfTriggeredJob
+     * @param jenkinsUserame
+     * @param jenkinsPassword
+     * @param jenkinsBaseUrl
+     * @throws IOException
+     * @throws JSONException
+     */
     public static void createSubscription(String subscriptionName, String nameOfTriggeredJob, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl) throws IOException, JSONException {
         RestPostSubscriptionObject subscription = new RestPostSubscriptionObject(subscriptionName);
         subscription.setRestPostBodyMediaType("application/x-www-form-urlencoded");
@@ -75,8 +91,76 @@ public class StepsUtils {
         subscriptions.put(subscriptionName, subscription);
     }
 
+    /**
+     * Adds a notification to the subscription
+     *
+     * @param key
+     * @param value
+     * @param subscriptionName
+     * @throws JSONException
+     */
     public static void addNotificationToSubscription(String key, String value, String subscriptionName) throws JSONException {
         RestPostSubscriptionObject subscription = (RestPostSubscriptionObject) subscriptions.get(subscriptionName);
         subscription.addNotificationMessageKeyValue(key, value);
+    }
+
+    /**
+     * Adds a condition to the default requirement in the subscription.
+     *
+     * @param jmesPath
+     * @param subscriptionName
+     * @throws JSONException
+     */
+    public static void addConditionToRequirement(String jmesPath, String subscriptionName) throws JSONException {
+        RestPostSubscriptionObject subscription = (RestPostSubscriptionObject) subscriptions.get(subscriptionName);
+
+        JSONObject condition = new JSONObject();
+        condition.put("jmespath", jmesPath);
+        subscription.addConditionToRequirement(0, condition);
+    }
+
+    /**
+     * Adds a subscription in eiffel intelligence, if it is any subscription with the same subscriptionName in EI it will first be removed.
+     *
+     * @param subscriptionName
+     * @param frontendBaseUrl
+     * @param backendBaseUrl
+     * @return
+     * @throws JSONException
+     * @throws ClientProtocolException
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    public static ResponseEntity sendSubscriptionToEiffelIntelligence(String subscriptionName, String frontendBaseUrl, String backendBaseUrl) throws JSONException, ClientProtocolException, URISyntaxException, IOException {
+        removeSubscription(subscriptionName, frontendBaseUrl, backendBaseUrl);
+
+        RestPostSubscriptionObject subscription = (RestPostSubscriptionObject) subscriptions.get(subscriptionName);
+        ResponseEntity response = new HttpRequest(HttpMethod.POST)
+            .setBaseUrl(frontendBaseUrl)
+            .setEndpoint("/subscriptions")
+            .addHeader("Content-Type", "application/json")
+            .addParam("backendurl", backendBaseUrl)
+            .setBody(subscription.getAsSubscriptions().toString())
+            .performRequest();
+
+        return response;
+    }
+
+    /**
+     * Removes a subscription from eiffel intelligence
+     *
+     * @param subscriptionName
+     * @param frontendBaseUrl
+     * @param backendBaseUrl
+     * @throws ClientProtocolException
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    private static void removeSubscription(String subscriptionName, String frontendBaseUrl, String backendBaseUrl) throws ClientProtocolException, URISyntaxException, IOException {
+        ResponseEntity response = new HttpRequest(HttpMethod.DELETE)
+                .setBaseUrl(frontendBaseUrl)
+                .setEndpoint("/subscriptions/" + subscriptionName)
+                .addParam("backendurl", backendBaseUrl)
+                .performRequest();
     }
 }

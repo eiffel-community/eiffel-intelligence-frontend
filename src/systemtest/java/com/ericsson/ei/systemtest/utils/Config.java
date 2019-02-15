@@ -14,6 +14,7 @@ public class Config {
     private String remremBaseUrl;
 
     private String eiFrontendBaseUrl;
+    private String eiBackendBaseUrl;
     /**
     *
     * This method retrieves the jenkins properties from the system properties.
@@ -52,5 +53,11 @@ public class Config {
         eiFrontendBaseUrl = System.getProperty("EI_FRONTEND_BASE_URL");
 
         assertNotNull(eiFrontendBaseUrl);
+    }
+
+    public void initEIBackend() {
+        eiBackendBaseUrl = System.getProperty("EI_BACKEND_BASE_URL");
+
+        assertNotNull(eiBackendBaseUrl);
     }
 }
