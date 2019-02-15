@@ -1,11 +1,10 @@
-package com.ericsson.ei.systemtests;
+package com.ericsson.ei.systemtest.flowRunner;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
-import util.PropertiesHandler;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/systemtest/resources/features/test.feature", glue = {
@@ -14,6 +13,6 @@ public class FlowRunnerIT {
 
     @BeforeClass
     public static void init() throws Throwable {
-        PropertiesHandler.setProperties();
+
     }
 }

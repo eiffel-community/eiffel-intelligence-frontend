@@ -340,7 +340,7 @@
                                 <rabbit.key>#</rabbit.key>
                             </systemPropertyVariables>
                             <excludes>
-                                <exclude>**/systemtests/*</exclude>
+                                <exclude>**/systemtest/**</exclude>
                             </excludes>
                         </configuration>
                         <executions>
@@ -377,7 +377,7 @@
                                 <ei.config.properties.file.path>${systemtestsProperties}</ei.config.properties.file.path>
                             </systemPropertyVariables>
                             <excludes>
-                                <exclude>**/frontend/*</exclude>
+                                <exclude>**/frontend/**</exclude>
                             </excludes>
                         </configuration>
                         <executions>
