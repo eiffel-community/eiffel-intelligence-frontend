@@ -164,7 +164,19 @@
             <version>5.1.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>eiffel-commons</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <resources>
@@ -233,25 +245,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <skipTests>${skipUTs}</skipTests>
-                    <forkCountTests>${forkCountTests}</forkCountTests>
-                    <reuseForks>false</reuseForks>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <excludes>
-                        <exclude>**/*IT.java</exclude>
-                        <exclude>${someModule.test.excludes}</exclude>
-                    </excludes>
-                    <includes>
-                        <include>${someModule.test.includes}</include>
-                    </includes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7.1</version>
                 <configuration>
@@ -277,35 +270,6 @@
                         <id>copy-resources</id>
                         <!-- here the phase you need -->
                         <phase>pre-site</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <!-- plugin requires all resources to exist within 
-                                resources/ directory -->
-                            <!-- but we don't want to break links in documentation -->
-                            <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/wiki/markdown/images</directory>
-                                    <includes>
-                                        <include>*.png</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
-                        <phase>site</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
