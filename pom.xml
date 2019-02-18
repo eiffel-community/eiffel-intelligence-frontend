@@ -333,12 +333,12 @@
                             <skipTests>${skipTests}</skipTests>
                             <skipITs>${skipITs}</skipITs>
                             <systemPropertyVariables>
-                                <rabbit.host>localhost</rabbit.host>
-                                <rabbit.port>5672</rabbit.port>
-                                <rabbit.username>myuser</rabbit.username>
-                                <rabbit.password>myuser</rabbit.password>
-                                <rabbit.exchange>ei-exchange</rabbit.exchange>
-                                <rabbit.key>#</rabbit.key>
+                                <rabbitmq.host>localhost</rabbitmq.host>
+                                <rabbitmq.port>5672</rabbitmq.port>
+                                <rabbitmq.username>myuser</rabbitmq.username>
+                                <rabbitmq.password>myuser</rabbitmq.password>
+                                <rabbitmq.exchange>ei-exchange</rabbitmq.exchange>
+                                <rabbitmq.key>#</rabbitmq.key>
                             </systemPropertyVariables>
                             <excludes>
                                 <exclude>**/systemtest/**</exclude>
