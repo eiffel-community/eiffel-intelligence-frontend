@@ -14,6 +14,7 @@
 package com.ericsson.ei.frontend;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
+
 @RestController
 public class EIRequestsController {
 
@@ -59,33 +61,47 @@ public class EIRequestsController {
     private EIRequestsControllerUtils eiRequestsControllerUtils;
 
     /**
-     * Bridge all EI Http Requests with GET method. Used for fetching
-     * Subscription by id or all subscriptions and EI Env Info.
+     * Bridge all EI Http Requests with GET method. Used for fetching Subscription by id or all subscriptions and EI Env
+     * Info.
+     *
+     * @param model
+     * @param request
+     * @return
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth",
-        "/auth/*", "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getRequests(Model model, HttpServletRequest request) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(request);
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth", "/auth/*",
+            "/queryAggregatedObject", "/queryMissedNotifications", "/query",
+            "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
+    public ResponseEntity<String> getRequests(Model model, HttpServletRequest incomingRequest) {
+        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         HttpGet outgoingRequest = new HttpGet(eiRequestUrl);
 
-        outgoingRequest = (HttpGet) addHeadersToRequest(outgoingRequest, request);
+        outgoingRequest = (HttpGet) addHeadersToRequest(outgoingRequest, incomingRequest);
 
-        return getResponse(outgoingRequest, request);
+        return executeHttpRequest(outgoingRequest, incomingRequest);
     }
 
     /**
      * Bridge all EI Http Requests with POST method.
+     *
+     * @param model
+     * @param incomingRequest
+     * @return
      */
     @CrossOrigin
-    @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation", "/query" }, method = RequestMethod.POST)
+    @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation",
+            "/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest incomingRequest) {
         String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         String requestBody = "";
 
         try {
-        	// Replaces \r with nothing in case system is run on windows \r may disturb tests. \r does not affect EI functionality.
-            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            // Replaces \r with nothing in case system is run on windows \r may disturb
+            // tests. \r does not affect EI functionality.
+            requestBody = incomingRequest.getReader()
+                                         .lines()
+                                         .collect(Collectors.joining(System.lineSeparator()))
+                                         .replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -100,12 +116,15 @@ public class EIRequestsController {
         outgoingRequest = (HttpPost) addHeadersToRequest(outgoingRequest, incomingRequest);
         outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(outgoingRequest, incomingRequest);
+        return executeHttpRequest(outgoingRequest, incomingRequest);
     }
 
     /**
-     * Bridge all EI Http Requests with PUT method. E.g. Making Update
-     * Subscription Request.
+     * Bridge all EI Http Requests with PUT method. E.g. Making Update Subscription Request.
+     *
+     * @param model
+     * @param incomingRequest
+     * @return
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
@@ -114,7 +133,10 @@ public class EIRequestsController {
         String requestBody = "";
 
         try {
-            requestBody = incomingRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator())).replaceAll("(\\r)", "");
+            requestBody = incomingRequest.getReader()
+                                         .lines()
+                                         .collect(Collectors.joining(System.lineSeparator()))
+                                         .replaceAll("(\\r)", "");
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
@@ -129,12 +151,15 @@ public class EIRequestsController {
         outgoingRequest = (HttpPut) addHeadersToRequest(outgoingRequest, incomingRequest);
         outgoingRequest.setHeader("Content-type", "application/json");
 
-        return getResponse(outgoingRequest, incomingRequest);
+        return executeHttpRequest(outgoingRequest, incomingRequest);
     }
 
     /**
-     * Bridge all EI Http Requests with DELETE method. Used for DELETE
-     * subscriptions.
+     * Bridge all EI Http Requests with DELETE method. Used for DELETE subscriptions.
+     *
+     * @param model
+     * @param incomingRequest
+     * @return
      */
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
@@ -145,30 +170,42 @@ public class EIRequestsController {
 
         outgoingRequest = (HttpDelete) addHeadersToRequest(outgoingRequest, incomingRequest);
 
-        return getResponse(outgoingRequest, incomingRequest);
+        return executeHttpRequest(outgoingRequest, incomingRequest);
     }
 
-    private ResponseEntity<String> getResponse(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
+    /**
+     * This function executes the given outgoingRequest and returns a ResponseEntity
+     *
+     * @param outgoingRequest
+     * @param incomingRequest
+     * @return
+     */
+    private ResponseEntity<String> executeHttpRequest(HttpRequestBase outgoingRequest,
+                                                      HttpServletRequest incomingRequest) {
         HttpHeaders headers = new HttpHeaders();
         String responseBody = "[]";
         int statusCode = HttpStatus.PROCESSING.value();
 
-        String url = outgoingRequest.getURI().toString();
+        String url = outgoingRequest.getURI()
+                                    .toString();
         LOG.debug("Forwarding request to: " + url);
-        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create().build().execute(outgoingRequest)) {
-            if(eiResponse.getEntity() != null) {
+        try (CloseableHttpResponse eiResponse = HttpClientBuilder.create()
+                                                                 .build()
+                                                                 .execute(outgoingRequest)) {
+            if (eiResponse.getEntity() != null) {
                 responseBody = StringUtils.defaultIfBlank(EntityUtils.toString(eiResponse.getEntity(), "utf-8"), "[]");
             }
 
-            headers = getHeadersFromResponse(headers, eiResponse, incomingRequest);
-            statusCode = eiResponse.getStatusLine().getStatusCode();
+            headers = getHeadersFromResponse(headers, eiResponse, incomingRequest, outgoingRequest);
+            statusCode = eiResponse.getStatusLine()
+                                   .getStatusCode();
 
-            LOG.debug("EI Http response status code: " + statusCode
-                    + "\nEI Received response body:\n" + responseBody
+            LOG.debug("EI Http response status code: " + statusCode + "\nEI Received response body:\n" + responseBody
                     + "\nForwarding response back to EI Frontend WebUI.");
         } catch (IOException e) {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: " + String.valueOf(e) + "\"}";
+            responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: "
+                    + String.valueOf(e) + "\"}";
             LOG.error("Forward Request Errors: " + e);
         }
 
@@ -177,17 +214,33 @@ public class EIRequestsController {
         return new ResponseEntity<>(responseBody, headers, HttpStatus.valueOf(statusCode));
     }
 
-    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse, HttpServletRequest incomingRequest) {
+    /**
+     * This function copies headders from the made request and puts it into the response. It also extracts any
+     * x-path-tokens if found.
+     *
+     * @param headers
+     * @param eiResponse
+     * @param incomingRequest
+     * @param outgoingRequest
+     * @return
+     */
+    private HttpHeaders getHeadersFromResponse(HttpHeaders headers, CloseableHttpResponse eiResponse,
+                                               HttpServletRequest incomingRequest, HttpRequestBase outgoingRequest) {
         List<String> headerNameList = new ArrayList<String>();
         List<String> notCopiedHeaderNameList = new ArrayList<>();
 
         for (Header header : eiResponse.getAllHeaders()) {
-            if (header.getName().equalsIgnoreCase(X_AUTH_TOKEN)) {
+            String headerName = header.getName();
+            if (headerName.equalsIgnoreCase(X_AUTH_TOKEN)) {
                 LOG.debug("Adding '" + X_AUTH_TOKEN + "' to current session.");
-                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, header.getValue());
+
+                String xAuthTokenKey = getXpathTokenKey(outgoingRequest.getURI());
+                incomingRequest.getSession()
+                               .setAttribute(xAuthTokenKey, header.getValue());
             }
 
-            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(header.getName().toLowerCase());
+            boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(header.getName()
+                                                                          .toLowerCase());
             if (headerShouldBeCopied) {
                 headerNameList.add(header.getName());
                 headers.add(header.getName(), header.getValue());
@@ -196,18 +249,25 @@ public class EIRequestsController {
             }
         }
 
-        LOG.debug("Headers processed returning response: "+
-                "\nHeaders copied to the response: " + headerNameList.toString() +
-                "\nHeaders not copied to the response: " + notCopiedHeaderNameList.toString());
+        LOG.debug("Headers processed returning response: " + "\nHeaders copied to the response: "
+                + headerNameList.toString() + "\nHeaders not copied to the response: "
+                + notCopiedHeaderNameList.toString());
         return headers;
     }
 
+    /**
+     * This function copies headders from the incomming request into the outgoing request headers.
+     *
+     * @param outgoingRequest
+     * @param incomingRequest
+     * @return
+     */
     private HttpRequestBase addHeadersToRequest(HttpRequestBase outgoingRequest, HttpServletRequest incomingRequest) {
         Enumeration<String> headerNames = incomingRequest.getHeaderNames();
         List<String> headerNameList = new ArrayList<>();
         List<String> notCopiedHeaderNameList = new ArrayList<>();
 
-        while(headerNames.hasMoreElements()) {
+        while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             boolean headerShouldBeCopied = HEADERS_TO_COPY.contains(headerName.toLowerCase());
             if (headerShouldBeCopied) {
@@ -218,21 +278,59 @@ public class EIRequestsController {
             }
         }
 
-        if (incomingRequest.getSession().getAttribute(X_AUTH_TOKEN) != null) {
-            LOG.debug("Adding '" + X_AUTH_TOKEN + "' to the request header.");
-            outgoingRequest.addHeader(X_AUTH_TOKEN, incomingRequest.getSession().getAttribute(X_AUTH_TOKEN).toString());
+        outgoingRequest = addXauthTokenToRequest(outgoingRequest, incomingRequest);
 
-            boolean userLoggingOut = incomingRequest.getRequestURL().toString().contains("logout");
-            if (userLoggingOut) {
-                LOG.debug("Removing '" + X_AUTH_TOKEN + "' from current session.");
-                incomingRequest.getSession().setAttribute(X_AUTH_TOKEN, null);
-            }
-        }
-
-        LOG.debug("Headers processed before making request: "+
-                "\nHeaders copied to the request: " + headerNameList.toString() +
-                "\nHeaders not copied to the request: " + notCopiedHeaderNameList.toString());
+        LOG.debug("Headers processed before making request: " + "\nHeaders copied to the request: "
+                + headerNameList.toString() + "\nHeaders not copied to the request: "
+                + notCopiedHeaderNameList.toString());
 
         return outgoingRequest;
+    }
+
+    /**
+     * This function adds and x-path-token to an outgoing request if it exists for the back-end the request is made
+     * towards.
+     *
+     * @param outgoingRequest
+     * @param incomingRequest
+     * @return
+     */
+    private HttpRequestBase addXauthTokenToRequest(HttpRequestBase outgoingRequest,
+                                                   HttpServletRequest incomingRequest) {
+        String xAuthTokenKey = getXpathTokenKey(outgoingRequest.getURI());
+        boolean sessionContainsXAuthToken = incomingRequest.getSession()
+                                                           .getAttribute(xAuthTokenKey) != null;
+        if (sessionContainsXAuthToken) {
+            LOG.debug("Adding '" + X_AUTH_TOKEN + "' to the request header.");
+            String xAuthToken = incomingRequest.getSession()
+                                               .getAttribute(xAuthTokenKey)
+                                               .toString();
+            outgoingRequest.addHeader(X_AUTH_TOKEN, xAuthToken);
+
+            boolean userLoggingOut = incomingRequest.getRequestURL()
+                                                    .toString()
+                                                    .contains("logout");
+            if (userLoggingOut) {
+                LOG.debug("Removing '" + X_AUTH_TOKEN + "' from current session.");
+                incomingRequest.getSession()
+                               .setAttribute(X_AUTH_TOKEN, null);
+            }
+        }
+        return outgoingRequest;
+    }
+
+    /**
+     * builds and xPathTokenKey, the token will be unique key for each http(s) host and port and stored for each session.
+     *
+     * @param uri
+     * @return
+     */
+    private String getXpathTokenKey(URI uri) {
+        String host = uri.getHost();
+        int port = uri.getPort();
+        String scheme = uri.getScheme();
+
+        String xAuthTokenKey = String.format("%s-%s%s%d", X_AUTH_TOKEN, scheme, host, port);
+        return xAuthTokenKey;
     }
 }
