@@ -22,9 +22,9 @@ public class Config {
     * @return
     */
     public void initJenkinsConfig() {
-        jenkinsBaseUrl = System.getProperty("JENKINS_BASE_URL");
-        jenkinsUsername = System.getProperty("JENKINS_USERNAME");
-        jenkinsPassword = System.getProperty("JENKINS_PASSWORD");
+        jenkinsBaseUrl = System.getProperty("jenkins.base.url");
+        jenkinsUsername = System.getProperty("jenkins.username");
+        jenkinsPassword = System.getProperty("jenkins.password");
 
         assertNotNull(jenkinsBaseUrl);
         assertNotNull(jenkinsUsername);
@@ -38,7 +38,7 @@ public class Config {
     * @return
     */
     public void initRemRemConfig() {
-        remremBaseUrl = System.getProperty("REMREM_BASE_URL");
+        remremBaseUrl = System.getProperty("remrem.base.url");
 
         assertNotNull(remremBaseUrl);
     }
@@ -50,13 +50,13 @@ public class Config {
      * @return
      */
     public void initEIFrontend() {
-        eiFrontendBaseUrl = System.getProperty("EI_FRONTEND_BASE_URL");
+        eiFrontendBaseUrl = System.getProperty("ei.frontend.base.url");
 
         assertNotNull(eiFrontendBaseUrl);
     }
 
     public void initEIBackend() {
-        eiBackendBaseUrl = System.getProperty("EI_BACKEND_BASE_URL");
+        eiBackendBaseUrl = System.getProperty("ei.backend.base.url");
 
         assertNotNull(eiBackendBaseUrl);
     }
