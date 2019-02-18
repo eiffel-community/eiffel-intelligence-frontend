@@ -45,9 +45,13 @@ public class PropertiesHandler {
      * @return property value
      */
     public static String getPriorityValue(String key, String value) {
-        boolean environmentOrSystemPropertyExist = (System.getProperty(key) != null) || (System.getenv(key) != null);
-        if (environmentOrSystemPropertyExist) {
-            return (System.getenv(key) != null) ? System.getenv(key) : System.getProperty(key);
+        boolean environmentPropertyExist = (System.getenv(key) != null);
+        boolean systemPropertyExist = (System.getProperty(key) != null);
+
+        if (environmentPropertyExist) {
+            return System.getenv(key);
+        } else if (systemPropertyExist) {
+            return System.getProperty(key);
         } else {
             return value;
         }
