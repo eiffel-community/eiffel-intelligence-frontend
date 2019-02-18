@@ -85,7 +85,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     public void we_send_the_to_eiffel_intelligence_for_creation(String subscriptionName) throws Throwable {
         ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
 
-        assertEquals("Failed to create subscription. Response: " + response.getBody(), response.getStatusCode(), 200);
+        assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
     }
 
     @Given("^all previous tests passes\\.$")
