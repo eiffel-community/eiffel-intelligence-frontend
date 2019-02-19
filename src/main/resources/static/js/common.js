@@ -72,6 +72,10 @@ var statusType = {
     danger: "alert-danger"
 };
 
+var statusText = {
+    backend_down: "<strong>Back end is down</strong>, wait for it go up or switch to another back end before continuing!"
+}
+
 function addStatusIndicator(statusType, statusText) {
     var statusIndicator = $(".content")[0].previousElementSibling;
     if(statusIndicator != null) {

@@ -1,3 +1,5 @@
+var timerInterval;
+
 jQuery(document).ready(function () {
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
@@ -157,4 +159,36 @@ jQuery(document).ready(function () {
     createFrontEndGeneralInfo();
     getInstanceInfo();
 
+    // Check EI Backend Server Status ########################################
+    function checkBackendStatus() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth/checkStatus",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            dataType: "text",
+            cache: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
+                    removeStatusIndicator();
+                } else {
+                    doIfSecurityOff();
+                    addStatusIndicator(statusType.danger, statusText.backend_down);
+                }
+            },
+            success: function (data, textStatus) {
+                checkBackendSecured();
+                removeStatusIndicator();
+            },
+            complete: function () {
+            }
+        });
+    }
+    checkBackendStatus();
+
+    // Check if EI Backend Server is online every X seconds
+    if (timerInterval == null) {
+        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    }
+    // END OF EI Backend Server check #########################################
 });

@@ -101,8 +101,7 @@ jQuery(document).ready(function () {
     // Check backend status to shrink or increase space for warning to show
     function toggleOnBackendStatus(backendStatus) {
         if (!backendStatus) {
-            var statusText = "<strong>Back end is down</strong>, wait for it go up or switch to another back end before continuing!";
-            addStatusIndicator(statusType.danger, statusText);
+            addStatusIndicator(statusType.danger, statusText.backend_down);
         }
         if (backendStatus) {
             removeStatusIndicator();
