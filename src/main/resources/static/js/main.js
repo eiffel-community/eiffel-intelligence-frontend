@@ -19,35 +19,43 @@ jQuery(document).ready(function () {
     var frontendServiceUrl = $('#frontendServiceUrl').text();
     var frontendServiceBackEndPath = "/backend";
 
+    var routes = {};
+    routes["subscriptions"] = function () {
+        updateBackEndInstanceList();
+        $(".app-header").removeClass("header-bar-hidden");
+        $(".main").load("subscriptionpage.html");
+    };
+    routes["test-rules"] = function () {
+        updateBackEndInstanceList();
+        $(".app-header").removeClass("header-bar-hidden");
+        $(".main").load("testRules.html");
+    };
+    routes["ei-info"] = function () {
+        updateBackEndInstanceList();
+        $(".app-header").removeClass("header-bar-hidden");
+        $(".main").load("eiInfo.html");
+    };
+    routes["switch-backend"] = function () {
+        $(".app-header").addClass("header-bar-hidden");
+        $(".main").load("switch-backend.html");
+    };
+    routes["add-backend"] = function () {
+        $(".app-header").addClass("header-bar-hidden");
+        $(".main").load("add-instances.html");
+    };
+    routes["login"] = function () {
+        updateBackEndInstanceList();
+        $(".app-header").removeClass("header-bar-hidden");
+        $(".main").load("login.html");
+    };
+
     router.on({
-        'subscriptions': function () {
-            updateBackEndInstanceList();
-            $(".app-header").removeClass("header-bar-hidden");
-            $(".main").load("subscriptionpage.html");
-        },
-        'test-rules': function () {
-            updateBackEndInstanceList();
-            $(".app-header").removeClass("header-bar-hidden");
-            $(".main").load("testRules.html");
-        },
-        'ei-info': function () {
-            updateBackEndInstanceList();
-            $(".app-header").removeClass("header-bar-hidden");
-            $(".main").load("eiInfo.html");
-        },
-        'switch-backend': function () {
-            $(".app-header").addClass("header-bar-hidden");
-            $(".main").load("switch-backend.html");
-        },
-        'add-backend': function () {
-            $(".app-header").addClass("header-bar-hidden");
-            $(".main").load("add-instances.html");
-        },
-        'login': function () {
-            updateBackEndInstanceList();
-            $(".app-header").removeClass("header-bar-hidden");
-            $(".main").load("login.html");
-        },
+        'subscriptions': routes["subscriptions"],
+        'test-rules': routes["test-rules"],
+        'ei-info': routes["ei-info"],
+        'switch-backend': routes["switch-backend"],
+        'add-backend': routes["add-backend"],
+        'login': routes["login"],
         '*': function () {
             router.navigate('subscriptions');
         }
@@ -150,8 +158,8 @@ jQuery(document).ready(function () {
                         window.logMessages(XMLHttpRequest.responseText);
                     },
                     success: function (responseData, XMLHttpRequest, textStatus) {
-                        console.log("Response from IE front end back end: " + responseData.message);
-                        location.reload();
+                        const currentUrl = router._lastRouteResolved.url;
+                        routes[currentUrl]();
                     }
                 });
             } else {
