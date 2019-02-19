@@ -23,7 +23,7 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <authToken>${auth.token}</authToken>
+  <authToken>AUTH_TOKEN_TO_BE_REPLACED</authToken>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>

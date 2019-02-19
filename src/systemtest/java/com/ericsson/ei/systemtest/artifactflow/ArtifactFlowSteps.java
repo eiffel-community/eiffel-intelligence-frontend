@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -88,18 +90,22 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
     }
 
-    @Given("^all previous tests passes\\.$")
-    public void all_previous_tests_passes() {
-        //Just for cucumber to make sense
+    @Given("^the jenkins job \"([^\"]*)\" is triggered$")
+    public void the_jenkins_job_is_triggered(String jenkinsJobToTrigger) throws Throwable {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("EVENT_ID", "");
+        parameters.put("TEST_CASE_NAME", "");
+
+        StepsUtils.triggerJenkinsJobWithParameters(jenkinsJobToTrigger, parameters, JENKINS_TOKEN);
     }
 
-    @When("^future story is done\\.$")
-    public void future_story_is_done() {
-
+    @When("^all jenkins jobs has been triggered$")
+    public void the_jenkins_job_has_been_triggered() throws Throwable {
+        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames);
     }
 
-    @Then("^everything should be fine\\.$")
-    public void everything_should_be_fine() {
-
+    @Then("^the test was a succcess$")
+    public void the_test_was_a_succcess() {
+        //Just for cucumber to make sence
     }
 }

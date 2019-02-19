@@ -1,11 +1,15 @@
 package com.ericsson.ei.systemtest.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
@@ -51,6 +55,7 @@ public class StepsUtils {
 
         String xmlJobData = Utils.getResourceFileAsString(jenkinsJobXml);
         xmlJobData = xmlJobData.replace("SCRIPT_TO_BE_REPLACED", script);
+        xmlJobData = xmlJobData.replace("AUTH_TOKEN_TO_BE_REPLACED", jenkinsToken);
         return jenkinsManager.forceCreateJob(jenkinsJobName, xmlJobData);
     }
 
@@ -167,6 +172,53 @@ public class StepsUtils {
                 LOGGER.error("Failed to remove subscription: \"" + subscriptionName+ "\" from EI. Response: " + response.getBody());
             }
         }
+    }
+
+    /**
+     * Triggers a jenkins job with parameters.
+     *
+     * @param jenkinsJobToTrigger
+     * @param jenkinsToken
+     * @throws Exception
+     */
+    public static void triggerJenkinsJobWithParameters(String jenkinsJobToTrigger, Map<String, String> parameters, String jenkinsToken) throws Exception {
+        boolean success = jenkinsManager.buildJobWithParameters(jenkinsJobToTrigger, jenkinsToken, parameters);
+        assertEquals("Was not able to trigger jenkins job", true, success);
+    }
+
+    /**
+     * Check if all jenkins jobs in a list of jenkins job names has been triggered
+     *
+     * @param jenkinsJobNames
+     * @throws Exception
+     */
+    public static void hasJenkinsJobsBeenTriggered(ArrayList<String> jenkinsJobNames) throws Exception {
+        for(int i=0; i<jenkinsJobNames.size(); i++) {
+            hasJenkinsJobBeenTriggered(jenkinsJobNames.get(i));
+        }
+    }
+
+    /**
+     * Check if a single jenkins job has been triggered
+     *
+     * @param jenkinsJob
+     * @throws Exception
+     */
+    public static void hasJenkinsJobBeenTriggered(String jenkinsJob) throws Exception {
+        long maxTime = System.currentTimeMillis() + 60000;
+
+        while(System.currentTimeMillis() < maxTime) {
+            try {
+                JSONObject status = jenkinsManager.getJenkinsBuildStatusData(jenkinsJob);
+                LOGGER.info(jenkinsJob + " was triggered.");
+                return;
+            } catch (Exception e) {
+                TimeUnit.SECONDS.sleep(1);
+                continue;
+            }
+        }
+
+        throw new Exception("Jenkins job \"" + jenkinsJob + "\" was never triggered.");
     }
 
     /**

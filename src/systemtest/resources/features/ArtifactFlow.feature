@@ -53,8 +53,9 @@ Feature: Artifact system test
     Then we send the "FlowCompleteSubscription" to eiffel intelligence for creation.
 
     #####Check so that everything triggers######
-    Given all previous tests passes.
-    When future story is done.
-    Then everything should be fine.
-    And subscriptions and jenkins jobs should be removed
+    Given the jenkins job "ArtC2Job" is triggered
+    When all jenkins jobs has been triggered
+    Then subscriptions and jenkins jobs should be removed
+    And the test was a succcess
+
 
