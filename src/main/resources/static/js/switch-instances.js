@@ -55,7 +55,6 @@ jQuery(document).ready(function () {
                     window.logMessages(XMLHttpRequest.responseText);
                 },
                 success: function (responseData, XMLHttpRequest, textStatus) {
-                    console.log("Response from IE front end back end: " + responseData.message);
                     router.navigate('subscriptions');
                 }
             });
