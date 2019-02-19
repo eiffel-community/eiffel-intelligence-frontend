@@ -31,8 +31,8 @@
 .display-inline-table {
     display: inline-table;
 }
-.split {
-    max-width: 50%;
+.white-space-normal {
+    white-space: normal;
 }
 .table-responsive>.table-bordered {
     border: 1px solid #dee2e6;
