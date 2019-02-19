@@ -1,5 +1,6 @@
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 
+// Start ## Login and Security ##
 function doIfUserLoggedIn(user) {
     localStorage.removeItem("currentUser");
     localStorage.setItem("currentUser", user);
@@ -61,3 +62,25 @@ function checkLoggedInUser() {
         }
     });
 }
+// End ## Login and Security ##
+
+// Start ## Status Indicator ##
+var statusType = {
+    success: "alert-success",
+    info: "alert-info",
+    warning: "alert-warning",
+    danger: "alert-danger"
+};
+
+function addStatusIndicator(statusType, statusText) {
+    var statusIndicator = $(".content")[0].previousElementSibling;
+    if(statusIndicator != null) {
+        $($(".content")[0].previousElementSibling).remove();
+    }
+    $(".content").before("<div class=\"subscription-alert alert "+statusType+"\">"+statusText+"</div>");
+}
+
+function removeStatusIndicator() {
+    $($(".content")[0].previousElementSibling).remove();
+}
+// End ## Status Indicator ##

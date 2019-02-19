@@ -100,20 +100,13 @@ jQuery(document).ready(function () {
     // Toggle warning text on and off
     // Check backend status to shrink or increase space for warning to show
     function toggleOnBackendStatus(backendStatus) {
-        if (!backendStatus && !$("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-9");
-            $("#btnEIContainer").parent().removeClass("col-md-3");
-            $("#subTitle").parent().addClass("col-md-4");
-            $("#btnEIContainer").parent().addClass("col-md-2");
+        if (!backendStatus) {
+            var statusText = "<strong>Back end is down</strong>, wait for it go up or switch to another back end before continuing!";
+            addStatusIndicator(statusType.danger, statusText);
         }
-        if (backendStatus && $("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-4");
-            $("#btnEIContainer").parent().removeClass("col-md-2");
-            $("#subTitle").parent().addClass("col-md-9");
-            $("#btnEIContainer").parent().addClass("col-md-3");
-            reload_table();
+        if (backendStatus) {
+            removeStatusIndicator();
         }
-        $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
     }
 

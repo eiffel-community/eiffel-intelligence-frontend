@@ -1,6 +1,16 @@
 .content {
     padding: 10px;
 }
+.subscription-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2px;
+    margin-bottom: 0;
+    border-radius:0px;
+    text-align: center;
+}
 #table {
     border-spacing: 0px;
 }
