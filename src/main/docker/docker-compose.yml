@@ -185,10 +185,14 @@ services:
     environment:      # Overrides settings in application config file
       - spring.application.name=ei-frontend
       - server.port=8080
-      - ei.frontendServiceHost=${HOST}
-      - ei.frontendServicePort=8081
-      - ei.backendInstancesListJsonContent=${EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST}
-      - ei.backendInstancesFilePath=/tmp/ei-instances-list.conf
+      - ei.frontend.service.host=${HOST}
+      - ei.frontend.service.port=8081
+      - ei.frontend.context.path=
+      - ei.backend.instances.list.json.content=${EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST}
+      - ei.backend.instances.filepath=/tmp/ei-instances-list.conf
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.ei=DEBUG
 
 networks:
   eiffel_2.0_1:
