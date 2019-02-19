@@ -28,7 +28,7 @@ Feature: Artifact system test
 
     #####Add TCSTCFSubscription to EI#####
     Given subscription "TCSTCFSubscription" is created which will trigger "TCSTCFJob"
-    When notification with key "EVENT_ID" and value "id" is added to "TCSTCFSubscription"
+    When notification with key "EVENT_ID" and value "testCaseExecutions[0].testCaseTriggeredEventId" is added to "TCSTCFSubscription"
     And notification with key "TEST_CASE_NAME" and value "'Test1'" is added to "TCSTCFSubscription"
     And condition with jmespath "testCaseExecutions[0].outcome.id=='Test1'" is added to "TCSTCFSubscription"
     Then we send the "TCSTCFSubscription" to eiffel intelligence for creation.
@@ -46,6 +46,8 @@ Feature: Artifact system test
     And notification with key "TEST_CASE_NAME" and value "'none'" is added to "FlowCompleteSubscription"
     And condition with jmespath "confidenceLevels[0].value=='SUCCESS'" is added to "FlowCompleteSubscription"
     And condition with jmespath "publications[0].locations[0].type=='ARTIFACTORY'" is added to "FlowCompleteSubscription"
+    And condition with jmespath "testCaseExecutions[0].outcome.verdict=='PASSED'" is added to "FlowCompleteSubscription"
+    And condition with jmespath "testCaseExecutions[0].testCaseStartedTime" is added to "FlowCompleteSubscription"
     Then we send the "FlowCompleteSubscription" to eiffel intelligence for creation.
 
     #####Check so that everything triggers######
