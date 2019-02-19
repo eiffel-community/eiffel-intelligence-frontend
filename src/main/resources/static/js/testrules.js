@@ -159,7 +159,7 @@ jQuery(document).ready(function () {
     }
 
     //Create information modal
-    $(".container").on("click", "button.rules_info", function (event) {
+    $(".rules_info").click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         $('#infoContent').text(test_rule_info);
@@ -229,7 +229,7 @@ jQuery(document).ready(function () {
     };
 
     //Upload events list json data
-    $(".container").on("click", "button.upload_rules", function (event) {
+    $(".upload_rules").click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         var isRules = true;
@@ -238,7 +238,7 @@ jQuery(document).ready(function () {
     });
 
     //Upload list of events json data
-    $(".container").on("click", "button.upload_events", function (event) {
+    $(".upload_events").click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         var isRules = false;
@@ -290,7 +290,7 @@ jQuery(document).ready(function () {
     }
 
     // Download the modified rule
-    $('.container').on('click', 'button.download_rules', function () {
+    $(".download_rules").click( function () {
         var formRules = [];
         $('.formRules').each(function () {
             try {
@@ -309,7 +309,7 @@ jQuery(document).ready(function () {
     });
 
     // Download the modified events
-    $('.container').on('click', 'button.download_events', function () {
+    $(".download_events").click( function () {
         var formEvents = [];
         $('.formEvents').each(function () {
             try {
@@ -347,14 +347,14 @@ jQuery(document).ready(function () {
     }
 
     // Download the rules template
-    $('.container').on('click', 'button.download_rules_template', function (event) {
+    $(".download_rules_template").click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         getTemplate("rulesTemplate");
     });
 
     // Download the events template
-    $('.container').on('click', 'button.download_events_template', function (event) {
+    $(".download_events_template").click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         getTemplate("eventsTemplate");
