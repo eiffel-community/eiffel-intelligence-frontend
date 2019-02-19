@@ -1,4 +1,4 @@
-<div class="container mw-100 pb-3" id="testRule">
+<div class="content" id="testRule">
     <div class="text-center">
         <h1 id="test_rules_header">Test Rules</h1>
     </div>
@@ -6,7 +6,8 @@
         <div class="p-1 col-lg-6 col-md-6 col-12 border border-right" id="testRulesDOMObject">
             <div class="d-flex flex-wrap sticky-button-bar">
                 <div class="col-11">
-                    <button class="btn btn-primary add_rule mr-1 mt-1 d-inline-block" data-bind="click : $root.addRule.bind($data, ruleTemplate)">
+                    <button class="btn btn-primary add_rule mr-1 mt-1 d-inline-block"
+                        data-bind="click : $root.addRule.bind($data, ruleTemplate)">
                         Add
                         <i class="fa fa-fw  fa-plus"></i>
                     </button>
@@ -23,7 +24,8 @@
                         Get Template
                         <i class="fa fa-fw  fa-download"></i>
                     </button>
-                    <button class="btn btn-danger clear_all_rules mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'rules')">
+                    <button class="btn btn-danger clear_all_rules mr-1 mt-1 d-inline-block"
+                        data-bind="click : $root.confirmClearAll.bind($data, 'rules')">
                         Clear All
                         <i class="fa fa-fw  fa-trash"></i>
                     </button>
@@ -40,7 +42,8 @@
                         </div>
                         <div>
                             <h6>
-                                <span class="badge-rounded badge-danger cursor-pointer" data-bind="click : $root.removeRule.bind()">
+                                <span class="badge-rounded badge-danger cursor-pointer"
+                                    data-bind="click : $root.removeRule.bind()">
                                     <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
                                 </span>
                             </h6>
@@ -52,7 +55,8 @@
         <div class="p-1 col-lg-6 col-md-6 col-12 border border-right" id="testEventsDOMObject">
             <div class="d-flex flex-wrap sticky-button-bar">
                 <div class="col-11">
-                    <button class="btn btn-primary add_event mr-1 mt-1 d-inline-block" data-bind="click : $root.addEvent.bind($data, {})">
+                    <button class="btn btn-primary add_event mr-1 mt-1 d-inline-block"
+                        data-bind="click : $root.addEvent.bind($data, {})">
                         Add
                         <i class="fa fa-fw  fa-plus"></i>
                     </button>
@@ -69,7 +73,8 @@
                         Get Template
                         <i class="fa fa-fw  fa-download"></i>
                     </button>
-                    <button class="btn btn-danger clear_all_events mr-1 mt-1 d-inline-block" data-bind="click : $root.confirmClearAll.bind($data, 'events')">
+                    <button class="btn btn-danger clear_all_events mr-1 mt-1 d-inline-block"
+                        data-bind="click : $root.confirmClearAll.bind($data, 'events')">
                         Clear All
                         <i class="fa fa-fw  fa-trash"></i>
                     </button>
@@ -86,7 +91,8 @@
                         </div>
                         <div>
                             <h6>
-                                <span class="badge-rounded badge-danger cursor-pointer" data-bind="click : $root.removeEvent.bind()">
+                                <span class="badge-rounded badge-danger cursor-pointer"
+                                    data-bind="click : $root.removeEvent.bind()">
                                     <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
                                 </span>
                             </h6>
@@ -99,7 +105,8 @@
     <div class="footer-buttons" id="submitButton">
         <div class="row ">
             <div class="text-center">
-                <button class="btn btn-success find_aggregated_object white-space-normal" data-bind="click : $root.submit.bind($data)">Find
+                <button class="btn btn-success find_aggregated_object white-space-normal"
+                    data-bind="click : $root.submit.bind($data)">Find
                     Aggregated Object</button>
                 <button class="rules_info">
                     <img src="assets/images/information.png" />
@@ -152,7 +159,8 @@
                 <p id="infoContent" class="pre"></p>
                 <div class="text-center">
                     <a href="https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/test-rules.md"
-                        target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Test Rules User Guide</a>
+                        target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Test Rules User
+                        Guide</a>
                 </div>
             </div>
             <div class="modal-footer">
@@ -185,16 +193,19 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
                 <!-- ko if: $root.clearType()=="rules" -->
-                <button data-bind="click: $root.clearAllRules" type="button" class="btn btn-danger">Clear all rules</button>
+                <button data-bind="click: $root.clearAllRules" type="button" class="btn btn-danger">Clear all
+                    rules</button>
                 <!-- /ko-->
 
                 <!-- ko if: $root.clearType()=="events" -->
-                <button data-bind="click: $root.clearAllEvents" type="button" class="btn btn-danger">Clear all events</button>
+                <button data-bind="click: $root.clearAllEvents" type="button" class="btn btn-danger">Clear all
+                    events</button>
                 <!-- /ko-->
             </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="js/testrules.js"></script>
 <script type="text/javascript" src="js/downloadFile.js"></script>
 <script type="text/javascript" src="resources/testRules_constants.js"></script>

@@ -1,5 +1,5 @@
-.content-wrapper {
-    height: 100%;
+.content {
+    padding: 10px;
 }
 #table {
     border-spacing: 0px;
