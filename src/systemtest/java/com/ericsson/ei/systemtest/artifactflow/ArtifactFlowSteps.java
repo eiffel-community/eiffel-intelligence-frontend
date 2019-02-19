@@ -29,7 +29,6 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^configurations are provided$")
     public void configurations_are_provided() {
-        //Temporary for my change(done in another PR)
         config.initEIFrontend();
         config.initEIBackend();
         config.initJenkinsConfig();
@@ -58,7 +57,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Then("^we continue with the next step$")
     public void we_continue_with_the_next_step() {
-        //Just for cucumber to make sence
+        //Just for cucumber to make sense
     }
 
     @Then("^subscriptions and jenkins jobs should be removed$")
@@ -91,7 +90,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^all previous tests passes\\.$")
     public void all_previous_tests_passes() {
-        //Just for cucumber to make sence
+        //Just for cucumber to make sense
     }
 
     @When("^future story is done\\.$")
