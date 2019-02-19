@@ -5,7 +5,7 @@ jQuery(document).ready(function () {
 
 	function checkBackendSecured() {
 		$.ajax({
-			url: frontendServiceUrl + "/auth",
+			url: addBakcendParameter(frontendServiceUrl + "/auth"),
 			type: "GET",
 			contentType: "application/string; charset=utf-8",
 			error: function (data) {
@@ -44,7 +44,7 @@ jQuery(document).ready(function () {
 
 	function sendLoginRequest(url, type, token) {
 		$.ajax({
-			url: url,
+			url: addBakcendParameter(url),
 			type: type,
 			contentType: 'application/json; charset=utf-8',
 			cache: false,

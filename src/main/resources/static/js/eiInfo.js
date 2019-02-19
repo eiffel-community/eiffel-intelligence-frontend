@@ -54,7 +54,7 @@ jQuery(document).ready(function () {
             { key: 'Application Name', value: data.applicationName },
             { key: 'Version', value: data.version },
             { key: 'Rules File Path', value: data.rulesPath },
-            { key: 'EI Back-End Connected Server', value: backEndServerUrl },
+            { key: 'EI Back-End Connected Server', value: "This needs to be updated" },
             { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
         ];
 
@@ -125,7 +125,7 @@ jQuery(document).ready(function () {
 
     function getInstanceInfo() {
         $.ajax({
-            url: frontEndServiceUrl + "/information",
+            url: addBakcendParameter(frontEndServiceUrl + "/information"),
             contentType: 'application/json;charset=UTF-8',
             type: 'GET',
             error: function (XMLHttpRequest, textStatus, errorThrown) {

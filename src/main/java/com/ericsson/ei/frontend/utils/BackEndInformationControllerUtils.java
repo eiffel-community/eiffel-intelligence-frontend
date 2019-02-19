@@ -54,13 +54,7 @@ public class BackEndInformationControllerUtils {
      */
     public ResponseEntity<String> handleRequestForInstances(HttpServletRequest request) {
         try {
-            String activeInstance = null;
-            if (request.getSession().getAttribute("backEndInstanceName") != null) {
-                activeInstance = request.getSession().getAttribute("backEndInstanceName").toString();
-            }
-
             JsonArray allAvailableInstances = backEndInstancesUtils.getBackEndsAsJsonArray();
-            allAvailableInstances = setActiveInstance(allAvailableInstances, activeInstance);
 
             return new ResponseEntity<>(
                     allAvailableInstances.toString(),

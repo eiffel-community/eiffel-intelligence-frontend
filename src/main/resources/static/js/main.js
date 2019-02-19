@@ -66,23 +66,6 @@ jQuery(document).ready(function () {
         });
     });
 
-    function updateBackEndInstanceList() {
-        $.ajax({
-            url: frontendServiceUrl + frontendServiceBackEndPath,
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failure when trying to load backend instances");
-            },
-            success: function (responseData, XMLHttpRequest, textStatus) {
-                var observableObject = $("#selectInstances")[0];
-                ko.cleanNode(observableObject);
-                ko.applyBindings(new viewModel(responseData), observableObject);
-            }
-        });
-    }
-
     function loadDocumentLinks() {
         // eiffelDocumentationUrlLinks variable is configure in application.properties
         var linksList = JSON.parse(eiffelDocumentationUrlLinks);
@@ -104,13 +87,6 @@ jQuery(document).ready(function () {
         });
     }
 
-    function init() {
-        checkBackendSecured();
-        loadDocumentLinks();
-    }
-
-    init();
-
     function singleInstanceModel(name, host, port, contextPath, https, active) {
         this.name = ko.observable(name),
             this.host = ko.observable(host),
@@ -121,44 +97,62 @@ jQuery(document).ready(function () {
             this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
     }
 
-    function viewModel(data) {
+    function viewModel(backendInstanceData) {
         var self = this;
         var currentName;
         self.instances = ko.observableArray();
-        var json = JSON.parse(ko.toJSON(data));
-        var oldSelectedActive = self.selectedActive;
-        for (var i = 0; i < json.length; i++) {
-            var obj = json[i];
-            var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.contextPath, obj.https, obj.active);
-            self.instances.push(instance);
-            if (obj.active == true) {
-                currentName = obj.name;
+        var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
+
+        for (var i = 0; i < jsonBackendInstanceData.length; i++) {
+            var instanceData = jsonBackendInstanceData[i];
+            var isActive = false;
+
+            if ((instanceData.defaultBackend == true && !sessionStorage.selectedActive) ||
+                (sessionStorage.selectedActive && sessionStorage.selectedActive == instanceData.name)) {
+                isActive = true;
+                currentName = instanceData.name;
+                sessionStorage.selectedActive = instanceData.name;
             }
+
+            var singleInstance = new singleInstanceModel(instanceData.name, instanceData.host, instanceData.port, instanceData.contextPath, instanceData.https, isActive);
+            self.instances.push(singleInstance);
         }
+
         self.selectedActive = ko.observable(currentName);
-        self.onChange = function () {
+
+        self.onChange = function (self) {
             if (typeof self.selectedActive() !== "undefined") {
-                $.ajax({
-                    url: frontendServiceUrl + frontendServiceBackEndPath,
-                    type: "PUT",
-                    data: self.selectedActive(),
-                    contentType: 'application/json; charset=utf-8',
-                    cache: false,
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        self.selectedActive = oldSelectedActive;
-                        updateBackEndInstanceList();
-                        window.logMessages(XMLHttpRequest.responseText);
-                    },
-                    success: function (responseData, XMLHttpRequest, textStatus) {
-                        console.log("Response from IE front end back end: " + responseData.message);
-                        location.reload();
-                    }
-                });
+                sessionStorage.selectedActive = self.selectedActive();
+                location.reload();
             } else {
                 $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
             }
         }
     }
+
+    function updateBackEndInstanceList() {
+        $.ajax({
+            url: frontendServiceUrl + frontendServiceBackEndPath,
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.logMessages("Failure when trying to load backend instances");
+            },
+            success: function (responseData, XMLHttpRequest, textStatus) {
+                var observableObject = $("#selectInstances")[0];
+                ko.cleanNode(observableObject);
+                ko.applyBindings(new viewModel(responseData), observableObject);
+            }
+        });
+    }
+
+    function init() {
+        checkBackendSecured();
+        loadDocumentLinks();
+    }
+
+    init();
 
     $('body').on('click', function (e) {
         if ($(e.target).data('toggle') !== 'tooltip' && $(e.target)[0].className !== 'tooltip-inner') {

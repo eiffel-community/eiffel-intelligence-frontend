@@ -13,33 +13,6 @@ jQuery(document).ready(function () {
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
 
-    // /Start ## Global AJAX Sender function ##################################
-    var AjaxHttpSender = function () { };
-
-    AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
-        $.ajax({
-            url: url,
-            type: type,
-            data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            cache: false,
-            beforeSend: function () {
-                callback.beforeSend();
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                callback.error(XMLHttpRequest, textStatus, errorThrown);
-            },
-            success: function (data, textStatus) {
-                callback.success(data, textStatus);
-            },
-            complete: function (XMLHttpRequest, textStatus) {
-                callback.complete();
-            }
-        });
-    }
-    // /Stop ## Global AJAX Sender function ##################################
-
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
     function checkBackendStatus() {
@@ -50,7 +23,7 @@ jQuery(document).ready(function () {
         var red = "#ff0000";
         var green = "#00ff00";
         $.ajax({
-            url: frontendServiceUrl + "/auth/checkStatus",
+            url: addBakcendParameter(frontendServiceUrl + "/auth/checkStatus"),
             type: "GET",
             contentType: "application/string; charset=utf-8",
             dataType: "text",
@@ -392,7 +365,7 @@ jQuery(document).ready(function () {
 
     function checkSecurityAndDrawTable() {
         $.ajax({
-            url: frontendServiceUrl + "/auth",
+            url: addBakcendParameter(frontendServiceUrl + "/auth"),
             type: "GET",
             contentType: "application/string; charset=utf-8",
             error: function () {
@@ -423,7 +396,7 @@ jQuery(document).ready(function () {
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": frontendServiceUrl + "/subscriptions",
+                "url": addBakcendParameter(frontendServiceUrl + "/subscriptions"),
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
                 "error": function () { },

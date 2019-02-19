@@ -13,7 +13,7 @@ jQuery(document).ready(function () {
 
     AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
         $.ajax({
-            url: url,
+            url: addBakcendParameter(url),
             type: type,
             data: data,
             contentType: 'application/json; charset=utf-8',
@@ -363,7 +363,7 @@ jQuery(document).ready(function () {
     // Start to check is backend Test Rule service status
     var isEnabled = true;
     $.ajax({
-        url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
+        url: addBakcendParameter(frontendServiceUrl + "/rules/rule-check/testRulePageEnabled"),
         contentType: 'application/json; charset=utf-8',
         type: 'GET',
         error: function () { },

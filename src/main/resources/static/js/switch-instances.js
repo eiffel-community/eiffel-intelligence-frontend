@@ -45,20 +45,8 @@ jQuery(document).ready(function () {
             });
         }
         self.submit = function () {
-            $.ajax({
-                url: frontendServiceUrl + frontendServiceBackEndPath,
-                type: "PUT",
-                data: selected.name,
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    window.logMessages(XMLHttpRequest.responseText);
-                },
-                success: function (responseData, XMLHttpRequest, textStatus) {
-                    console.log("Response from IE front end back end: " + responseData.message);
-                    router.navigate('subscriptions');
-                }
-            });
+            sessionStorage.selectedActive = selected.name;
+            router.navigate('subscriptions');
         }
     }
     $.ajax({

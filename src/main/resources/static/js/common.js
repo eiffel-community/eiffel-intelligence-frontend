@@ -1,5 +1,49 @@
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 
+function addBakcendParameter(url) {
+    if (!sessionStorage.selectedActive) {
+        return url;
+    }
+    var delimeter = "";
+    var parameterKey = "backendname";
+
+    if (url.includes("?")) {
+        delimeter = "&";
+    } else {
+        delimeter = "?";
+    }
+    url = url + delimeter + parameterKey + "=" + sessionStorage.selectedActive;
+    console.log("New url ==== " + url);
+    return url;
+}
+
+// /Start ## Global AJAX Sender function ##################################
+var AjaxHttpSender = function () { };
+
+AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
+    $.ajax({
+        url: addBakcendParameter(url),
+        type: type,
+        data: data,
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        cache: false,
+        beforeSend: function () {
+            callback.beforeSend();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            callback.error(XMLHttpRequest, textStatus, errorThrown);
+        },
+        success: function (data, textStatus) {
+            callback.success(data, textStatus);
+        },
+        complete: function (XMLHttpRequest, textStatus) {
+            callback.complete();
+        }
+    });
+}
+// /Stop ## Global AJAX Sender function ##################################
+
 function doIfUserLoggedIn(user) {
     localStorage.removeItem("currentUser");
     localStorage.setItem("currentUser", user);
@@ -29,7 +73,7 @@ function doIfSecurityOff() {
 
 function checkBackendSecured() {
     $.ajax({
-        url: frontendServiceUrl + "/auth",
+        url: addBakcendParameter(frontendServiceUrl + "/auth"),
         type: "GET",
         contentType: "application/string; charset=utf-8",
         error: function (data) {
@@ -48,7 +92,7 @@ function checkBackendSecured() {
 
 function checkLoggedInUser() {
     $.ajax({
-        url: frontendServiceUrl + "/auth/login",
+        url: addBakcendParameter(frontendServiceUrl + "/auth/login"),
         type: "GET",
         contentType: 'application/string; charset=utf-8',
         cache: false,

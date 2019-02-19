@@ -17,11 +17,12 @@
 package com.ericsson.ei.frontend.utils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,16 +45,16 @@ public class EIRequestsControllerUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsControllerUtils.class);
 
-    private static final List<String> REQUESTS_WITH_QUERY_PARAM = new ArrayList<>(Arrays.asList("/queryAggregatedObject", "/queryMissedNotifications", "/query"));
-    private static final String BACKEND_KEY_NAME = "backendurl";
+    private static final String BACKEND_URL_KEY_NAME = "backendurl";
+    private static final String BACKEND_NAME_KEY_NAME = "backendname";
 
     @Autowired
     private BackEndInstancesUtils backEndInstancesUtils;
 
     /**
-     * Processes an HttpServletRequest and extract the URL parameters from it and reformats
-     * the requests and removes EI Front End specific parameters if any and builds a new URL
-     * to be used to call the requested, selected or default EI back end.
+     * Processes an HttpServletRequest and extract the URL parameters from it and reformats the requests and removes EI
+     * Front End specific parameters if any and builds a new URL to be used to call the requested, selected or default
+     * EI back end.
      *
      * @param request
      * @return String
@@ -62,38 +63,39 @@ public class EIRequestsControllerUtils {
     public String getEIRequestURL(HttpServletRequest request) {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestQuery = request.getQueryString();
-        String requestUrl = null;
 
-        if (requestQuery != null && requestQuery.contains(BACKEND_KEY_NAME)) {
-            // Selecting back end from user input as parameter.
-            List<NameValuePair> params = getParameters(requestQuery);
-            requestUrl = extractUrlFromParameters(params);
-            requestQuery = removeBackendDataFromQueryString(params);
-            LOG.debug(BACKEND_KEY_NAME + " key detected, forwarding request to url '" + requestUrl + "'.");
-        } else {
-            BackEndInformation backEndInformation = getEIBackendInformation(request);
-            requestUrl = backEndInformation.getUrlAsString();
-        }
+        String requestUrl = getBackEndUrl(requestQuery);
+        requestQuery = removeBackendDataFromQueryString(requestQuery);
 
-        if(REQUESTS_WITH_QUERY_PARAM.contains(eiBackendAddressSuffix)) {
-            String query = (requestQuery != null && !requestQuery.isEmpty()) ? "?" + requestQuery : "";
+        if (!requestQuery.isEmpty()) {
+            String query = "?" + requestQuery;
             requestUrl = requestUrl + eiBackendAddressSuffix + query;
         } else {
             requestUrl = requestUrl + eiBackendAddressSuffix;
         }
+
         LOG.debug("Got HTTP Request with method " + request.getMethod() + "\nUrlSuffix: " + eiBackendAddressSuffix
                 + "\nForwarding Request to EI Backend with url: " + requestUrl);
+
         return requestUrl;
     }
 
-    private BackEndInformation getEIBackendInformation(HttpServletRequest request) {
-        String backEndInstanceName = null;
+    private String getBackEndUrl(String requestQuery) {
+        String requestUrl = null;
 
-        if (request.getSession().getAttribute("backEndInstanceName") != null) {
-            backEndInstanceName = request.getSession().getAttribute("backEndInstanceName").toString();
+        if (requestQuery != null) {
+            List<NameValuePair> params = getParameters(requestQuery);
+            if (requestQuery.contains(BACKEND_URL_KEY_NAME)) {
+                requestUrl = extractUrlFromParameters(params);
+            } else {
+                String backEndName = extractBackEndNameFromParameters(params);
+                BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
+                requestUrl = backEndInformation.getUrlAsString();
+            }
+            LOG.debug("Forwarding request to url '" + requestUrl + "'.");
         }
 
-        return backEndInstancesUtils.getBackEndInformationByName(backEndInstanceName);
+        return requestUrl;
     }
 
     private List<NameValuePair> getParameters(String requestQuery) {
@@ -104,31 +106,58 @@ public class EIRequestsControllerUtils {
         } catch (URISyntaxException e) {
             LOG.error("Error while encoding URL parameters: " + e);
         }
+
         return params;
     }
 
     private String extractUrlFromParameters(List<NameValuePair> params) {
         String urlFromParams = null;
+
         for (NameValuePair param : params) {
-            if (param.getName().equals(BACKEND_KEY_NAME)) {
-                urlFromParams = param.getValue();
+            if (param.getName()
+                     .equals(BACKEND_URL_KEY_NAME)) {
+                try {
+                    urlFromParams = URLDecoder.decode(param.getValue(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("Failed to decode back-end url");
+                }
             }
         }
+
         return urlFromParams;
     }
 
-    private String removeBackendDataFromQueryString(List<NameValuePair> params) {
+    private String extractBackEndNameFromParameters(List<NameValuePair> params) {
+        String backendName = null;
+
+        for (NameValuePair param : params) {
+            if (param.getName()
+                     .equals(BACKEND_NAME_KEY_NAME)) {
+                try {
+                    backendName = URLDecoder.decode(param.getValue(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("Failed to decode back-end name");
+                }
+            }
+        }
+
+        return backendName;
+    }
+
+    private String removeBackendDataFromQueryString(String requestQuery) {
+        List<NameValuePair> params = getParameters(requestQuery);
         List<NameValuePair> processedParams = new ArrayList<>();
         for (NameValuePair param : params) {
             String name = param.getName(), value = param.getValue();
-            if (name.equals(BACKEND_KEY_NAME)) {
+            if (name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME)) {
                 continue;
             }
             processedParams.add(new BasicNameValuePair(name, value));
         }
 
-        if (processedParams.size() == 0)
-            return null;
+        if (processedParams.size() == 0) {
+            return "";
+        }
 
         return URLEncodedUtils.format(processedParams, "UTF8");
     }
