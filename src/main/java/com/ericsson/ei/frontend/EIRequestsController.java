@@ -215,7 +215,7 @@ public class EIRequestsController {
     }
 
     /**
-     * This function copies headders from the made request and puts it into the response. It also extracts any
+     * This function copies headers from the made request and puts it into the response. It also extracts any
      * x-path-tokens if found.
      *
      * @param headers
@@ -256,7 +256,7 @@ public class EIRequestsController {
     }
 
     /**
-     * This function copies headders from the incomming request into the outgoing request headers.
+     * This function copies headers from the incomming request into the outgoing request headers.
      *
      * @param outgoingRequest
      * @param incomingRequest
@@ -288,7 +288,7 @@ public class EIRequestsController {
     }
 
     /**
-     * This function adds and x-path-token to an outgoing request if it exists for the back-end the request is made
+     * This function adds an x-path-token to an outgoing request if it exists for the back-end the request is made
      * towards.
      *
      * @param outgoingRequest
@@ -320,7 +320,7 @@ public class EIRequestsController {
     }
 
     /**
-     * builds and xPathTokenKey, the token will be unique key for each http(s) host and port and stored for each session.
+     * builds an xPathTokenKey, the token will be unique key for each http(s) host and port and stored for each session.
      *
      * @param uri
      * @return
