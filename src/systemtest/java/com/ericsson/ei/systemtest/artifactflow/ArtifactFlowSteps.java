@@ -64,6 +64,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     @Then("^subscriptions and jenkins jobs should be removed$")
     public void subscriptions_and_jenkins_jobs_should_be_removed() throws Throwable {
         StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
+        StepsUtils.deleteSubscriptions(config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")

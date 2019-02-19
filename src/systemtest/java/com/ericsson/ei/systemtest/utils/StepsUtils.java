@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
@@ -132,7 +133,7 @@ public class StepsUtils {
      * @throws IOException
      */
     public static ResponseEntity sendSubscriptionToEiffelIntelligence(String subscriptionName, String frontendBaseUrl, String backendBaseUrl) throws JSONException, ClientProtocolException, URISyntaxException, IOException {
-        removeSubscription(subscriptionName, frontendBaseUrl, backendBaseUrl);
+        deleteSubscription(subscriptionName, frontendBaseUrl, backendBaseUrl);
 
         RestPostSubscriptionObject subscription = (RestPostSubscriptionObject) subscriptions.get(subscriptionName);
         ResponseEntity response = new HttpRequest(HttpMethod.POST)
@@ -147,7 +148,29 @@ public class StepsUtils {
     }
 
     /**
-     * Removes a subscription from eiffel intelligence
+     * Deletes all created subscriptions from ei
+     *
+     * @param frontendBaseUrl
+     * @param backendBaseUrl
+     * @throws ClientProtocolException
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    public static void deleteSubscriptions(String frontendBaseUrl, String backendBaseUrl) throws ClientProtocolException, URISyntaxException, IOException {
+        Iterator<String> keys = subscriptions.keys();
+
+        while(keys.hasNext()) {
+            String subscriptionName = keys.next();
+            ResponseEntity response = deleteSubscription(subscriptionName, frontendBaseUrl, backendBaseUrl);
+
+            if(response.getStatusCode() != 200) {
+                LOGGER.error("Failed to remove subscription: \"" + subscriptionName+ "\" from EI. Response: " + response.getBody());
+            }
+        }
+    }
+
+    /**
+     * Deletes a subscription from eiffel intelligence
      *
      * @param subscriptionName
      * @param frontendBaseUrl
@@ -156,11 +179,13 @@ public class StepsUtils {
      * @throws URISyntaxException
      * @throws IOException
      */
-    private static void removeSubscription(String subscriptionName, String frontendBaseUrl, String backendBaseUrl) throws ClientProtocolException, URISyntaxException, IOException {
+    private static ResponseEntity deleteSubscription(String subscriptionName, String frontendBaseUrl, String backendBaseUrl) throws ClientProtocolException, URISyntaxException, IOException {
         ResponseEntity response = new HttpRequest(HttpMethod.DELETE)
                 .setBaseUrl(frontendBaseUrl)
                 .setEndpoint("/subscriptions/" + subscriptionName)
                 .addParam("backendurl", backendBaseUrl)
                 .performRequest();
+
+        return response;
     }
 }
