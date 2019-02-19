@@ -67,8 +67,8 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
-        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
+    public void subscription_is_created(String subscriptionName, String jenkinsJobName) throws Throwable {
+        StepsUtils.createSubscription(subscriptionName, jenkinsJobName, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
     }
 
     @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
