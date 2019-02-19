@@ -76,18 +76,18 @@ public class StepsUtils {
      * Creates a subscription that later can be used to send to Eiffel intelligence.
      *
      * @param subscriptionName
-     * @param nameOfTriggeredJob
+     * @param nameOfJobToBeTriggered
      * @param jenkinsUserame
      * @param jenkinsPassword
      * @param jenkinsBaseUrl
      * @throws IOException
      * @throws JSONException
      */
-    public static void createSubscription(String subscriptionName, String nameOfTriggeredJob, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl) throws IOException, JSONException {
+    public static void createSubscription(String subscriptionName, String nameOfJobToBeTriggered, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl) throws IOException, JSONException {
         RestPostSubscriptionObject subscription = new RestPostSubscriptionObject(subscriptionName);
         subscription.setRestPostBodyMediaType("application/x-www-form-urlencoded");
         subscription.setBasicAuth(jenkinsUserame, jenkinsPassword);
-        subscription.setNotificationMeta(jenkinsBaseUrl + "/job/" + nameOfTriggeredJob + "/buildWithParameters");
+        subscription.setNotificationMeta(jenkinsBaseUrl + "/job/" + nameOfJobToBeTriggered + "/buildWithParameters");
         subscriptions.put(subscriptionName, subscription);
     }
 

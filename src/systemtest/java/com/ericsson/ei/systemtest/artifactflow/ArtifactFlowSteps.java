@@ -66,7 +66,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
     }
 
-    @Given("^subscription \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
+    @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
     public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
         StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
     }
