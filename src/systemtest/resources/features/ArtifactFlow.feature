@@ -6,13 +6,12 @@ Feature: Artifact system test
             triggered in order to know if all events has been aggregated correctly.
 
     Given configurations are provided
-    When a jenkins job '"ArtC2Job"' from '"src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt"' is created
+    Then a jenkins job '"ArtC2Job"' from '"src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt"' is created
     And a jenkins job '"TCTJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCTScript.txt"' is created
     And a jenkins job '"TCSTCFJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCSTCFScript.txt"' is created
     And a jenkins job '"CLMJob"' from '"src/systemtest/resources/JenkinsShellScripts/CLMScript.txt"' is created
     And a jenkins job '"ArtPJob"' from '"src/systemtest/resources/JenkinsShellScripts/ArtPScript.txt"' is created
     And a jenkins job '"FlowCompleteJob"' from '"src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt"' is created
-    Then we continue with the next step
 
     #####Add CLMSubscription to EI#####
     Given subscription object "CLMSubscription" is created which will trigger "CLMJob"
@@ -53,9 +52,8 @@ Feature: Artifact system test
     Then we send the "FlowCompleteSubscription" to eiffel intelligence for creation.
 
     #####Check so that everything triggers######
-    Given the jenkins job "ArtC2Job" is triggered
-    When all jenkins jobs has been triggered
-    Then subscriptions and jenkins jobs should be removed
-    And the test was a succcess
+    When the jenkins job "ArtC2Job" is triggered
+    Then all jenkins jobs has been triggered
+    And subscriptions and jenkins jobs should be removed
 
 

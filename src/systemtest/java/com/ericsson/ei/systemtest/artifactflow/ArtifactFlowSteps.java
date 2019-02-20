@@ -14,6 +14,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
+import com.ericsson.eiffelcommons.helpers.JenkinsXmlData;
 import com.ericsson.eiffelcommons.utils.ResponseEntity;
 
 import cucumber.api.java.en.Given;
@@ -39,6 +40,13 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
     public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
+        /*JenkinsXmlData jenkinsXmlData = new JenkinsXmlData()
+                .addGrovyScript("")
+                .addBuildParameter("EVENT_ID")
+                .addBuildParameter("TEST_CASE_NAME");
+        
+        String test = jenkinsXmlData.getXmlAsString();*/
+        System.out.println();
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,

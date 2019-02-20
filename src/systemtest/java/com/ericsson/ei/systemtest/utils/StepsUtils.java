@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -210,7 +211,17 @@ public class StepsUtils {
         while(System.currentTimeMillis() < maxTime) {
             try {
                 JSONObject status = jenkinsManager.getJenkinsBuildStatusData(jenkinsJob);
-                LOGGER.info(jenkinsJob + " was triggered.");
+                int estimatedDuration = status.getInt("estimatedDuration");
+                String result = status.getString("result");
+                String infoMessage = jenkinsJob + " was triggered. Estimated duration(ms): " + estimatedDuration + ". Result: " + result;
+
+                boolean statusContainsParameters = status.has("actions") && status.getJSONArray("actions").length() != 0 && status.getJSONArray("actions").getJSONObject(0).has("parameters");
+                if (statusContainsParameters) {
+                    JSONArray parameters = status.getJSONArray("actions").getJSONObject(0).getJSONArray("parameters");
+                    infoMessage += " Parameters: " + parameters;
+                }
+
+                LOGGER.info(infoMessage);
                 return;
             } catch (Exception e) {
                 TimeUnit.SECONDS.sleep(1);
