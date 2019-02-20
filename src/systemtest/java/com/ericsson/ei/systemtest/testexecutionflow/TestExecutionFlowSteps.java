@@ -1,4 +1,4 @@
-package com.ericsson.ei.systemtest.artifactflow;
+package com.ericsson.ei.systemtest.testexecutionflow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,8 +19,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 @Ignore
-public class ArtifactFlowSteps extends AbstractTestExecutionListener{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactFlowSteps.class);
+public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestExecutionFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
     private static final String JENKINS_JOB_XML = "jenkinsJobTemplate.xml";
 
@@ -55,11 +55,6 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         assertTrue("Failed to create jenkins job.", success);
     }
 
-    @Then("^we continue with the next step$")
-    public void we_continue_with_the_next_step() {
-        //Just for cucumber to make sense
-    }
-
     @Then("^subscriptions and jenkins jobs should be removed$")
     public void subscriptions_and_jenkins_jobs_should_be_removed() throws Throwable {
         StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
@@ -67,8 +62,8 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
-        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
+    public void subscription_is_created(String subscriptionName, String jenkinsJobName) throws Throwable {
+        StepsUtils.createSubscription(subscriptionName, jenkinsJobName, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
     }
 
     @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
@@ -86,20 +81,5 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
 
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
-    }
-
-    @Given("^all previous tests passes\\.$")
-    public void all_previous_tests_passes() {
-        //Just for cucumber to make sense
-    }
-
-    @When("^future story is done\\.$")
-    public void future_story_is_done() {
-
-    }
-
-    @Then("^everything should be fine\\.$")
-    public void everything_should_be_fine() {
-
     }
 }

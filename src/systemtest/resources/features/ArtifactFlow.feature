@@ -1,9 +1,10 @@
-@AuthFeature
+@ArtifactFlowFeature
 Feature: Artifact system test
 
   @ArtifactFlowScenario
-  Scenario: """Creates jenkins jobs, subscriptions and at last see that the flowcompletejob has been 
-               triggered in order to know if all events has been aggregated correctly."""
+  Scenario: Creates jenkins jobs, subscriptions and at last see that the flowcompletejob has been 
+            triggered in order to know if all events has been aggregated correctly.
+
     Given configurations are provided
     When a jenkins job '"ArtC2Job"' from '"src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt"' is created
     And a jenkins job '"TCTJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCTScript.txt"' is created
