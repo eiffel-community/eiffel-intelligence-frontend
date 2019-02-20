@@ -193,9 +193,9 @@ public class StepsUtils {
      * @param jenkinsJobNames
      * @throws Exception
      */
-    public static void hasJenkinsJobsBeenTriggered(ArrayList<String> jenkinsJobNames) throws Exception {
+    public static void hasJenkinsJobsBeenTriggered(ArrayList<String> jenkinsJobNames, int timeoutMilliseconds) throws Exception {
         for(int i=0; i<jenkinsJobNames.size(); i++) {
-            hasJenkinsJobBeenTriggered(jenkinsJobNames.get(i));
+            hasJenkinsJobBeenTriggered(jenkinsJobNames.get(i), timeoutMilliseconds);
         }
     }
 
@@ -205,15 +205,21 @@ public class StepsUtils {
      * @param jenkinsJob
      * @throws Exception
      */
-    public static void hasJenkinsJobBeenTriggered(String jenkinsJob) throws Exception {
-        long maxTime = System.currentTimeMillis() + 60000;
+    public static void hasJenkinsJobBeenTriggered(String jenkinsJob, int timeoutMilliseconds) throws Exception {
+        long maxTime = System.currentTimeMillis() + timeoutMilliseconds;
 
         while(System.currentTimeMillis() < maxTime) {
             try {
                 JSONObject status = jenkinsManager.getJenkinsBuildStatusData(jenkinsJob);
-                int estimatedDuration = status.getInt("estimatedDuration");
+                int duration = status.getInt("duration");
                 String result = status.getString("result");
-                String infoMessage = jenkinsJob + " was triggered. Estimated duration(ms): " + estimatedDuration + ". Result: " + result;
+
+                if(result.equals("null")) {
+                    LOGGER.info(jenkinsJob + " triggered but not finished yet. Rechecking...");
+                    continue;
+                }
+
+                String infoMessage = jenkinsJob + " was triggered. Duration(ms): " + duration + ". Result: " + result;
 
                 boolean statusContainsParameters = status.has("actions") && status.getJSONArray("actions").length() != 0 && status.getJSONArray("actions").getJSONObject(0).has("parameters");
                 if (statusContainsParameters) {
@@ -229,7 +235,7 @@ public class StepsUtils {
             }
         }
 
-        throw new Exception("Jenkins job \"" + jenkinsJob + "\" was never triggered.");
+        throw new Exception("Jenkins job \"" + jenkinsJob + "\" was never triggered successfully.");
     }
 
     /**

@@ -14,7 +14,6 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
-import com.ericsson.eiffelcommons.helpers.JenkinsXmlData;
 import com.ericsson.eiffelcommons.utils.ResponseEntity;
 
 import cucumber.api.java.en.Given;
@@ -44,7 +43,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
                 .addGrovyScript("")
                 .addBuildParameter("EVENT_ID")
                 .addBuildParameter("TEST_CASE_NAME");
-        
+
         String test = jenkinsXmlData.getXmlAsString();*/
         System.out.println();
         boolean success = StepsUtils.createJenkinsJob(
@@ -109,7 +108,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @When("^all jenkins jobs has been triggered$")
     public void the_jenkins_job_has_been_triggered() throws Throwable {
-        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames);
+        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames, config.getJobTimeoutMilliseconds());
     }
 
     @Then("^the test was a succcess$")
