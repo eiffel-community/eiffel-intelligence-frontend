@@ -5,7 +5,6 @@ var isReplacing = true;
 
 jQuery(document).ready(function () {
     frontendServiceUrl = $('#frontendServiceUrl').text();
-    loadTooltip();
 
     // /Start ## Global AJAX Sender function ##################################
     var AjaxHttpSender = function () {
@@ -159,7 +158,7 @@ jQuery(document).ready(function () {
     }
 
     //Create information modal
-    $(".rules_info").click( function (event) {
+    $(".rules_info").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
         $('#infoContent').text(test_rule_info);
@@ -229,7 +228,7 @@ jQuery(document).ready(function () {
     };
 
     //Upload events list json data
-    $(".upload_rules").click( function (event) {
+    $(".upload_rules").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
         var isRules = true;
@@ -238,7 +237,7 @@ jQuery(document).ready(function () {
     });
 
     //Upload list of events json data
-    $(".upload_events").click( function (event) {
+    $(".upload_events").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
         var isRules = false;
@@ -290,7 +289,7 @@ jQuery(document).ready(function () {
     }
 
     // Download the modified rule
-    $(".download_rules").click( function () {
+    $(".download_rules").click(function () {
         var formRules = [];
         $('.formRules').each(function () {
             try {
@@ -309,7 +308,7 @@ jQuery(document).ready(function () {
     });
 
     // Download the modified events
-    $(".download_events").click( function () {
+    $(".download_events").click(function () {
         var formEvents = [];
         $('.formEvents').each(function () {
             try {
@@ -336,7 +335,7 @@ jQuery(document).ready(function () {
                 var jsonData = JSON.parse(request.response);
                 var jsonString = JSON.stringify(jsonData, null, 2);
                 var statusCode = jsonData['statusCode'];
-                if(statusCode != undefined && statusCode == 500) {
+                if (statusCode != undefined && statusCode == 500) {
                     window.logMessages("Failed to download template, Error: Could not contact the backend server.");
                 } else {
                     downloadFile(jsonString, "application/json;charset=utf-8", name + ".json");
@@ -347,57 +346,77 @@ jQuery(document).ready(function () {
     }
 
     // Download the rules template
-    $(".download_rules_template").click( function (event) {
+    $(".download_rules_template").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
         getTemplate("rulesTemplate");
     });
 
     // Download the events template
-    $(".download_events_template").click( function (event) {
+    $(".download_events_template").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
         getTemplate("eventsTemplate");
     });
 
-    // Start to check is backend Test Rule service status
-    var isEnabled = true;
-    $.ajax({
-        url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
-        contentType: 'application/json; charset=utf-8',
-        type: 'GET',
-        error: function () { },
-        success: function (data) {
-            isEnabled = JSON.parse(ko.toJSON(data)).status;
-            if (isEnabled != true) {
-                displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")
+    // Check backend Test Rule service status
+    function checkTestRulePageEnabled() {
+        $.ajax({
+            url: frontendServiceUrl + "/rules/rule-check/testRulePageEnabled",
+            contentType: 'application/json; charset=utf-8',
+            type: 'GET',
+            error: function () {
+                addStatusIndicator(statusType.danger, statusText.backend_down);
+                elementsDisabled(true);
+            },
+            success: function (data) {
+                var isEnabled = JSON.parse(ko.toJSON(data)).status;
+                if (isEnabled != true) {
+                    addStatusIndicator(statusType.warning, statusText.test_rules_disabled);
+                } else {
+                    removeStatusIndicator();
+                }
+                elementsDisabled(!isEnabled);
+            },
+            complete: function () { }
+        });
+    }
+
+    function elementsDisabled(disabled) {
+        $('button.btn').prop("disabled", disabled);
+        $('textarea').prop("disabled", disabled);
+    }
+
+    // Check EI Backend Server Status ########################################
+    function checkBackendStatus() {
+        $.ajax({
+            url: frontendServiceUrl + "/auth/checkStatus",
+            type: "GET",
+            contentType: "application/string; charset=utf-8",
+            dataType: "text",
+            cache: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
+                } else {
+                    doIfSecurityOff();
+                }
+            },
+            success: function (data, textStatus) {
+                checkBackendSecured();
+            },
+            complete: function () {
+                checkTestRulePageEnabled();
             }
-        },
-        complete: function () { }
-    });
-    // Finish to check backend Test Rule Service status
-
-    function displayOverlay(text) {
-        var overlay = document.createElement('div');
-        overlay.setAttribute('id', 'overlay')
-        overlay.setAttribute('class', 'testRulePage d-flex')
-        var padding = document.createElement('div');
-        padding.setAttribute('class', 'col-lg-3 col-md-1 d-none d-lg-block');
-        var main = document.createElement('div');
-        main.setAttribute('class', 'col-lg-9 col-md-11 col-12 flexbox');
-        var textNode = document.createTextNode(text);
-        main.appendChild(textNode);
-        overlay.appendChild(padding);
-        overlay.appendChild(main);
-        var parent = document.getElementById('testRule');
-        parent.appendChild(overlay);
+        });
     }
+    checkBackendStatus();
 
-    function loadTooltip() {
-        $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
+    // Check if EI Backend Server is online every X seconds
+    if(timerInterval != null) {
+        window.clearInterval(timerInterval);
     }
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
 
-    function closeTooltip() {
-        $('.tooltip').tooltip('hide');
-    }
+    // END OF EI Backend Server check #########################################
 });

@@ -1,6 +1,5 @@
-var timerInterval;
-
 jQuery(document).ready(function () {
+
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
     var frontEndVersion = $('#frontEndVersion').text();
@@ -131,10 +130,6 @@ jQuery(document).ready(function () {
             contentType: 'application/json;charset=UTF-8',
             type: 'GET',
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                var label = createLabel(generalEIInfoLabel);
-                body.appendChild(label);
-                var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
-                body.appendChild(element);
             },
             success: function (data, textStatus, xhr) {
                 var eiInfoContainer = document.getElementById('eiInfoContainer');
@@ -160,6 +155,8 @@ jQuery(document).ready(function () {
     getInstanceInfo();
 
     // Check EI Backend Server Status ########################################
+    var backendStatus;
+    var currentBackendStatus = false;
     function checkBackendStatus() {
         $.ajax({
             url: frontendServiceUrl + "/auth/checkStatus",
@@ -171,24 +168,33 @@ jQuery(document).ready(function () {
                 if (XMLHttpRequest.status == 401) {
                     doIfUserLoggedOut();
                     removeStatusIndicator();
+                    currentBackendStatus = true;
                 } else {
                     doIfSecurityOff();
                     addStatusIndicator(statusType.danger, statusText.backend_down);
+                    currentBackendStatus = false;
                 }
             },
             success: function (data, textStatus) {
                 checkBackendSecured();
                 removeStatusIndicator();
+                currentBackendStatus = true;
             },
             complete: function () {
+                if(backendStatus != undefined && backendStatus != currentBackendStatus) {
+                    reloadRoute();
+                }
+                backendStatus = currentBackendStatus;
             }
         });
     }
     checkBackendStatus();
 
     // Check if EI Backend Server is online every X seconds
-    if (timerInterval == null) {
-        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    if(timerInterval != null) {
+        window.clearInterval(timerInterval);
     }
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+
     // END OF EI Backend Server check #########################################
 });

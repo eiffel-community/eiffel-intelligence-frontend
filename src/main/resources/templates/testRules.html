@@ -37,16 +37,13 @@
             <div class="row-fluid rulesListDisplay" data-bind="foreach: rulesBindingList">
                 <div class="pb-2" data-bind="attr: { id: 'Rule' + $index() }">
                     <div class="d-flex flex-nowrap">
-                        <div class="col-11">
+                        <div class="text-area">
                             <textarea class="form-control formRules" rows="10" data-bind="textInput: data"></textarea>
                         </div>
                         <div>
-                            <h6>
-                                <span class="badge-rounded badge-danger cursor-pointer"
-                                    data-bind="click : $root.removeRule.bind()">
-                                    <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
-                                </span>
-                            </h6>
+                            <button class="btn btn-danger remove-item" data-bind="click : $root.removeRule.bind()">
+                                <i class="fa fa-fw  fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -86,16 +83,13 @@
             <div class="row-fluid eventsListDisplay" data-bind="foreach: eventsBindingList">
                 <div class="pb-2" data-bind="attr: { id: 'Events' + $index() }">
                     <div class="d-flex flex-nowrap">
-                        <div class="col-11">
+                        <div class="text-area">
                             <textarea class="form-control formEvents" rows="10" data-bind="textInput: data"></textarea>
                         </div>
                         <div>
-                            <h6>
-                                <span class="badge-rounded badge-danger cursor-pointer"
-                                    data-bind="click : $root.removeEvent.bind()">
-                                    <i class="fa fa-fw  fa-trash" aria-hidden="true"></i>
-                                </span>
-                            </h6>
+                            <button class="btn btn-danger remove-item" data-bind="click : $root.removeEvent.bind()">
+                                <i class="fa fa-fw  fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -108,7 +102,7 @@
                 <button class="btn btn-success find_aggregated_object white-space-normal"
                     data-bind="click : $root.submit.bind($data)">Find
                     Aggregated Object</button>
-                <button class="rules_info">
+                <button class="rules_info cursor-pointer">
                     <img src="assets/images/information.png" />
                 </button>
             </div>
