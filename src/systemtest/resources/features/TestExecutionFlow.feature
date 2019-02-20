@@ -6,7 +6,6 @@ Feature: Test Execution system test
             triggered in order to know if all events has been aggregated correctly.
 
     Given configurations are provided
-    Then we continue with the next step
 
     #####Add TestExecution_Subscription_01_ActT to EI#####
     Given subscription object "TestExecution_Subscription_01_ActT" is created which will trigger "TestExecution_Job_02_ActF"

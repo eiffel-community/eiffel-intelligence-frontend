@@ -55,11 +55,6 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
         assertTrue("Failed to create jenkins job.", success);
     }
 
-    @Then("^we continue with the next step$")
-    public void we_continue_with_the_next_step() {
-        //Just for cucumber to make sense
-    }
-
     @Then("^subscriptions and jenkins jobs should be removed$")
     public void subscriptions_and_jenkins_jobs_should_be_removed() throws Throwable {
         StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
@@ -86,20 +81,5 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
         ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
 
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
-    }
-
-    @Given("^all previous tests passes\\.$")
-    public void all_previous_tests_passes() {
-        //Just for cucumber to make sense
-    }
-
-    @When("^future story is done\\.$")
-    public void future_story_is_done() {
-
-    }
-
-    @Then("^everything should be fine\\.$")
-    public void everything_should_be_fine() {
-
     }
 }
