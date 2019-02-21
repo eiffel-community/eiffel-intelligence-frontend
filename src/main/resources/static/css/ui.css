@@ -48,7 +48,7 @@ body {
 }
 .app-header .header-bar {
     visibility: visible;
-    max-width: 600px;
+    max-width: 50%;
     min-width: 10%;
     outline: 0;
 }
@@ -402,6 +402,9 @@ body {
 }
 
 @media (max-width: 767.98px) {
+    .app-header .header-bar {
+        max-width: 100%;
+    }
     .app-body .sidebar {
         margin-left: -200px;
     }
