@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -37,24 +36,17 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         config.initRemRemConfig();
     }
 
-    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
-    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
-        /*JenkinsXmlData jenkinsXmlData = new JenkinsXmlData()
-                .addGrovyScript("")
-                .addBuildParameter("EVENT_ID")
-                .addBuildParameter("TEST_CASE_NAME");
-
-        String test = jenkinsXmlData.getXmlAsString();*/
-        System.out.println();
+    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created with parameters: (.*)$")
+    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, List<String> parameters) throws Throwable {
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,
                 config.getJenkinsBaseUrl(),
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
+                config.getRemremBaseUrl(),
                 JENKINS_TOKEN,
-                JENKINS_JOB_XML,
-                config.getRemremBaseUrl()
+                parameters
          );
 
         if (success) {
@@ -62,11 +54,6 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         }
 
         assertTrue("Failed to create jenkins job.", success);
-    }
-
-    @Then("^we continue with the next step$")
-    public void we_continue_with_the_next_step() {
-        //Just for cucumber to make sense
     }
 
     @Then("^subscriptions and jenkins jobs should be removed$")
@@ -99,20 +86,11 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
 
     @Given("^the jenkins job \"([^\"]*)\" is triggered$")
     public void the_jenkins_job_is_triggered(String jenkinsJobToTrigger) throws Throwable {
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("EVENT_ID", "");
-        parameters.put("TEST_CASE_NAME", "");
-
-        StepsUtils.triggerJenkinsJobWithParameters(jenkinsJobToTrigger, parameters, JENKINS_TOKEN);
+        StepsUtils.triggerJenkinsJob(jenkinsJobToTrigger, JENKINS_TOKEN);
     }
 
     @When("^all jenkins jobs has been triggered$")
     public void the_jenkins_job_has_been_triggered() throws Throwable {
         StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames, config.getJobTimeoutMilliseconds());
-    }
-
-    @Then("^the test was a succcess$")
-    public void the_test_was_a_succcess() {
-        //Just for cucumber to make sence
     }
 }

@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.ClientProtocolException;
@@ -19,11 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ericsson.eiffelcommons.JenkinsManager;
+import com.ericsson.eiffelcommons.helpers.JenkinsXmlData;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
 import com.ericsson.eiffelcommons.utils.HttpRequest;
 import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
 import com.ericsson.eiffelcommons.utils.ResponseEntity;
-import com.ericsson.eiffelcommons.utils.Utils;
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
@@ -44,20 +44,29 @@ public class StepsUtils {
     * @return boolean - If the creation was a success or not
      * @throws Exception
     */
-    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String jenkinsJobXml, String remremBaseUrl) throws Exception {
+    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String remremBaseUrl, String jenkinsToken, List<String> parameters) throws Exception {
+        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
+        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
+
+        JenkinsXmlData jenkinsXmlData = new JenkinsXmlData()
+                .addJobToken(jenkinsToken)
+                .addSystemGrovyScript(script, false);
+
+
+        for (String parameter: parameters) {
+            jenkinsXmlData.addBuildParameter(parameter);
+        }
+
+        String jenkinsXmlAsString = jenkinsXmlData.getXmlAsString();
+
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
 
         if(!jenkinsManager.pluginExists("Groovy")) {
             jenkinsManager.installPlugin("Groovy", "2.1");
             jenkinsManager.restartJenkins();
         }
-        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
-        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
 
-        String xmlJobData = Utils.getResourceFileAsString(jenkinsJobXml);
-        xmlJobData = xmlJobData.replace("SCRIPT_TO_BE_REPLACED", script);
-        xmlJobData = xmlJobData.replace("AUTH_TOKEN_TO_BE_REPLACED", jenkinsToken);
-        return jenkinsManager.forceCreateJob(jenkinsJobName, xmlJobData);
+        return jenkinsManager.forceCreateJob(jenkinsJobName, jenkinsXmlAsString);
     }
 
     /**
@@ -182,8 +191,8 @@ public class StepsUtils {
      * @param jenkinsToken
      * @throws Exception
      */
-    public static void triggerJenkinsJobWithParameters(String jenkinsJobToTrigger, Map<String, String> parameters, String jenkinsToken) throws Exception {
-        boolean success = jenkinsManager.buildJobWithParameters(jenkinsJobToTrigger, jenkinsToken, parameters);
+    public static void triggerJenkinsJob(String jenkinsJobToTrigger, String jenkinsToken) throws Exception {
+        boolean success = jenkinsManager.buildJob(jenkinsJobToTrigger, jenkinsToken);
         assertEquals("Was not able to trigger jenkins job", true, success);
     }
 
