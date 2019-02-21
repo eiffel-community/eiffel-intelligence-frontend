@@ -383,7 +383,7 @@ jQuery(document).ready(function () {
     }
 
     function elementsDisabled(disabled) {
-        $('button.btn').prop("disabled", disabled);
+        $('.main button.btn').prop("disabled", disabled);
         $('textarea').prop("disabled", disabled);
     }
 
