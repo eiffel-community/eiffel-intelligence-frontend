@@ -115,12 +115,8 @@ jQuery(document).ready(function () {
     }
 
     function toggleButtonsDisabled(disabled) {
-        $('#addSubscription').prop("disabled", disabled);
-        $('#bulkDelete').prop("disabled", disabled);
-        $('#uploadSubscription').prop("disabled", disabled);
-        $('#getTemplateButton').prop("disabled", disabled);
-        $('#reloadButton').prop("disabled", disabled);
-        $('.table-btn').prop("disabled", disabled);
+        $('.main #subButtons button.btn').prop("disabled", disabled);
+        $('.main #table button.btn').prop("disabled", disabled);
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
