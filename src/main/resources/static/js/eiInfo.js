@@ -54,7 +54,7 @@ jQuery(document).ready(function () {
             { key: 'Application Name', value: data.applicationName },
             { key: 'Version', value: data.version },
             { key: 'Rules File Path', value: data.rulesPath },
-            { key: 'EI Back-End Connected Server', value: "This needs to be updated" },
+            { key: 'EI Back-End Connected Server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
             { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
         ];
 
@@ -124,34 +124,37 @@ jQuery(document).ready(function () {
     }
 
     function getInstanceInfo() {
-        $.ajax({
-            url: addBakcendParameter(frontEndServiceUrl + "/information"),
-            contentType: 'application/json;charset=UTF-8',
-            type: 'GET',
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
+        var callback = {
+            beforeSend: function () {
+            },
+            success: function (responseData, textStatus) {
+                //var eiInfoContainer = document.getElementById('eiInfoContainer');
+                //var data = JSON.parse(responseData);
+                createGeneralEIInfo(responseData);
+                generateEIInformationBasedOnList(responseData.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+                generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
+                generateEIInformationBasedOnList(responseData.threads, "Eiffel Intelligence Backend Java Threads Settings");
+                generateEIInformationBasedOnList(responseData.email, "Eiffel Intelligence Backend E-Mail Settings");
+                generateEIInformationBasedOnList(responseData.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
+                generateEIInformationBasedOnList(responseData.waitList, "Eiffel Intelligence Backend WaitList settings");
+                generateEIInformationBasedOnList([responseData.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
+                generateEIInformationBasedOnList([responseData.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
+                generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
+                generateEIInformationBasedOnList([responseData.erUrl], "End point for downstream/upstream search in EventRepository");
+                generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence Backend LDAP Settings");
+            },
+            error: function (request, textStatus, errorThrown) {
                 var label = createLabel(generalEIInfoLabel);
                 body.appendChild(label);
                 var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
                 body.appendChild(element);
             },
-            success: function (data, textStatus, xhr) {
-                var eiInfoContainer = document.getElementById('eiInfoContainer');
-                var data = JSON.parse(xhr.responseText);
-                createGeneralEIInfo(data);
-                generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
-                generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
-                generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
-                generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
-                generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
-                generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
-                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
-                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-                generateEIInformationBasedOnList([data.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
-                generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
-                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
-            },
-            complete: function (XMLHttpRequest, textStatus) { }
-        });
+            complete: function () {
+            }
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/information";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
 
     createFrontEndGeneralInfo();

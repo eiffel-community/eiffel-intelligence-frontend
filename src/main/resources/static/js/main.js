@@ -54,16 +54,21 @@ jQuery(document).ready(function () {
     }).resolve();
 
     $("#logoutBtn").click(function () {
-        $.ajax({
-            url: frontendServiceUrl + "/auth/logout",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            complete: function (XMLHttpRequest, textStatus) {
+        var callback = {
+            beforeSend: function () {
+            },
+            success: function (responseData, textStatus) {
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            },
+            complete: function () {
                 doIfUserLoggedOut();
                 router.navigate('*');
             }
-        });
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth/logout";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     });
 
     function loadDocumentLinks() {
@@ -106,21 +111,27 @@ jQuery(document).ready(function () {
         for (var i = 0; i < jsonBackendInstanceData.length; i++) {
             var instanceData = jsonBackendInstanceData[i];
             var isActive = false;
+            var name = instanceData.name;
+            var host = instanceData.host;
+            var port = instanceData.port;
+            var https = instanceData.https;
+            var contextPath = instanceData.contextPath;
 
             if ((instanceData.defaultBackend == true && !sessionStorage.selectedActive) ||
-                (sessionStorage.selectedActive && sessionStorage.selectedActive == instanceData.name)) {
+                (sessionStorage.selectedActive && sessionStorage.selectedActive == name)) {
                 isActive = true;
                 currentName = instanceData.name;
                 sessionStorage.selectedActive = instanceData.name;
             }
 
-            var singleInstance = new singleInstanceModel(instanceData.name, instanceData.host, instanceData.port, instanceData.contextPath, instanceData.https, isActive);
+            sessionStorage.setItem(name, formatUrl(host, port, https, contextPath));
+            var singleInstance = new singleInstanceModel(name, host, port, contextPath, https, isActive);
             self.instances.push(singleInstance);
         }
 
         self.selectedActive = ko.observable(currentName);
 
-        self.onChange = function (self) {
+        self.onChange = function () {
             if (typeof self.selectedActive() !== "undefined") {
                 sessionStorage.selectedActive = self.selectedActive();
                 location.reload();

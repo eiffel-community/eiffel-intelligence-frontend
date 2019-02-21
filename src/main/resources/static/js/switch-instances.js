@@ -12,6 +12,7 @@ jQuery(document).ready(function () {
             this.active = ko.observable(active)
         this.defaultBackend = ko.observable(defaultBackend)
     }
+
     function multipleInstancesModel(data) {
         var router = new Navigo(null, true, '#');
         var self = this;
@@ -49,6 +50,7 @@ jQuery(document).ready(function () {
             router.navigate('subscriptions');
         }
     }
+
     $.ajax({
         url: frontendServiceUrl + frontendServiceBackEndPath,
         type: "GET",

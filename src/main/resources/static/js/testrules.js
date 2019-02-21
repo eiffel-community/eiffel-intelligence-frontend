@@ -7,34 +7,6 @@ jQuery(document).ready(function () {
     frontendServiceUrl = $('#frontendServiceUrl').text();
     loadTooltip();
 
-    // /Start ## Global AJAX Sender function ##################################
-    var AjaxHttpSender = function () {
-    };
-
-    AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
-        $.ajax({
-            url: addBakcendParameter(url),
-            type: type,
-            data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            cache: false,
-            beforeSend: function () {
-                callback.beforeSend();
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                callback.error(XMLHttpRequest, textStatus, errorThrown);
-            },
-            success: function (data, textStatus) {
-                callback.success(data, textStatus);
-            },
-            complete: function (XMLHttpRequest, textStatus) {
-                callback.complete();
-            }
-        });
-    }
-    // /Stop ## Global AJAX Sender function ##################################
-
     //Function for validating the json format, it accepts only string json
     function isValidJSON(str) {
         if (typeof (str) !== 'string') {
@@ -98,14 +70,14 @@ jQuery(document).ready(function () {
             var callback = {
                 beforeSend: function () {
                 },
-                success: function (data, textStatus) {
+                success: function (responseData, textStatus) {
                     if (data.length > 0) {
                         $.jGrowl("Successfully aggregated object generated", {
                             sticky: false,
                             theme: 'Error'
                         });
 
-                        $('#aggregatedObjectContent').text(JSON.stringify(data, null, 2));
+                        $('#aggregatedObjectContent').text(JSON.stringify(responseData, null, 2));
                         $('#aggregatedObjectModal').modal('show');
                     }
                 },
@@ -361,20 +333,23 @@ jQuery(document).ready(function () {
     });
 
     // Start to check is backend Test Rule service status
-    var isEnabled = true;
-    $.ajax({
-        url: addBakcendParameter(frontendServiceUrl + "/rules/rule-check/testRulePageEnabled"),
-        contentType: 'application/json; charset=utf-8',
-        type: 'GET',
-        error: function () { },
-        success: function (data) {
-            isEnabled = JSON.parse(ko.toJSON(data)).status;
+    var callback = {
+        beforeSend: function () {
+        },
+        success: function (responseData, textStatus) {
+            isEnabled = JSON.parse(ko.toJSON(responseData)).status;
             if (isEnabled != true) {
                 displayOverlay("Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]")
             }
         },
-        complete: function () { }
-    });
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+        complete: function () {
+        }
+    };
+    var ajaxHttpSender = new AjaxHttpSender();
+    var contextPath = "/rules/rule-check/testRulePageEnabled";
+    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     // Finish to check backend Test Rule Service status
 
     function displayOverlay(text) {

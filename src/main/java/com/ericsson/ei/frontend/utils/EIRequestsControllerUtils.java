@@ -92,9 +92,12 @@ public class EIRequestsControllerUtils {
                 BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
                 requestUrl = backEndInformation.getUrlAsString();
             }
-            LOG.debug("Forwarding request to url '" + requestUrl + "'.");
+        } else {
+            BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(null);
+            requestUrl = backEndInformation.getUrlAsString();
         }
 
+        LOG.debug("Forwarding request to url '" + requestUrl + "'.");
         return requestUrl;
     }
 
@@ -149,7 +152,7 @@ public class EIRequestsControllerUtils {
         List<NameValuePair> processedParams = new ArrayList<>();
         for (NameValuePair param : params) {
             String name = param.getName(), value = param.getValue();
-            if (name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME)) {
+            if (name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME) || name == null || value == null) {
                 continue;
             }
             processedParams.add(new BasicNameValuePair(name, value));
