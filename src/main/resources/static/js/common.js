@@ -197,7 +197,7 @@ var statusType = {
 
 var statusText = {
     backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
-    test_rules_disabled: "Test Rule service is not enabled! To enable it set the backend property [testaggregated.enabled] as [true]"
+    test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
 }
 
 function addStatusIndicator(statusType, statusText) {
