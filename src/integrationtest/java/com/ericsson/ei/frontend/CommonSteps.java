@@ -47,7 +47,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
     private int frontendPort;
-    private String frontendHost = "localhost";
+    private String frontendHost = "http://localhost";
     private String baseURL;
     private String rabbitHost;
     private int rabbitPort;
