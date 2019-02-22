@@ -5,7 +5,7 @@ def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 ///////////////////////////////////////CLM1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathArtP1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactPublishedEvent';
+def uriPathArtP1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelArtifactPublishedEvent';
 def jsonArtP1 = """
 	{
 	  "msgParams": {
