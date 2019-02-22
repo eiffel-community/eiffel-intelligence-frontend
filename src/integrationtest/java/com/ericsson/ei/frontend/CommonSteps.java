@@ -176,7 +176,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @Then("^response code (\\d+) is received$")
     public void get_response_code(int statusCode) throws Throwable {
         LOGGER.debug("Response code: {}", response.getStatusCode());
-        assertEquals(HttpStatus.valueOf(statusCode), response.getStatusCode());
+        assertEquals(statusCode, response.getStatusCode());
     }
 
     @Then("^response body \'(.*)\' is received$")
