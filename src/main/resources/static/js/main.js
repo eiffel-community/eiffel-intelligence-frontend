@@ -55,12 +55,6 @@ jQuery(document).ready(function () {
 
     $("#logoutBtn").click(function () {
         var callback = {
-            beforeSend: function () {
-            },
-            success: function (responseData, textStatus) {
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-            },
             complete: function () {
                 doIfUserLoggedOut();
                 router.navigate('*');

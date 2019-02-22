@@ -23,8 +23,6 @@ jQuery(document).ready(function () {
         var red = "#ff0000";
         var green = "#00ff00";
         var callback = {
-            beforeSend: function () {
-            },
             success: function (responseData, textStatus) {
                 if (backendStatus == false) {
                     checkBackendSecured();
@@ -367,8 +365,6 @@ jQuery(document).ready(function () {
 
     function checkSecurityAndDrawTable() {
         var callback = {
-            beforeSend: function () {
-            },
             success: function (responseData, textStatus) {
                 isSecured = JSON.parse(ko.toJSON(responseData)).security;
                 drawTable(isSecured);
@@ -526,8 +522,6 @@ jQuery(document).ready(function () {
     // /Start ## Bulk delete#################################################
     function deleteSubscriptions(subscriptionsToDeleteString) {
         var callback = {
-            beforeSend: function () {
-            },
             success: function (responseData, textStatus) {
                 reload_table();
             },
@@ -537,8 +531,6 @@ jQuery(document).ready(function () {
                 for (var i = 0; i < responseJSON.length; i++) {
                     window.logMessages("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
-            },
-            complete: function () {
             }
         };
 
@@ -641,8 +633,6 @@ jQuery(document).ready(function () {
         // Send Subscription JSON file to Spring MVC
         // AJAX Callback handling
         var callback = {
-            beforeSend: function () {
-            },
             success: function (responseData, textStatus) {
                 var returnData = [responseData];
                 if (returnData.length > 0) {
@@ -661,8 +651,6 @@ jQuery(document).ready(function () {
                     errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason + "\n";
                 }
                 window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
-            },
-            complete: function () {
             }
         };
         // Perform AJAX
@@ -707,14 +695,12 @@ jQuery(document).ready(function () {
         var id = $(object).attr("id").split("-")[1];
         // AJAX Callback handling
         var callback = {
-            beforeSend: function () { },
             success: function (responseData, textStatus) {
                 populate_json(responseData, mode);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.logMessages("Error: " + XMLHttpRequest.responseText);
-            },
-            complete: function () { }
+            }
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();

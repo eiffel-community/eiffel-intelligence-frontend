@@ -219,6 +219,7 @@
                         </goals>
                         <configuration>
                             <sources>
+                                <source>src/test/resources</source>
                                 <source>src/functionaltest/java</source>
                                 <source>src/functionaltest/resources</source>
                                 <source>src/integrationtest/java</source>

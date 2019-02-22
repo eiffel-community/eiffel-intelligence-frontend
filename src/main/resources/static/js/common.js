@@ -19,7 +19,9 @@ function addBackendParameter(url) {
 // /Start ## Global AJAX Sender function ##################################
 var AjaxHttpSender = function () { };
 
-// This function is to be used for every rest call going through the bridge except drawTable in subscription.js
+// This function is to be used for every rest call going through the bridge except drawTable
+// in subscription.js.
+// In callback beforeSend, complete, error and success is optional.
 AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback, contentType, dataType) {
     if (!contentType) {
         contentType = "application/json; charset=utf-8";
@@ -36,28 +38,24 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
         dataType: dataType,
         cache: false,
         beforeSend: function (XMLHttpRequest) {
-            callback.beforeSend(XMLHttpRequest);
+            if(typeof callback.beforeSend === 'function') {
+                callback.beforeSend(XMLHttpRequest);
+            }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            if (contextPath == "/auth") {
-                console.log("Data Error /auth == " + XMLHttpRequest.message);
+            if(typeof callback.error === 'function') {
+                callback.error(XMLHttpRequest, textStatus, errorThrown);
             }
-            if (contextPath == "/auth/login") {
-                console.log("Data Error /auth/login == " + XMLHttpRequest.message);
-            }
-            callback.error(XMLHttpRequest, textStatus, errorThrown);
         },
         success: function (responseData, textStatus) {
-            if (contextPath == "/auth") {
-                console.log("Data /auth == " + ko.toJSON(responseData));
+            if(typeof callback.success === 'function') {
+                callback.success(responseData, textStatus);
             }
-            if (contextPath == "/auth/login") {
-                console.log("Data /auth/login == " + ko.toJSON(responseData));
-            }
-            callback.success(responseData, textStatus);
         },
         complete: function (XMLHttpRequest, textStatus) {
-            callback.complete(XMLHttpRequest, textStatus);
+            if(typeof callback.complete === 'function') {
+                callback.complete(XMLHttpRequest, textStatus);
+            }
         }
     });
 }
@@ -114,8 +112,6 @@ function doIfSecurityOff() {
 
 function checkBackendSecured() {
     var callback = {
-        beforeSend: function () {
-        },
         success: function (responseData, textStatus) {
             var isSecured = JSON.parse(ko.toJSON(responseData)).security;
             if (isSecured == true) {
@@ -126,9 +122,6 @@ function checkBackendSecured() {
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             doIfSecurityOff();
-        },
-        complete: function () {
-            console.log("Complete security check!");
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
@@ -138,16 +131,12 @@ function checkBackendSecured() {
 
 function checkLoggedInUser() {
     var callback = {
-        beforeSend: function () {
-        },
         success: function (responseData, textStatus) {
             var userFromBackEnd = responseData.user;
             doIfUserLoggedIn(userFromBackEnd);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             doIfUserLoggedOut();
-        },
-        complete: function () {
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();

@@ -4,15 +4,13 @@
         "host": "firstHost",
         "port": 7676,
         "contextPath": "firstPath",
-        "https": false,
-        "active": false
+        "https": false
     },
     {
         "name": "secondName",
         "host": "secondHost",
         "port": 6767,
         "contextPath": "secondPath",
-        "https": false,
-        "active": true
+        "https": false
     }
 ]

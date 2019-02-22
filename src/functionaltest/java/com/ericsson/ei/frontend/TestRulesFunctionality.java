@@ -132,7 +132,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @AfterClass
     public static void tearDownMocks() throws IOException {
         mockClient.stop();
-        mockServer.stop();
+        //mockServer.stop();
     }
 
 }

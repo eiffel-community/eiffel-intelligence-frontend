@@ -125,11 +125,7 @@ jQuery(document).ready(function () {
 
     function getInstanceInfo() {
         var callback = {
-            beforeSend: function () {
-            },
             success: function (responseData, textStatus) {
-                //var eiInfoContainer = document.getElementById('eiInfoContainer');
-                //var data = JSON.parse(responseData);
                 createGeneralEIInfo(responseData);
                 generateEIInformationBasedOnList(responseData.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
                 generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
@@ -148,8 +144,6 @@ jQuery(document).ready(function () {
                 body.appendChild(label);
                 var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
                 body.appendChild(element);
-            },
-            complete: function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
