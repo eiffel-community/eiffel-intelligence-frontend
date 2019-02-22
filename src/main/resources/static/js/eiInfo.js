@@ -1,4 +1,5 @@
 jQuery(document).ready(function () {
+
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
     var frontEndVersion = $('#frontEndVersion').text();
@@ -138,12 +139,6 @@ jQuery(document).ready(function () {
                 generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
                 generateEIInformationBasedOnList([responseData.erUrl], "End point for downstream/upstream search in EventRepository");
                 generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence Backend LDAP Settings");
-            },
-            error: function (request, textStatus, errorThrown) {
-                var label = createLabel(generalEIInfoLabel);
-                body.appendChild(label);
-                var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
-                body.appendChild(element);
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
@@ -154,4 +149,45 @@ jQuery(document).ready(function () {
     createFrontEndGeneralInfo();
     getInstanceInfo();
 
+    // Check EI Backend Server Status ########################################
+    var backendStatus;
+    var currentBackendStatus = false;
+    function checkBackendStatus() {
+        var callback = {
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
+                    removeStatusIndicator();
+                    currentBackendStatus = true;
+                } else {
+                    doIfSecurityOff();
+                    addStatusIndicator(statusType.danger, statusText.backend_down);
+                    currentBackendStatus = false;
+                }
+            },
+            success: function (data, textStatus) {
+                checkBackendSecured();
+                removeStatusIndicator();
+                currentBackendStatus = true;
+            },
+            complete: function () {
+                if(backendStatus != undefined && backendStatus != currentBackendStatus) {
+                    reloadRoute();
+                }
+                backendStatus = currentBackendStatus;
+            }
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth/checkStatus";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+    }
+    checkBackendStatus();
+
+    // Check if EI Backend Server is online every X seconds
+    if(timerInterval != null) {
+        window.clearInterval(timerInterval);
+    }
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+
+    // END OF EI Backend Server check #########################################
 });

@@ -14,7 +14,6 @@ jQuery(document).ready(function () {
     }
 
     function multipleInstancesModel(data) {
-        var router = new Navigo(null, true, '#');
         var self = this;
         var selected;
         self.instances = ko.observableArray();
@@ -47,7 +46,7 @@ jQuery(document).ready(function () {
         }
         self.submit = function () {
             sessionStorage.selectedActive = selected.name;
-            router.navigate('subscriptions');
+            navigateRoute('subscriptions');
         }
     }
 

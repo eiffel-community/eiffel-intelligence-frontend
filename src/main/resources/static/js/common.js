@@ -1,4 +1,7 @@
+var router = new Navigo(null, true, '#');
 var frontendServiceUrl = $('#frontendServiceUrl').text();
+var frontendServiceBackEndPath = "/backend";
+var timerInterval;
 
 function addBackendParameter(url) {
     if (!sessionStorage.selectedActive) {
@@ -83,6 +86,128 @@ function formatUrl(host, port, https, contextPath) {
     return http + "://" + host + port + contextPath;
 }
 
+// Start ## Routing ##
+var routes = {};
+routes["subscriptions"] = function () {
+    updateBackEndInstanceList();
+    $(".app-header").removeClass("header-bar-hidden");
+    $(".main").load("subscriptionpage.html");
+};
+routes["test-rules"] = function () {
+    updateBackEndInstanceList();
+    $(".app-header").removeClass("header-bar-hidden");
+    $(".main").load("testRules.html");
+};
+routes["ei-info"] = function () {
+    updateBackEndInstanceList();
+    $(".app-header").removeClass("header-bar-hidden");
+    $(".main").load("eiInfo.html");
+};
+routes["switch-backend"] = function () {
+    $(".app-header").addClass("header-bar-hidden");
+    $(".main").load("switch-backend.html");
+};
+routes["add-backend"] = function () {
+    $(".app-header").addClass("header-bar-hidden");
+    $(".main").load("add-instances.html");
+};
+routes["login"] = function () {
+    updateBackEndInstanceList();
+    $(".app-header").removeClass("header-bar-hidden");
+    $(".main").load("login.html");
+};
+
+router.on({
+    'subscriptions': routes["subscriptions"],
+    'test-rules': routes["test-rules"],
+    'ei-info': routes["ei-info"],
+    'switch-backend': routes["switch-backend"],
+    'add-backend': routes["add-backend"],
+    'login': routes["login"],
+    '*': function () {
+        router.navigate('subscriptions');
+    }
+}).resolve();
+
+function reloadRoute() {
+    const currentUrl = router._lastRouteResolved.url;
+    routes[currentUrl]();
+}
+
+function navigateRoute(route) {
+    router.navigate(route);
+}
+// End ## Routing ##
+
+// Start ## Load Back end list ##
+function updateBackEndInstanceList() {
+    $.ajax({
+        url: frontendServiceUrl + frontendServiceBackEndPath,
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.logMessages("Failure when trying to load backend instances");
+        },
+        success: function (responseData, XMLHttpRequest, textStatus) {
+            var observableObject = $("#selectInstances")[0];
+            ko.cleanNode(observableObject);
+            ko.applyBindings(new viewModel(responseData), observableObject);
+        }
+    });
+}
+
+function singleInstanceModel(name, host, port, contextPath, https, active) {
+    this.name = ko.observable(name),
+        this.host = ko.observable(host),
+        this.port = ko.observable(port),
+        this.contextPath = ko.observable(contextPath),
+        this.https = ko.observable(https),
+        this.active = ko.observable(active),
+        this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
+}
+
+function viewModel(backendInstanceData) {
+    var self = this;
+    var currentName;
+    self.instances = ko.observableArray();
+    var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
+
+    for (var i = 0; i < jsonBackendInstanceData.length; i++) {
+        var instanceData = jsonBackendInstanceData[i];
+        var isActive = false;
+        var name = instanceData.name;
+        var host = instanceData.host;
+        var port = instanceData.port;
+        var https = instanceData.https;
+        var contextPath = instanceData.contextPath;
+
+        if ((instanceData.defaultBackend == true && !sessionStorage.selectedActive) ||
+            (sessionStorage.selectedActive && sessionStorage.selectedActive == name)) {
+            isActive = true;
+            currentName = instanceData.name;
+            sessionStorage.selectedActive = instanceData.name;
+        }
+
+        sessionStorage.setItem(name, formatUrl(host, port, https, contextPath));
+        var singleInstance = new singleInstanceModel(name, host, port, contextPath, https, isActive);
+        self.instances.push(singleInstance);
+    }
+
+    self.selectedActive = ko.observable(currentName);
+
+    self.onChange = function () {
+        if (typeof self.selectedActive() !== "undefined") {
+            sessionStorage.selectedActive = self.selectedActive();
+            location.reload();
+        } else {
+            $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
+        }
+    }
+}
+// End ## Load Back end list ##
+
+// Start ## Login and Security ##
 function doIfUserLoggedIn(user) {
     sessionStorage.removeItem("currentUser");
     sessionStorage.setItem("currentUser", user);
@@ -143,3 +268,30 @@ function checkLoggedInUser() {
     var contextPath = "/auth/login";
     ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
+// End ## Login and Security ##
+
+// Start ## Status Indicator ##
+var statusType = {
+    success: "alert-success",
+    info: "alert-info",
+    warning: "alert-warning",
+    danger: "alert-danger"
+};
+
+var statusText = {
+    backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
+    test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
+}
+
+function addStatusIndicator(statusType, statusText) {
+    var statusIndicator = $(".content")[0].previousElementSibling;
+    if (statusIndicator != null) {
+        $($(".content")[0].previousElementSibling).remove();
+    }
+    $(".content").before("<div class=\"subscription-alert alert " + statusType + "\">" + statusText + "</div>");
+}
+
+function removeStatusIndicator() {
+    $($(".content")[0].previousElementSibling).remove();
+}
+// End ## Status Indicator ##
