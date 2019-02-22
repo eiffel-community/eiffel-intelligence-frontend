@@ -18,7 +18,6 @@ import static junit.framework.TestCase.assertTrue;
 public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceChangeFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
-    private static final String JENKINS_JOB_XML = "jenkinsJobTemplate.xml";
 
     private ArrayList<String> jenkinsJobNames = new ArrayList<String>();
     private Config config = new Config();
