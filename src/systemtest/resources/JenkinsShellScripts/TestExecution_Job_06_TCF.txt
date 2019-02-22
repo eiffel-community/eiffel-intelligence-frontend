@@ -111,15 +111,20 @@ def jsonTCF2 = """
   {
     "msgParams": {
       "meta": {
-        "type": "EiffelTestCaseStartedEvent",
+        "type": "EiffelTestCaseFinishedEvent",
         "version": "1.1.0",
         "tags": []
       }
     },
     "eventParams": {
       "data": {
-        "executor": "",
-        "liveLogs": [],
+        "outcome": {
+          "verdict": "PASSED",
+          "conclusion": "SUCCESSFUL",
+          "description": "",
+          "metrics": []
+        },
+        "persistentLogs": [],
         "customData": []
       },
       "links": [

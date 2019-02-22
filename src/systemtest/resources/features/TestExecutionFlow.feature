@@ -50,8 +50,7 @@ Feature: Test Execution system test
     Then we send the "TestExecution_Subscription_05_TCT" to eiffel intelligence for creation.
 
     #####Add TestExecution_Subscription_06_TCF to EI#####
-    Given subscription object "TestExecution_Subscription_06_TCF" is created which will trigger "TestExecution_Job_07_Complete"
-    When notification with key "TEST_CONCLUSION" and value "test_suite[0].test_case[0].conclusion" is added to "TestExecution_Subscription_06_TCF"
+    Given subscription object "TestExecution_Subscription_06_TCF" is created which will trigger "TestExecution_Job_07_Complete" with no parameters
     And condition with jmespath "test_suite[0].test_case[0].conclusion == 'SUCCESSFUL'" is added to "TestExecution_Subscription_06_TCF"
     And condition with jmespath "test_suite[0].test_case[1].conclusion == 'SUCCESSFUL'" is added to "TestExecution_Subscription_06_TCF"
     Then we send the "TestExecution_Subscription_06_TCF" to eiffel intelligence for creation.
