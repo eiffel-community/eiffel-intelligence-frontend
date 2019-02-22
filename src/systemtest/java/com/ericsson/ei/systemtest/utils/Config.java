@@ -15,6 +15,21 @@ public class Config {
 
     private String eiFrontendBaseUrl;
     private String eiBackendBaseUrl;
+
+    private int jobTimeoutMilliseconds = 60000;
+
+    /**
+     * Initializes the configuration. Some configurations are set to default and some are mendatory.
+     * These are the current default configuration values:
+     * int jobTimeoutMilliseconds = 60000
+     */
+    public Config() {
+         String jobTimeoutMilliseconds = System.getProperty("job.timeout.milliseconds");
+         if(jobTimeoutMilliseconds != null) {
+             this.jobTimeoutMilliseconds = Integer.parseInt(jobTimeoutMilliseconds);
+         }
+    }
+
     /**
     *
     * This method retrieves the jenkins properties from the system properties.

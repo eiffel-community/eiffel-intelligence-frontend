@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -35,17 +36,17 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         config.initRemRemConfig();
     }
 
-    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
-    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
+    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created with parameters: (.*)$")
+    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, List<String> parameters) throws Throwable {
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,
                 config.getJenkinsBaseUrl(),
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
+                config.getRemremBaseUrl(),
                 JENKINS_TOKEN,
-                JENKINS_JOB_XML,
-                config.getRemremBaseUrl()
+                parameters
          );
 
         if (success) {
@@ -53,11 +54,6 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         }
 
         assertTrue("Failed to create jenkins job.", success);
-    }
-
-    @Then("^we continue with the next step$")
-    public void we_continue_with_the_next_step() {
-        //Just for cucumber to make sense
     }
 
     @Then("^subscriptions and jenkins jobs should be removed$")
@@ -88,18 +84,13 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
     }
 
-    @Given("^all previous tests passes\\.$")
-    public void all_previous_tests_passes() {
-        //Just for cucumber to make sense
+    @Given("^the jenkins job \"([^\"]*)\" is triggered$")
+    public void the_jenkins_job_is_triggered(String jenkinsJobToTrigger) throws Throwable {
+        StepsUtils.triggerJenkinsJob(jenkinsJobToTrigger, JENKINS_TOKEN);
     }
 
-    @When("^future story is done\\.$")
-    public void future_story_is_done() {
-
-    }
-
-    @Then("^everything should be fine\\.$")
-    public void everything_should_be_fine() {
-
+    @When("^all jenkins jobs has been triggered$")
+    public void the_jenkins_job_has_been_triggered() throws Throwable {
+        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames, config.getJobTimeoutMilliseconds());
     }
 }

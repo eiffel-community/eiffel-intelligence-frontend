@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -35,17 +36,17 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
         config.initRemRemConfig();
     }
 
-    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created$")
-    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName) throws Throwable {
+    @Given("^a jenkins job '\\\"([^\\\"]*)\\\"' from '\"([^\"]*)\"' is created with parameters: (.*)$")
+    public void a_jenkins_job_from_is_created(String jenkinsJobName, String scriptFileName, List<String> parameters) throws Throwable {
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,
                 config.getJenkinsBaseUrl(),
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
+                config.getRemremBaseUrl(),
                 JENKINS_TOKEN,
-                JENKINS_JOB_XML,
-                config.getRemremBaseUrl()
+                parameters
          );
 
         if (success) {

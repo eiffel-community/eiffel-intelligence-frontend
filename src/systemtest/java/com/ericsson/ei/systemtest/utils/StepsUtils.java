@@ -1,24 +1,29 @@
 package com.ericsson.ei.systemtest.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ericsson.eiffelcommons.JenkinsManager;
+import com.ericsson.eiffelcommons.helpers.JenkinsXmlData;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
 import com.ericsson.eiffelcommons.utils.HttpRequest;
 import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
 import com.ericsson.eiffelcommons.utils.ResponseEntity;
-import com.ericsson.eiffelcommons.utils.Utils;
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
@@ -39,19 +44,29 @@ public class StepsUtils {
     * @return boolean - If the creation was a success or not
      * @throws Exception
     */
-    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String jenkinsToken, String jenkinsJobXml, String remremBaseUrl) throws Exception {
+    public static boolean createJenkinsJob(String jenkinsJobName, String scriptFileName, String jenkinsBaseUrl, String jenkinsUsername, String jenkinsPassword, String remremBaseUrl, String jenkinsToken, List<String> parameters) throws Exception {
+        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
+        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
+
+        JenkinsXmlData jenkinsXmlData = new JenkinsXmlData()
+                .addJobToken(jenkinsToken)
+                .addSystemGrovyScript(script, false);
+
+
+        for (String parameter: parameters) {
+            jenkinsXmlData.addBuildParameter(parameter);
+        }
+
+        String jenkinsXmlAsString = jenkinsXmlData.getXmlAsString();
+
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
 
         if(!jenkinsManager.pluginExists("Groovy")) {
             jenkinsManager.installPlugin("Groovy", "2.1");
             jenkinsManager.restartJenkins();
         }
-        String script = new String(Files.readAllBytes(Paths.get(scriptFileName)));
-        script = script.replace("REMREM_BASE_URL_TO_BE_REPLACED", remremBaseUrl);
 
-        String xmlJobData = Utils.getResourceFileAsString(jenkinsJobXml);
-        xmlJobData = xmlJobData.replace("SCRIPT_TO_BE_REPLACED", script);
-        return jenkinsManager.forceCreateJob(jenkinsJobName, xmlJobData);
+        return jenkinsManager.forceCreateJob(jenkinsJobName, jenkinsXmlAsString);
     }
 
     /**
@@ -167,6 +182,69 @@ public class StepsUtils {
                 LOGGER.error("Failed to remove subscription: \"" + subscriptionName+ "\" from EI. Response: " + response.getBody());
             }
         }
+    }
+
+    /**
+     * Triggers a jenkins job with parameters.
+     *
+     * @param jenkinsJobToTrigger
+     * @param jenkinsToken
+     * @throws Exception
+     */
+    public static void triggerJenkinsJob(String jenkinsJobToTrigger, String jenkinsToken) throws Exception {
+        boolean success = jenkinsManager.buildJob(jenkinsJobToTrigger, jenkinsToken);
+        assertEquals("Was not able to trigger jenkins job", true, success);
+    }
+
+    /**
+     * Check if all jenkins jobs in a list of jenkins job names has been triggered
+     *
+     * @param jenkinsJobNames
+     * @throws Exception
+     */
+    public static void hasJenkinsJobsBeenTriggered(ArrayList<String> jenkinsJobNames, int timeoutMilliseconds) throws Exception {
+        for(int i=0; i<jenkinsJobNames.size(); i++) {
+            hasJenkinsJobBeenTriggered(jenkinsJobNames.get(i), timeoutMilliseconds);
+        }
+    }
+
+    /**
+     * Check if a single jenkins job has been triggered
+     *
+     * @param jenkinsJob
+     * @throws Exception
+     */
+    public static void hasJenkinsJobBeenTriggered(String jenkinsJob, int timeoutMilliseconds) throws Exception {
+        long maxTime = System.currentTimeMillis() + timeoutMilliseconds;
+
+        while(System.currentTimeMillis() < maxTime) {
+            try {
+                JSONObject status = jenkinsManager.getJenkinsBuildStatusData(jenkinsJob);
+                int duration = status.getInt("duration");
+                String result = status.getString("result");
+
+                if(result.equals("null")) {
+                    LOGGER.info(jenkinsJob + " triggered but not finished yet. Rechecking...");
+                    continue;
+                }
+
+                String infoMessage = jenkinsJob + " was triggered. Duration(ms): " + duration + ". Result: " + result;
+
+                boolean statusContainsParameters = status.has("actions") && status.getJSONArray("actions").length() != 0 && status.getJSONArray("actions").getJSONObject(0).has("parameters");
+                if (statusContainsParameters) {
+                    JSONArray parameters = status.getJSONArray("actions").getJSONObject(0).getJSONArray("parameters");
+                    infoMessage += " Parameters: " + parameters;
+                }
+
+                LOGGER.info(infoMessage);
+                return;
+            } catch (Exception e) {
+                TimeUnit.SECONDS.sleep(1);
+                continue;
+            }
+        }
+
+        throw new Exception("Jenkins job \"" + jenkinsJob + "\" was never triggered successfully.");
     }
 
     /**
