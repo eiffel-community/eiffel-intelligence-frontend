@@ -100,7 +100,12 @@ public class TestRulesPage extends PageBaseClass {
 
     public void clickRemoveRuleNumber(int number) {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule" + number)));
-        WebElement removeRuleButton = driver.findElement(By.id("Rule" + number)).findElement(By.className("fa-trash"));
+        WebElement removeRuleButton = driver.findElement(By.id("Rule" + number)).findElement(By.className("remove-item"));
+
+        // We need the following two lines in order to be sure that the remove event button is not obscured...
+        JavascriptExecutor jse2 = driver;
+        jse2.executeScript("arguments[0].scrollIntoView()", removeRuleButton);
+
         removeRuleButton.click();
     }
 
@@ -112,7 +117,7 @@ public class TestRulesPage extends PageBaseClass {
 
     public void clickRemoveEventNumber(int number) {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Events" + number)));
-        WebElement removeEventButton = driver.findElement(By.id("Events" + number)).findElement(By.className("fa-trash"));
+        WebElement removeEventButton = driver.findElement(By.id("Events" + number)).findElement(By.className("remove-item"));
 
         // We need the following two lines in order to be sure that the remove event button is not obscured...
         JavascriptExecutor jse2 = driver;

@@ -4,7 +4,6 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
-var timerInterval;
 
 jQuery(document).ready(function () {
 
@@ -92,28 +91,21 @@ jQuery(document).ready(function () {
     }
 
     // Check if EI Backend Server is online every X seconds
-    if (timerInterval == null) {
-        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    if(timerInterval != null) {
+        window.clearInterval(timerInterval);
     }
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if buttons should be enabled or disabled
     // Toggle warning text on and off
     // Check backend status to shrink or increase space for warning to show
     function toggleOnBackendStatus(backendStatus) {
-        if (!backendStatus && !$("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-9");
-            $("#btnEIContainer").parent().removeClass("col-md-3");
-            $("#subTitle").parent().addClass("col-md-4");
-            $("#btnEIContainer").parent().addClass("col-md-2");
+        if (!backendStatus) {
+            addStatusIndicator(statusType.danger, statusText.backend_down);
         }
-        if (backendStatus && $("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-4");
-            $("#btnEIContainer").parent().removeClass("col-md-2");
-            $("#subTitle").parent().addClass("col-md-9");
-            $("#btnEIContainer").parent().addClass("col-md-3");
-            reload_table();
+        if (backendStatus) {
+            removeStatusIndicator();
         }
-        $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
     }
 
@@ -123,12 +115,8 @@ jQuery(document).ready(function () {
     }
 
     function toggleButtonsDisabled(disabled) {
-        $('#addSubscription').prop("disabled", disabled);
-        $('#bulkDelete').prop("disabled", disabled);
-        $('#uploadSubscription').prop("disabled", disabled);
-        $('#getTemplateButton').prop("disabled", disabled);
-        $('#reloadButton').prop("disabled", disabled);
-        $('.table-btn').prop("disabled", disabled);
+        $('.main #subButtons button.btn').prop("disabled", disabled);
+        $('.main #table button.btn').prop("disabled", disabled);
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.

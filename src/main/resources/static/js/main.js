@@ -11,55 +11,9 @@ jQuery(document).ready(function () {
             });
         };
     }(jQuery));
-    // Used for navigation/routing. First parameter is used to set the main URL but can be set to null.
-    // Second is to set the use of hash to true or false. This uses and old routing approach with hash in the URL.
-    // Third specifies the hash character you want to use.
-    var router = new Navigo(null, true, '#');
+
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
     var frontendServiceUrl = $('#frontendServiceUrl').text();
-    var frontendServiceBackEndPath = "/backend";
-
-    var routes = {};
-    routes["subscriptions"] = function () {
-        updateBackEndInstanceList();
-        $(".app-header").removeClass("header-bar-hidden");
-        $(".main").load("subscriptionpage.html");
-    };
-    routes["test-rules"] = function () {
-        updateBackEndInstanceList();
-        $(".app-header").removeClass("header-bar-hidden");
-        $(".main").load("testRules.html");
-    };
-    routes["ei-info"] = function () {
-        updateBackEndInstanceList();
-        $(".app-header").removeClass("header-bar-hidden");
-        $(".main").load("eiInfo.html");
-    };
-    routes["switch-backend"] = function () {
-        $(".app-header").addClass("header-bar-hidden");
-        $(".main").load("switch-backend.html");
-    };
-    routes["add-backend"] = function () {
-        $(".app-header").addClass("header-bar-hidden");
-        $(".main").load("add-instances.html");
-    };
-    routes["login"] = function () {
-        updateBackEndInstanceList();
-        $(".app-header").removeClass("header-bar-hidden");
-        $(".main").load("login.html");
-    };
-
-    router.on({
-        'subscriptions': routes["subscriptions"],
-        'test-rules': routes["test-rules"],
-        'ei-info': routes["ei-info"],
-        'switch-backend': routes["switch-backend"],
-        'add-backend': routes["add-backend"],
-        'login': routes["login"],
-        '*': function () {
-            router.navigate('subscriptions');
-        }
-    }).resolve();
 
     $("#logoutBtn").click(function () {
         $.ajax({
@@ -73,23 +27,6 @@ jQuery(document).ready(function () {
             }
         });
     });
-
-    function updateBackEndInstanceList() {
-        $.ajax({
-            url: frontendServiceUrl + frontendServiceBackEndPath,
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Failure when trying to load backend instances");
-            },
-            success: function (responseData, XMLHttpRequest, textStatus) {
-                var observableObject = $("#selectInstances")[0];
-                ko.cleanNode(observableObject);
-                ko.applyBindings(new viewModel(responseData), observableObject);
-            }
-        });
-    }
 
     function loadDocumentLinks() {
         // eiffelDocumentationUrlLinks variable is configure in application.properties
@@ -118,55 +55,6 @@ jQuery(document).ready(function () {
     }
 
     init();
-
-    function singleInstanceModel(name, host, port, contextPath, https, active) {
-        this.name = ko.observable(name),
-            this.host = ko.observable(host),
-            this.port = ko.observable(port),
-            this.contextPath = ko.observable(contextPath),
-            this.https = ko.observable(https),
-            this.active = ko.observable(active),
-            this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
-    }
-
-    function viewModel(data) {
-        var self = this;
-        var currentName;
-        self.instances = ko.observableArray();
-        var json = JSON.parse(ko.toJSON(data));
-        var oldSelectedActive = self.selectedActive;
-        for (var i = 0; i < json.length; i++) {
-            var obj = json[i];
-            var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.contextPath, obj.https, obj.active);
-            self.instances.push(instance);
-            if (obj.active == true) {
-                currentName = obj.name;
-            }
-        }
-        self.selectedActive = ko.observable(currentName);
-        self.onChange = function () {
-            if (typeof self.selectedActive() !== "undefined") {
-                $.ajax({
-                    url: frontendServiceUrl + frontendServiceBackEndPath,
-                    type: "PUT",
-                    data: self.selectedActive(),
-                    contentType: 'application/json; charset=utf-8',
-                    cache: false,
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        self.selectedActive = oldSelectedActive;
-                        updateBackEndInstanceList();
-                        window.logMessages(XMLHttpRequest.responseText);
-                    },
-                    success: function (responseData, XMLHttpRequest, textStatus) {
-                        const currentUrl = router._lastRouteResolved.url;
-                        routes[currentUrl]();
-                    }
-                });
-            } else {
-                $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
-            }
-        }
-    }
 
     $('body').on('click', function (e) {
         if ($(e.target).data('toggle') !== 'tooltip' && $(e.target)[0].className !== 'tooltip-inner') {
