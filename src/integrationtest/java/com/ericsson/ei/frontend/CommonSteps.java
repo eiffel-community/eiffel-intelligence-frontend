@@ -164,7 +164,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         do {
             response = httpRequest.performRequest();
         } while (response.getStatusCode() == statusCode && stopTime > System.currentTimeMillis());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     }
 
     @Then("^request is saved to request list at index (\\d+)$")
