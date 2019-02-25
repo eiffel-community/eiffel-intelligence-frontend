@@ -6,12 +6,12 @@ Feature: Artifact system test
             triggered in order to know if all events has been aggregated correctly.
 
     Given configurations are provided
-    Then a jenkins job '"ArtC2Job"' from '"src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt"' is created with parameters: ,
-    And a jenkins job '"TCTJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCTScript.txt"' is created with parameters: EVENT_ID, TEST_CASE_NAME,
-    And a jenkins job '"TCSTCFJob"' from '"src/systemtest/resources/JenkinsShellScripts/TCSTCFScript.txt"' is created with parameters: EVENT_ID,
-    And a jenkins job '"CLMJob"' from '"src/systemtest/resources/JenkinsShellScripts/CLMScript.txt"' is created with parameters: EVENT_ID,
-    And a jenkins job '"ArtPJob"' from '"src/systemtest/resources/JenkinsShellScripts/ArtPScript.txt"' is created with parameters: EVENT_ID,
-    And a jenkins job '"FlowCompleteJob"' from '"src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt"' is created with parameters: EVENT_ID,
+    Then a jenkins job "ArtC2Job" from "src/systemtest/resources/JenkinsShellScripts/ArtC2Script.txt" is created with parameters: ,
+    And a jenkins job "TCTJob" from "src/systemtest/resources/JenkinsShellScripts/TCTScript.txt" is created with parameters: EVENT_ID, TEST_CASE_NAME,
+    And a jenkins job "TCSTCFJob" from "src/systemtest/resources/JenkinsShellScripts/TCSTCFScript.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "CLMJob" from "src/systemtest/resources/JenkinsShellScripts/CLMScript.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "ArtPJob" from "src/systemtest/resources/JenkinsShellScripts/ArtPScript.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "FlowCompleteJob" from "src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt" is created with parameters: EVENT_ID,
 
     #####Add CLMSubscription to EI#####
     Given subscription object "CLMSubscription" is created which will trigger "CLMJob"
@@ -51,5 +51,3 @@ Feature: Artifact system test
     When the jenkins job "ArtC2Job" is triggered
     Then all jenkins jobs has been triggered
     And subscriptions and jenkins jobs should be removed
-
-

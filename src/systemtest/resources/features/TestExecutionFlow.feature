@@ -6,6 +6,13 @@ Feature: Test Execution system test
             triggered in order to know if all events has been aggregated correctly.
 
     Given configurations are provided
+    Then a jenkins job "TestExecution_Job_01_ActT" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_01_ActT.txt" is created with parameters: ,
+    And a jenkins job "TestExecution_Job_02_ActF" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_02_ActF.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "TestExecution_Job_03_TERCC" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_03_TERCC.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "TestExecution_Job_04_TSS" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_04_TSS.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "TestExecution_Job_05_TCT" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_05_TCT.txt" is created with parameters: EVENT_ID,
+    And a jenkins job "TestExecution_Job_06_TCF" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_06_TCF.txt" is created with parameters: EVENT_ID_CASE1, EVENT_ID_CASE2
+    And a jenkins job "TestExecution_Job_07_Complete" from "src/systemtest/resources/JenkinsShellScripts/TestExecution_Job_07_Complete.txt" is created with parameters: ,
 
     #####Add TestExecution_Subscription_01_ActT to EI#####
     Given subscription object "TestExecution_Subscription_01_ActT" is created which will trigger "TestExecution_Job_02_ActF"
@@ -43,8 +50,7 @@ Feature: Test Execution system test
     Then we send the "TestExecution_Subscription_05_TCT" to eiffel intelligence for creation.
 
     #####Add TestExecution_Subscription_06_TCF to EI#####
-    Given subscription object "TestExecution_Subscription_06_TCF" is created which will trigger "TestExecution_Job_07_Complete"
-    When notification with key "TEST_CONCLUSION" and value "test_suite[0].test_case[0].conclusion" is added to "TestExecution_Subscription_06_TCF"
+    Given subscription object "TestExecution_Subscription_06_TCF" is created which will trigger "TestExecution_Job_07_Complete" with no parameters
     And condition with jmespath "test_suite[0].test_case[0].conclusion == 'SUCCESSFUL'" is added to "TestExecution_Subscription_06_TCF"
     And condition with jmespath "test_suite[0].test_case[1].conclusion == 'SUCCESSFUL'" is added to "TestExecution_Subscription_06_TCF"
     Then we send the "TestExecution_Subscription_06_TCF" to eiffel intelligence for creation.
