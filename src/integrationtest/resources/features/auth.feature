@@ -43,7 +43,7 @@ Feature: Authentication test
     # Check: First user is still logged in
     When request is performed from request list at index 0
     Then response code 200 is received
-    And response body '{"user":"newton"}' is received
+    And response body '{"user":"gauss"}' is received
 
     # Action: First user logging out
     When '/auth/logout' endpoint is set in request list at index 0
@@ -53,7 +53,7 @@ Feature: Authentication test
     # Check: Second user is still logged in
     When request is performed from request list at index 1
     Then response code 200 is received
-    And response body '{"user":"gauss"}' is received
+    And response body '{"user":"newton"}' is received
 
     # Check: First user proved logged out
     When '/auth/login' endpoint is set in request list at index 0
