@@ -27,7 +27,7 @@ public class PropertiesHandler {
                               .toString();
             String valueInFile = entry.getValue()
                                       .toString();
-            String value = getPriorityValue(key, valueInFile);
+            String value = getPrioritizedValue(key, valueInFile);
             System.setProperty(key, value);
         }
     }
@@ -44,7 +44,7 @@ public class PropertiesHandler {
      *
      * @return property value
      */
-    public static String getPriorityValue(String key, String value) {
+    public static String getPrioritizedValue(String key, String value) {
         boolean environmentPropertyExist = (System.getenv(key) != null);
         boolean systemPropertyExist = (System.getProperty(key) != null);
 
