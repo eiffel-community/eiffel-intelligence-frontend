@@ -1,0 +1,83 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActS/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathActS = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityStartedEvent";
+def jsonActS = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelActivityStartedEvent",
+        "version": "1.1.0",
+        "tags": []
+      }
+    },
+    "eventParams": {
+      "data": {
+        "liveLogs": [],
+        "customData": []
+      },
+      "links": [
+        {
+          "type": "ACTIVITY_EXECUTION",
+          "target": \"""" + build.environment.EVENT_ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathActS, jsonActS);
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActF/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathActF = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityFinishedEvent";
+def jsonActF = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelActivityFinishedEvent",
+        "version": "1.1.0",
+        "tags": []
+      }
+    },
+    "eventParams": {
+      "data": {
+        "outcome": {
+          "conclusion": "SUCCESSFUL",
+          "description": ""
+        },
+        "persistentLogs": [],
+        "customData": []
+      },
+      "links": [
+        {
+          "type": "ACTIVITY_EXECUTION",
+          "target": \"""" + build.environment.EVENT_ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathActF, jsonActF);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}
