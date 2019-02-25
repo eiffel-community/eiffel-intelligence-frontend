@@ -40,19 +40,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WebControllerUtils {
 
-    @Value("${ei.frontendServiceHost:#{null}}")
+    @Value("${ei.frontend.service.host:#{null}}")
     private String frontendServiceHost;
 
-    @Value("${ei.frontendServicePort:#{null}}")
+    @Value("${ei.frontend.service.port:#{null}}")
     private int frontendServicePort;
 
-    @Value("${ei.frontendContextPath:#{null}}")
+    @Value("${ei.frontend.context.path:#{null}}")
     private String frontendContextPath;
 
-    @Value("${ei.useSecureHttpFrontend:#{null}}")
+    @Value("${ei.use.secure.http.frontend:#{null}}")
     private boolean useSecureHttpFrontend;
 
-    @Value("${ei.eiffelDocumentationUrls:#{null}}")
+    @Value("${ei.eiffel.documentation.urls:#{null}}")
     private String eiffelDocumentationUrls;
 
     @Value("${build.version:#{null}}")

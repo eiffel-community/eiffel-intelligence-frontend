@@ -11,33 +11,64 @@ jdk:
 env:
   - EI_BACKEND_PORT=8099 MONGODB_PORT=27017 RABBITMQ_AMQP_PORT=5672 RABBITMQ_WEB_PORT=15672 EIFFEL_ER_PORT=8084 JENKINS_PORT=8081 MAIL_SMTP_PORT=1025 MAIL_WEB_PORT=8025
 
+
+# Using default 'test' stage for our tests, and only running deploy stage
+# (after merge) on master branch
+stages:
+  - test
+  - name: deploy
+    if: branch = master
+
+
 before_install:
-  - chmod +x pom.xml
   - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
   - cd eiffel-intelligence
   - docker-compose up -d
+
+
+install:
+  - chmod +x pom.xml
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - cd target
   - export EIFFEL_WAR=$(ls *.war)
   - java -Dspring.config.location=file:../../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
   - cd ../..
 
-script:
-  - "mvn verify -Dei.backendInstancesListJsonContent=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
 
 after_script:
   - cd eiffel-intelligence
   - docker-compose down
   - fuser -k ${EI_BACKEND_PORT}/tcp
 
+
+# Generate site documentation using mvn site plugin
 before_deploy:
   - rm -rf docs
   - mvn site -B
 
-deploy:
-  skip_cleanup: true
-  provider: pages
-  github-token: $GITHUB_TOKEN
-  local_dir: docs/
-  on:
-    branch: master
+
+# List of jobs to run, tied to specific stages
+jobs:
+  include:
+    - stage: test
+      name: functionalTests
+      before_install: skip
+      install: skip
+      script:
+        - mvn test -B
+      after_script: skip
+    - stage: test
+      name: integrationTests
+      script:
+        - "mvn verify -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
+    - stage: deploy
+      name: deployGitHubPages
+      before_install: skip    # do not run again
+      install: skip           # do not run again
+      script: skip            # do not run default test scripts
+      after_script: skip      # do not run again
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github-token: $GITHUB_TOKEN
+        local_dir: docs/
