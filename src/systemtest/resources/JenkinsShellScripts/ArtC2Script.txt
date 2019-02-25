@@ -5,7 +5,7 @@ def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 ///////////////////////////////////////SCC2/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathSCC2 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeCreatedEvent";
+def uriPathSCC2 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent";
 def jsonSCC2 = """{
   "msgParams": {
     "meta": {
@@ -63,7 +63,7 @@ SCC2ID = generateEiffelEventAndPublish(uriPathSCC2, jsonSCC2);
 ///////////////////////////////////////SCC1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathSCC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeCreatedEvent';
+def uriPathSCC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent';
 def jsonSCC1 = """
   {
     "msgParams": {
@@ -122,7 +122,7 @@ SCC1ID = generateEiffelEventAndPublish(uriPathSCC1, jsonSCC1);
 ///////////////////////////////////////SCS1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathSCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelSourceChangeSubmittedEvent';
+def uriPathSCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeSubmittedEvent';
 def jsonSCS1 = """
   {
     "msgParams": {
@@ -181,7 +181,7 @@ SCS1ID = generateEiffelEventAndPublish(uriPathSCS1, jsonSCS1);
 ///////////////////////////////////////CDef1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathCDef1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelCompositionDefinedEvent';
+def uriPathCDef1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelCompositionDefinedEvent';
 def jsonCDef1 = """
   {
     "msgParams": {
@@ -218,7 +218,7 @@ CDef1ID = generateEiffelEventAndPublish(uriPathCDef1, jsonCDef1);
 ///////////////////////////////////////ArtC1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathArtC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactCreatedEvent';
+def uriPathArtC1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelArtifactCreatedEvent';
 def jsonArtC1 = """
   {
     "msgParams": {
@@ -260,7 +260,7 @@ ArtC1ID = generateEiffelEventAndPublish(uriPathArtC1, jsonArtC1);
 ///////////////////////////////////////CDef2/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathCDef2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelCompositionDefinedEvent';
+def uriPathCDef2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelCompositionDefinedEvent';
 def jsonCDef2 = """
   {
     "msgParams": {
@@ -297,7 +297,7 @@ CDef2ID = generateEiffelEventAndPublish(uriPathCDef2, jsonCDef2);
 ///////////////////////////////////////ArtC2/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathArtC2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelArtifactCreatedEvent';
+def uriPathArtC2 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelArtifactCreatedEvent';
 def jsonArtC2 = """
   {
     "msgParams": {

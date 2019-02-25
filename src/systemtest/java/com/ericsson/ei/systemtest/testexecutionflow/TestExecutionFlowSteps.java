@@ -1,4 +1,4 @@
-package com.ericsson.ei.systemtest.artifactflow;
+package com.ericsson.ei.systemtest.testexecutionflow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,8 +20,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 @Ignore
-public class ArtifactFlowSteps extends AbstractTestExecutionListener{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactFlowSteps.class);
+public class TestExecutionFlowSteps extends AbstractTestExecutionListener{
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestExecutionFlowSteps.class);
     private static final String JENKINS_TOKEN = "123";
     private static final String JENKINS_JOB_XML = "jenkinsJobTemplate.xml";
 
@@ -63,8 +63,8 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
-        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
+    public void subscription_is_created(String subscriptionName, String jenkinsJobName) throws Throwable {
+        StepsUtils.createSubscription(subscriptionName, jenkinsJobName, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
     }
 
     @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
@@ -82,15 +82,5 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener{
         ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
 
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
-    }
-
-    @Given("^the jenkins job \"([^\"]*)\" is triggered$")
-    public void the_jenkins_job_is_triggered(String jenkinsJobToTrigger) throws Throwable {
-        StepsUtils.triggerJenkinsJob(jenkinsJobToTrigger, JENKINS_TOKEN);
-    }
-
-    @When("^all jenkins jobs has been triggered$")
-    public void the_jenkins_job_has_been_triggered() throws Throwable {
-        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames, config.getJobTimeoutMilliseconds());
     }
 }

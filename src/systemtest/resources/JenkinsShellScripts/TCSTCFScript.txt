@@ -5,7 +5,7 @@ def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 ///////////////////////////////////////TCS1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathTCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelTestCaseStartedEvent';
+def uriPathTCS1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelTestCaseStartedEvent';
 def jsonTCS1 = """
   {
     "msgParams": {
@@ -44,7 +44,7 @@ generateEiffelEventAndPublish(uriPathTCS1, jsonTCS1);
 ///////////////////////////////////////TCF1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-def uriPathTCF1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&amp;msgType=EiffelTestCaseFinishedEvent';
+def uriPathTCF1 = baseUrl + '/generateAndPublish?mp=eiffelsemantics&msgType=EiffelTestCaseFinishedEvent';
 def jsonTCF1 = """
   {
     "msgParams": {

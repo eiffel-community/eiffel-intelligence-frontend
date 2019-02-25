@@ -1,0 +1,4 @@
+import hudson.model.*
+def out = getBinding().out;
+
+out.println("Systemtest for artifact flow success");
