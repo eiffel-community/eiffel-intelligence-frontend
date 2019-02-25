@@ -152,7 +152,7 @@ public class EIRequestsControllerUtils {
         List<NameValuePair> processedParams = new ArrayList<>();
         for (NameValuePair param : params) {
             String name = param.getName(), value = param.getValue();
-            if (name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME) || name == null || value == null) {
+            if (name == null || value == null || name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME)) {
                 continue;
             }
             processedParams.add(new BasicNameValuePair(name, value));

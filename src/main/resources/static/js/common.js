@@ -7,15 +7,15 @@ function addBackendParameter(url) {
     if (!sessionStorage.selectedActive) {
         return url;
     }
-    var delimeter = "";
+    var delimiter = "";
     var parameterKey = "backendname";
 
     if (url.includes("?")) {
-        delimeter = "&";
+        delimiter = "&";
     } else {
-        delimeter = "?";
+        delimiter = "?";
     }
-    url = url + delimeter + parameterKey + "=" + sessionStorage.selectedActive;
+    url = url + delimiter + parameterKey + "=" + sessionStorage.selectedActive;
     return url;
 }
 
@@ -66,8 +66,9 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
 
 function formatUrl(host, port, https, contextPath) {
     var http = "http";
-    if (https == true || https == "https") {
-        http  = http + "s";
+    var useHttps = (https == true || https == "https");
+    if (useHttps) {
+        http  = "https";
     }
     if (contextPath) {
         if (contextPath.charAt(0) != "/"){
@@ -169,7 +170,6 @@ function singleInstanceModel(name, host, port, contextPath, https, active) {
 
 function viewModel(backendInstanceData) {
     var self = this;
-    var currentName;
     self.instances = ko.observableArray();
     var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
 
@@ -182,11 +182,13 @@ function viewModel(backendInstanceData) {
         var https = instanceData.https;
         var contextPath = instanceData.contextPath;
 
-        if ((instanceData.defaultBackend == true && !sessionStorage.selectedActive) ||
-            (sessionStorage.selectedActive && sessionStorage.selectedActive == name)) {
+        var thisInstanceShouldBeSelectedAsActive =
+            instanceData.defaultBackend == true && !sessionStorage.selectedActive ||
+            sessionStorage.selectedActive && sessionStorage.selectedActive == name;
+
+        if (thisInstanceShouldBeSelectedAsActive) {
             isActive = true;
-            currentName = instanceData.name;
-            sessionStorage.selectedActive = instanceData.name;
+            sessionStorage.selectedActive = name;
         }
 
         sessionStorage.setItem(name, formatUrl(host, port, https, contextPath));
@@ -194,7 +196,7 @@ function viewModel(backendInstanceData) {
         self.instances.push(singleInstance);
     }
 
-    self.selectedActive = ko.observable(currentName);
+    self.selectedActive = ko.observable(sessionStorage.selectedActive);
 
     self.onChange = function () {
         if (typeof self.selectedActive() !== "undefined") {
