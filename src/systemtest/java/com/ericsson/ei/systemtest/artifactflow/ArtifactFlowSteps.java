@@ -32,9 +32,10 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener {
         config.initRemRemConfig();
     }
 
-    @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob) throws Throwable {
-        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), config.getJenkinsBaseUrl());
+    @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
+    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
+        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), 
+                                      config.getJenkinsBaseUrl(), !hasParameters.isEmpty());
     }
 
     @Given("^the jenkins job \"([^\"]*)\" is triggered$")
