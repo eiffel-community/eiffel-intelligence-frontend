@@ -99,11 +99,17 @@ public class StepsUtils {
      * @throws IOException
      * @throws JSONException
      */
-    public static void createSubscription(String subscriptionName, String nameOfJobToBeTriggered, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl) throws IOException, JSONException {
+    public static void createSubscription(String subscriptionName, String nameOfJobToBeTriggered, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl, boolean hasParameters) throws IOException, JSONException {
         RestPostSubscriptionObject subscription = new RestPostSubscriptionObject(subscriptionName);
         subscription.setRestPostBodyMediaType("application/x-www-form-urlencoded");
         subscription.setBasicAuth(jenkinsUserame, jenkinsPassword);
-        subscription.setNotificationMeta(jenkinsBaseUrl + "/job/" + nameOfJobToBeTriggered + "/buildWithParameters");
+        String notificationMeta = jenkinsBaseUrl + "/job/" + nameOfJobToBeTriggered;
+        if(hasParameters) {
+            notificationMeta += "/buildWithParameters";
+        } else {
+            notificationMeta += "/build";
+        }
+        subscription.setNotificationMeta(notificationMeta);
         subscriptions.put(subscriptionName, subscription);
     }
 
