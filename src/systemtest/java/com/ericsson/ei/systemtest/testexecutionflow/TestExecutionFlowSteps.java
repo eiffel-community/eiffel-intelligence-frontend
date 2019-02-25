@@ -33,9 +33,9 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener {
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
-    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String noParameters) throws Throwable {
+    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
         StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), 
-                                      config.getJenkinsBaseUrl(), noParameters.isEmpty());
+                                      config.getJenkinsBaseUrl(), !hasParameters.isEmpty());
     }
 
     @Given("^the jenkins job \"([^\"]*)\" is triggered$")
