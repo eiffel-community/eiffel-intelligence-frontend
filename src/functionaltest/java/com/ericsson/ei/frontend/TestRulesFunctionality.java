@@ -52,7 +52,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         int portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = driver;
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
@@ -137,7 +137,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @AfterClass
     public static void tearDownMocks() throws IOException {
         mockClient.stop();
-        mockServer.stop();
     }
 
 }

@@ -12,8 +12,8 @@ jQuery(document).ready(function () {
             this.active = ko.observable(active)
         this.defaultBackend = ko.observable(defaultBackend)
     }
+
     function multipleInstancesModel(data) {
-        var router = new Navigo(null, true, '#');
         var self = this;
         var selected;
         self.instances = ko.observableArray();
@@ -45,21 +45,11 @@ jQuery(document).ready(function () {
             });
         }
         self.submit = function () {
-            $.ajax({
-                url: frontendServiceUrl + frontendServiceBackEndPath,
-                type: "PUT",
-                data: selected.name,
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    window.logMessages(XMLHttpRequest.responseText);
-                },
-                success: function (responseData, XMLHttpRequest, textStatus) {
-                    router.navigate('subscriptions');
-                }
-            });
+            sessionStorage.selectedActive = selected.name;
+            navigateRoute('subscriptions');
         }
     }
+
     $.ajax({
         url: frontendServiceUrl + frontendServiceBackEndPath,
         type: "GET",

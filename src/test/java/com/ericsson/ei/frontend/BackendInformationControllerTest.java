@@ -49,7 +49,6 @@ public class BackendInformationControllerTest {
 
     private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
-    private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
 
     private static final String PATH_FOR_BACK_END_INFORMATION = "/backend";
 
@@ -61,14 +60,12 @@ public class BackendInformationControllerTest {
 
     private JsonObject instance;
     private JsonArray instances;
-    private JsonArray instancesWithActive;
     private List<BackEndInformation> information;
 
     @Before
     public void before() throws Exception {
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
-        instancesWithActive = new JsonParser().parse(new FileReader(BACKEND_RESPONSE_INSTANCES_FILE_PATH)).getAsJsonArray();
         information = new ArrayList<>();
         for(JsonElement element : instances) {
             information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
@@ -81,17 +78,7 @@ public class BackendInformationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(PATH_FOR_BACK_END_INFORMATION)
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().string(instancesWithActive.toString()))
-            .andReturn();
-    }
-
-    @Test
-    public void testSwitchInstance() throws Exception {
-        when(utils.getBackEndInformationList()).thenReturn(information);
-        mockMvc.perform(MockMvcRequestBuilders.put(PATH_FOR_BACK_END_INFORMATION)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instancesWithActive.toString()))
-            .andExpect(status().isOk())
+            .andExpect(content().string(instances.toString()))
             .andReturn();
     }
 

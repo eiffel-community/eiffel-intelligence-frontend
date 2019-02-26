@@ -3,6 +3,90 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServiceBackEndPath = "/backend";
 var timerInterval;
 
+function addBackendParameter(url) {
+    if (!sessionStorage.selectedActive) {
+        return url;
+    }
+    var delimiter = "";
+    var parameterKey = "backendname";
+
+    if (url.includes("?")) {
+        delimiter = "&";
+    } else {
+        delimiter = "?";
+    }
+    url = url + delimiter + parameterKey + "=" + sessionStorage.selectedActive;
+    return url;
+}
+
+// /Start ## Global AJAX Sender function ##################################
+var AjaxHttpSender = function () { };
+
+// This function is to be used for every rest call going through the bridge except drawTable
+// in subscription.js.
+// In callback beforeSend, complete, error and success is optional.
+AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback, contentType, dataType) {
+    if (!contentType) {
+        contentType = "application/json; charset=utf-8";
+    }
+    if (!dataType) {
+        dataType = "json";
+    }
+    url = addBackendParameter(frontendServiceUrl+contextPath)
+    $.ajax({
+        url: url,
+        type: type,
+        data: data,
+        contentType: contentType,
+        dataType: dataType,
+        cache: false,
+        beforeSend: function (XMLHttpRequest) {
+            if(typeof callback.beforeSend === 'function') {
+                callback.beforeSend(XMLHttpRequest);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            if(typeof callback.error === 'function') {
+                callback.error(XMLHttpRequest, textStatus, errorThrown);
+            }
+        },
+        success: function (responseData, textStatus) {
+            if(typeof callback.success === 'function') {
+                callback.success(responseData, textStatus);
+            }
+        },
+        complete: function (XMLHttpRequest, textStatus) {
+            if(typeof callback.complete === 'function') {
+                callback.complete(XMLHttpRequest, textStatus);
+            }
+        }
+    });
+}
+// /Stop ## Global AJAX Sender function ##################################
+
+function formatUrl(host, port, useHttps, contextPath) {
+    var protocol = "http";
+    if (useHttps) {
+        protocol = "https";
+    }
+
+    if (contextPath) {
+        if (contextPath.charAt(0) != "/"){
+            contextPath = "/" + contextPath;
+        }
+    } else {
+        contextPath = "";
+    }
+
+    if (port) {
+        port = ":" + port;
+    } else {
+        port = "";
+    }
+
+    return protocol + "://" + host + port + contextPath;
+}
+
 // Start ## Routing ##
 var routes = {};
 routes["subscriptions"] = function () {
@@ -84,38 +168,40 @@ function singleInstanceModel(name, host, port, contextPath, https, active) {
         this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
 }
 
-function viewModel(data) {
+function viewModel(backendInstanceData) {
     var self = this;
-    var currentName;
     self.instances = ko.observableArray();
-    var json = JSON.parse(ko.toJSON(data));
-    var oldSelectedActive = self.selectedActive;
-    for (var i = 0; i < json.length; i++) {
-        var obj = json[i];
-        var instance = new singleInstanceModel(obj.name, obj.host, obj.port, obj.contextPath, obj.https, obj.active);
-        self.instances.push(instance);
-        if (obj.active == true) {
-            currentName = obj.name;
+    var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
+
+    for (var i = 0; i < jsonBackendInstanceData.length; i++) {
+        var instanceData = jsonBackendInstanceData[i];
+        var isActive = false;
+        var name = instanceData.name;
+        var host = instanceData.host;
+        var port = instanceData.port;
+        var https = instanceData.https;
+        var contextPath = instanceData.contextPath;
+
+        var thisInstanceShouldBeSelectedAsActive =
+            instanceData.defaultBackend == true && !sessionStorage.selectedActive ||
+            sessionStorage.selectedActive && sessionStorage.selectedActive == name;
+
+        if (thisInstanceShouldBeSelectedAsActive) {
+            isActive = true;
+            sessionStorage.selectedActive = name;
         }
+
+        sessionStorage.setItem(name, formatUrl(host, port, https, contextPath));
+        var singleInstance = new singleInstanceModel(name, host, port, contextPath, https, isActive);
+        self.instances.push(singleInstance);
     }
-    self.selectedActive = ko.observable(currentName);
+
+    self.selectedActive = ko.observable(sessionStorage.selectedActive);
+
     self.onChange = function () {
         if (typeof self.selectedActive() !== "undefined") {
-            $.ajax({
-                url: frontendServiceUrl + frontendServiceBackEndPath,
-                type: "PUT",
-                data: self.selectedActive(),
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    self.selectedActive = oldSelectedActive;
-                    updateBackEndInstanceList();
-                    window.logMessages(XMLHttpRequest.responseText);
-                },
-                success: function (responseData, XMLHttpRequest, textStatus) {
-                    reloadRoute();
-                }
-            });
+            sessionStorage.selectedActive = self.selectedActive();
+            location.reload();
         } else {
             $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
         }
@@ -125,8 +211,8 @@ function viewModel(data) {
 
 // Start ## Login and Security ##
 function doIfUserLoggedIn(user) {
-    localStorage.removeItem("currentUser");
-    localStorage.setItem("currentUser", user);
+    sessionStorage.removeItem("currentUser");
+    sessionStorage.setItem("currentUser", user);
     $("#userItem").show();
     $("#userItem").addClass("user-login");
     $("#ldapUserName").text(user);
@@ -136,14 +222,14 @@ function doIfUserLoggedIn(user) {
 }
 
 function doIfUserLoggedOut() {
-    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("currentUser");
     $("#userItem").show();
     $("#userItem").removeClass("user-login");
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
     $(".show_if_authorized").hide();
-    localStorage.setItem('errorsStore', []);
+    sessionStorage.setItem('errorsStore', []);
 }
 
 function doIfSecurityOff() {
@@ -152,38 +238,37 @@ function doIfSecurityOff() {
 }
 
 function checkBackendSecured() {
-    $.ajax({
-        url: frontendServiceUrl + "/auth",
-        type: "GET",
-        contentType: "application/string; charset=utf-8",
-        error: function (data) {
-            doIfSecurityOff();
-        },
-        success: function (data) {
-            var isSecured = JSON.parse(ko.toJSON(data)).security;
+    var callback = {
+        success: function (responseData, textStatus) {
+            var isSecured = JSON.parse(ko.toJSON(responseData)).security;
             if (isSecured == true) {
                 checkLoggedInUser();
             } else {
                 doIfSecurityOff();
             }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            doIfSecurityOff();
         }
-    });
+    };
+    var ajaxHttpSender = new AjaxHttpSender();
+    var contextPath = "/auth";
+    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
 
 function checkLoggedInUser() {
-    $.ajax({
-        url: frontendServiceUrl + "/auth/login",
-        type: "GET",
-        contentType: 'application/string; charset=utf-8',
-        cache: false,
-        error: function (request, textStatus, errorThrown) {
-            doIfUserLoggedOut();
-        },
+    var callback = {
         success: function (responseData, textStatus) {
-            var user = JSON.parse(ko.toJSON(responseData)).user;
-            doIfUserLoggedIn(user);
+            var userFromBackEnd = responseData.user;
+            doIfUserLoggedIn(userFromBackEnd);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            doIfUserLoggedOut();
         }
-    });
+    };
+    var ajaxHttpSender = new AjaxHttpSender();
+    var contextPath = "/auth/login";
+    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
 // End ## Login and Security ##
 

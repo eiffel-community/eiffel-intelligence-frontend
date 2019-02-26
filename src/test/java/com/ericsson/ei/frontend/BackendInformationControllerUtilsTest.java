@@ -54,8 +54,6 @@ public class BackendInformationControllerUtilsTest {
 
     private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
-    private static final String BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedResponseInstances.json";
-    private static final String NOT_DEFAULT_BACKEND_RESPONSE_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/expectedNotDefaultResponseInstances.json";
 
     @MockBean
     private BackEndInstancesUtils backEndInstancesUtils;
@@ -78,10 +76,6 @@ public class BackendInformationControllerUtilsTest {
     public void before() throws Exception {
         instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
-        instancesWithActive = new JsonParser().parse(new FileReader(BACKEND_RESPONSE_INSTANCES_FILE_PATH))
-                .getAsJsonArray();
-        instancesWithNotDefaultActive = new JsonParser()
-                .parse(new FileReader(NOT_DEFAULT_BACKEND_RESPONSE_INSTANCES_FILE_PATH)).getAsJsonArray();
 
         mockedRequest = Mockito.mock(HttpServletRequest.class);
         mockedSession = Mockito.mock(HttpSession.class);
@@ -101,24 +95,7 @@ public class BackendInformationControllerUtilsTest {
         ResponseEntity<String> response;
         ResponseEntity<String> expectedResponse;
 
-        // Test where active name is given.
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn("someName");
-        expectedResponse = createExpectedResponse(instancesWithNotDefaultActive.toString(), HttpStatus.OK);
-        response = backendInfoContrUtils.handleRequestForInstances(mockedRequest);
-        assertEquals(expectedResponse, response);
-
-        // Test where active name is null
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn(null);
-        expectedResponse = createExpectedResponse(instancesWithActive.toString(), HttpStatus.OK);
-        response = backendInfoContrUtils.handleRequestForInstances(mockedRequest);
-        assertEquals(expectedResponse, response);
-
-        // There are nothing to load.
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn(null);
-        when(backEndInstancesUtils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
-        expectedResponse = createExpectedResponse(
-                "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"contextPath\":\"/\"}]",
-                HttpStatus.OK);
+        expectedResponse = createExpectedResponse(instances.toString(), HttpStatus.OK);
         response = backendInfoContrUtils.handleRequestForInstances(mockedRequest);
         assertEquals(expectedResponse, response);
     }
