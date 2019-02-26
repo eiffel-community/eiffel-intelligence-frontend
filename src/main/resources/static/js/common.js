@@ -65,9 +65,9 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
 // /Stop ## Global AJAX Sender function ##################################
 
 function formatUrl(host, port, useHttps, contextPath) {
-    var scheme = "http";
+    var protocol = "http";
     if (useHttps) {
-        scheme = "https";
+        protocol = "https";
     }
 
     if (contextPath) {
@@ -84,7 +84,7 @@ function formatUrl(host, port, useHttps, contextPath) {
         port = "";
     }
 
-    return scheme + "://" + host + port + contextPath;
+    return protocol + "://" + host + port + contextPath;
 }
 
 // Start ## Routing ##
