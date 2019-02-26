@@ -46,8 +46,9 @@ import cucumber.api.java.en.When;
 public class CommonSteps extends AbstractTestExecutionListener {
 
     @LocalServerPort
-    private int frontendPort;
-    private String frontendHost = "http://localhost";
+    private int frontEndPort;
+    private String frontEndHost = "localhost";
+    private String protocol = "http";
     private String baseURL;
     private String rabbitHost;
     private int rabbitPort;
@@ -69,7 +70,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Before
     public void beforeAllScenarios() {
-        baseURL = String.join(":", frontendHost, String.valueOf(frontendPort));
+        baseURL = String.format("%s://%s:%d", protocol, frontEndHost, frontEndPort);
     }
 
     @Before("@QueryByIdScenario or @QueryFreestyleScenario")
@@ -84,8 +85,8 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Given("^frontend is up and running$")
     public void frontend_running() {
-        LOGGER.debug("Front-end port: {}", frontendPort);
-        assertEquals(true, frontendPort != 0);
+        LOGGER.debug("Front-end port: {}", frontEndPort);
+        assertEquals(true, frontEndPort != 0);
     }
 
     @Given("^an aggregated object is created$")
