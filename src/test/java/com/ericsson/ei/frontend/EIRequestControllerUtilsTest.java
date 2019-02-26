@@ -50,21 +50,16 @@ public class EIRequestControllerUtilsTest {
 
     private HttpServletRequest  mockedRequest;
 
-    private HttpSession  mockedSession;
-
     //private BackEndInformation backendInformation;
 
     @Before
     public void beforeClass() {
-        BackEndInformation backendInformation = new BackEndInformation("TestName", "TestHost", "12345", "", false, false);
+        BackEndInformation backendInformation = new BackEndInformation("TestName", "TestHost", "12345", "", false, true);
         BackEndInformation backendInformationNull = new BackEndInformation("NullName", "NullHost", "12345", "", false, false);
         mockedRequest = Mockito.mock(HttpServletRequest.class);
-        mockedSession = Mockito.mock(HttpSession.class);
 
         when(backEndInstancesUtils.getBackEndInformationByName("TestName")).thenReturn(backendInformation);
         when(backEndInstancesUtils.getBackEndInformationByName(null)).thenReturn(backendInformationNull);
-
-        when(mockedRequest.getSession()).thenReturn(mockedSession);
 
         when(mockedRequest.getMethod()).thenReturn("Test");
     }
@@ -73,32 +68,28 @@ public class EIRequestControllerUtilsTest {
     public void testGetEIRequestURL() throws Exception {
         String url = null;
 
-        // Test name TestName and no querystring.
-        when(mockedRequest.getServletPath()).thenReturn("/subscription");
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn("TestName");
-        when(mockedRequest.getQueryString()).thenReturn(null);
-        url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
-        assertEquals("http://TestHost:12345/subscription", url);
-
         // Test name null and no querystring.
         when(mockedRequest.getServletPath()).thenReturn("/subscription");
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn(null);
         when(mockedRequest.getQueryString()).thenReturn(null);
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
         assertEquals("http://NullHost:12345/subscription", url);
 
         // Test name TestName and querystring.
         when(mockedRequest.getServletPath()).thenReturn("/query");
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn("TestName");
         when(mockedRequest.getQueryString()).thenReturn("someQuary=Something");
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
-        assertEquals("http://TestHost:12345/query?someQuary=Something", url);
+        assertEquals("http://NullHost:12345/query?someQuary=Something", url);
 
         // Test url given in input from request.
         when(mockedRequest.getServletPath()).thenReturn("/subscription");
-        when(mockedSession.getAttribute("backEndInstanceName")).thenReturn("TestName");
         when(mockedRequest.getQueryString()).thenReturn("backendurl=https://inPutBackEndUrl:98765");
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
         assertEquals("https://inPutBackEndUrl:98765/subscription", url);
+
+        // Test name given in input from request.
+        when(mockedRequest.getServletPath()).thenReturn("/subscription");
+        when(mockedRequest.getQueryString()).thenReturn("backendname=TestName");
+        url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
+        assertEquals("http://TestHost:12345/subscription", url);
     }
 }

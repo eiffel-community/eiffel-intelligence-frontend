@@ -17,7 +17,6 @@
 package com.ericsson.ei.frontend.utils;
 
 import java.net.URI;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -54,13 +52,7 @@ public class BackEndInformationControllerUtils {
      */
     public ResponseEntity<String> handleRequestForInstances(HttpServletRequest request) {
         try {
-            String activeInstance = null;
-            if (request.getSession().getAttribute("backEndInstanceName") != null) {
-                activeInstance = request.getSession().getAttribute("backEndInstanceName").toString();
-            }
-
             JsonArray allAvailableInstances = backEndInstancesUtils.getBackEndsAsJsonArray();
-            allAvailableInstances = setActiveInstance(allAvailableInstances, activeInstance);
 
             return new ResponseEntity<>(
                     allAvailableInstances.toString(),
@@ -204,23 +196,6 @@ public class BackEndInformationControllerUtils {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setLocation(URI.create("/"));
         return httpHeaders;
-    }
-
-    private JsonArray setActiveInstance(JsonArray allAvailableInstances, String activeInstance) {
-        if (allAvailableInstances.size() == 0) {
-            throw new NoSuchElementException ("No Available instances, back end instance list is empty!");
-        }
-        for (JsonElement element : allAvailableInstances) {
-            if (activeInstance == null && element.getAsJsonObject().get("defaultBackend").getAsBoolean()) {
-                element.getAsJsonObject().addProperty("active", true);
-            } else if (activeInstance != null
-                    && element.getAsJsonObject().get("name").getAsString().equals(activeInstance)) {
-                element.getAsJsonObject().addProperty("active", true);
-            } else {
-                element.getAsJsonObject().addProperty("active", false);
-            }
-        }
-        return allAvailableInstances;
     }
 
 }

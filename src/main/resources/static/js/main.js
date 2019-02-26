@@ -13,19 +13,17 @@ jQuery(document).ready(function () {
     }(jQuery));
 
     var eiffelDocumentationUrlLinks = $('#eiffelDocumentationUrlLinks').text();
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
 
     $("#logoutBtn").click(function () {
-        $.ajax({
-            url: frontendServiceUrl + "/auth/logout",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            complete: function (XMLHttpRequest, textStatus) {
+        var callback = {
+            complete: function () {
                 doIfUserLoggedOut();
                 router.navigate('*');
             }
-        });
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth/logout";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     });
 
     function loadDocumentLinks() {
