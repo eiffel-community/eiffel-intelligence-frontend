@@ -191,9 +191,6 @@ jQuery(document).ready(function () {
     checkBackendStatus();
 
     // Check if EI Backend Server is online every X seconds
-    if(timerInterval != null) {
-        window.clearInterval(timerInterval);
-    }
     timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // END OF EI Backend Server check #########################################
