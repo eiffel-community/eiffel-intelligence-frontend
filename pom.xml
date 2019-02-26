@@ -46,6 +46,13 @@
         </plugins>
     </reporting>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -163,6 +170,12 @@
             <artifactId>amqp-client</artifactId>
             <version>5.4.0</version>
             <scope>test</scope>
+        </dependency>
+        <!-- Eiffel Commons -->
+        <dependency>
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>eiffel-commons</artifactId>
+            <version>0.0.6</version>
         </dependency>
     </dependencies>
 
