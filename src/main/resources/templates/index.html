@@ -44,20 +44,14 @@
           <div class="dropdown-header text-center">
             <strong>Messages</strong>
           </div>
-          <div class="alert-empty text-center" data-bind="visible: $root.errorMessages().length == 0">No messages</div>
+          <div class="alert-empty text-center" data-bind="if: $root.errorMessages().length == 0">No messages</div>
           <div class="alert-list" id="alerts" data-bind="foreach: errorMessages.slice(0).reverse()">
             <div class="dropdown-item">
-              <div class="col-11 alert-message" data-bind="text: message, click: function(data, event) {$root.expandMessage(event)}"></div>
-              <div class="col-1 alert-remove">
+              <div class="col-10 alert-message" data-bind="text: message, click: function(data, event) {$root.expandMessage(event)}"></div>
+              <div class="col-2 alert-remove">
                 <i class="fa fa-fw fa-minus-circle cursor-pointer" data-bind="click: function(data, event) {$root.removeErrorMessage($index())}"></i>
               </div>
             </div>
-          </div>
-          <div class="alert-clear" data-bind="visible: $root.errorMessages().length != 0">
-              <button class="alert-clear-button btn btn-sm btn-secondary" data-bind="click: function(data, event) {$root.removeAllErrorMessages()}">
-                  Clear All
-                  <i class="fa fa-fw  fa-trash"></i>
-              </button>
           </div>
         </div>
       </li>
