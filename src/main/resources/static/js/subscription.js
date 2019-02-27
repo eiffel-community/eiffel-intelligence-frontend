@@ -63,10 +63,6 @@ jQuery(document).ready(function () {
         $("#subButtons").show();
     }
 
-    // Check if EI Backend Server is online every X seconds
-    if(timerInterval != null) {
-        window.clearInterval(timerInterval);
-    }
     timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if buttons should be enabled or disabled

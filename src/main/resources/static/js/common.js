@@ -90,29 +90,35 @@ function formatUrl(host, port, useHttps, contextPath) {
 // Start ## Routing ##
 var routes = {};
 routes["subscriptions"] = function () {
+    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("subscriptionpage.html");
 };
 routes["test-rules"] = function () {
+    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("testRules.html");
 };
 routes["ei-info"] = function () {
+    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("eiInfo.html");
 };
 routes["switch-backend"] = function () {
+    window.clearInterval(timerInterval);
     $(".app-header").addClass("header-bar-hidden");
     $(".main").load("switch-backend.html");
 };
 routes["add-backend"] = function () {
+    window.clearInterval(timerInterval);
     $(".app-header").addClass("header-bar-hidden");
     $(".main").load("add-instances.html");
 };
 routes["login"] = function () {
+    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("login.html");
