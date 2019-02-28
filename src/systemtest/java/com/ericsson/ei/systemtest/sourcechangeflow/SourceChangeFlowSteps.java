@@ -1,9 +1,12 @@
 package com.ericsson.ei.systemtest.sourcechangeflow;
 
 import com.ericsson.ei.systemtest.utils.Config;
+import com.ericsson.ei.systemtest.utils.PropertiesHandler;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
@@ -23,9 +27,10 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
     private Config config = new Config();
 
     @Given("^configurations are provided$")
-    public void configurations_are_provided() {
+    public void configurations_are_provided() throws Throwable {
+        PropertiesHandler.setProperties();
         config.initEIFrontend();
-        config.initEIBackend();
+        config.initEIBackend("sourcechange");
         config.initJenkinsConfig();
         config.initRemRemConfig();
     }
@@ -50,9 +55,32 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
         assertTrue("Failed to create jenkins job.", success);
     }
 
+    @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
+    public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
+        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(),
+                config.getJenkinsBaseUrl(), !hasParameters.isEmpty());
+    }
+
+    @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
+    public void notification_with_key_and_value_is_added_to(String key, String value, String subscriptionName) throws Throwable {
+        StepsUtils.addNotificationToSubscription(key, value, subscriptionName);
+    }
+
+    @When("^condition with jmespath \"([^\"]*)\" is added to \"([^\"]*)\"$")
+    public void condition_with_jmespath_is_added_to(String jmesPath, String subscriptionName) throws Throwable {
+        StepsUtils.addConditionToRequirement(jmesPath, subscriptionName);
+    }
+
+    @Then("^we send the \"([^\"]*)\" to eiffel intelligence for creation\\.$")
+    public void we_send_the_to_eiffel_intelligence_for_creation(String subscriptionName) throws Throwable {
+        ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
+
+        assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
+    }
+
     @Then("^subscriptions and jenkins jobs should be removed$")
     public void subscriptions_and_jenkins_jobs_should_be_removed() throws Throwable {
         StepsUtils.deleteJenkinsJobs(jenkinsJobNames);
-        //StepsUtils.deleteSubscriptions(config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
+        StepsUtils.deleteSubscriptions(config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
     }
 }

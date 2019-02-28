@@ -17,7 +17,7 @@ public class PropertiesHandler {
         if (System.getProperty("ei.config.properties.file.path") != null) {
             eiConfigPropertiesFilepath = System.getProperty("ei.config.properties.file.path");
         } else {
-            eiConfigPropertiesFilepath = "src/systemtest/resources/system_test.properties";
+            eiConfigPropertiesFilepath = "src/systemtest/resources/system-test.properties";
         }
         InputStream systemTestFileInputStream = new FileInputStream(new File(eiConfigPropertiesFilepath));
         Properties systemTestProperties = new Properties();
