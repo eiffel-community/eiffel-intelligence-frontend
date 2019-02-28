@@ -10,7 +10,7 @@ Feature: Source Change system test
     And a jenkins job '"ActT1Job"' from '"src/systemtest/resources/JenkinsShellScripts/ActT1Script.txt"' is created with parameters: EVENT_ID,
     And a jenkins job '"ActSFCJob"' from '"src/systemtest/resources/JenkinsShellScripts/ActSFCScript.txt"' is created with parameters: EVENT_ID,
     And a jenkins job '"CLMJob"' from '"src/systemtest/resources/JenkinsShellScripts/CLMScript.txt"' is created with parameters: EVENT_ID,
-    And a jenkins job "FlowCompleteJob" from "src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt" is created with parameters: ,
+    And a jenkins job '"FlowCompleteJob"' from '"src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt"' is created with parameters: ,
 
     ### Add ActT1Subscription to EI ###
     Given subscription object "ActT1Subscription" is created which will trigger "ActT1Job" with parameters
@@ -40,6 +40,7 @@ Feature: Source Change system test
     And condition with jmespath "outcome.conclusion=='SUCCESSFUL'" is added to "FlowCompleteSubscription"
     Then we send the "FlowCompleteSubscription" to eiffel intelligence for creation.
 
-
     ### Check everything has been triggered ###
-    #And subscriptions and jenkins jobs should be removed
+    When the jenkins job "SCS1Job" is triggered
+    Then all jenkins jobs has been triggered
+    And subscriptions and jenkins jobs should be removed

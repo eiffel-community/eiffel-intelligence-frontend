@@ -55,6 +55,11 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
         assertTrue("Failed to create jenkins job.", success);
     }
 
+    @Given("^the jenkins job \"([^\"]*)\" is triggered$")
+    public void the_jenkins_job_is_triggered(String jenkinsJobToTrigger) throws Throwable {
+        StepsUtils.triggerJenkinsJob(jenkinsJobToTrigger, JENKINS_TOKEN);
+    }
+
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
     public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
         StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(),
@@ -76,6 +81,11 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
         ResponseEntity response = StepsUtils.sendSubscriptionToEiffelIntelligence(subscriptionName, config.getEiFrontendBaseUrl(), config.getEiBackendBaseUrl());
 
         assertEquals("Failed to create subscription. Response: " + response.getBody(), 200, response.getStatusCode());
+    }
+
+    @Then("^all jenkins jobs has been triggered$")
+    public void the_jenkins_job_has_been_triggered() throws Throwable {
+        StepsUtils.hasJenkinsJobsBeenTriggered(jenkinsJobNames, config.getJobTimeoutMilliseconds());
     }
 
     @Then("^subscriptions and jenkins jobs should be removed$")
