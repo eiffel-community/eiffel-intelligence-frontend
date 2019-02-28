@@ -349,8 +349,10 @@ jQuery(document).ready(function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
+        var contentType = "application/string; charset=utf-8";
+        var datatype = "text";
         var contextPath = "/auth/checkStatus";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
     }
     checkBackendStatus();
 
