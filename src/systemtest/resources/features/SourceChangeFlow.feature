@@ -12,13 +12,6 @@ Feature: Source Change system test
     And a jenkins job '"CLMJob"' from '"src/systemtest/resources/JenkinsShellScripts/CLMScript.txt"' is created with parameters: EVENT_ID,
     And a jenkins job '"FlowCompleteJob"' from '"src/systemtest/resources/JenkinsShellScripts/FlowCompleteScript.txt"' is created with parameters: ,
 
-    ### Add ActT1Subscription to EI ###
-    Given subscription object "ActT1Subscription" is created which will trigger "ActT1Job" with parameters
-    When notification with key "EVENT_ID" and value "id" is added to "ActT1Subscription"
-    And condition with jmespath "submission.gitIdentifier.repoName=='my-repo'" is added to "ActT1Subscription"
-    And condition with jmespath "submission.submitter.email=='jane@example.com'" is added to "ActT1Subscription"
-    Then we send the "ActT1Subscription" to eiffel intelligence for creation.
-
     ### Add CLMSubscription to EI ###
     Given subscription object "CLMSubscription" is created which will trigger "CLMJob" with parameters
     When notification with key "EVENT_ID" and value "id" is added to "CLMSubscription"
@@ -26,10 +19,16 @@ Feature: Source Change system test
     And condition with jmespath "submission.submitter.email=='jane@example.com'" is added to "CLMSubscription"
     Then we send the "CLMSubscription" to eiffel intelligence for creation.
 
+    ### Add ActT1Subscription to EI ###
+    Given subscription object "ActT1Subscription" is created which will trigger "ActT1Job" with parameters
+    When notification with key "EVENT_ID" and value "submission.confidenceLevels[0].eventId" is added to "ActT1Subscription"
+    And condition with jmespath "submission.confidenceLevels[0].value=='SUCCESS'" is added to "ActT1Subscription"
+    Then we send the "ActT1Subscription" to eiffel intelligence for creation.
+
     ### Add ActSFCSubscription to EI ###
     Given subscription object "ActSFCSubscription" is created which will trigger "ActSFCJob" with parameters
-    When notification with key "EVENT_ID" and value "triggeredEventId" is added to "ActSFCSubscription"
-    And condition with jmespath "name=='TriggeredOnSourceChangeSubmitted'" is added to "ActSFCSubscription"
+    When notification with key "EVENT_ID" and value "causedActivities[0].triggeredEventId" is added to "ActSFCSubscription"
+    And condition with jmespath "causedActivities[0].name=='TriggeredOnSourceChangeSubmitted'" is added to "ActSFCSubscription"
     Then we send the "ActSFCSubscription" to eiffel intelligence for creation.
 
     ### Add FlowCompleteSubscription to EI ###
@@ -37,7 +36,7 @@ Feature: Source Change system test
     And condition with jmespath "creations[0].author.name=='Jane Doe'" is added to "FlowCompleteSubscription"
     And condition with jmespath "submission.gitIdentifier.repoName=='my-repo'" is added to "FlowCompleteSubscription"
     And condition with jmespath "submission.confidenceLevels[0].value=='SUCCESS'" is added to "FlowCompleteSubscription"
-    And condition with jmespath "outcome.conclusion=='SUCCESSFUL'" is added to "FlowCompleteSubscription"
+    And condition with jmespath "causedActivities[0].outcome.conclusion=='SUCCESSFUL'" is added to "FlowCompleteSubscription"
     Then we send the "FlowCompleteSubscription" to eiffel intelligence for creation.
 
     ### Check everything has been triggered ###
