@@ -21,13 +21,13 @@ Feature: Source Change system test
 
     ### Add ActT1Subscription to EI ###
     Given subscription object "ActT1Subscription" is created which will trigger "ActT1Job" with parameters
-    When notification with key "EVENT_ID" and value "submission.confidenceLevels[0].eventId" is added to "ActT1Subscription"
+    When notification with key "EVENT_ID" and value "submission.confidenceLevels[?name=='unittest'].eventId | [0]" is added to "ActT1Subscription"
     And condition with jmespath "submission.confidenceLevels[?value=='SUCCESS']" is added to "ActT1Subscription"
     Then we send the "ActT1Subscription" to eiffel intelligence for creation.
 
     ### Add ActSFCSubscription to EI ###
     Given subscription object "ActSFCSubscription" is created which will trigger "ActSFCJob" with parameters
-    When notification with key "EVENT_ID" and value "causedActivities[0].triggeredEventId" is added to "ActSFCSubscription"
+    When notification with key "EVENT_ID" and value "causedActivities[?name=='TriggeredOnSourceChangeSubmitted'].triggeredEventId | [0]" is added to "ActSFCSubscription"
     And condition with jmespath "causedActivities[?name=='TriggeredOnSourceChangeSubmitted']" is added to "ActSFCSubscription"
     Then we send the "ActSFCSubscription" to eiffel intelligence for creation.
 
