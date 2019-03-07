@@ -74,7 +74,7 @@
             <version>${springBootVersion}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -87,7 +87,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -189,7 +189,7 @@
             <artifactId>json</artifactId>
             <version>20180130</version>
         </dependency>
-    </dependencies>   
+    </dependencies>
     <dependencyManagement>
     </dependencyManagement>
     <repositories>
@@ -293,7 +293,7 @@
                 <configuration>
                     <!-- This is where site.xml is located -->
                     <siteDirectory>${basedir}/wiki</siteDirectory>
-                    <!-- Github pages only generates documentation from docs 
+                    <!-- Github pages only generates documentation from docs
                         directory -->
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -317,7 +317,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- plugin requires all resources to exist within 
+                            <!-- plugin requires all resources to exist within
                                 resources/ directory -->
                             <!-- but we don't want to break links in documentation -->
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
@@ -402,6 +402,9 @@
                             <excludes>
                                 <exclude>**/frontend/*</exclude>
                             </excludes>
+                            <includes>
+                                <include>**/systemtest/**</include>
+                            </includes>
                         </configuration>
                         <executions>
                             <execution>

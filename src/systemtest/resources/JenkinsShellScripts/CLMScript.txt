@@ -23,7 +23,7 @@ def jsonCLM1 = """
     },
     "eventParams": {
       "data": {
-        "name": "required",
+        "name": "unittest",
         "value": "SUCCESS",
         "issuer": {
           "name": "",
@@ -51,9 +51,9 @@ def generateEiffelEventAndPublish(uriPath, json){
   post.setDoOutput(true)
   post.setRequestProperty("Content-Type", "application/json")
   post.getOutputStream().write(message.getBytes("UTF-8"));
-      
+
   responseText = post.getInputStream().getText();
-    
+
   def jsonSlurper = new JsonSlurper()
   responseJson = jsonSlurper.parseText(responseText);
   return responseJson["events"][0]["id"].toString();
