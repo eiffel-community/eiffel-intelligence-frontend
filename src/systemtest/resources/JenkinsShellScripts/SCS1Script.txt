@@ -6,8 +6,8 @@ def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 ///////////////////////////////////////SCC1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathSCC1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent";
-jsonSCC1 = """{
+def uriPathSCC1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent";
+def jsonSCC1 = """{
   "msgParams": {
     "meta": {
      "type": "EiffelSourceChangeCreatedEvent",
@@ -24,15 +24,15 @@ jsonSCC1 = """{
   "eventParams": {
     "data": {
       "author": {
-       "name": "",
-       "email": "",
+       "name": "John Doe",
+       "email": "john@mail.com",
        "id": "",
        "group": ""
       },
       "gitIdentifier": {
        "commitId": "commitID",
        "branch": "",
-       "repoName": "",
+       "repoName": "my-repo",
        "repoUri": "required"
       },
       "svnIdentifier": {
@@ -49,16 +49,16 @@ jsonSCC1 = """{
       }
     }
   }
-}"""
+}""";
 
-SCC1ID = generateEiffelEventAndPublish(uriPathSCS1, jsonSCS1);
+SCC1ID = generateEiffelEventAndPublish(uriPathSCC1, jsonSCC1);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////SCC2/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathSCC2 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent";
-jsonSCC2 = """{
+def uriPathSCC2 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeCreatedEvent";
+def jsonSCC2 = """{
   "msgParams": {
     "meta": {
     "type": "EiffelSourceChangeCreatedEvent",
@@ -75,15 +75,15 @@ jsonSCC2 = """{
   "eventParams": {
     "data": {
      "author": {
-      "name": "",
-      "email": "",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
       "id": "",
       "group": ""
      },
      "gitIdentifier": {
       "commitId": "commitID",
       "branch": "",
-      "repoName": "",
+      "repoName": "my-repo",
       "repoUri": "required"
      },
      "svnIdentifier": {
@@ -106,17 +106,17 @@ jsonSCC2 = """{
       }
     ]
   }
-}"""
+}""";
 
-SCC2ID = generateEiffelEventAndPublish(uriPathSCS1, jsonSCS1);
+SCC2ID = generateEiffelEventAndPublish(uriPathSCC2, jsonSCC2);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////SCS1/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathSCS1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeSubmittedEvent";
-jsonSCS1 = """
+def uriPathSCS1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelSourceChangeSubmittedEvent";
+def jsonSCS1 = """
 {
   "msgParams": {
     "meta": {
@@ -134,19 +134,19 @@ jsonSCS1 = """
   "eventParams": {
     "data": {
       "submitter": {
-        "name": "",
-        "email": "",
+        "name": "Jane Doe",
+        "email": "jane@example.com",
         "id": "",
         "group": ""
       },
       "gitIdentifier": {
         "commitId": "commitID ",
         "repoUri": "my-repo",
-        "branch": "",
-        "repoName": ""
+        "branch": "master",
+        "repoName": "my-repo"
       },
       "svnIdentifier": {
-        "revision": "1",
+        "revision": "3",
         "directory": "required",
         "repoName": "",
         "repoUri": "required"
@@ -165,10 +165,9 @@ jsonSCS1 = """
       }
     ]
   }
-}"""
+}""";
 
 SCS1ID = generateEiffelEventAndPublish(uriPathSCS1, jsonSCS1);
-
 
 
 def generateEiffelEventAndPublish(uriPath, json){
