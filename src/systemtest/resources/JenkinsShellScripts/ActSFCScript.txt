@@ -6,8 +6,8 @@ def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
 ///////////////////////////////////////ActS1////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathActS1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityStartedEvent";
-jsonActS1 = """{
+def uriPathActS1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityStartedEvent";
+def jsonActS1 = """{
   "msgParams": {
    "meta": {
      "type": "EiffelActivityStartedEvent",
@@ -32,7 +32,7 @@ jsonActS1 = """{
      }
    ]
   }
-}"""
+}""";
 
 ActS1ID = generateEiffelEventAndPublish(uriPathActS1, jsonActS1);
 
@@ -41,8 +41,8 @@ ActS1ID = generateEiffelEventAndPublish(uriPathActS1, jsonActS1);
 ///////////////////////////////////////ActF1////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathActF1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityFinishedEvent";
-jsonActF1 = """{
+def uriPathActF1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityFinishedEvent";
+def jsonActF1 = """{
   "msgParams": {
     "meta": {
      "type": "EiffelActivityFinishedEvent",
@@ -70,7 +70,7 @@ jsonActF1 = """{
       }
     ]
   }
-}"""
+}""";
 
 ActF1ID = generateEiffelEventAndPublish(uriPathActF1, jsonActF1);
 
@@ -80,8 +80,8 @@ ActF1ID = generateEiffelEventAndPublish(uriPathActF1, jsonActF1);
 ///////////////////////////////////////ActC1////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-uriPathActC1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityCanceledEvent";
-jsonActC1 = """{
+def uriPathActC1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityCanceledEvent";
+def jsonActC1 = """{
   "msgParams": {
     "meta": {
      "type": "EiffelActivityCanceledEvent",
@@ -106,7 +106,7 @@ jsonActC1 = """{
       }
     ]
   }
-}"""
+}""";
 
 
 ActC1ID = generateEiffelEventAndPublish(uriPathActC1, jsonActC1);

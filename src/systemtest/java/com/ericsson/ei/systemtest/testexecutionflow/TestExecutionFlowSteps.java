@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ericsson.ei.systemtest.utils.PropertiesHandler;
 import org.junit.Ignore;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -25,16 +26,17 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener {
     private Config config = new Config();
 
     @Given("^configurations are provided$")
-    public void configurations_are_provided() {
+    public void configurations_are_provided() throws Throwable {
+        PropertiesHandler.setProperties();
         config.initEIFrontend();
-        config.initEIBackend();
+        config.initEIBackend("testexecution");
         config.initJenkinsConfig();
         config.initRemRemConfig();
     }
 
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
     public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
-        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(), 
+        StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(),
                                       config.getJenkinsBaseUrl(), !hasParameters.isEmpty());
     }
 

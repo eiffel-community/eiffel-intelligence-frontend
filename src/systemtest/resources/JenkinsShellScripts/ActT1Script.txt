@@ -23,12 +23,12 @@ jsonActT1 = """{
   },
   "eventParams": {
     "data": {
-      "name": "required",
-      "categories": [],
+      "name": "TriggeredOnSourceChangeSubmitted",
+      "categories": ["system_test"],
       "triggers": [
         {
           "type": "SOURCE_CHANGE",
-          "description": ""
+          "description": "Code merged"
         }
       ],
       "executionType": "AUTOMATED"
@@ -40,7 +40,7 @@ jsonActT1 = """{
       }
     ]
   }
-}"""
+}""";
 
 
 ActT1ID = generateEiffelEventAndPublish(uriPathActT1, jsonActT1);

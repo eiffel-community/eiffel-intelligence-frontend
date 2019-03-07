@@ -19,7 +19,7 @@ public class Config {
     private int jobTimeoutMilliseconds = 60000;
 
     /**
-     * Initializes the configuration. Some configurations are set to default and some are mendatory.
+     * Initializes the configuration. Some configurations are set to default and some are mandatory.
      * These are the current default configuration values:
      * int jobTimeoutMilliseconds = 60000
      */
@@ -37,7 +37,7 @@ public class Config {
     * @return
     */
     public void initJenkinsConfig() {
-        jenkinsBaseUrl = System.getProperty("jenkins.base.url");
+        jenkinsBaseUrl = System.getProperty("jenkins.url");
         jenkinsUsername = System.getProperty("jenkins.username");
         jenkinsPassword = System.getProperty("jenkins.password");
 
@@ -53,7 +53,7 @@ public class Config {
     * @return
     */
     public void initRemRemConfig() {
-        remremBaseUrl = System.getProperty("remrem.base.url");
+        remremBaseUrl = System.getProperty("remrem.publish.url");
 
         assertNotNull(remremBaseUrl);
     }
@@ -65,13 +65,13 @@ public class Config {
      * @return
      */
     public void initEIFrontend() {
-        eiFrontendBaseUrl = System.getProperty("ei.frontend.base.url");
+        eiFrontendBaseUrl = System.getProperty("ei.frontend.url");
 
         assertNotNull(eiFrontendBaseUrl);
     }
 
-    public void initEIBackend() {
-        eiBackendBaseUrl = System.getProperty("ei.backend.base.url");
+    public void initEIBackend(String selectedBackend) {
+        eiBackendBaseUrl = System.getProperty("ei.backend.url." + selectedBackend);
 
         assertNotNull(eiBackendBaseUrl);
     }
