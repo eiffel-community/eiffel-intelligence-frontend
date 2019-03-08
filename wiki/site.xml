@@ -39,12 +39,13 @@
 
         <menu name="Overview">
             <item name="Home" href="index.html" />
-            <item name="Add Subscription" href="Add-Subscription.html" />
-            <item name="GUI overview" href="GUI-Overview.html" />
-            <item name="Subscription handling" href="Subscription-Handling.html" />
-            <item name="Test rules" href="Test-Rules.html" />
+            <item name="Run in Docker" href="docker.html" />
+            <item name="GUI overview" href="GUI-overview.html" />
+            <item collapse="true" name="Subscription handling" href="subscription-handling.html">
+                <item name="Add Subscription" href="add-subscription.html" />
+            </item>
+            <item name="Test rules" href="test-rules.html" />
             <item name="Curl Examples" href="curl-examples.html" />
-            <item name="Docker" href="docker.html" />
         </menu>
 
         <footer/>

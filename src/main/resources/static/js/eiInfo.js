@@ -1,4 +1,5 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
+
     // Fetch injected URL from DOM
     var frontEndServiceUrl = $('#frontendServiceUrl').text();
     var frontEndVersion = $('#frontEndVersion').text();
@@ -54,7 +55,7 @@ jQuery(document).ready(function() {
             { key: 'Application Name', value: data.applicationName },
             { key: 'Version', value: data.version },
             { key: 'Rules File Path', value: data.rulesPath },
-            { key: 'EI Back-End Connected Server', value: backEndServerUrl },
+            { key: 'EI Back-End Connected Server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
             { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
         ];
 
@@ -68,7 +69,7 @@ jQuery(document).ready(function() {
         body.appendChild(label);
 
         var div = document.createElement('div');
-        div.setAttribute('class','table-responsive');
+        div.setAttribute('class', 'table-responsive');
 
         var tbl = createTable();
 
@@ -86,7 +87,7 @@ jQuery(document).ready(function() {
 
     function generateEIInformationBasedOnList(dataList, tableLabel) {
         var div = document.createElement('div');
-        div.setAttribute('class','table-responsive');
+        div.setAttribute('class', 'table-responsive');
 
         var label = createLabel(tableLabel);
         body.appendChild(label);
@@ -94,11 +95,11 @@ jQuery(document).ready(function() {
         var tbdy = null;
         var tbl = null;
 
-        dataList.forEach(function(dataSubList) {
+        dataList.forEach(function (dataSubList) {
             tbdy = document.createElement('tbody');
             tbl = createTable();
 
-            Object.keys(dataSubList).forEach(function(dataKey) {
+            Object.keys(dataSubList).forEach(function (dataKey) {
                 value = dataSubList[dataKey];
                 var tr = createTableRow(dataKey, value);
                 tbdy.appendChild(tr);
@@ -124,37 +125,68 @@ jQuery(document).ready(function() {
     }
 
     function getInstanceInfo() {
-        $.ajax({
-            url: frontEndServiceUrl + "/information",
-            contentType : 'application/json;charset=UTF-8',
-            type: 'GET',
-            error : function (XMLHttpRequest, textStatus, errorThrown) {
-                var label = createLabel(generalEIInfoLabel);
-                body.appendChild(label);
-                var element = createErrorMessage('<strong>Error:</strong> Could not fetch information from back-end!');
-                body.appendChild(element);
-            },
-            success : function (data, textStatus, xhr) {
-                var eiInfoContainer = document.getElementById('eiInfoContainer');
-                var data = JSON.parse(xhr.responseText);
-                createGeneralEIInfo(data);
-                generateEIInformationBasedOnList(data.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
-                generateEIInformationBasedOnList(data.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
-                generateEIInformationBasedOnList(data.threads, "Eiffel Intelligence Backend Java Threads Settings");
-                generateEIInformationBasedOnList(data.email, "Eiffel Intelligence Backend E-Mail Settings");
-                generateEIInformationBasedOnList(data.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
-                generateEIInformationBasedOnList(data.waitList, "Eiffel Intelligence Backend WaitList settings");
-                generateEIInformationBasedOnList([data.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
-                generateEIInformationBasedOnList([data.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-                generateEIInformationBasedOnList([data.informSubscription], "Eiffel Intelligence Backend InformSubscription Settings");
-                generateEIInformationBasedOnList([data.erUrl], "End point for downstream/upstream search in EventRepository");
-                generateEIInformationBasedOnList([data.ldap], "Eiffel Intelligence Backend LDAP Settings");
-            },
-            complete: function (XMLHttpRequest, textStatus) {}
-        });
+        var callback = {
+            success: function (responseData, textStatus) {
+                createGeneralEIInfo(responseData);
+                generateEIInformationBasedOnList(responseData.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+                generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
+                generateEIInformationBasedOnList(responseData.threads, "Eiffel Intelligence Backend Java Threads Settings");
+                generateEIInformationBasedOnList(responseData.email, "Eiffel Intelligence Backend E-Mail Settings");
+                generateEIInformationBasedOnList(responseData.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
+                generateEIInformationBasedOnList(responseData.waitList, "Eiffel Intelligence Backend WaitList settings");
+                generateEIInformationBasedOnList([responseData.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
+                generateEIInformationBasedOnList([responseData.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
+                generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
+                generateEIInformationBasedOnList([responseData.erUrl], "End point for downstream/upstream search in EventRepository");
+                generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence Backend LDAP Settings");
+            }
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/information";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
 
     createFrontEndGeneralInfo();
     getInstanceInfo();
 
+    // Check EI Backend Server Status ########################################
+    var backendStatus;
+    var currentBackendStatus = false;
+    function checkBackendStatus() {
+        var callback = {
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 401) {
+                    doIfUserLoggedOut();
+                    removeStatusIndicator();
+                    currentBackendStatus = true;
+                } else {
+                    doIfSecurityOff();
+                    addStatusIndicator(statusType.danger, statusText.backend_down);
+                    currentBackendStatus = false;
+                }
+            },
+            success: function (data, textStatus) {
+                checkBackendSecured();
+                removeStatusIndicator();
+                currentBackendStatus = true;
+            },
+            complete: function () {
+                if(backendStatus != undefined && backendStatus != currentBackendStatus) {
+                    reloadRoute();
+                }
+                backendStatus = currentBackendStatus;
+            }
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contentType = "application/string; charset=utf-8";
+        var datatype = "text";
+        var contextPath = "/auth/checkStatus";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
+    }
+    checkBackendStatus();
+
+    // Check if EI Backend Server is online every X seconds
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+
+    // END OF EI Backend Server check #########################################
 });

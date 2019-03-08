@@ -1,89 +1,73 @@
-
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     var router = new Navigo(null, true, '#');
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
 
     function checkBackendSecured() {
-        $.ajax({
-            url: frontendServiceUrl + "/auth",
-            type: "GET",
-            contentType: "application/string; charset=utf-8",
-            error: function (data) {
-                router.navigate('subscriptions');
+        var callback = {
+            beforeSend: function () {
             },
-            success: function (data) {
+            success: function (responseData, textStatus) {
                 var currentUser = localStorage.getItem("currentUser");
-                var isSecured = JSON.parse(ko.toJSON(data)).security;
+                var isSecured = responseData.security;
                 if (isSecured == false || (isSecured == true && currentUser != null)) {
                     router.navigate('subscriptions');
                 }
+            },
+            error: function (responseData) {
+                router.navigate('subscriptions');
+            },
+            complete: function () {
             }
-        });
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
 
     checkBackendSecured();
 
-	// /Start ## Knockout ####################################################
-	function loginModel() {
-		this.userState = {
-			ldapUserName: ko.observable(""),
-			password: ko.observable("")
-		};
-		this.remember = ko.observable(false);
+    // /Start ## Knockout ####################################################
+    function loginModel() {
+        this.userState = {
+            ldapUserName: ko.observable(""),
+            password: ko.observable("")
+        };
+        this.remember = ko.observable(false);
 
-		this.login = function(userState, remember) {
-			var dataJSON = ko.toJSON(userState);
-			if(JSON.parse(dataJSON).ldapUserName == "" || JSON.parse(dataJSON).password == "") {
-				window.logMessages("Username and password fields cannot be empty");
-			} else {
-				var token = window.btoa(JSON.parse(dataJSON).ldapUserName + ":" + JSON.parse(dataJSON).password);
-				sendLoginRequest(frontendServiceUrl + "/auth/login", "GET", token);
-			}
-		}
-	}
+        this.login = function (userState, remember) {
+            var dataJSON = JSON.parse(ko.toJSON(userState));
+            if (dataJSON.ldapUserName == "" || dataJSON.password == "") {
+                window.logMessages("Username and password fields cannot be empty");
+            } else {
+                var token = window.btoa(dataJSON.ldapUserName + ":" + dataJSON.password);
+                sendLoginRequest(token);
+            }
+        }
+    }
 
-	function sendLoginRequest (url, type, token) {
-		$.ajax({
-			url : url,
-			type : type,
-			contentType : 'application/json; charset=utf-8',
-			cache: false,
-			beforeSend : function (request) {
-				request.setRequestHeader("Authorization", "Basic " + token);
-			},
-			error : function (request, textStatus, errorThrown) {
-			    window.logMessages("Bad credentials");
-			},
-			success : function (responseData, textStatus) {
-				var currentUser = JSON.parse(ko.toJSON(responseData)).user;
-				$.jGrowl("Welcome " + currentUser, { sticky : false, theme : 'Notify' });
-				doIfUserLoggedIn(currentUser);
-				router.navigate('subscriptions');
-			}
-		});
-	}
+    function sendLoginRequest(token) {
+        var callback = {
+            beforeSend: function (XMLHttpRequest) {
+                XMLHttpRequest.setRequestHeader("Authorization", "Basic " + token);
+            },
+            success: function (responseData, textStatus) {
+                var currentUser = JSON.parse(ko.toJSON(responseData)).user;
+                $.jGrowl("Welcome " + currentUser, { sticky: false, theme: 'Notify' });
+                doIfUserLoggedIn(currentUser);
+                router.navigate('subscriptions');
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.logMessages("Bad credentials");
+            },
+            complete: function () {
+            }
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth/login";
+        ajaxHttpSender.sendAjax(contextPath, "GET", token, callback);
+    }
 
-	var observableObject = $("#viewModelDOMObject")[0];
-	ko.cleanNode(observableObject);
-	var model = new loginModel();
-	ko.applyBindings(model, observableObject);
-	// /Stop ## Knockout #####################################################
-
-	// /Start ## Cookies functions ###########################################
-	function setCookie(name, value) {
-		var expiry = new Date(new Date().getTime() + 1800 * 1000); // plus 30 min
-		if(window.location.protocol == "https:") {
-			document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString() + "; secure; HttpOnly";
-		} else {
-			document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
-		}
-	}
-
-	function getCookie(name) {
-		var re = new RegExp(name + "=([^;]+)");
-		var value = re.exec(document.cookie);
-		return (value != null) ? unescape(value[1]) : null;
-	}
-	// /Stop ## Cookies functions ############################################
-
+    var observableObject = $("#viewModelDOMObject")[0];
+    ko.cleanNode(observableObject);
+    var model = new loginModel();
+    ko.applyBindings(model, observableObject);
 });

@@ -1,23 +1,11 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<mvc:resources mapping="/resources/**" location="/resources/" />
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eiffel Intelligence Subscription Handling</title>
-</head>
+<div class="d-none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
+<div class="d-none" id="frontEndVersion" th:text="${version}"></div>
+<div class="d-none" id="frontEndApplicationPropertiesVersion" th:text="${applicationPropertiesVersion}"></div>
+<div class="d-none" id="frontendAppName" th:text="${frontendAppName}"></div>
+<div class="d-none" id="backendServerUrl" th:text="${backendServerUrl}"></div>
 
-<body class="nav-link">
-    <div class="d-none" id="frontendServiceUrl" th:text="${frontendServiceUrl}"></div>
-    <div class="d-none" id="frontEndVersion" th:text="${version}"></div>
-    <div class="d-none" id="frontEndApplicationPropertiesVersion" th:text="${applicationPropertiesVersion}"></div>
-    <div class="d-none" id="frontendAppName" th:text="${frontendAppName}"></div>
-    <div class="d-none" id="backendServerUrl" th:text="${backendServerUrl}"></div>
-
+<div class="content">
     <div class="col-12" id="eiPageFrame"></div>
+</div>
 
-    <script type="text/javascript" src="js/eiInfo.js"></script>
-
-</body>
-</html>
+<script type="text/javascript" src="js/eiInfo.js"></script>

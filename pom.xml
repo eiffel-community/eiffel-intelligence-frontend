@@ -46,6 +46,13 @@
         </plugins>
     </reporting>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -161,8 +168,14 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>5.1.2</version>
+            <version>5.4.0</version>
             <scope>test</scope>
+        </dependency>
+        <!-- Eiffel Commons -->
+        <dependency>
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>eiffel-commons</artifactId>
+            <version>0.0.6</version>
         </dependency>
     </dependencies>
 
@@ -219,6 +232,7 @@
                         </goals>
                         <configuration>
                             <sources>
+                                <source>src/test/resources</source>
                                 <source>src/functionaltest/java</source>
                                 <source>src/functionaltest/resources</source>
                                 <source>src/integrationtest/java</source>
@@ -239,8 +253,11 @@
                     <reuseForks>false</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <excludes>
-                        <exclude>**/*IT.java</exclude>
                         <exclude>${someModule.test.excludes}</exclude>
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>TestBaseClass</exclude>
+                        <exclude>SeleniumBaseClass</exclude>
+                        <exclude>CommonSteps</exclude>
                     </excludes>
                     <includes>
                         <include>${someModule.test.includes}</include>
@@ -303,7 +320,7 @@
                     <execution>
                         <id>copy-resources</id>
                         <!-- here the phase you need -->
-                        <phase>site</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -314,26 +331,15 @@
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/wiki/images</directory>
+                                    <directory>${basedir}/wiki/markdown/images</directory>
+                                    <includes>
+                                        <include>*.png</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-                <!-- We want to remove duplicate/copied resources from site
-                    generation -->
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/wiki/resources</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
 
         </plugins>

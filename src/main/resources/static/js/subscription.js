@@ -4,7 +4,6 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
-var timerInterval;
 
 jQuery(document).ready(function () {
 
@@ -12,33 +11,6 @@ jQuery(document).ready(function () {
 
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
-
-    // /Start ## Global AJAX Sender function ##################################
-    var AjaxHttpSender = function () { };
-
-    AjaxHttpSender.prototype.sendAjax = function (url, type, data, callback) {
-        $.ajax({
-            url: url,
-            type: type,
-            data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            cache: false,
-            beforeSend: function () {
-                callback.beforeSend();
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                callback.error(XMLHttpRequest, textStatus, errorThrown);
-            },
-            success: function (data, textStatus) {
-                callback.success(data, textStatus);
-            },
-            complete: function (XMLHttpRequest, textStatus) {
-                callback.complete();
-            }
-        });
-    }
-    // /Stop ## Global AJAX Sender function ##################################
 
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
@@ -49,12 +21,14 @@ jQuery(document).ready(function () {
         }
         var red = "#ff0000";
         var green = "#00ff00";
-        $.ajax({
-            url: frontendServiceUrl + "/auth/checkStatus",
-            type: "GET",
-            contentType: "application/string; charset=utf-8",
-            dataType: "text",
-            cache: false,
+        var callback = {
+            success: function (responseData, textStatus) {
+                if (backendStatus == false) {
+                    checkBackendSecured();
+                }
+                EIConnBtn.style.background = green;
+                backendStatus = true;
+            },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 if (XMLHttpRequest.status == 401) {
                     doIfUserLoggedOut();
@@ -66,18 +40,21 @@ jQuery(document).ready(function () {
                     backendStatus = false;
                 }
             },
-            success: function (data, textStatus) {
-                if(backendStatus == false) {
-                    checkBackendSecured();
-                }
-                EIConnBtn.style.background = green;
-                backendStatus = true;
-            },
             complete: function () {
+                if(table != undefined && table.rows().data().length == 0) {
+                    toggleCheckboxesDisabled(true);
+                } else {
+                    toggleCheckboxesDisabled(!backendStatus);
+                }
                 toggleOnBackendStatus(backendStatus);
                 setTimeout(loadSubButtons, 800);
             }
-        });
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contentType = "application/string; charset=utf-8";
+        var datatype = "text";
+        var contextPath = "/auth/checkStatus";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
     }
     checkBackendStatus();
 
@@ -86,30 +63,29 @@ jQuery(document).ready(function () {
         $("#subButtons").show();
     }
 
-    // Check if EI Backend Server is online every X seconds
-    if (timerInterval == null){
-        timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
-    }
+    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
 
     // Check if buttons should be enabled or disabled
     // Toggle warning text on and off
     // Check backend status to shrink or increase space for warning to show
     function toggleOnBackendStatus(backendStatus) {
-        if(!backendStatus && !$("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-9");
-            $("#btnEIContainer").parent().removeClass("col-md-3");
-            $("#subTitle").parent().addClass("col-md-4");
-            $("#btnEIContainer").parent().addClass("col-md-2");
+        if (!backendStatus) {
+            addStatusIndicator(statusType.danger, statusText.backend_down);
         }
-        if(backendStatus && $("#back_end_down_warning").is(":visible")) {
-            $("#subTitle").parent().removeClass("col-md-4");
-            $("#btnEIContainer").parent().removeClass("col-md-2");
-            $("#subTitle").parent().addClass("col-md-9");
-            $("#btnEIContainer").parent().addClass("col-md-3");
-            reload_table();
+        if (backendStatus) {
+            removeStatusIndicator();
         }
-        $("#back_end_down_warning").toggle(!backendStatus);
         toggleButtonsDisabled(!backendStatus);
+    }
+
+    function toggleCheckboxesDisabled(disabled) {
+        $('#check-all').prop("disabled", disabled);
+        $('.data-check').prop("disabled", disabled);
+    }
+
+    function toggleButtonsDisabled(disabled) {
+        $('.main #subButtons button.btn').prop("disabled", disabled);
+        $('.main #table button.btn').prop("disabled", disabled);
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -137,7 +113,7 @@ jQuery(document).ready(function () {
         this.authenticationType = ko.observable(data.authenticationType);
         this.userName = ko.observable(data.userName);
         this.password = ko.observable(data.password);
-        this.emailSubject = ko.observable(data.emailSubject).extend({notify:'always'});
+        this.emailSubject = ko.observable(data.emailSubject).extend({ notify: 'always' });
 
         // Default to REST_POST
         if (this.notificationType() == "" || this.notificationType() == null) {
@@ -243,10 +219,10 @@ jQuery(document).ready(function () {
         var self = this;
         self.subscription = ko.observableArray([]);
         self.subscription_templates_in = ko.observableArray([
-                { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
-                { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
-                { "text": "Mail Trigger", value: "templateEmailTrigger" }
-            ]);
+            { "text": "Jenkins Pipeline Parameterized Job Trigger", value: "templatejenkinsPipelineParameterizedBuildTrigger" },
+            { "text": "REST POST (Raw Body : JSON)", value: "templateRestPostJsonRAWBodyTrigger" },
+            { "text": "Mail Trigger", value: "templateEmailTrigger" }
+        ]);
 
 
         self.choosen_subscription_template = ko.observable();
@@ -255,25 +231,25 @@ jQuery(document).ready(function () {
         self.formpostkeyvaluepairs = ko.observable(false);
         self.mode = ko.observable("");
         self.showPassword = ko.observable(false);
-        self.setShowPassword = function (boolean){
+        self.setShowPassword = function (boolean) {
             self.showPassword(boolean);
         }
         self.formpostkeyvaluepairsAuth = ko.observable(false);
         self.notificationType_in = ko.observableArray([
-                {"value": "REST_POST", "label": "REST_POST", "id": "restPostRadio"},
-                {"value": "MAIL", "label": "MAIL", "id": "mailRadio"}
-            ]);
+            { "value": "REST_POST", "label": "REST_POST", "id": "restPostRadio" },
+            { "value": "MAIL", "label": "MAIL", "id": "mailRadio" }
+        ]);
         self.restPostBodyMediaType_in = ko.observableArray([
-                {"value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio"},
-                {"value": "application/json", "label": "RAW BODY: JSON",  "id": "appJsonRadio"}
-            ]);
+            { "value": "application/x-www-form-urlencoded", "label": "FORM/POST Parameters", "id": "keyValueRadio" },
+            { "value": "application/json", "label": "RAW BODY: JSON", "id": "appJsonRadio" }
+        ]);
         self.authenticationType_in = ko.observableArray([
-                { "text": "NO_AUTH", value: "NO_AUTH" },
-                { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
-            ]);
+            { "text": "NO_AUTH", value: "NO_AUTH" },
+            { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
+        ]);
         self.repeat_in = ko.observableArray([
-                { "value": true, "label": "Activate Repeat" }
-            ]);
+            { "value": true, "label": "Activate Repeat" }
+        ]);
 
         self.add_requirement = function (data, event) {
             var conditions_array = [];
@@ -303,15 +279,15 @@ jQuery(document).ready(function () {
             var date = new Date(epochtime);
             var resolvedOptions = Intl.DateTimeFormat().resolvedOptions();
             var options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    hour12: false,
-                    timeZone: resolvedOptions.timeZone,
-                    timeZoneName: 'short'
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false,
+                timeZone: resolvedOptions.timeZone,
+                timeZoneName: 'short'
             };
             return date.toLocaleDateString(resolvedOptions.locale, options);  // Is now a date (in client time zone)
         }
@@ -373,23 +349,28 @@ jQuery(document).ready(function () {
     // /Stop ## Knockout #####################################################
 
     function checkSecurityAndDrawTable() {
-        $.ajax({
-            url: frontendServiceUrl + "/auth",
-            type: "GET",
-            contentType: "application/string; charset=utf-8",
-            error: function () {
+        var callback = {
+            success: function (responseData, textStatus) {
+                isSecured = JSON.parse(ko.toJSON(responseData)).security;
+                drawTable(isSecured);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 drawTable(false);
             },
-            success: function (data) {
-                isSecured = JSON.parse(ko.toJSON(data)).security;
-                drawTable(isSecured);
+            complete: function () {
+                $("#check-all").click(function () {
+                    $(".data-check").prop('checked', $(this).prop('checked'));
+                });
             }
-        });
+        };
+        var ajaxHttpSender = new AjaxHttpSender();
+        var contextPath = "/auth";
+        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
 
     // /Start ## Datatables ##################################################
     function drawTable(isSecured) {
-        var currentUser = localStorage.getItem("currentUser");
+        var currentUser = sessionStorage.getItem("currentUser");
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -400,10 +381,17 @@ jQuery(document).ready(function () {
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": frontendServiceUrl + "/subscriptions",
+                "url": addBackendParameter(frontendServiceUrl + "/subscriptions"),
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
-                "error": function () { }
+                "error": function () { },
+                "complete": function(data) {
+                    if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
+                        toggleCheckboxesDisabled(false);
+                    } else {
+                        toggleCheckboxesDisabled(true);
+                    }
+                }
             },
             //Set column definition initialisation properties.
             "columnDefs": [
@@ -487,9 +475,6 @@ jQuery(document).ready(function () {
                 if (isSecured == false) {
                     table.column(2).visible(false);
                 }
-                $("#check-all").click(function () {
-                    $(".data-check").prop('checked', $(this).prop('checked'));
-                });
                 $(".control").click(function () {
                     setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
                 });
@@ -498,10 +483,11 @@ jQuery(document).ready(function () {
     };
     checkSecurityAndDrawTable();
 
-    $("#sidenavCollapse").click(function() {
+    $(".main").on('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function () {
         table.responsive.rebuild();
         table.responsive.recalc();
     });
+
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################
@@ -519,6 +505,35 @@ jQuery(document).ready(function () {
     // /Stop ## Reload Table#################################################
 
     // /Start ## Bulk delete#################################################
+    function deleteSubscriptions(subscriptionsToDeleteString) {
+        var callback = {
+            success: function (responseData, textStatus) {
+                reload_table();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                reload_table();
+                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
+                for (var i = 0; i < responseJSON.length; i++) {
+                    window.logMessages("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
+                }
+            }
+        };
+
+        $('.confirm-delete .modal-body').text(subscriptionsToDeleteString);
+        $('.confirm-delete .btn-danger').unbind();
+        $('.confirm-delete .btn-danger').click(function () {
+            $("#check-all").prop('checked', false);
+            // replace all /n with comma
+            if(/\n/.exec(subscriptionsToDeleteString)) {
+                subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
+            }
+            var ajaxHttpSender = new AjaxHttpSender();
+            var contextPath = "/subscriptions/";
+            ajaxHttpSender.sendAjax(contextPath + subscriptionsToDeleteString, "DELETE", null, callback);
+        });
+        $('.confirm-delete').modal('show');
+    };
+
     $("#bulkDelete").click(function () {
         var subscriptionsToDelete = [];
         var data = table.rows().nodes();
@@ -539,39 +554,7 @@ jQuery(document).ready(function () {
             subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
         }
 
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
-                reload_table();
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
-                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                for (var i = 0; i < responseJSON.length; i++) {
-                    window.logMessages("Error deleteing subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
-                }
-            },
-            complete: function () {
-            }
-        };
-
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Are you sure you want to delete these subscriptions?<pre>' + subscriptionsToDeleteString,
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    // replace all /n with comma
-                    subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + subscriptionsToDeleteString, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
-        });
+        deleteSubscriptions(subscriptionsToDeleteString);
     });
     // /Stop ## Bulk delete##################################################
 
@@ -580,7 +563,7 @@ jQuery(document).ready(function () {
         req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
         req.responseType = "application/json;charset=utf-8";
         req.onload = function (event) {
-            if (this.responseText == ""){
+            if (this.responseText == "") {
                 window.logMessages("Failed to download template, Error: Could not contact the backend server.");
             } else {
                 var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
@@ -626,19 +609,17 @@ jQuery(document).ready(function () {
         }
     }
 
-    var pom = document.getElementById('upload_sub');
-    pom.onchange = function uploadFinished() {
-        var subscriptionFile = pom.files[0];
+    $('#upload_sub').change(function () {
+        var subscriptionFile = document.getElementById('upload_sub').files[0];
+        $('#upload_sub').val("");
         validateJsonAndCreateSubscriptions(subscriptionFile);
-    };
+    });
     function tryToCreateSubscription(subscriptionJson) {
         // Send Subscription JSON file to Spring MVC
         // AJAX Callback handling
         var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                var returnData = [data];
+            success: function (responseData, textStatus) {
+                var returnData = [responseData];
                 if (returnData.length > 0) {
                     $.jGrowl("Subscriptions were successfully created.", {
                         sticky: false,
@@ -652,37 +633,21 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason +"\n";
+                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason + "\n";
                 }
                 window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
-            },
-            complete: function () {
             }
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions", "POST", ko.toJSON(subscriptionJson), callback);
+        var contextPath = "/subscriptions";
+        ajaxHttpSender.sendAjax(contextPath, "POST", ko.toJSON(subscriptionJson), callback);
     }
 
     // /Start ## upload_subscriptions #################################################
     $("#uploadSubscription").click(function () {
         function createUploadWindow() {
-            //            var pom = document.createElement('input');
-            //            pom.setAttribute('id', 'uploadFile');
-            //            pom.setAttribute('type', 'file');
-            //            pom.setAttribute('name', 'upFile');
-            //            pom.onchange = function uploadFinished() {
-            //            	var subscriptionFile = pom.files[0];
-            //            	validateJsonAndCreateSubscriptions(subscriptionFile);
-            //        	};
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            }
-            else {
-                pom.click();
-            }
+            $('#upload_sub').click();
         }
 
         function createUploadWindowMSExplorer() {
@@ -715,18 +680,17 @@ jQuery(document).ready(function () {
         var id = $(object).attr("id").split("-")[1];
         // AJAX Callback handling
         var callback = {
-            beforeSend: function () { },
-            success: function (data, textStatus) {
-                populate_json(data, mode);
+            success: function (responseData, textStatus) {
+                populate_json(responseData, mode);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.logMessages("Error: " + XMLHttpRequest.responseText);
-            },
-            complete: function () { }
+            }
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "GET", null, callback);
+        var contextPath = "/subscriptions/";
+        ajaxHttpSender.sendAjax(contextPath + id, "GET", null, callback);
     }
 
     // /Start ## Edit Subscription ###########################################
@@ -746,7 +710,7 @@ jQuery(document).ready(function () {
     function populate_json(data, save_method_in) {
         vm.mode(save_method_in);
 
-        if (save_method_in == "edit" || save_method_in == "view"){
+        if (save_method_in == "edit" || save_method_in == "view") {
             vm.showPassword(false);
         } else {
             vm.showPassword(true);
@@ -774,7 +738,7 @@ jQuery(document).ready(function () {
                     item[0].notificationMessageKeyValues[0].formkey == "");
                 if (notificationMessageRawJsonShouldBeReplacedWithFormValue) {
                     item[0].notificationMessageRawJson = item[0].notificationMessageKeyValues[0].formvalue;
-                    item[0].notificationMessageKeyValues[0] = new formdata_model({"formkey":"","formvalue":""});
+                    item[0].notificationMessageKeyValues[0] = new formdata_model({ "formkey": "", "formvalue": "" });
                 } else {
                     item[0].notificationMessageRawJson = "";
                     for (i = 0; i < item[0].notificationMessageKeyValues.length; i++) {
@@ -795,7 +759,7 @@ jQuery(document).ready(function () {
 
             $('.modal-title').text(title_);
             save_method = save_method_in;
-            $('#modal_form').on('hidden.bs.modal', function() {
+            $('#modal_form').on('hidden.bs.modal', function () {
                 $('.text-danger').hide();
             });
         }
@@ -902,15 +866,6 @@ jQuery(document).ready(function () {
             error = true;
         }
 
-        /*
-        JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
-        var inpurDataIsNotValidJson = (jsonData != "" && !validateJsonString(jsonData));
-        if (inpurDataIsNotValidJson) {
-            $('#invalidNotificationMessageRawJson').text("Input is not valid JSON.");
-            error = true;
-        }
-        */
-
         if (error) {
             $('#invalidNotificationMessageRawJson').show();
             $('#notificationMessageRawJson').addClass("is-invalid");
@@ -933,23 +888,6 @@ jQuery(document).ready(function () {
 
             $('#formvalue_' + i).removeClass("is-invalid");
             $('#formkey_' + i).removeClass("is-invalid");
-
-            /*
-            JSON validation is not possible due to EI back end not handeling " as it should be in JSON format
-            var testValueShouldBeValidatedAsJson = (
-                String(testKey).toLowerCase().replace(/"/g, "") == "json" && testValue != "");
-            if (testValueShouldBeValidatedAsJson) {
-                // check value field for valid JSON
-                var testValueIsNotValidJson = !validateJsonString(testValue);
-                if (testValueIsNotValidJson) {
-                    $('#formvalue_' + i).addClass("is-invalid");
-                    $('#formkey_' + i).addClass("is-invalid");
-                    $('#notificationMessageValuesJsonError').text("A key indicates JSON but value is not valid JSON!");
-                    $('#notificationMessageValuesJsonError').show();
-                    error = true;
-                }
-            }
-            */
 
             var testKeyIsEmpty = (testKey == "" && !allowEmpty);
             if (testKeyIsEmpty) {
@@ -1063,23 +1001,14 @@ jQuery(document).ready(function () {
         var jsonParsedFormData = ko.toJS(vm.subscription());
         var formDataToSend = createParsedFormCopy(jsonParsedFormData);
 
-        var url = frontendServiceUrl + "/subscriptions";
-        var type;
-        if (save_method === 'add') {  // Add new
-            type = "POST";
-
-        } else if (save_method === 'edit') {  // Update existing
-            type = "PUT";
-        }
-
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
                 $('#btnSave').text('Saving...'); //change button text
                 $('#btnSave').attr('disabled', true); //set button disable
             },
-            success: function (data, textStatus) {
-                var returnData = [data];
+            success: function (responseData, textStatus) {
+                var returnData = [responseData];
                 if (returnData.length > 0) {
                     $('#modal_form').modal('hide');
                     reload_table();
@@ -1104,7 +1033,15 @@ jQuery(document).ready(function () {
 
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        ajaxHttpSender.sendAjax(url, type, JSON.stringify(formDataToSend), callback);
+        var type;
+        if (save_method === 'add') {  // Add new
+            type = "POST";
+
+        } else if (save_method === 'edit') {  // Update existing
+            type = "PUT";
+        }
+        var contextPath = "/subscriptions";
+        ajaxHttpSender.sendAjax(contextPath, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
 
@@ -1113,46 +1050,11 @@ jQuery(document).ready(function () {
         event.stopPropagation();
         event.preventDefault();
         // Get tag that contains subscriptionName
-        var id = $(this).attr("id").split("-")[1];
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (data, textStatus) {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
-                reload_table();
+        var subscription = $(this).attr("id").split("-")[1];
 
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Error: " + XMLHttpRequest.responseText);
-            },
-            complete: function () {
-            }
-        };
-
-        $.confirm({
-            title: 'Confirm!',
-            content: 'Please confirm before deleting subscription!',
-            buttons: {
-                confirm: function () {
-                    var ajaxHttpSender = new AjaxHttpSender();
-                    ajaxHttpSender.sendAjax(frontendServiceUrl + "/subscriptions/" + id, "DELETE", null, callback);
-                },
-                cancel: function () {
-                }
-            }
-        });
+        deleteSubscriptions(subscription);
     });
     // /Stop ## Delete Subscription #########################################
-
-    function toggleButtonsDisabled(disabled) {
-        $('#addSubscription').prop("disabled", disabled);
-        $('#bulkDelete').prop("disabled", disabled);
-        $('#uploadSubscription').prop("disabled", disabled);
-        $('#getTemplateButton').prop("disabled", disabled);
-        $('#reloadButton').prop("disabled", disabled);
-        $('.table-btn').prop("disabled", disabled);
-    }
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });

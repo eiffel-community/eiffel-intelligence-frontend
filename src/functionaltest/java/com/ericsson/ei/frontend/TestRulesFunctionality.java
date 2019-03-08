@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -51,6 +52,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         int portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
+        JavascriptExecutor js = driver;
 
         // Open indexpage and verify that it is opened
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
@@ -59,6 +61,9 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         // Verify that we can navigate to test rules page
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
         assert(new WebDriverWait(driver, 10).until((webdriver) -> testRulesPage.presenceOfTestRulesHeader()));
+
+        //Enable buttons
+        js.executeScript("$('button.btn').prop(\"disabled\", false);");
 
         // Verify that "download rules template" button works
         String downloadedRulesTemplate = "";
@@ -132,7 +137,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @AfterClass
     public static void tearDownMocks() throws IOException {
         mockClient.stop();
-        mockServer.stop();
     }
 
 }

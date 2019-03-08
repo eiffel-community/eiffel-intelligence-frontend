@@ -1,46 +1,33 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-</head>
-
-<body class="bg-dark">
-<div class="d-flex justify-content-center ml-3 mr-3">
-    <div class="card card-standard">
-        <div class="card-header">Login</div>
-        <div class="card-body">
-            <form id="viewModelDOMObject" autocomplete="on">
-                <div class="form-group">
-                    <label for="inputUsername">Username</label>
-                    <input class="form-control" id="inputUsername" type="text" placeholder="Enter username"
-                           data-bind="textInput: $root.userState.ldapUserName"/>
-                </div>
-                <div class="form-group">
-                    <label for="inputPassword">Password</label>
-                    <input class="form-control" id="inputPassword" type="password" placeholder="Password"
-                           data-bind="textInput: $root.userState.password"/>
-                </div>
-                <div class="form-group">
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" data-bind="checked: $root.remember"/> Remember me</label>
+<div class="content">
+    <div class="d-flex justify-content-center ml-3 mr-3">
+        <div class="card card-standard">
+            <div class="card-header">Login</div>
+            <div class="card-body">
+                <form id="viewModelDOMObject" autocomplete="on">
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        <input class="form-control" id="inputUsername" type="text" placeholder="Enter username"
+                            data-bind="textInput: $root.userState.ldapUserName" />
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block"
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input class="form-control" id="inputPassword" type="password" placeholder="Password"
+                            data-bind="textInput: $root.userState.password" />
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" data-bind="checked: $root.remember" />
+                                Remember me</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block"
                         data-bind="click: function(){$root.login($root.userState, $root.remember());}">Login
-                </button>
-            </form>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript" src="js/login.js"></script>
-
-</body>
-
-</html>

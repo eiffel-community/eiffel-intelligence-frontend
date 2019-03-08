@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
@@ -20,6 +21,7 @@ public class TestAlarm extends SeleniumBaseClass {
     @Test
     public void testAlarm() throws IOException {
         initBaseMocks(mockedHttpClient);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
 
         //Load index page
         IndexPage indexPageObject = new IndexPage(null, driver, baseUrl);
@@ -27,6 +29,8 @@ public class TestAlarm extends SeleniumBaseClass {
 
         //Generate exception
         TestRulesPage testRulesPage = indexPageObject.clickTestRulesPage();
+        //Enable buttons
+        js.executeScript("$('button.btn').prop(\"disabled\", false);");
         testRulesPage.clickRemoveRuleNumber(0);
         testRulesPage.clickRemoveEventNumber(0);
 
@@ -34,6 +38,6 @@ public class TestAlarm extends SeleniumBaseClass {
         for (int i = 0; i < 5; i++) {
             indexPageObject.clickAlarmButton();
         }
-        assertTrue(driver.findElements(By.className("dropdown-item")).size() >= 2);
+        assertTrue(driver.findElements(By.cssSelector(".alert-list .dropdown-item")).size() >= 2);
     }
 }
