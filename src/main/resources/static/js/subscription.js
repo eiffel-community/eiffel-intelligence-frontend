@@ -461,7 +461,7 @@ jQuery(document).ready(function () {
                     "render": function (data, type, row, meta) {
                         var unsecureEditAll = isSecured == false;
                         var securedEditOwn = (row.ldapUserName == currentUser && row.ldapUserName != null);
-                        var securedEditNoOwner = isSecured == true && row.ldapUserName.length == 0 && currentUser != null;
+                        var allEditNoOwner = row.ldapUserName.length == 0);
                         if (unsecureEditAll || securedEditOwn || securedEditNoOwner) {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
