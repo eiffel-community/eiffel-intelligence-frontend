@@ -43,7 +43,7 @@ public class WebControllerUtils {
     @Value("${ei.frontend.service.host:#{null}}")
     private String frontendServiceHost;
 
-    @Value("${ei.frontend.service.port:#{null}}")
+    @Value("${server.port:#{null}}")
     private int frontendServicePort;
 
     @Value("${ei.frontend.context.path:#{null}}")
