@@ -22,6 +22,7 @@
       }
     ],
     "subscriptionName":"default_instance_subscription",
+    "ldapUserName":"",
     "_id":{
       "$oid":"5ad6f907c242af3f1469751d"
     }
