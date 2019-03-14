@@ -460,9 +460,9 @@ jQuery(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row, meta) {
                         var unsecureEditAll = isSecured == false;
-                        var securedEditOwn = (row.ldapUserName == currentUser && row.ldapUserName != null);
-                        var allEditNoOwner = row.ldapUserName.length == 0);
-                        if (unsecureEditAll || securedEditOwn || securedEditNoOwner) {
+                        var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
+                        var allEditNoOwner = row.ldapUserName.length == 0;
+                        if (unsecureEditAll || securedEditOwn || allEditNoOwner) {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
