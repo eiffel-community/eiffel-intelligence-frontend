@@ -839,9 +839,9 @@ jQuery(document).ready(function () {
             var emails = notificationMeta.split(",");
             for(var email of emails) {
                 email = email.trim();
-                var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                var isInvalidEmailAddress = (!regExpression.test(email) && email != "");
-                if (isInvalidEmailAddress) {
+                var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var isValidEmailAddress = validEmailRegExpression.test(email);
+                if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");
                     error = true;
                     break;
