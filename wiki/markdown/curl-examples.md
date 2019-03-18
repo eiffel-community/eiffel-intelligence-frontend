@@ -8,7 +8,9 @@ The front-end may also be used by other tools such as CURL or any kind of progra
 Below are some examples of using CURL towards different endpoints, together with example responses.
 Most endpoints are also documented in the [Eiffel Intelligence backend repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
 
-**Note: If you have multiple url parameters, you need to add quotation mark around the entire query. For example curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"**
+**Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
+    
+    curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
 
 #### Quick access to endpoints:
 * [/auth](#auth)
