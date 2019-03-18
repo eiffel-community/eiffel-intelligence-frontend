@@ -75,17 +75,26 @@ jQuery(document).ready(function () {
         if (backendStatus) {
             removeStatusIndicator();
         }
-        toggleButtonsDisabled(!backendStatus);
+        toggleButtonsDisabled(backendStatus);
     }
 
     function toggleCheckboxesDisabled(disabled) {
         $('#check-all').prop("disabled", disabled);
         $('.data-check').prop("disabled", disabled);
     }
-
-    function toggleButtonsDisabled(disabled) {
-        $('.main #subButtons button.btn').prop("disabled", disabled);
-        $('.main #table button.btn').prop("disabled", disabled);
+    
+    var previousStatus;
+    function toggleButtonsDisabled(currentStatus) {
+    	var statusChanged = (previousStatus != currentStatus);
+    	$('.main #subButtons button.btn').prop("disabled", !currentStatus);  		
+    
+    	if(statusChanged && !currentStatus){
+    		table.clear().draw();
+    	}
+    	if(statusChanged && currentStatus){
+    		reload_table();    		
+    	}
+    	previousStatus = currentStatus;    	
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -382,7 +391,7 @@ jQuery(document).ready(function () {
             "ajax": {
                 "url": addBackendParameter(frontendServiceUrl + "/subscriptions"),
                 "type": "GET",
-                "dataSrc": "",   // Flat structure from EI backend REST API
+                "dataSrc": "",   //Flat structure from EI backend REST API
                 "error": function () { },
                 "complete": function(data) {
                     if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
@@ -466,8 +475,10 @@ jQuery(document).ready(function () {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
-                            } else {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>';
+                        } else {
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>'
+                                + '<button  id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn" disabled="">Edit</button> '
+                                + '<button  id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn" disabled="">Delete</button>';
                         }
                     }
                 }
@@ -617,7 +628,7 @@ jQuery(document).ready(function () {
     });
     function tryToCreateSubscription(subscriptionJson) {
         // Send Subscription JSON file to Spring MVC
-        // AJAX Callback handling
+    	// AJAX Callback handling
         var callback = {
             success: function (responseData, textStatus) {
                 var returnData = [responseData];
@@ -666,11 +677,10 @@ jQuery(document).ready(function () {
             createUploadWindow();
         }
     });
-    // /END ## upload_subscriptions #################################################
-
+    // /END ## upload_subscriptions ################################################# 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
-        table.ajax.reload(null, false); //reload datatable ajax
+        table.ajax.reload(null, false); // reload datatable ajax
     }
     // /Stop ## Reload Datatables ############################################
 
@@ -707,7 +717,7 @@ jQuery(document).ready(function () {
     });
     // /Stop ## View Subscription ###########################################
 
-    // /Start ## populate JSON  ###########################################
+    // /Start ## populate JSON ###########################################
     function populate_json(data, save_method_in) {
         vm.mode(save_method_in);
 
@@ -792,7 +802,7 @@ jQuery(document).ready(function () {
         $('#modal_form .close').prop("disabled", false);
         $('.text-danger').hide();
     }
-    // /Stop ## pupulate JSON  ###########################################
+    // /Stop ## pupulate JSON ###########################################
 
     function validateName(subscriptionName) {
         var error = false;
@@ -835,7 +845,7 @@ jQuery(document).ready(function () {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
             error = true;
         } else if (vm.restPost()) {
-            //validate url not implemented yet.
+            // validate url not implemented yet.
         } else if (!vm.restPost()) {
             // Validate email
             var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -884,8 +894,8 @@ jQuery(document).ready(function () {
         $('#errorExists').hide();
 
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
-            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
+            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); // Do validation without spaces;
+            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); // Do validation without spaces
 
             $('#formvalue_' + i).removeClass("is-invalid");
             $('#formkey_' + i).removeClass("is-invalid");
@@ -964,7 +974,7 @@ jQuery(document).ready(function () {
             return false;
         }
         return true;
-        //END: Check of other subscription fields values
+        // END: Check of other subscription fields values
     }
 
     function createParsedFormCopy(jsonCopiedData) {
@@ -974,8 +984,7 @@ jQuery(document).ready(function () {
         }
 
         if (!vm.formpostkeyvaluepairs()) {
-            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
-            // and ensures the list contains only one object.
+            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here and ensures the list contains only one object.
             var notificationMessageKeyValues = [];
             var formKeyValuePair = { "formkey": "", "formvalue": jsonCopiedData[0].notificationMessageRawJson };
             notificationMessageKeyValues.push(formKeyValuePair);
@@ -1005,8 +1014,8 @@ jQuery(document).ready(function () {
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
-                $('#btnSave').text('Saving...'); //change button text
-                $('#btnSave').attr('disabled', true); //set button disable
+                $('#btnSave').text('Saving...'); // change button text
+                $('#btnSave').attr('disabled', true); // set button disable
             },
             success: function (responseData, textStatus) {
                 var returnData = [responseData];
@@ -1027,8 +1036,8 @@ jQuery(document).ready(function () {
                 $('#serverError').show();
             },
             complete: function () {
-                $('#btnSave').text('Save'); //change button text
-                $('#btnSave').attr('disabled', false); //set button enable
+                $('#btnSave').text('Save'); // change button text
+                $('#btnSave').attr('disabled', false); // set button enable
             }
         };
 
