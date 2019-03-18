@@ -827,20 +827,25 @@ jQuery(document).ready(function () {
         $('#notificationMeta').removeClass("is-invalid");
         $('#errorExists').hide();
 
-        var notoficationMetaIsEmpty = (
+        var notificationMetaIsEmpty = (
             !allowEmpty && notificationMeta == "" || !allowEmpty && notificationMeta.replace(/\s/g, "") == '""');
-        if (notoficationMetaIsEmpty) {
-            $('#invalidNotificationMeta').text("NotificationMeta must not be empty");
+        if (notificationMetaIsEmpty) {
+            $('#invalidNotificationMeta').text("NotificationMeta must not be empty.");
             error = true;
         } else if (vm.restPost()) {
             //validate url not implemented yet.
         } else if (!vm.restPost()) {
             // Validate email
-            var regExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            var isInvalidEmailAddress = (!regExpression.test(notificationMeta) && notificationMeta != "");
-            if (isInvalidEmailAddress) {
-                $('#invalidNotificationMeta').text("Not a valid email.");
-                error = true;
+            var emails = notificationMeta.split(",");
+            for(var email of emails) {
+                email = email.trim();
+                var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var isValidEmailAddress = validEmailRegExpression.test(email);
+                if (!isValidEmailAddress) {
+                    $('#invalidNotificationMeta').text(email + " not a valid email.");
+                    error = true;
+                    break;
+                }
             }
         }
         if (error) {
