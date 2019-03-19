@@ -43,7 +43,7 @@ public class WebControllerUtils {
     @Value("${ei.frontend.service.host:#{null}}")
     private String frontendServiceHost;
 
-    @Value("${server.port:#{null}}")
+    @Value("${ei.frontend.service.port:#{null}}")
     private int frontendServicePort;
 
     @Value("${ei.frontend.context.path:#{null}}")
@@ -76,19 +76,18 @@ public class WebControllerUtils {
     /**
      * Formats the parameters in the class to an URL as String.
      *
-     * @return String
-     *      URL to this service
+     * @return String URL to this service
      */
     public String getFrontEndServiceUrl() {
         String requestedUrl = null;
         String http = "http";
         String contextPath = "";
         if (useSecureHttpFrontend) {
-        	http = "https";
+            http = "https";
         }
 
         if (frontendContextPath != null && !frontendContextPath.isEmpty()) {
-        	contextPath = ("/" + frontendContextPath).replace("//", "/");
+            contextPath = ("/" + frontendContextPath).replace("//", "/");
         }
 
         requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, contextPath);
@@ -101,8 +100,7 @@ public class WebControllerUtils {
      * BackendInformation for this name, or null if no name was found.
      *
      * @param httpSession
-     * @return String
-     *      URL from found BackendInformation
+     * @return String URL from found BackendInformation
      */
     public String getBackEndServiceUrl(HttpSession httpSession) {
         String activeInstance = null;
