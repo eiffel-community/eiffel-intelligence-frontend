@@ -39,14 +39,14 @@ services:
     ports:
       - "27017:27017"
     healthcheck:
-        test: ["CMD-SHELL","echo", "'db.stats().ok' | mongo localhost:27017/test", "--quiet"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
+      test: ["CMD-SHELL","echo", "'db.stats().ok' | mongo localhost:27017/test", "--quiet"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
-          eiffel_2.0_1:
-            aliases:
-              - mongodb
+      eiffel_2.0_1:
+        aliases:
+          - mongodb
 
   rabbitmq:
     restart: always
@@ -58,14 +58,14 @@ services:
       - "15672:15672"
       - "5672:5672"
     healthcheck:
-        test: ["CMD-SHELL", "if rabbitmqctl status; then \nexit 0 \nfi \nexit 1"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
+      test: ["CMD-SHELL", "if rabbitmqctl status; then \nexit 0 \nfi \nexit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
-          eiffel_2.0_1:
-            aliases:
-              - rabbitmq
+      eiffel_2.0_1:
+        aliases:
+          - rabbitmq
     environment:
       - RABBITMQ_USERNAME=myuser
       - RABBITMQ_PASSWORD=myuser
@@ -77,83 +77,274 @@ services:
     expose:
       - "8080"
     ports:
-      - "8082:8080"
+      - "8084:8080"
     depends_on:
       - rabbitmq
       - mongodb
     networks:
-          eiffel_2.0_1:
-            aliases:
-              - eiffel-er
+      eiffel_2.0_1:
+        aliases:
+          - eiffel-er
     environment:   # Overrides settings in config file in catalina folder. OBS --> skip quotes for rabbitmq.bindingKey value
-                   # No config file copied to catalina folder in Dockerfile, only uses env vars below ;-)
-                   # /eventrepository removed in contextpath
-       - server.contextPath=/
-       - server.port=8080
-       - rabbitmq.host=rabbitmq
-       - rabbitmq.componentName=eventrepository
-       - rabbitmq.port=5672
-       - rabbitmq.domainId=ei-domain
-       - rabbitmq.durable=true
-       - rabbitmq.user=myuser
-       - rabbitmq.password=myuser
-       - rabbitmq.exchangeName=ei-exchange
-       - rabbitmq.bindingKey=#
-       - rabbitmq.autoDelete=false
-       - rabbitmq.createExchangeIfNotExisting=true
-       - rabbitmq.consumerName=messageConsumer
-       - mongodb.host=mongodb
-       - mongodb.port=27017
-       - mongodb.database=eiffel
-       - mongodb.collection=events
-       - mongodb.user
-       - mongodb.password
-       - mongodb.indexes=meta.id,links.target,links.type,meta.time,data.gav.groupId,data.gav.artifactId
-       - mongodb.externalERs
-       - search.limit=100
-       - search.levels=10
-       - eventrepo2.URL=
-       - index.staticIndex.indexOn=false
-       - index.staticIndex.filePath=src/main/resources/static_indexes.json
-       - index.dynamicIndex.indexOn=false
-       - index.dynamicIndex.indexCreationDay=SUNDAY
-       - index.dynamicIndex.indexCreationTime=11:50:00
-       - index.dynamicIndex.maxIndexesCount=5
-       - index.dynamicIndex.filePath=src/main/resources/dynamic_indexing.json
-       - index.dynamicIndex.fileUpdatePeriod=30
-       - WAIT_MB_HOSTS=rabbitmq:15672
-       - WAIT_DB_HOSTS=mongodb:27017
+      # No config file copied to catalina folder in Dockerfile, only uses env vars below ;-)
+      # /eventrepository removed in contextpath
+      - server.contextPath=/
+      - server.port=8080
+      - rabbitmq.host=rabbitmq
+      - rabbitmq.componentName=eventrepository
+      - rabbitmq.port=5672
+      - rabbitmq.domainId=ei-domain
+      - rabbitmq.durable=true
+      - rabbitmq.user=myuser
+      - rabbitmq.password=myuser
+      - rabbitmq.exchangeName=ei-exchange
+      - rabbitmq.bindingKey=#
+      - rabbitmq.autoDelete=false
+      - rabbitmq.createExchangeIfNotExisting=true
+      - rabbitmq.consumerName=messageConsumer
+      - mongodb.host=mongodb
+      - mongodb.port=27017
+      - mongodb.database=eiffel
+      - mongodb.collection=events
+      - mongodb.user
+      - mongodb.password
+      - mongodb.indexes=meta.id,links.target,links.type,meta.time,data.gav.groupId,data.gav.artifactId
+      - mongodb.externalERs
+      - search.limit=100
+      - search.levels=10
+      - eventrepo2.URL=
+      - index.staticIndex.indexOn=false
+      - index.staticIndex.filePath=src/main/resources/static_indexes.json
+      - index.dynamicIndex.indexOn=false
+      - index.dynamicIndex.indexCreationDay=SUNDAY
+      - index.dynamicIndex.indexCreationTime=11:50:00
+      - index.dynamicIndex.maxIndexesCount=5
+      - index.dynamicIndex.filePath=src/main/resources/dynamic_indexing.json
+      - index.dynamicIndex.fileUpdatePeriod=30
+      - WAIT_MB_HOSTS=rabbitmq:15672
+      - WAIT_DB_HOSTS=mongodb:27017
 
-  ei_backend:
+
+  mail-server:
+    image: mailhog/mailhog
+    expose:
+      - "1025"
+      - "8025"
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    depends_on:
+      - mongodb
+    environment:
+      MH_STORAGE: mongodb
+      MH_MONGO_URI: mongodb:27017
+      MH_MONGO_COLLECTION: messages
+      MH_MONGO_DB: mailhog
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - mail-server
+
+
+  generate:
     restart: always
-    image: eiffelericsson/eiffel-intelligence-backend:1.0.0-1
+    image: eiffelericsson/eiffel-remrem-generate:1.0.0
     expose:
       - "8080"
     ports:
-      - "8080:8080"
+      - "8095:8080"
+    environment:
+      - server.port=8080
+      - jasypt.encryptor.password=
+      - activedirectory.generate.enabled=false
+      - activedirectory.ldapUrl=
+      - activedirectory.managerPassword=
+      - activedirectory.managerDn=
+      - activedirectory.rootDn=
+      - activedirectory.userSearchFilter=
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.eiffel.remrem.producer=INFO
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - generate
+
+
+  publish:
+    restart: always
+    image: eiffelericsson/eiffel-remrem-publish:1.0.0
+    expose:
+      - "8080"
+    ports:
+      - "8096:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - server.port=8080
+      - jasypt.encryptor.password=
+      - rabbitmq.instances.jsonlist=${REMREM_PUBLISH_RABBITMQ_INSTANCES_LIST}
+      - generate.server.uri=http://generate:8080
+      - generate.server.path=
+      - activedirectory.publish.enabled=false
+      - activedirectory.ldapUrl=
+      - activedirectory.managerPassword=
+      - activedirectory.managerDn=
+      - activedirectory.rootDn=
+      - activedirectory.userSearchFilter=
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.eiffel.remrem.producer=INFO
+      - WAIT_MB_HOSTS=rabbitmq:15672
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - publish
+
+
+  jenkins:
+    restart: always
+    image: bitnami/jenkins:2.150.2
+    expose:
+      - "8080"
+    ports:
+      - "8082:8080"
+      - "50001:50000"
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
+      - JENKINS_USERNAME=admin
+      - JENKINS_PASSWORD=admin
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - jenkins
+
+
+  ############### Start EI backend artifact rules #############################
+  ei-backend-artifact:
+    restart: always
+    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    expose:
+      - "8080"
+    ports:
+      - "8070:8080"
     depends_on:
       - mongodb
       - rabbitmq
     networks:
-          eiffel_2.0_1:
-            aliases:
-              - ei-backend
+      eiffel_2.0_1:
+        aliases:
+          - ei-backend-artifact
     environment:       # Overrides settings in application config file
-      - SpringApplicationName=ei-backend
+      - SpringApplicationName=ei-backend-artifact
       - server.port=8080
-      - rules.path=src/main/resources/ArtifactRules_new.json
+      - rules.path=/ArtifactRules.json
       - rabbitmq.host=rabbitmq
       - rabbitmq.port=5672
       - rabbitmq.domainId=ei-domain
-      - rabbitmq.componentName=ei-backend
-      - rabbitmq.waitlist.queue.suffix=waitlist
+      - rabbitmq.componentName=eiffel-intelligence-artifact
+      - rabbitmq.waitlist.queue.suffix=waitlist-artifact
       - rabbitmq.exchange.name=ei-exchange
       - rabbitmq.user=myuser
       - rabbitmq.password=myuser
       - spring.data.mongodb.host=mongodb
       - spring.data.mongodb.port=27017
-      - spring.data.mongodb.database=eiffel2_intelligence
-      - missedNotificationDataBaseName=eiffel2_intelligence_MissedNotification
+      - spring.data.mongodb.database=eiffel-intelligence-artifact
+      - missedNotificationDataBaseName=MissedNotification-artifact
+      - search.query.prefix=object
+      - aggregated.object.name=aggregatedObject
+      - spring.mail.properties.mail.smtp.auth=false
+      - spring.mail.properties.mail.smtp.starttls.enable=false
+      - er.url=http://${HOST}:8084/search/
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.ei=ERROR
+      - WAIT_MB_HOSTS=rabbitmq:15672
+      - WAIT_DB_HOSTS=mongodb:27017
+
+  ############### Stop EI backend artifact rules ##############################
+
+
+  ############### Start EI backend sourcechange rules ##########################
+  ei-backend-sourcechange:
+    restart: always
+    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    expose:
+      - "8080"
+    ports:
+      - "8072:8080"
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - ei-backend-sourcechange
+    environment:       # Overrides settings in application config file
+      - SpringApplicationName=ei-backend-sourcechange
+      - server.port=8080
+      - rules.path=/SourceChangeObjectRules.json
+      - rabbitmq.host=rabbitmq
+      - rabbitmq.port=5672
+      - rabbitmq.domainId=ei-domain
+      - rabbitmq.componentName=eiffel-intelligence-sourcechange
+      - rabbitmq.waitlist.queue.suffix=waitlist-sourcechange
+      - rabbitmq.exchange.name=ei-exchange
+      - rabbitmq.user=myuser
+      - rabbitmq.password=myuser
+      - spring.data.mongodb.host=mongodb
+      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.database=eiffel-intelligence-sourcechange
+      - missedNotificationDataBaseName=MissedNotification-sourcechange
+      - search.query.prefix=object
+      - aggregated.object.name=aggregatedObject
+      - spring.mail.properties.mail.smtp.auth=false
+      - spring.mail.properties.mail.smtp.starttls.enable=false
+      - er.url=http://${HOST}:8084/search/
+      - logging.level.root=OFF
+      - logging.level.org.springframework.web=ERROR
+      - logging.level.com.ericsson.ei=ERROR
+      - WAIT_MB_HOSTS=rabbitmq:15672
+      - WAIT_DB_HOSTS=mongodb:27017
+
+  ############### Stop EI backend sourcechange rules ###########################
+
+
+  ############### Start EI backend testexecution rules #########################
+  ei-backend-testexecution:
+    restart: always
+    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    expose:
+      - "8080"
+    ports:
+      - "8074:8080"
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      eiffel_2.0_1:
+        aliases:
+          - ei-backend-testexecution
+    environment:       # Overrides settings in application config file
+      - SpringApplicationName=ei-backend-testexecution
+      - server.port=8080
+      - rules.path=/TestExecutionObjectRules.json
+      - rabbitmq.host=rabbitmq
+      - rabbitmq.port=5672
+      - rabbitmq.domainId=ei-domain
+      - rabbitmq.componentName=eiffel-intelligence-testexecution
+      - rabbitmq.waitlist.queue.suffix=waitlist-testexecution
+      - rabbitmq.exchange.name=ei-exchange
+      - rabbitmq.user=myuser
+      - rabbitmq.password=myuser
+      - spring.data.mongodb.host=mongodb
+      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.database=eiffel-intelligence-testexecution
+      - missedNotificationDataBaseName=MissedNotification-testexecution
       - search.query.prefix=object
       - aggregated.object.name=aggregatedObject
       - spring.mail.host=
@@ -162,36 +353,41 @@ services:
       - spring.mail.password=
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:8082
+      - er.url=http://${HOST}:8084/search/
       - logging.level.root=OFF
       - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=ERROR
       - WAIT_MB_HOSTS=rabbitmq:15672
       - WAIT_DB_HOSTS=mongodb:27017
 
-  ei_frontend:
+  ############### Stop EI backend testexecution rules ##########################
+
+  ei-frontend:
     restart: always
-    image: eiffel-intelligence-frontend:0.0.19
+    image: eiffelericsson/eiffel-intelligence-frontend:1.0.1
     expose:
       - "8080"
     ports:
       - "8081:8080"
     depends_on:
-      - ei_backend
+      - ei-backend-artifact
+      - ei-backend-sourcechange
+      - ei-backend-testexecution
     networks:
-          eiffel_2.0_1:
-            aliases:
-              - ei-frontend
+      eiffel_2.0_1:
+        aliases:
+          - ei-frontend
     environment:      # Overrides settings in application config file
-      - spring.application.name=ei-frontend
-      - server.port=8081
+      - spring.application.name=eiffel-intelligence-frontend
+      - server.port=8080
       - ei.frontend.service.host=${HOST}
+      - ei.frontend.service.port=8081
       - ei.frontend.context.path=
-      - ei.backend.instances.list.json.content=${EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST}
-      - ei.backend.instances.filepath=/tmp/ei-instances-list.conf
+      - ei.backend.instances.list.json.content=${EI_INSTANCES_LIST}
+      - ei.backend.instances.filepath=/tmp/eiInstancesListFile.json
       - logging.level.root=OFF
       - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.ei=DEBUG
+      - logging.level.com.ericsson.ei=ERROR
 
 networks:
   eiffel_2.0_1:
