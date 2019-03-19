@@ -205,7 +205,7 @@ services:
 
   jenkins:
     restart: always
-    image: bitnami/jenkins:2.150.2
+    image: bitnami/jenkins:2.138.3
     expose:
       - "8080"
     ports:
