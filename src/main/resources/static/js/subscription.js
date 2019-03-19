@@ -75,7 +75,7 @@ jQuery(document).ready(function () {
         if (backendStatus) {
             removeStatusIndicator();
         }
-        toggleButtonsDisabled(backendStatus);
+        updateTable(backendStatus);
     }
 
     function toggleCheckboxesDisabled(disabled) {
@@ -84,17 +84,15 @@ jQuery(document).ready(function () {
     }
     
     var previousStatus;
-    function toggleButtonsDisabled(currentStatus) {
+    function updateTable(currentStatus) {
     	var statusChanged = (previousStatus != currentStatus);
-    	$('.main #subButtons button.btn').prop("disabled", !currentStatus);  		
-    
     	if(statusChanged && !currentStatus){
     		table.clear().draw();
     	}
     	if(statusChanged && currentStatus){
     		reload_table();    		
     	}
-    	previousStatus = currentStatus;    	
+    	previousStatus = currentStatus;
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -394,7 +392,7 @@ jQuery(document).ready(function () {
                 "dataSrc": "",   //Flat structure from EI backend REST API
                 "error": function () { },
                 "complete": function(data) {
-                    if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
+                    if(data.responseJSON != undefined && data.responseJSON.length > 0) {
                         toggleCheckboxesDisabled(false);
                     } else {
                         toggleCheckboxesDisabled(true);
@@ -470,13 +468,13 @@ jQuery(document).ready(function () {
                     "render": function (data, type, row, meta) {
                         var unsecureEditAll = isSecured == false;
                         var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
-                        var allEditNoOwner = row.ldapUserName.length == 0;
-                        if (unsecureEditAll || securedEditOwn || allEditNoOwner) {
+                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;
+                        if (unsecureEditAll || securedEditOwn || allUserEditNoOwner) {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
                         } else {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>'
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button  id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn" disabled="">Edit</button> '
                                 + '<button  id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn" disabled="">Delete</button>';
                         }
@@ -487,9 +485,6 @@ jQuery(document).ready(function () {
                 if (isSecured == false) {
                     table.column(2).visible(false);
                 }
-                $(".control").click(function () {
-                    setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
-                });
             }
         });
     };
@@ -680,7 +675,9 @@ jQuery(document).ready(function () {
     // /END ## upload_subscriptions ################################################# 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
-        table.ajax.reload(null, false); // reload datatable ajax
+    	if(table != undefined) {
+    		table.ajax.reload(null, false); // reload datatable ajax
+    	}
     }
     // /Stop ## Reload Datatables ############################################
 
