@@ -380,16 +380,16 @@ jQuery(document).ready(function () {
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
-            "processing": true, //Feature control the processing indicator.
-            "serverSide": false, //Feature control DataTables' server-side processing mode.
+            "processing": true, // Feature control the processing indicator.
+            "serverSide": false, // Feature control DataTables' server-side processing mode.
             "fixedHeader": true,
-            "order": [], //Initial no order.
+            "order": [], // Initial no order.
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
                 "url": addBackendParameter(frontendServiceUrl + "/subscriptions"),
                 "type": "GET",
-                "dataSrc": "",   //Flat structure from EI backend REST API
+                "dataSrc": "",   // Flat structure from EI backend REST API
                 "error": function () { },
                 "complete": function(data) {
                     if(data.responseJSON != undefined && data.responseJSON.length > 0) {
@@ -399,7 +399,7 @@ jQuery(document).ready(function () {
                     }
                 }
             },
-            //Set column definition initialisation properties.
+            // Set column definition initialisation properties.
             "columnDefs": [
                 {
                     "targets": [0],
@@ -473,6 +473,8 @@ jQuery(document).ready(function () {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
+                        } else if(currentUser != undefined && row.ldapUserName.length != 0 && row.ldapUserName != currentUser ) {
+                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                         } else {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button  id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn" disabled="">Edit</button> '
