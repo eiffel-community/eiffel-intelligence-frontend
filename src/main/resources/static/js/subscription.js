@@ -473,8 +473,6 @@ jQuery(document).ready(function () {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
                                 + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
-                        } else if(currentUser != undefined && row.ldapUserName.length != 0 && row.ldapUserName != currentUser ) {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                         } else {
                             return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                                 + '<button  id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn" disabled="">Edit</button> '
