@@ -23,6 +23,7 @@ change the docker images used for the Eiffel Intelligence services.
 
 To set up the environment for running system tests (from root directory):
 
+    source src/main/docker/env.bash
     docker-compose -f src/main/docker/docker-compose.yml up -d
 
 

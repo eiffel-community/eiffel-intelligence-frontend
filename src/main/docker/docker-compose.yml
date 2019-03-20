@@ -33,11 +33,11 @@ version: "2.1"
 services:
   mongodb:
     restart: always
-    image: mongo:latest
+    image: ${MONGODB_IMAGE}
     expose:
       - "27017"
     ports:
-      - "27017:27017"
+      - "${MONGODB_PORT}:27017"
     healthcheck:
       test: ["CMD-SHELL","echo", "'db.stats().ok' | mongo localhost:27017/test", "--quiet"]
       interval: 30s
@@ -50,13 +50,13 @@ services:
 
   rabbitmq:
     restart: always
-    image: bitnami/rabbitmq:3.7.8-debian-9
+    image: ${RABBITMQ_IMAGE}
     expose:
       - "15672"
       - "5672"
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - "${RABBITMQ_WEB_PORT}:15672"
+      - "${RABBITMQ_AMQP_PORT}:5672"
     healthcheck:
       test: ["CMD-SHELL", "if rabbitmqctl status; then \nexit 0 \nfi \nexit 1"]
       interval: 30s
@@ -73,11 +73,11 @@ services:
 
   eiffel-er:
     restart: always
-    image: eiffelericsson/eiffel-er:0.0.67
+    image: ${EIFFEL_ER_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8084:8080"
+      - "${EIFFEL_ER_PORT}:8080"
     depends_on:
       - rabbitmq
       - mongodb
@@ -121,18 +121,18 @@ services:
       - index.dynamicIndex.maxIndexesCount=5
       - index.dynamicIndex.filePath=src/main/resources/dynamic_indexing.json
       - index.dynamicIndex.fileUpdatePeriod=30
-      - WAIT_MB_HOSTS=rabbitmq:15672
-      - WAIT_DB_HOSTS=mongodb:27017
+      - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
+      - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
 
 
   mail-server:
-    image: mailhog/mailhog
+    image: ${MAILSERVER_IMAGE}
     expose:
       - "1025"
       - "8025"
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "${MAIL_SMTP_PORT}:1025"
+      - "${MAIL_WEB_PORT}:8025"
     depends_on:
       - mongodb
     environment:
@@ -148,11 +148,11 @@ services:
 
   generate:
     restart: always
-    image: eiffelericsson/eiffel-remrem-generate:1.0.0
+    image: ${REMREM_GENERATE_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8095:8080"
+      - "${REMREM_GENERATE_PORT}:8080"
     environment:
       - server.port=8080
       - jasypt.encryptor.password=
@@ -163,8 +163,8 @@ services:
       - activedirectory.rootDn=
       - activedirectory.userSearchFilter=
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.eiffel.remrem.producer=INFO
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.eiffel.remrem.producer=DEBUG
     networks:
       eiffel_2.0_1:
         aliases:
@@ -173,11 +173,11 @@ services:
 
   publish:
     restart: always
-    image: eiffelericsson/eiffel-remrem-publish:1.0.0
+    image: ${REMREM_PUBLISH_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8096:8080"
+      - "${REMREM_PUBLISH_PORT}:8080"
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -194,9 +194,9 @@ services:
       - activedirectory.rootDn=
       - activedirectory.userSearchFilter=
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.eiffel.remrem.producer=INFO
-      - WAIT_MB_HOSTS=rabbitmq:15672
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.eiffel.remrem.producer=DEBUG
+      - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
     networks:
       eiffel_2.0_1:
         aliases:
@@ -205,11 +205,11 @@ services:
 
   jenkins:
     restart: always
-    image: bitnami/jenkins:2.138.3
+    image: ${JENKINS_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8082:8080"
+      - "${JENKINS_PORT}:8080"
       - "50001:50000"
     depends_on:
       - rabbitmq
@@ -227,11 +227,11 @@ services:
   ############### Start EI backend artifact rules #############################
   ei-backend-artifact:
     restart: always
-    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    image: ${EI_BACKEND_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8070:8080"
+      - "${EI_BACKEND_ARTIFACT_PORT}:8080"
     depends_on:
       - mongodb
       - rabbitmq
@@ -244,7 +244,7 @@ services:
       - server.port=8080
       - rules.path=/ArtifactRules.json
       - rabbitmq.host=rabbitmq
-      - rabbitmq.port=5672
+      - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
       - rabbitmq.componentName=eiffel-intelligence-artifact
       - rabbitmq.waitlist.queue.suffix=waitlist-artifact
@@ -252,19 +252,19 @@ services:
       - rabbitmq.user=myuser
       - rabbitmq.password=myuser
       - spring.data.mongodb.host=mongodb
-      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-artifact
       - missedNotificationDataBaseName=MissedNotification-artifact
       - search.query.prefix=object
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=http://${HOST}:8084/search/
+      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.ei=ERROR
-      - WAIT_MB_HOSTS=rabbitmq:15672
-      - WAIT_DB_HOSTS=mongodb:27017
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.ei=DEBUG
+      - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
+      - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
 
   ############### Stop EI backend artifact rules ##############################
 
@@ -272,11 +272,11 @@ services:
   ############### Start EI backend sourcechange rules ##########################
   ei-backend-sourcechange:
     restart: always
-    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    image: ${EI_BACKEND_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8072:8080"
+      - "${EI_BACKEND_SOURCECHANGE_PORT}:8080"
     depends_on:
       - mongodb
       - rabbitmq
@@ -289,7 +289,7 @@ services:
       - server.port=8080
       - rules.path=/SourceChangeObjectRules.json
       - rabbitmq.host=rabbitmq
-      - rabbitmq.port=5672
+      - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
       - rabbitmq.componentName=eiffel-intelligence-sourcechange
       - rabbitmq.waitlist.queue.suffix=waitlist-sourcechange
@@ -297,19 +297,19 @@ services:
       - rabbitmq.user=myuser
       - rabbitmq.password=myuser
       - spring.data.mongodb.host=mongodb
-      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-sourcechange
       - missedNotificationDataBaseName=MissedNotification-sourcechange
       - search.query.prefix=object
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=http://${HOST}:8084/search/
+      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.ei=ERROR
-      - WAIT_MB_HOSTS=rabbitmq:15672
-      - WAIT_DB_HOSTS=mongodb:27017
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.ei=DEBUG
+      - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
+      - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
 
   ############### Stop EI backend sourcechange rules ###########################
 
@@ -317,11 +317,11 @@ services:
   ############### Start EI backend testexecution rules #########################
   ei-backend-testexecution:
     restart: always
-    image: eiffelericsson/eiffel-intelligence-backend:1.0.1
+    image: ${EI_BACKEND_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8074:8080"
+      - "${EI_BACKEND_TESTEXECUTION_PORT}:8080"
     depends_on:
       - mongodb
       - rabbitmq
@@ -334,7 +334,7 @@ services:
       - server.port=8080
       - rules.path=/TestExecutionObjectRules.json
       - rabbitmq.host=rabbitmq
-      - rabbitmq.port=5672
+      - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
       - rabbitmq.componentName=eiffel-intelligence-testexecution
       - rabbitmq.waitlist.queue.suffix=waitlist-testexecution
@@ -342,7 +342,7 @@ services:
       - rabbitmq.user=myuser
       - rabbitmq.password=myuser
       - spring.data.mongodb.host=mongodb
-      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-testexecution
       - missedNotificationDataBaseName=MissedNotification-testexecution
       - search.query.prefix=object
@@ -353,22 +353,22 @@ services:
       - spring.mail.password=
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=http://${HOST}:8084/search/
+      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.ei=ERROR
-      - WAIT_MB_HOSTS=rabbitmq:15672
-      - WAIT_DB_HOSTS=mongodb:27017
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.ei=DEBUG
+      - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
+      - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
 
   ############### Stop EI backend testexecution rules ##########################
 
   ei-frontend:
     restart: always
-    image: eiffelericsson/eiffel-intelligence-frontend:1.0.1
+    image: ${EI_FRONTEND_IMAGE}
     expose:
       - "8080"
     ports:
-      - "8081:8080"
+      - "${EI_FRONTEND_PORT}:8080"
     depends_on:
       - ei-backend-artifact
       - ei-backend-sourcechange
@@ -381,13 +381,13 @@ services:
       - spring.application.name=eiffel-intelligence-frontend
       - server.port=8080
       - ei.frontend.service.host=${HOST}
-      - ei.frontend.service.port=8081
+      - ei.frontend.service.port=${EI_FRONTEND_PORT}
       - ei.frontend.context.path=
       - ei.backend.instances.list.json.content=${EI_INSTANCES_LIST}
       - ei.backend.instances.filepath=/tmp/eiInstancesListFile.json
       - logging.level.root=OFF
-      - logging.level.org.springframework.web=ERROR
-      - logging.level.com.ericsson.ei=ERROR
+      - logging.level.org.springframework.web=DEBUG
+      - logging.level.com.ericsson.ei=DEBUG
 
 networks:
   eiffel_2.0_1:
