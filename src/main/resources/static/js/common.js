@@ -234,7 +234,7 @@ function doIfUserLoggedOut() {
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
-    $(".show_if_authorized").hide();
+    $(".show_if_authorized").prop('disabled', true);
     sessionStorage.setItem('errorsStore', []);
 }
 
