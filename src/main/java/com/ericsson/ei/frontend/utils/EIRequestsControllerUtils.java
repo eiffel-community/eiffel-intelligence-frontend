@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackEndInformation;
 
 import lombok.Getter;
@@ -58,9 +59,10 @@ public class EIRequestsControllerUtils {
      *
      * @param request
      * @return String
+     * @throws Exception 
      * @throws IOException
      */
-    public String getEIRequestURL(HttpServletRequest request) {
+    public String getEIRequestURL(HttpServletRequest request) throws EiBackendInstancesException {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestQuery = request.getQueryString();
 
@@ -80,7 +82,7 @@ public class EIRequestsControllerUtils {
         return requestUrl;
     }
 
-    private String getBackEndUrl(String requestQuery) {
+    private String getBackEndUrl(String requestQuery) throws EiBackendInstancesException {
         String requestUrl = null;
 
         if (requestQuery != null) {
@@ -90,6 +92,10 @@ public class EIRequestsControllerUtils {
             } else {
                 String backEndName = extractBackEndNameFromParameters(params);
                 BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
+                if (backEndInformation == null) {
+                    LOG.debug("Backend Instances list is not available or not configured. Returning back empty EI Backend Url.");
+                    throw new EiBackendInstancesException("No EI Backend instances has been configured for EI Frontend service.");
+                }
                 requestUrl = backEndInformation.getUrlAsString();
             }
         } else {

@@ -30,6 +30,11 @@ jQuery(document).ready(function () {
                 backendStatus = true;
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("HHEHEH");
+                var obj = JSON.parse(XMLHttpRequest.responseText);
+                console.log(obj);
+                console.log(obj.message);
+		logMessages(obj.message);
                 if (XMLHttpRequest.status == 401) {
                     doIfUserLoggedOut();
                     EIConnBtn.style.background = green;

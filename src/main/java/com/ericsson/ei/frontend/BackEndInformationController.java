@@ -42,7 +42,7 @@ public class BackEndInformationController {
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
-        LOG.debug("Recieved request for instances.");
+        LOG.debug("Recieved request for retrieving EI Backend instances list.");
         ResponseEntity<String> response = backEndInfoContUtils.handleRequestForInstances(request);
         return response;
     }
@@ -50,7 +50,7 @@ public class BackEndInformationController {
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.PUT)
     public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
-        LOG.debug("Recieved request to switch back end.");
+        LOG.debug("Recieved request to switch EI back end instance.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToSwitchBackEnd(request);
         return response;
 
@@ -59,7 +59,7 @@ public class BackEndInformationController {
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
-        LOG.debug("Recieved request to delete back end.");
+        LOG.debug("Recieved request to delete EI back end instance.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToDeleteBackEnd(request);
         return response;
     }
@@ -67,7 +67,7 @@ public class BackEndInformationController {
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.POST)
     public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
-        LOG.debug("Recieved request to add back end.");
+        LOG.debug("Recieved request to add EI back end instance.");
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToAddBackEnd(request);
         return response;
     }
