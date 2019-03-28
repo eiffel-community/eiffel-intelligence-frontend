@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -75,6 +76,7 @@ public class BackEndInstanceFileUtils {
                     LOG.debug("EI Instances List file path is not provided! " +
                             "Will create a default EI Instances List file at file path: " + eiInstancesPath);
                 }
+                LOG.info("Loading EI-Backend instances from EI Instances List file: " + eiInstancesPath);
                 parseAndSetEiInstancesList();
             }
 
@@ -155,14 +157,19 @@ public class BackEndInstanceFileUtils {
      * @return JsonArray
      */
     public JsonArray getInstancesFromFile() {
+        LOG.debug("Reading EI Instances File: " + eiInstancesPath);
         try {
             ensureValidFile();
 
             JsonArray inputBackEndInstances = new JsonParser()
                     .parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
+            if (inputBackEndInstances.isJsonNull() || inputBackEndInstances.size() < 1) {
+                LOG.debug("EI Instance file does not exist or is empty. Returnin an empty EI Instance json list.");
+                return new JsonArray();
+            }
             return inputBackEndInstances;
-        } catch (IOException e) {
-            LOG.error("Failure when try to parse json file" + e.getMessage());
+        } catch (Exception e) {
+            LOG.error("Failure when try to parse EI instances json file. Error: " + e.getMessage());
             return new JsonArray();
         }
     }
@@ -176,7 +183,7 @@ public class BackEndInstanceFileUtils {
         try {
             Files.write(Paths.get(eiInstancesPath), jsonArrayToDump.toString().getBytes());
         } catch (IOException e) {
-            LOG.error("Couldn't add instance to file " + e.getMessage());
+            LOG.error("Couldn't add EI instance to EI Instances file. Error: " + e.getMessage());
         }
 
     }
@@ -189,7 +196,7 @@ public class BackEndInstanceFileUtils {
             }
 
             if (!fileContainsJsonArray()) {
-                LOG.error("File does not contain valid json! JSON:' "
+                LOG.error("EI Instances file does not contain valid json! JSON:' "
                         + new String(Files.readAllBytes(Paths.get(eiInstancesPath))) + "'.");
                 System.exit(-1);
             }
@@ -211,9 +218,11 @@ public class BackEndInstanceFileUtils {
             eiInstancesParentFolder.mkdirs();
         }
 
-        LOG.debug("File does not exist! Trying to create file.");
+        LOG.debug("EI Instances file does not exist! Trying to create file.");
         Files.createFile(Paths.get(eiInstancesPath));
-        Files.write(Paths.get(eiInstancesPath), "[]".getBytes());
+        PrintWriter eiInstanceFilePrintWriter = new PrintWriter(eiInstancesPath);
+        eiInstanceFilePrintWriter.println("[]");
+        eiInstanceFilePrintWriter.close();
     }
 
     private boolean fileContainsJsonArray() {
@@ -221,7 +230,7 @@ public class BackEndInstanceFileUtils {
             new JsonParser().parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
             return true;
         } catch (Exception e) {
-            LOG.error("Failure when try to parse json file" + e.getMessage());
+            LOG.error("Failure when try to parse EI Instances json file. Error: " + e.getMessage());
             return false;
         }
     }

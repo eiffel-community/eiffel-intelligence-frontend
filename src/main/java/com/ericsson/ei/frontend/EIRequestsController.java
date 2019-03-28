@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 
 @RestController
@@ -73,7 +74,14 @@ public class EIRequestsController {
             "/queryAggregatedObject", "/queryMissedNotifications", "/query",
             "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest incomingRequest) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        String eiRequestUrl;
+        try {
+            eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        } catch (EiBackendInstancesException e) {
+            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         HttpGet outgoingRequest = new HttpGet(eiRequestUrl);
 
         outgoingRequest = (HttpGet) addHeadersToRequest(outgoingRequest, incomingRequest);
@@ -92,7 +100,14 @@ public class EIRequestsController {
     @RequestMapping(value = { "/subscriptions", "/rules/rule-check/aggregation",
             "/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest incomingRequest) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        String eiRequestUrl;
+        try {
+            eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        } catch (EiBackendInstancesException e) {
+            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         String requestBody = "";
 
         try {
@@ -129,7 +144,14 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions", method = RequestMethod.PUT)
     public ResponseEntity<String> putRequests(Model model, HttpServletRequest incomingRequest) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        String eiRequestUrl;
+        try {
+            eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        } catch (EiBackendInstancesException e) {
+            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         String requestBody = "";
 
         try {
@@ -164,8 +186,14 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest incomingRequest) {
-        String eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
-
+        String eiRequestUrl;
+        try {
+            eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
+        } catch (EiBackendInstancesException e) {
+            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
+            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         HttpDelete outgoingRequest = new HttpDelete(eiRequestUrl);
 
         outgoingRequest = (HttpDelete) addHeadersToRequest(outgoingRequest, incomingRequest);
