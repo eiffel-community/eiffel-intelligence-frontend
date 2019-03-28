@@ -194,7 +194,6 @@ public class BackEndInstancesUtils {
         }
 
         if (backEndInformationList.size() == 0) {
-            LOG.error("No backend information found!");
             return null;
         }
 
@@ -240,6 +239,7 @@ public class BackEndInstancesUtils {
      * @return JsonArray with back end information data.
      */
     public JsonArray getBackEndsAsJsonArray() {
+        LOG.debug("Read and return EI Backend instances as JsonArray.");
         parseBackEndInstances();
         return parseBackEndsAsJsonArray();
     }
@@ -261,6 +261,7 @@ public class BackEndInstancesUtils {
      * @param def
      */
     public void setDefaultBackEndInstance(String name, String host, int port, String contextPath, boolean def) {
+        LOG.debug("Setting default EI Instance: " + name + ", " + host + ":" + port);
         getDefaultBackendInformation().setName(name);
         getDefaultBackendInformation().setHost(host);
         getDefaultBackendInformation().setPort(String.valueOf(port));
