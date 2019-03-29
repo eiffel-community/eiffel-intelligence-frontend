@@ -93,7 +93,6 @@ public class EIRequestsControllerUtils {
                 String backEndName = extractBackEndNameFromParameters(params);
                 BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
                 if (backEndInformation == null) {
-                    LOG.debug("Backend Instances list is not available or not configured. Returning back empty EI Backend Url.");
                     throw new EiBackendInstancesException("No EI Backend instances has been configured for EI Frontend service.");
                 }
                 requestUrl = backEndInformation.getUrlAsString();
