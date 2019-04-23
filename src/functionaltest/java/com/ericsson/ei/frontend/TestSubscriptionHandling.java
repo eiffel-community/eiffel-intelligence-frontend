@@ -26,7 +26,9 @@ import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
-            SeleniumConfig.getTempDownloadDirectory().getPath(), "subscriptionsTemplate.json");
+            SeleniumConfig.getTempDownloadDirectory()
+                          .getPath(),
+            "subscriptionsTemplate.json");
     private static final String SUBSCRIPTION_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest",
             "resources", "responses", "SubscriptionTemplate.json");
     private static final String SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP = String.join(File.separator, "src",
@@ -70,15 +72,18 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         // Setup mocks for "Bulk Delete" and get Template
         String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
-        mockClient
-                .when(request().withMethod("DELETE")
-                        .withPath("/subscriptions/Subscription1,Subscription2,Subscription3"))
-                .respond(response().withStatusCode(200).withBody(""));
-        mockClient.when(request().withMethod("GET").withPath("/download/subscriptionsTemplate"))
-                .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
+        mockClient.when(request().withMethod("DELETE")
+                                 .withPath("/subscriptions/Subscription1,Subscription2,Subscription3"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(""));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/download/subscriptionsTemplate"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(mockedTemplateResponse));
 
         // Delete all subscriptions before continuing (This does not delete
-        // subscriptions as subscriptions are mocked and cannot be deleted, we check mock
+        // subscriptions as subscriptions are mocked and cannot be deleted, we check
+        // mock
         // server for correct call at the end of the test)
         subscriptionPage.clickBulkDelete();
 
@@ -95,13 +100,14 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Upload a subscription
         subscriptionPage.clickUploadSubscriptionFunctionality(DOWNLOADED_TEMPLATE_FILE_PATH);
 
-
         // Verify that subscriptions where deleted and added via calls to mocked
         // server
         Thread.sleep(1000);
-        mockClient.verify(request()
-                .withMethod("DELETE").withPath("/subscriptions/Subscription1,Subscription2,Subscription3"));
-        mockClient.verify(request().withMethod("POST").withPath("/subscriptions").withBody(getSubscriptionsTemplate));
+        mockClient.verify(request().withMethod("DELETE")
+                                   .withPath("/subscriptions/Subscription1,Subscription2,Subscription3"));
+        mockClient.verify(request().withMethod("POST")
+                                   .withPath("/subscriptions")
+                                   .withBody(getSubscriptionsTemplate));
     }
 
     @Test
@@ -206,7 +212,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.isRadioCheckboxSelected(mailRadioID));
         assertEquals("mymail@company.com", subscriptionPage.getValueFromElement(notificationMetaInputID));
 
-        // Save and verify that form was closed, if form was not closed something went wrong.
+        // Save and verify that form was closed, if form was not closed something went
+        // wrong.
         subscriptionPage.clickFormsSaveBtn();
         assert (subscriptionPage.noPresenceOfHeader(formHeaderID));
     }
@@ -216,14 +223,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Set up
         int portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default",
-        "localhost", portServer, "", true);
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
         setupMockEndpoints(false, "");
 
         // Open subscription page.
         IndexPage indexPageObject = openIndexPage();
-        SubscriptionPage subscriptionPage =
-        openSubscriptionPage(indexPageObject);
+        SubscriptionPage subscriptionPage = openSubscriptionPage(indexPageObject);
 
         // Press "Reload" button without enabling LDAP and verify that two
         // subscriptions with names "Subscription1" and "Subscription2" are
@@ -235,8 +240,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
         // Test View button on a subscription
         subscriptionPage.clickViewButtonByXPath(VIEW_BUTTON_XPATH2);
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> driver.getPageSource().contains("View Subscription")));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource()
+                                                                         .contains("View Subscription")));
         subscriptionPage.clickFormCloseBtn();
     }
 
@@ -245,21 +250,19 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Set up
         int portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default",
-        "localhost", portServer, "", true);
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
         setupMockEndpoints(true, "");
 
         // Open subscription page.
         IndexPage indexPageObject = openIndexPage();
-        SubscriptionPage subscriptionPage =
-        openSubscriptionPage(indexPageObject);
+        SubscriptionPage subscriptionPage = openSubscriptionPage(indexPageObject);
 
         // Given LDAP is enabled, "Reload" subscriptions and reload
         // subscription page with LDAP enabled with unauthorized user names
         // Verify that subscriptions exists but only with "View" button
         assert (subscriptionPage.clickExpandButtonByXPath(EXPAND_BUTTON_XPATH));
-        assert (subscriptionPage.buttonDoesNotExistByXPath(DELETE_BUTTON_XPATH));
-        assert (subscriptionPage.buttonDoesNotExistByXPath(EDIT_BUTTON_XPATH));
+        assert (subscriptionPage.buttonDisabledByXPath(DELETE_BUTTON_XPATH));
+        assert (subscriptionPage.buttonDisabledByXPath(EDIT_BUTTON_XPATH));
         assert (subscriptionPage.buttonExistByXPath(VIEW_BUTTON_XPATH));
     }
 
@@ -268,14 +271,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Set up
         int portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default",
-        "localhost", portServer, "", true);
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
         setupMockEndpoints(true, "ABCD");
 
         // Open subscription page.
         IndexPage indexPageObject = openIndexPage();
-        SubscriptionPage subscriptionPage =
-        openSubscriptionPage(indexPageObject);
+        SubscriptionPage subscriptionPage = openSubscriptionPage(indexPageObject);
 
         // Given LDAP is enabled, reload the index page and mock the user
         // response as user 'ABCD'. Verify that current user can see only
@@ -291,8 +292,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // is unauthorized for this subscription
         assert (subscriptionPage.clickExpandButtonByXPath(EXPAND_BUTTON_XPATH2));
         assert (subscriptionPage.buttonExistByXPath(VIEW_BUTTON_XPATH2));
-        assert (subscriptionPage.buttonDoesNotExistByXPath(EDIT_BUTTON_XPATH2));
-        assert (subscriptionPage.buttonDoesNotExistByXPath(DELETE_BUTTON_XPATH2));
+        assert (subscriptionPage.buttonDisabledByXPath(EDIT_BUTTON_XPATH2));
+        assert (subscriptionPage.buttonDisabledByXPath(DELETE_BUTTON_XPATH2));
 
     }
 
@@ -306,8 +307,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         // Click on Subscription Handling page button and verify that it is open
         String subscriptionHeaderID = "subData";
         SubscriptionPage subscriptionPage = indexPageObject.clickSubscriptionPage();
-        assert (new WebDriverWait(driver, 10)
-                .until((webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
+        assert (new WebDriverWait(driver, 10).until(
+                (webdriver) -> subscriptionPage.presenceOfHeader(subscriptionHeaderID)));
 
         return subscriptionPage;
     }
@@ -315,27 +316,41 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     private static void setupMockEndpoints(boolean security, String user) throws IOException {
         mockClient.clear(request());
         String subscriptionResponse = getJSONStringFromFile(SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
-        mockClient.when(request().withMethod("GET").withPath("/subscriptions"))
-                .respond(response().withStatusCode(200).withBody(subscriptionResponse));
-        mockClient.when(request().withMethod("DELETE").withPath("/subscriptions"))
-                .respond(response().withStatusCode(200).withBody(""));
-        mockClient.when(request().withMethod("POST").withPath("/subscriptions"))
-                .respond(response().withStatusCode(200).withBody(""));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/subscriptions"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(subscriptionResponse));
+        mockClient.when(request().withMethod("DELETE")
+                                 .withPath("/subscriptions"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(""));
+        mockClient.when(request().withMethod("POST")
+                                 .withPath("/subscriptions"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(""));
 
         String subscriptionResponse2 = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
-        mockClient.when(request().withMethod("GET").withPath("/subscriptions/Subscription2"))
-                .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/subscriptions/Subscription2"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(subscriptionResponse2));
 
         String responseStatus = "{\"status\":\"OK\"}";
-        mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus"))
-                .respond(response().withStatusCode(200).withBody(responseStatus));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/auth/checkStatus"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(responseStatus));
 
         String responseAuth = "{\"security\":" + security + "}";
         String responseUser = "{\"user\":\"" + user + "\"}";
-        mockClient.when(request().withMethod("GET").withPath("/auth"))
-                .respond(response().withStatusCode(200).withBody(responseAuth));
-        mockClient.when(request().withMethod("GET").withPath("/auth/login"))
-                .respond(response().withStatusCode(200).withBody(responseUser));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/auth"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(responseAuth));
+        mockClient.when(request().withMethod("GET")
+                                 .withPath("/auth/login"))
+                  .respond(response().withStatusCode(200)
+                                     .withBody(responseUser));
 
     }
 

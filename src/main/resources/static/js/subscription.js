@@ -75,17 +75,24 @@ jQuery(document).ready(function () {
         if (backendStatus) {
             removeStatusIndicator();
         }
-        toggleButtonsDisabled(!backendStatus);
+        updateTable(backendStatus);
     }
 
     function toggleCheckboxesDisabled(disabled) {
         $('#check-all').prop("disabled", disabled);
         $('.data-check').prop("disabled", disabled);
     }
-
-    function toggleButtonsDisabled(disabled) {
-        $('.main #subButtons button.btn').prop("disabled", disabled);
-        $('.main #table button.btn').prop("disabled", disabled);
+    
+    var previousStatus;
+    function updateTable(currentStatus) {
+        var statusChanged = (previousStatus != currentStatus);
+        if(statusChanged && !currentStatus){
+    	    table.clear().draw();
+        }
+        if(statusChanged && currentStatus){
+    	    reload_table();    		
+        }
+        previousStatus = currentStatus;
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -373,10 +380,10 @@ jQuery(document).ready(function () {
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
-            "processing": true, //Feature control the processing indicator.
-            "serverSide": false, //Feature control DataTables' server-side processing mode.
+            "processing": true, // Feature control the processing indicator.
+            "serverSide": false, // Feature control DataTables' server-side processing mode.
             "fixedHeader": true,
-            "order": [], //Initial no order.
+            "order": [], // Initial no order.
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
@@ -385,14 +392,14 @@ jQuery(document).ready(function () {
                 "dataSrc": "",   // Flat structure from EI backend REST API
                 "error": function () { },
                 "complete": function(data) {
-                    if(data.responseJSON.length != undefined && data.responseJSON.length > 0) {
+                    if(data.responseJSON != undefined && data.responseJSON.length > 0) {
                         toggleCheckboxesDisabled(false);
                     } else {
                         toggleCheckboxesDisabled(true);
                     }
                 }
             },
-            //Set column definition initialisation properties.
+            // Set column definition initialisation properties.
             "columnDefs": [
                 {
                     "targets": [0],
@@ -459,14 +466,18 @@ jQuery(document).ready(function () {
                     "title": "Action",
                     "data": null,
                     "render": function (data, type, row, meta) {
-
-                        if (isSecured == false || (row.ldapUserName == currentUser && row.ldapUserName != null)) {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
-                                + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
-                                + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
-                        } else {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button>';
-                        }
+                        var unsecureEditAll = isSecured == false;
+                        var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
+                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;                        
+                        var disableButton = unsecureEditAll || securedEditOwn || allUserEditNoOwner;
+                        
+                        var disablingText = "";                        
+                        if(disableButton == false){                        	
+                        	disablingText = " disabled";
+                        } 
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
                     }
                 }
             ],
@@ -474,9 +485,6 @@ jQuery(document).ready(function () {
                 if (isSecured == false) {
                     table.column(2).visible(false);
                 }
-                $(".control").click(function () {
-                    setTimeout(function () { toggleOnBackendStatus(backendStatus); }, 50);
-                });
             }
         });
     };
@@ -664,11 +672,12 @@ jQuery(document).ready(function () {
             createUploadWindow();
         }
     });
-    // /END ## upload_subscriptions #################################################
-
+    // /END ## upload_subscriptions ################################################# 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
-        table.ajax.reload(null, false); //reload datatable ajax
+        if(table != undefined) {
+    	    table.ajax.reload(null, false); // reload datatable ajax
+        }
     }
     // /Stop ## Reload Datatables ############################################
 
@@ -705,7 +714,7 @@ jQuery(document).ready(function () {
     });
     // /Stop ## View Subscription ###########################################
 
-    // /Start ## populate JSON  ###########################################
+    // /Start ## populate JSON ###########################################
     function populate_json(data, save_method_in) {
         vm.mode(save_method_in);
 
@@ -790,7 +799,7 @@ jQuery(document).ready(function () {
         $('#modal_form .close').prop("disabled", false);
         $('.text-danger').hide();
     }
-    // /Stop ## pupulate JSON  ###########################################
+    // /Stop ## pupulate JSON ###########################################
 
     function validateName(subscriptionName) {
         var error = false;
@@ -833,7 +842,7 @@ jQuery(document).ready(function () {
             $('#invalidNotificationMeta').text("NotificationMeta must not be empty.");
             error = true;
         } else if (vm.restPost()) {
-            //validate url not implemented yet.
+            // validate url not implemented yet.
         } else if (!vm.restPost()) {
             // Validate email
             var emails = notificationMeta.split(",");
@@ -887,8 +896,8 @@ jQuery(document).ready(function () {
         $('#errorExists').hide();
 
         for (i = 0; i < notificationMessageKeyValuesArray.length; i++) {
-            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); //Do validation without spaces;
-            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); //Do validation without spaces
+            var testKey = notificationMessageKeyValuesArray[i].formkey().replace(/ /g, ""); // Do validation without spaces;
+            var testValue = notificationMessageKeyValuesArray[i].formvalue().replace(/ /g, ""); // Do validation without spaces
 
             $('#formvalue_' + i).removeClass("is-invalid");
             $('#formkey_' + i).removeClass("is-invalid");
@@ -967,7 +976,7 @@ jQuery(document).ready(function () {
             return false;
         }
         return true;
-        //END: Check of other subscription fields values
+        // END: Check of other subscription fields values
     }
 
     function createParsedFormCopy(jsonCopiedData) {
@@ -977,8 +986,7 @@ jQuery(document).ready(function () {
         }
 
         if (!vm.formpostkeyvaluepairs()) {
-            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here
-            // and ensures the list contains only one object.
+            // Since EI back end does not handle notificationMessageRawJson key we must inject that value to formvalue here and ensures the list contains only one object.
             var notificationMessageKeyValues = [];
             var formKeyValuePair = { "formkey": "", "formvalue": jsonCopiedData[0].notificationMessageRawJson };
             notificationMessageKeyValues.push(formKeyValuePair);
@@ -1008,8 +1016,8 @@ jQuery(document).ready(function () {
         // AJAX Callback handling
         var callback = {
             beforeSend: function () {
-                $('#btnSave').text('Saving...'); //change button text
-                $('#btnSave').attr('disabled', true); //set button disable
+                $('#btnSave').text('Saving...'); // change button text
+                $('#btnSave').attr('disabled', true); // set button disable
             },
             success: function (responseData, textStatus) {
                 var returnData = [responseData];
@@ -1030,8 +1038,8 @@ jQuery(document).ready(function () {
                 $('#serverError').show();
             },
             complete: function () {
-                $('#btnSave').text('Save'); //change button text
-                $('#btnSave').attr('disabled', false); //set button enable
+                $('#btnSave').text('Save'); // change button text
+                $('#btnSave').attr('disabled', false); // set button enable
             }
         };
 

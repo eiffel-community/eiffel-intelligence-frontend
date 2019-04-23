@@ -22,14 +22,14 @@ public class SubscriptionPage extends PageBaseClass {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
             return true;
-        } catch ( TimeoutException e) {
+        } catch (TimeoutException e) {
             return false;
         }
     }
 
     public void clickAddSubscription() {
-        WebElement addSubscriptionBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
+        WebElement addSubscriptionBtn = new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.id("addSubscription")));
         addSubscriptionBtn.click();
     }
 
@@ -48,8 +48,8 @@ public class SubscriptionPage extends PageBaseClass {
         WebElement bulkDeleteBtn = driver.findElement(By.id("bulkDelete"));
         bulkDeleteBtn.click();
         // Click confirm button to confirm delete
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".confirm-delete .modal-footer .btn-danger")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.cssSelector(".confirm-delete .modal-footer .btn-danger")));
         WebElement confirmBtn = driver.findElement(By.cssSelector(".confirm-delete .modal-footer .btn-danger"));
         confirmBtn.click();
     }
@@ -80,34 +80,29 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public boolean isRadioCheckboxSelected(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement checkbox = driver.findElement(By.id(id));
         boolean radioBtnIsSelected = checkbox.isSelected();
         return radioBtnIsSelected;
     }
 
     public boolean isCheckboxSelected(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
         WebElement checkbox = driver.findElement(By.id(id));
         boolean isSelected = checkbox.isSelected();
         return isSelected;
     }
 
     public void clickSpanAroundCheckbox(String id, String spanId) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
 
         WebElement checkbox = driver.findElement(By.id(id));
         WebElement span = driver.findElement(By.id(spanId));
 
         span.click();
 
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
     }
 
     public String getValueFromElement(String id) {
@@ -124,8 +119,8 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickUploadSubscriptionFunctionality(String filePath) throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("upload_sub")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.presenceOfElementLocated(By.id("upload_sub")));
         WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
         uploadInputField.sendKeys(filePath);
     }
@@ -140,8 +135,8 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickGetTemplate() {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
         WebElement getTemplateButton = driver.findElement(By.id("getTemplateButton"));
         getTemplateButton.click();
     }
@@ -158,15 +153,16 @@ public class SubscriptionPage extends PageBaseClass {
         viewBtn.click();
     }
 
-    public void clickAddRequirementBtn(){
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addRequirement")));
+    public void clickAddRequirementBtn() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.id("addRequirement")));
         WebElement viewBtn = driver.findElement(By.id("addRequirement"));
         viewBtn.click();
     }
 
     public String getSubscriptionNameFromSubscription() {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[@class='odd']/td[3]")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.xpath("//tr[@class='odd']/td[3]")));
         WebElement subscriptionNameElement = driver.findElement(By.xpath("//tr[@class='odd']/td[3]"));
         return subscriptionNameElement.getText();
     }
@@ -181,53 +177,48 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public boolean buttonExistByXPath(String XPath) {
-        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // The row indicates weather or not the del / view and edit buttons has moved
+        // down to
         // next row.
         String findInRow;
         try {
             findInRow = "[2]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                    ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
             return true;
         } catch (Exception e) {
         }
         try {
             findInRow = "[1]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                    ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
             return true;
         } catch (Exception e) {
         }
         return false;
     }
 
-    public boolean buttonDoesNotExistByXPath(String XPath) {
-        // The row indicates weather or not the del / view and edit buttons has moved down to
-        // next row.
-        String findInRow;
+    public boolean buttonDisabledByXPath(String XPath) {
         try {
-            findInRow = "[2]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPath + findInRow)));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                    ExpectedConditions.presenceOfElementLocated(By.xpath(XPath)));
+            WebElement element = driver.findElement(By.xpath(XPath));
+            return !element.isEnabled();
         } catch (Exception e) {
             return false;
         }
-        try {
-            findInRow = "[1]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPath + findInRow)));
-        } catch (Exception e) {
-            return false;
-        }
-        //elementIsNotVisible
-        return true;
     }
 
     public void clickReloadLDAP() throws IOException {
-        WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
+        WebElement reloadBtn = new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.id("reloadButton")));
         reloadBtn.click();
     }
 
     public boolean textExistsInTable(String txt) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                    ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" + txt + "')]]")));
         } catch (Exception e) {
             return false;
         }
@@ -236,7 +227,8 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean textDoesNotExistsInTable(String txt) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[contains(.,'" +txt+ "')]]")));
+            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                    ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[contains(.,'" + txt + "')]]")));
         } catch (Exception e) {
             return false;
         }
@@ -247,7 +239,8 @@ public class SubscriptionPage extends PageBaseClass {
         try {
             if (expandButtonExist(loc)) {
                 new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
-                driver.findElement(By.xpath(loc)).click();
+                driver.findElement(By.xpath(loc))
+                      .click();
             } else {
                 return true;
             }
@@ -258,23 +251,27 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public int countElements(String id) {
-        return driver.findElements(By.id(id)).size();
+        return driver.findElements(By.id(id))
+                     .size();
     }
 
     public void clickViewButtonByXPath(String XPath) {
-        // The row indicates weather or not the del / view and edit buttons has moved down to
+        // The row indicates weather or not the del / view and edit buttons has moved
+        // down to
         // next row.
         try {
             String Xpath2 = XPath + "[2]";
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath2)));
-            driver.findElement(By.xpath(Xpath2)).click();
+            driver.findElement(By.xpath(Xpath2))
+                  .click();
             return;
         } catch (Exception e) {
         }
         try {
             String Xpath1 = XPath + "[1]";
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath1)));
-            driver.findElement(By.xpath(Xpath1)).click();
+            driver.findElement(By.xpath(Xpath1))
+                  .click();
             return;
         } catch (Exception e) {
         }
@@ -284,7 +281,7 @@ public class SubscriptionPage extends PageBaseClass {
         try {
             new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.id(loc)));
             return true;
-        } catch ( TimeoutException e) {
+        } catch (TimeoutException e) {
             return false;
         }
     }

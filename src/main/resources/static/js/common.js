@@ -224,7 +224,7 @@ function doIfUserLoggedIn(user) {
     $("#ldapUserName").text(user);
     $("#loginBlock").hide();
     $("#logoutBlock").show();
-    $(".show_if_authorized").show();
+    $(".show_if_authorized").prop('disabled', false); 
 }
 
 function doIfUserLoggedOut() {
@@ -234,7 +234,7 @@ function doIfUserLoggedOut() {
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
-    $(".show_if_authorized").hide();
+    $(".show_if_authorized").prop('disabled', true);
     sessionStorage.setItem('errorsStore', []);
 }
 
