@@ -85,14 +85,14 @@ jQuery(document).ready(function () {
     
     var previousStatus;
     function updateTable(currentStatus) {
-    	var statusChanged = (previousStatus != currentStatus);
-    	if(statusChanged && !currentStatus){
-    		table.clear().draw();
-    	}
-    	if(statusChanged && currentStatus){
-    		reload_table();    		
-    	}
-    	previousStatus = currentStatus;
+        var statusChanged = (previousStatus != currentStatus);
+        if(statusChanged && !currentStatus){
+    	    table.clear().draw();
+        }
+        if(statusChanged && currentStatus){
+    	    reload_table();    		
+        }
+        previousStatus = currentStatus;
     }
 
     // Check if EI Backend Server is online when Status Connection button is pressed.
@@ -468,16 +468,16 @@ jQuery(document).ready(function () {
                     "render": function (data, type, row, meta) {
                         var unsecureEditAll = isSecured == false;
                         var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
-                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;
-                        if (unsecureEditAll || securedEditOwn || allUserEditNoOwner) {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
-                                + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn">Edit</button> '
-                                + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn">Delete</button>';
-                        } else {
-                            return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
-                                + '<button  id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn" disabled="">Edit</button> '
-                                + '<button  id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn" disabled="">Delete</button>';
-                        }
+                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;                        
+                        var disableButton = unsecureEditAll || securedEditOwn || allUserEditNoOwner;
+                        
+                        var disablingText = "";                        
+                        if(disableButton == false){                        	
+                        	disablingText = " disabled";
+                        } 
+                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
+                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
                     }
                 }
             ],
@@ -623,7 +623,7 @@ jQuery(document).ready(function () {
     });
     function tryToCreateSubscription(subscriptionJson) {
         // Send Subscription JSON file to Spring MVC
-    	// AJAX Callback handling
+        // AJAX Callback handling
         var callback = {
             success: function (responseData, textStatus) {
                 var returnData = [responseData];
@@ -675,9 +675,9 @@ jQuery(document).ready(function () {
     // /END ## upload_subscriptions ################################################# 
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
-    	if(table != undefined) {
-    		table.ajax.reload(null, false); // reload datatable ajax
-    	}
+        if(table != undefined) {
+    	    table.ajax.reload(null, false); // reload datatable ajax
+        }
     }
     // /Stop ## Reload Datatables ############################################
 
