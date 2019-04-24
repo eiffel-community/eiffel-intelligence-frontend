@@ -1,60 +1,56 @@
 {
-	"meta": {
-		"id": "6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
-		"source": {
-			"domainId": "example.domain"
-		},
-		"time": 1481875891763,
-		"type": "EiffelArtifactCreatedEvent",
-		"version": "1.0.0"
-	},
-	"data": {
-		"customData": [
-			{
-				"value": "ArtC2",
-				"key": "name"
-			},
-			{
-				"value": 1,
-				"key": "iteration"
-			}
-		],
-		"fileInformation": [
-			{
-				"classifier": "debug",
-				"extension": "jar"
-			},
-			{
-				"classifier": "test",
-				"extension": "txt"
-			},
-			{
-				"classifier": "application",
-				"extension": "exe"
-			}
-		],
-		"gav": {
-			"artifactId": "sub-system",
-			"version": "1.1.0",
-			"groupId": "com.mycompany.myproduct"
-		}
-	},
-	"links": [
-		{
-			"target": "fb6ef12d-25fb-4d77-b9fd-87688e66de47",
-			"type": "COMPOSITION"
-		},
-		{
-			"target": "1100572b-c3j4-441e-abc9-b62f48080011",
-			"type": "PREVIOUS_VERSION"
-		},
-		{
-			"target": "c4f9565d-2382-488f-b911-e3326bce21a3",
-			"type": "ENVIRONMENT"
-		},
-		{
-			"target": "c04fa59a-3c36-4601-8eac-7a26b8910f08",
-			"type": "CONTEXT"
-		}
-	]
+  "meta": {
+    "id": "6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43",
+    "source": {
+      "domainId": "example.domain"
+    },
+    "time": 1481875891763,
+    "type": "EiffelArtifactCreatedEvent",
+    "version": "3.0.0"
+  },
+  "data": {
+    "customData": [
+      {
+        "value": "ArtC2",
+        "key": "name"
+      },
+      {
+        "value": 1,
+        "key": "iteration"
+      }
+    ],
+    "fileInformation": [
+      {
+        "classifier": "debug",
+        "extension": "jar"
+      },
+      {
+        "classifier": "test",
+        "extension": "txt"
+      },
+      {
+        "classifier": "application",
+        "extension": "exe"
+      }
+    ],
+    "identity": "pkg:maven/com.mycompany.myproduct/artifact-name@2.0.0"
+  },
+  "links": [
+    {
+      "target": "fb6ef12d-25fb-4d77-b9fd-87688e66de47",
+      "type": "COMPOSITION"
+    },
+    {
+      "target": "1100572b-c3j4-441e-abc9-b62f48080011",
+      "type": "PREVIOUS_VERSION"
+    },
+    {
+      "target": "c4f9565d-2382-488f-b911-e3326bce21a3",
+      "type": "ENVIRONMENT"
+    },
+    {
+      "target": "c04fa59a-3c36-4601-8eac-7a26b8910f08",
+      "type": "CONTEXT"
+    }
+  ]
 }
