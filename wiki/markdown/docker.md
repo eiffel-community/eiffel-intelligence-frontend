@@ -84,39 +84,44 @@ Another option to configure Eiffel Intelligence front-end is to provide the appl
 
 # Run Docker image with provided docker-compose file
 This docker-compose file includes these components, [docker-compose.yml](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/docker-compose.yml):
-- MongoDb
+- MongoDB
 - RabbitMq
-- ER
-- EI back-end
+- ER (Event Repository)
+- Mail server
+- Jenkins
+- Eiffel REMReM services (Generate and Publish)
+- 3 instances of EI back-end (using different rule sets)
 - EI front-end (Using the local EI front-end Docker image build from previous steps)
 
-If you have used a different image tag when you build the EI front-end docker image, then you need to update docker-compose.yml file.
+NOTE: Only MongoDB, RabbitMQ, ER and EI components are needed to start.
+The rest of the components can be commented out if not needed.
 
-This line need to changed, in ei_backend service section:
+### 1 Source environment variables used in docker-compose.yml
 
-"image: eiffel-intelligence-frontend:0.0.19"
+For easier configuration, the Docker images to be used and ports for the different
+services are set in [env.bash](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/env.bash)
+file. Update to whichever ports you want to use, or keep default values. If you have used a different image tag when you built the EI front-end
+docker image, then you need to update the [env.bash file](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/env.bash)
+with the locally built image.
 
-To:
+To run docker-compose commands, the environment variables needs to be set:
 
-"image: \<your image tag\>"
+    source src/main/docker/env.bash
 
 Two variables need to be set before we can start up all services with docker-compose tool.
-Set Docker host ip to the HOST variable.
-If on Linux:
-
+Set Docker host IP to the HOST variable. This is done automatically when sourcing [env.bash](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/env.bash).
+But it is also possible to do it manually. If on Linux:
 `export HOST=$(hostname -I | tr " " "\n"| head -1)`
-
-If on Windows, get Docker Host ip with command: `dockermachine ip`
-
-Set that Docker host ip to HOST environment varaible.
+If on Windows, get Docker Host IP with command: `dockermachine ip`
+Set that Docker host IP to HOST environment variable.
 
 Currently we need to provide EI back-end instances list outside of docker-compose.yml file.
+This is also done via the [env.bash](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/env.bash)
+file.
 
-`export EIFFEL2_EI_FRONTEND_EI_INSTANCES_LIST=$(echo [{ \"contextPath\": \"\", \"port\": \"8080\", \"name\": \"EI-Backend\", \"host\": \"ei-backend\", \"https\": false, \"defaultBackend\": true}])`
+### 2 Then run following docker-compose command to startup all components:
 
-Then run following docker-compose command to startup all components:
-
-`docker-compose -f src/main/docker/docker-compose.yml up -d`
+    docker-compose -f src/main/docker/docker-compose.yml up -d
 
 It will take some minutes until all components has started. When all components has loaded, you should be able to access EI front-end web page with address:
 http://\<docker host ip\>:8081/
@@ -132,7 +137,7 @@ Following command can be used to get the logs from the EI front-end container/se
 
 `docker-compose -f src/main/docker/docker-compose.yml logs ei_frontend`
 
-All service names can be retreived with following command:
+All service names can be retrieved with following command:
 
 `docker-compose -f src/main/docker/docker-compose.yml config --services`
 
