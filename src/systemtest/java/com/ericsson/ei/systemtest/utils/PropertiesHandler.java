@@ -14,11 +14,12 @@ public class PropertiesHandler {
     public static void setProperties() throws Throwable {
         final String eiConfigPropertiesFilepath;
 
-        if (System.getProperty("ei.config.properties.file.path") != null) {
-            eiConfigPropertiesFilepath = System.getProperty("ei.config.properties.file.path");
-        } else {
+        if (System.getProperty("ei.config.properties.file.path") == null || System.getProperty("ei.config.properties.file.path").equals("")) {
             eiConfigPropertiesFilepath = "src/systemtest/resources/system-test.properties";
+        } else {
+            eiConfigPropertiesFilepath = System.getProperty("ei.config.properties.file.path");
         }
+
         InputStream systemTestFileInputStream = new FileInputStream(new File(eiConfigPropertiesFilepath));
         Properties systemTestProperties = new Properties();
         systemTestProperties.load(systemTestFileInputStream);
