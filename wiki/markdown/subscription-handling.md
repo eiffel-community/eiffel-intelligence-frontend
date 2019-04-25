@@ -4,7 +4,7 @@ Clicking on the Subscription Handling element will display some buttons in main
 page which help perform a number of subscription related actions. A table may
 become visible, which is populated by the information about the stored (if any)
 subscriptions in the connected database. This view is also the default view of
-the Eiffel Intelligence Frontend, once the authentication (if enabled) is done.
+the Eiffel Intelligence front-end, once the authentication (if enabled) is done.
 
 <img src="images/subscription_overview.png">
 </img>
@@ -22,9 +22,9 @@ database.
 This button downloads a subscription template
 #### _Upload Subscriptions_
 This button help uploads a subscription by opening a file explorer
-#### _EI Backend Status_
-This button indicates, through its color, whether a backend instance is
-connected with frontend or not. The green color means backend is connected
+#### _EI Back-end Status_
+This button indicates, through its color, whether a back-end instance is
+connected with front-end or not. The green color means back-end is connected
 while red means no instance is connected.
 
 

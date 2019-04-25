@@ -9,7 +9,7 @@ Below are some examples of using CURL towards different endpoints, together with
 Most endpoints are also documented in the [Eiffel Intelligence backend repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
 
 **Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
-    
+
     curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
 
 #### Quick access to endpoints:
@@ -178,7 +178,7 @@ The second entry is invalid due to having the same name as the first entry. The 
 
 #### Deleting a back-end instance via curl
 
-It is possible to delete a back-end instance using curl. The full JSON object has to be specified to identify which instance should be deleted. It is not possible to delete a default backend instance.
+It is possible to delete a back-end instance using curl. The full JSON object has to be specified to identify which instance should be deleted. It is not possible to delete a default back-end instance.
 
     {"name":"My Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":false},
 

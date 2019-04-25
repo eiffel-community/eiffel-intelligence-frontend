@@ -1,6 +1,6 @@
 # Add Subscription
 
-This form is used to add subscription through frontend GUI. Here is a
+This form is used to add subscription through front-end GUI. Here is a
 description of the elements available on this form.
 
 <img src="images/subscription_add_form1.png">
