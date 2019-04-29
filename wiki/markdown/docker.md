@@ -90,8 +90,8 @@ This docker-compose file includes these components, [docker-compose.yml](https:/
 - Mail server
 - Jenkins
 - Eiffel REMReM services (Generate and Publish)
-- 3 instances of EI back-end (using different rule sets)
-- EI front-end (Using the local EI front-end Docker image build from previous steps)
+- 3 instances of EI backend (using different rule sets)
+- EI frontend (Using the local EI front-end Docker image build from previous steps)
 
 NOTE: Only MongoDB, RabbitMQ, ER and EI components are needed to start.
 The rest of the components can be commented out if not needed.
