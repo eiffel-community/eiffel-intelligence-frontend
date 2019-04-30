@@ -276,7 +276,7 @@ aggregated object will show up on the screen.
 ## Curl ##
 
 It is possible to use curl to get required information. To get information
-about test rules status, if this functionality is enabled in back end or
+about test rules status, if this functionality is enabled in back-end or
 not, you can execute command below.
 
     curl -X GET http://<host>:8080/rules/rule-check/testRulePageEnabled?backendurl="http://127.0.0.1:8090/"
