@@ -30,7 +30,6 @@ install:
   - cd eiffel-intelligence
   - chmod +x pom.xml
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - ls target
   - export EIFFEL_WAR=$(ls target/*.war)
   - java -Dspring.config.location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
   - cd ..
