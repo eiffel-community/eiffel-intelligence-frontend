@@ -21,8 +21,7 @@ public class CheckEIConfigurations {
     
     @PostConstruct
     public void logAndCheckConfiguration() {
-        
-        
+            
         LOGGER.debug("EI Frontend started with following configurations:\n"
                 + "server.port: " + env.getProperty("server.port") + "\n"
                 + "ei.frontend.service.port: " + env.getProperty("ei.frontend.service.port") + "\n"
@@ -35,6 +34,6 @@ public class CheckEIConfigurations {
                 + "logging.level.root: " + env.getProperty("logging.level.root") + "\n"
                 + "logging.level.org.springframework.web: " + env.getProperty("logging.level.org.springframework.web") + "\n"
                 + "logging.level.com.ericsson.ei: " + env.getProperty("logging.level.com.ericsson.ei") + "\n"
-                + "\nThese properties is only some of the configuraitons, more configurations can have been provided.\n");
+                + "\nThese properties is only some of the configuraitons, more configurations may have been provided.\n");
     }
 }
