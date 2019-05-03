@@ -349,7 +349,7 @@ public class BackEndInstancesUtils {
 
     private void ensureDefaultBackEnd() {
         if (defaultBackendInformation.getHost() == null || defaultBackendInformation.getPort() == null) {
-            LOG.debug("No default Host or Port set!");
+            LOG.debug("No default EI Backend instance Host and/or Port has been set!");
             return;
         }
         defaultBackendInformation.setDefaultBackend(true);
