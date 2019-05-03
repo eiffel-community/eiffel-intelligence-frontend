@@ -32,7 +32,6 @@ install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - ls target
   - export EIFFEL_WAR=$(ls target/*.war)
-  - echo -e EIFFEL WAR FILE: ${EIFFEL_WAR}
   - java -Dspring.config.location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
   - cd ..
 
