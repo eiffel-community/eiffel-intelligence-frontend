@@ -60,7 +60,7 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener {
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,
-                config.getJenkinsBaseUrl(),
+                config.getJenkinsBaseExternalUrl(),
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
                 config.getRemremBaseUrl(),
