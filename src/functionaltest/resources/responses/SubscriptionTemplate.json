@@ -1,109 +1,109 @@
-[  
-  {  
+[
+  {
     "aggregationtype":"eiffel-intelligence",
     "created":1524037895385,
     "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/x-www-form-urlencoded",
-    "notificationMessageKeyValues":[  
-      {  
+    "notificationMessageKeyValues":[
+      {
         "formkey":"json",
         "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
       }
     ],
     "repeat":false,
-    "requirements":[  
-      {  
-        "conditions":[  
-          {  
-            "jmespath":"gav.groupId=='com.othercompany.library'"
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
           }
         ]
       }
     ],
     "subscriptionName":"Subscription1",
-    "_id":{  
+    "_id":{
       "$oid":"5ad6f907c242af3f1469751d"
     }
   },
-  {  
+  {
     "aggregationtype":"eiffel-intelligence",
     "created":1524037895415,
     "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/x-www-form-urlencoded",
-    "notificationMessageKeyValues":[  
-      {  
+    "notificationMessageKeyValues":[
+      {
         "formkey":"json",
         "formvalue":"{parameter: [{ name: 'jsonparams', value : to_string(@) }]}"
       }
     ],
     "repeat":false,
-    "requirements":[  
-      {  
-        "conditions":[  
-          {  
-            "jmespath":"gav.groupId=='com.othercompany.library'"
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
           }
         ]
       }
     ],
     "subscriptionName":"Subscription2",
-    "_id":{  
+    "_id":{
       "$oid":"5ad6f907c242af3f1469751e"
     }
   },
-  {  
+  {
     "aggregationtype":"eiffel-intelligence",
     "created":1524223397628,
     "notificationMeta":"http://<MyHost:port>/api/doit",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/json",
-    "notificationMessageKeyValues":[  
-      {  
+    "notificationMessageKeyValues":[
+      {
         "formkey":"",
         "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
       }
     ],
     "repeat":false,
-    "requirements":[  
-      {  
-        "conditions":[  
-          {  
-            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && gitIdentifier==null]"
           }
         ]
       }
     ],
     "subscriptionName":"Selenium_test_subscription",
-    "_id":{  
+    "_id":{
       "$oid":"5ad9cda5b715d336247e4980"
     }
   },
-  {  
+  {
     "aggregationtype":"eiffel-intelligence",
     "created":1524223397628,
     "notificationMeta":"http://<MyHost:port>/api/doit",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/json",
-    "notificationMessageKeyValues":[  
-      {  
+    "notificationMessageKeyValues":[
+      {
         "formkey":"",
         "formvalue":"{mydata: [{ fullaggregation : to_string(@) }]}"
       }
     ],
     "repeat":false,
-    "requirements":[  
-      {  
-        "conditions":[  
-          {  
-            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && svnIdentifier==null]"
+    "requirements":[
+      {
+        "conditions":[
+          {
+            "jmespath":"submission.sourceChanges[?submitter.group == 'Team Gophers' && gitIdentifier==null]"
           }
         ]
       }
     ],
     "subscriptionName":"Subscription_uploaded",
-    "_id":{  
+    "_id":{
       "$oid":"5ad9cda5b715d336247e4980"
     }
   }

@@ -1,5 +1,5 @@
 {
   "criteria": {
-    "object.gav.groupId": "com.mycompany.myproduct"
+    "aggregatedObject.identity": "pkg:maven/com.mycompany.myproduct/artifact-name@2.0.0"
   }
 }
