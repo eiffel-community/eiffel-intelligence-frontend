@@ -164,7 +164,7 @@ public class BackEndInstanceFileUtils {
             JsonArray inputBackEndInstances = new JsonParser()
                     .parse(new String(Files.readAllBytes(Paths.get(eiInstancesPath)))).getAsJsonArray();
             if (inputBackEndInstances.isJsonNull() || inputBackEndInstances.size() < 1) {
-                LOG.debug("EI Instance file does not exist or is empty. Returnin an empty EI Instance json list.");
+                LOG.debug("EI Instance file does not exist or is empty. Returning an empty EI Instance json list.");
                 return new JsonArray();
             }
             return inputBackEndInstances;
