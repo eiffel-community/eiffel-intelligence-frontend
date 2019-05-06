@@ -33,7 +33,7 @@ Feature: Source Change system test
 
     ### Add FlowCompleteSubscription to EI ###
     Given subscription object "FlowCompleteSubscription" is created which will trigger "FlowCompleteJob"
-    And condition with jmespath "submission.submitter.name=='Jane Doe'" is added to "FlowCompleteSubscription"
+    And condition with jmespath "creations[?author.name=='Jane Doe']" is added to "FlowCompleteSubscription"
     And condition with jmespath "submission.gitIdentifier.repoName=='my-repo'" is added to "FlowCompleteSubscription"
     And condition with jmespath "submission.confidenceLevels[?value=='SUCCESS']" is added to "FlowCompleteSubscription"
     And condition with jmespath "causedActivities[?outcome.conclusion=='SUCCESSFUL']" is added to "FlowCompleteSubscription"

@@ -259,7 +259,7 @@ services:
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:8080/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
@@ -304,7 +304,7 @@ services:
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:8080/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
@@ -353,7 +353,7 @@ services:
       - spring.mail.password=
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:8080/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
