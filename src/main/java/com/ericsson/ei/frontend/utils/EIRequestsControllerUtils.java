@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackEndInformation;
 
 import lombok.Getter;
@@ -52,15 +53,17 @@ public class EIRequestsControllerUtils {
     private BackEndInstancesUtils backEndInstancesUtils;
 
     /**
-     * Processes an HttpServletRequest and extract the URL parameters from it and reformats the requests and removes EI
-     * Front End specific parameters if any and builds a new URL to be used to call the requested, selected or default
-     * EI back end.
+     * Processes an HttpServletRequest and extract the URL parameters from it and
+     * reformats the requests and removes EI Front End specific parameters if any
+     * and builds a new URL to be used to call the requested, selected or default EI
+     * back end.
      *
      * @param request
      * @return String
+     * @throws Exception
      * @throws IOException
      */
-    public String getEIRequestURL(HttpServletRequest request) {
+    public String getEIRequestURL(HttpServletRequest request) throws EiBackendInstancesException {
         String eiBackendAddressSuffix = request.getServletPath();
         String requestQuery = request.getQueryString();
 
@@ -80,7 +83,7 @@ public class EIRequestsControllerUtils {
         return requestUrl;
     }
 
-    private String getBackEndUrl(String requestQuery) {
+    private String getBackEndUrl(String requestQuery) throws EiBackendInstancesException {
         String requestUrl = null;
 
         if (requestQuery != null) {
@@ -90,6 +93,10 @@ public class EIRequestsControllerUtils {
             } else {
                 String backEndName = extractBackEndNameFromParameters(params);
                 BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
+                if (backEndInformation == null) {
+                    throw new EiBackendInstancesException(
+                            "EI Backend instance '" + backEndName +  "' does not exist in EI Backend Instances list.");
+                }
                 requestUrl = backEndInformation.getUrlAsString();
             }
         } else {
@@ -117,8 +124,7 @@ public class EIRequestsControllerUtils {
         String urlFromParams = null;
 
         for (NameValuePair param : params) {
-            if (param.getName()
-                     .equals(BACKEND_URL_KEY_NAME)) {
+            if (param.getName().equals(BACKEND_URL_KEY_NAME)) {
                 try {
                     urlFromParams = URLDecoder.decode(param.getValue(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
@@ -134,8 +140,7 @@ public class EIRequestsControllerUtils {
         String backendName = null;
 
         for (NameValuePair param : params) {
-            if (param.getName()
-                     .equals(BACKEND_NAME_KEY_NAME)) {
+            if (param.getName().equals(BACKEND_NAME_KEY_NAME)) {
                 try {
                     backendName = URLDecoder.decode(param.getValue(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
@@ -152,7 +157,8 @@ public class EIRequestsControllerUtils {
         List<NameValuePair> processedParams = new ArrayList<>();
         for (NameValuePair param : params) {
             String name = param.getName(), value = param.getValue();
-            if (name == null || value == null || name.equals(BACKEND_URL_KEY_NAME) || name.equals(BACKEND_NAME_KEY_NAME)) {
+            if (name == null || value == null || name.equals(BACKEND_URL_KEY_NAME)
+                    || name.equals(BACKEND_NAME_KEY_NAME)) {
                 continue;
             }
             processedParams.add(new BasicNameValuePair(name, value));
