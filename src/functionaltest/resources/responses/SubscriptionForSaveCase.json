@@ -43,7 +43,7 @@
       {
         "conditions":[
           {
-            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
+            "jmespath": "split(identity, '/') | [0] =='pkg:maven'"
           }
         ]
       }
