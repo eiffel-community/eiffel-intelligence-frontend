@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-intelligence-frontend</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>war</packaging>
 
     <parent>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>1.18.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

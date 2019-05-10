@@ -9,7 +9,7 @@ jdk:
   - oraclejdk8
 
 env:
-  - EI_BACKEND_PORT=8099 MONGODB_PORT=27017 RABBITMQ_AMQP_PORT=5672 RABBITMQ_WEB_PORT=15672 EIFFEL_ER_PORT=8084 JENKINS_PORT=8081 MAIL_SMTP_PORT=1025 MAIL_WEB_PORT=8025
+  - EI_BACKEND_PORT=8099
 
 
 # Using default 'test' stage for our tests, and only running deploy stage
@@ -21,23 +21,22 @@ stages:
 
 
 before_install:
-  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
-  - cd eiffel-intelligence
-  - docker-compose up -d
+  - source src/main/docker/env.bash
+  - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
 
 
 install:
+  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+  - cd eiffel-intelligence
   - chmod +x pom.xml
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - cd target
-  - export EIFFEL_WAR=$(ls *.war)
-  - java -Dspring.config.location=file:../../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
-  - cd ../..
+  - export EIFFEL_WAR=$(ls target/*.war)
+  - java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
+  - cd ..
 
 
 after_script:
-  - cd eiffel-intelligence
-  - docker-compose down
+  - docker-compose -f src/main/docker/docker-compose.yml down
   - fuser -k ${EI_BACKEND_PORT}/tcp
 
 

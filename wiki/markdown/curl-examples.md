@@ -8,6 +8,10 @@ The front-end may also be used by other tools such as CURL or any kind of progra
 Below are some examples of using CURL towards different endpoints, together with example responses.
 Most endpoints are also documented in the [Eiffel Intelligence backend repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
 
+**Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
+
+    curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
+
 #### Quick access to endpoints:
 * [/auth](#auth)
 * [/backend](#backend)
@@ -17,6 +21,24 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 * [/rules](#rules)
 * [/subscriptions](#subscriptions)
 
+#### Specified back-end
+As a user of the front-end you may want to specify your own back-end URL if you do not want to use the default back-end.
+This is possible to do by injecting the back-end URL as a query parameter.
+The parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end instance does not have to be specified in the list of available instances.
+
+An example of a way to add such parameter is examplified below, note that the "?" indicates that parameters has been added to the front-end url.
+`localhost:8080` is the front-end url, and we want to access the context path /auth but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
+
+
+    curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
+
+Example with Tomcat:
+
+    curl -X GET http://localhost:8080/eifrontend/auth?backendurl="http://127.0.0.1:8090/eibackend/"
+
+This way of entering the `backendurl` may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
+
+**Note: It is not possible to add the `backendurl` parameter as a JSON parameter.**
 
 ## <a id="auth" /> /auth
 
@@ -156,33 +178,13 @@ The second entry is invalid due to having the same name as the first entry. The 
 
 #### Deleting a back-end instance via curl
 
-It is possible to delete a back-end instance using curl. The full JSON object has to be specified to identify which instance should be deleted. It is not possible to delete a default backend instance.
+It is possible to delete a back-end instance using curl. The full JSON object has to be specified to identify which instance should be deleted. It is not possible to delete a default back-end instance.
 
     {"name":"My Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":false},
 
 In the below command the JSON object is put in a file and sent along with the request.
 
     curl -X DELETE --data @data.json localhost:8080/backend
-
-
-#### Specified back-end
-As a user of the front-end you may want to specify your own back-end URL if you do not want to use the default back-end.
-This is possible to do by injecting the back-end URL as a query parameter.
-The parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end instance does not have to be specified in the list of available instances.
-
-An example of a way to add such parameter is below, note that the "?" indicates that parameters has been added to the front-end url.
-`localhost:8080` is the front-end url, and we want to access the context path /auth but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
-
-
-    curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
-
-Example with Tomcat:
-
-    curl -X GET http://localhost:8080/eifrontend/auth?backendurl="http://127.0.0.1:8090/eibackend/"
-
-This way of entering the `backendurl` may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
-
-Note: It is not possible to add the `backendurl` parameter as a JSON parameter.
 
 
 ## <a id="download" />/download
@@ -372,7 +374,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"gav.groupId=='com.othercompany.library'"
+                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
                         }
                     ]
                 }
@@ -404,7 +406,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"gav.groupId=='com.othercompany.library'"
+                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
                         }
                     ]
                 }
@@ -435,7 +437,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"gav.groupId=='com.othercompany.library'"
+                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
                         }
                     ]
                 }

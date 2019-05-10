@@ -62,10 +62,8 @@ contains 3 events.
         "IdRule": "meta.id",
         "StartEvent": "YES",
         "IdentifyRules": "[meta.id]",
-        "MatchIdRules": {
-          "_id": "%IdentifyRules_objid%"
-        },
-        "ExtractionRules": "{ id : meta.id, type : meta.type, time : meta.time, gav : data.gav, fileInformation : data.fileInformation, buildCommand : data.buildCommand }",
+        "MatchIdRules": {"_id": "%IdentifyRules_objid%"},
+        "ExtractionRules": "{ id : meta.id, type : meta.type, time : meta.time, identity : data.identity, fileInformation : data.fileInformation, buildCommand : data.buildCommand }",
         "DownstreamIdentifyRules": "links | [?type=='COMPOSITION'].target",
         "DownstreamMergeRules": "{\"externalComposition\":{\"eventId\":%IdentifyRules%}}",
         "DownstreamExtractionRules": "{artifacts: [{id : meta.id}]}",
@@ -127,11 +125,7 @@ contains 3 events.
             "domainId": "someDomain",
             "host": "someHost",
             "name": "someName",
-            "serializer": {
-              "groupId": "com.github.Ericsson",
-              "artifactId": "eiffel-remrem-semantics",
-              "version": "0.0.10"
-            },
+            "serializer": "pkg:maven/com.mycompany.tools/eiffel-serializer@1.0.3",
             "uri": "http://host:port/path"
           },
           "security": {
@@ -142,11 +136,7 @@ contains 3 events.
           }
         },
         "data": {
-          "gav": {
-            "groupId": "someGroup",
-            "artifactId": "someArtifact",
-            "version": "someVersion"
-          },
+          "identity": "pkg:maven/com.mycompany.myproduct/artifact-name@2.1.7",
           "fileInformation": [
             {
               "classifier": "",
@@ -155,13 +145,7 @@ contains 3 events.
           ],
           "buildCommand": "trigger",
           "requiresImplementation": "NONE",
-          "dependsOn": [
-            {
-              "groupId": "",
-              "artifactId": "",
-              "version": ""
-            }
-          ],
+          "dependsOn": ["pkg:maven/com.mycompany.myproduct/my-interface@%5B1.0%2C2.0%29"],
           "implements": [],
           "name": "event",
           "customData": []
@@ -184,11 +168,7 @@ contains 3 events.
             "domainId": "someDomain",
             "host": "someHost",
             "name": "someName",
-            "serializer": {
-              "groupId": "com.github.Ericsson",
-              "artifactId": "eiffel-remrem-semantics",
-              "version": "0.0.10"
-            },
+            "serializer": "pkg:maven/com.mycompany.tools/eiffel-serializer@1.0.3",
             "uri": "http://host:port/path"
           },
           "security": {
@@ -226,11 +206,7 @@ contains 3 events.
           "source": {
             "domainId": "someDomain",
             "name": "someName",
-            "serializer": {
-              "groupId": "com.github.Ericsson",
-              "artifactId": "eiffel-remrem-semantics",
-              "version": "0.0.10"
-            }
+            "serializer": "pkg:maven/com.mycompany.tools/eiffel-serializer@1.0.3"
           }
         },
         "data": {
@@ -276,7 +252,7 @@ aggregated object will show up on the screen.
 ## Curl ##
 
 It is possible to use curl to get required information. To get information
-about test rules status, if this functionality is enabled in back end or
+about test rules status, if this functionality is enabled in back-end or
 not, you can execute command below.
 
     curl -X GET http://<host>:8080/rules/rule-check/testRulePageEnabled?backendurl="http://127.0.0.1:8090/"
