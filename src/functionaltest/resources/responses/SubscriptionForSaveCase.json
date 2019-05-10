@@ -16,7 +16,7 @@
       {
         "conditions":[
           {
-            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'",
+            "jmespath": "match(identity, '[a-z]+\\\\.[a-z.]+[a-z]') =='com.mycompany.myproduct'"
           }
         ]
       }
