@@ -17,7 +17,7 @@
       {
         "conditions":[
           {
-            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
+            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
           }
         ]
       }
@@ -46,7 +46,7 @@
       {
         "conditions":[
           {
-            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
+            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
           }
         ]
       }

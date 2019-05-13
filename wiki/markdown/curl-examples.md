@@ -374,7 +374,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
+                            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
                         }
                     ]
                 }
@@ -406,7 +406,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
+                            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
                         }
                     ]
                 }
@@ -437,7 +437,7 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
                 {
                     "conditions":[
                         {
-                            "jmespath":"identity=='pkg:maven/com.mycompany.myproduct/artifact-name@1.0.0'"
+                            "jmespath": "split(identity, '/') | [1] =='com.mycompany.myproduct'"
                         }
                     ]
                 }
