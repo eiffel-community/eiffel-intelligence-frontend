@@ -224,7 +224,7 @@ function doIfUserLoggedIn(user) {
     $("#ldapUserName").text(user);
     $("#loginBlock").hide();
     $("#logoutBlock").show();
-    $(".show_if_authorized").prop('disabled', false); 
+    $(".show_if_authorized").prop('disabled', false);
 }
 
 function doIfUserLoggedOut() {
@@ -246,8 +246,8 @@ function doIfSecurityOff() {
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
-            var isSecured = JSON.parse(ko.toJSON(responseData)).security;
-            if (isSecured == true) {
+            var ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
+            if (ldapEnabled == true) {
                 checkLoggedInUser();
             } else {
                 doIfSecurityOff();

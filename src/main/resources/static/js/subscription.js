@@ -86,7 +86,7 @@ jQuery(document).ready(function () {
     var previousStatus;
     function updateTable(currentStatus) {
         var statusChanged = (previousStatus != currentStatus);
-        if(statusChanged && !currentStatus){
+        if(statusChanged && !currentStatus && table != undefined){
             table.clear().draw();
         }
         if(statusChanged && currentStatus){
@@ -357,8 +357,8 @@ jQuery(document).ready(function () {
     function checkSecurityAndDrawTable() {
         var callback = {
             success: function (responseData, textStatus) {
-                isSecured = JSON.parse(ko.toJSON(responseData)).security;
-                drawTable(isSecured);
+                ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
+                drawTable(ldapEnabled);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 drawTable(false);
@@ -375,7 +375,7 @@ jQuery(document).ready(function () {
     }
 
     // /Start ## Datatables ##################################################
-    function drawTable(isSecured) {
+    function drawTable(ldapEnabled) {
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -465,21 +465,23 @@ jQuery(document).ready(function () {
                     "title": "Action",
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(row, data)
+                        subscriptionOwner = row.ldapUserName
+                        subscriptionName = data.subscriptionName
 
+                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName, ldapEnabled)
                         var disablingText = "";
                         if(disableEditDeleteButtons == true){
                             disablingText = " disabled";
                         }
 
-                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
+                        return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                            + '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
+                            + '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
                     }
                 }
             ],
             "initComplete": function () {
-                if (isSecured == false) {
+                if (ldapEnabled == false) {
                     table.column(2).visible(false);
                 }
             }
@@ -492,30 +494,50 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
-    function isEditAndDeleteButtonsDisabled(row, data) {
-        var disableEditDeleteButtons = true
-        var currentUser = sessionStorage.getItem("currentUser");
-
-        var isAnonymousSubscription = row.ldapUserName == null || row.ldapUserName == undefined || row.ldapUserName.length == 0
-        var isCurrentUserLoggedIn = currentUser != null && currentUser != undefined && currentUser.length != 0
-
-        if (isSecured == false || isAnonymousSubscription == true) {
-            // Is NOT secured or is anonymous subscription
-            disableEditDeleteButtons = false
-        } else if (isCurrentUserLoggedIn == true) {
-            // Is secured and not anonymous subscription and user is logged in
-            var isCurrentUserOwner = row.ldapUserName == currentUser
-            if (isCurrentUserOwner == true) {
-                // Back end is secured, current user is owner to subscription
-                disableEditDeleteButtons = false
-            } else {
-                console.log("User is not owner of subscription: '" + data.subscriptionName + "'." )
-            }
-        } else {
-            console.log("User must be logged in to edit subscription: '" + data.subscriptionName + "'." )
+    function isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName, ldapEnabled) {
+        if (ldapEnabled == false) {
+            // LDAP is NOT activated
+            return false
         }
 
-        return disableEditDeleteButtons
+        // Check if subscriptionOwner is defined
+        var subscriptionOwnerDefined = isUserNameDefined(subscriptionOwner)
+        if (subscriptionOwnerDefined == false) {
+            // LDAP is NOT activated or is anonymous subscription
+            return false
+        }
+
+        // Check if current user is logged in
+        var currentUser = sessionStorage.getItem("currentUser");
+        var isCurrentUserLoggedIn = isUserNameDefined(currentUser)
+        if (isCurrentUserLoggedIn == false) {
+            // Current user is not logged in
+            console.log("User must be logged in to edit subscription: '" + subscriptionName + "'." )
+            return true
+        }
+
+        var isCurrentUserOwner = subscriptionOwner == currentUser
+        if (isCurrentUserOwner == false) {
+            // Back end is secured, but current user is not owner to subscription
+            console.log("User is not owner of subscription: '" + subscriptionName + "'." )
+            return true
+        }
+
+        return false
+    }
+
+    function isUserNameDefined(username) {
+        var isDefined = false
+        var userNameIsString = isString(username)
+        if (userNameIsString == true) {
+            isDefined = username.length != 0
+        }
+        return isDefined
+    }
+
+    function isString(value) {
+        var isString = typeof value === 'string' || value instanceof String
+        return isString
     }
     // /Stop ## Datatables ##################################################
 
