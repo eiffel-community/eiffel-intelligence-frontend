@@ -82,15 +82,15 @@ jQuery(document).ready(function () {
         $('#check-all').prop("disabled", disabled);
         $('.data-check').prop("disabled", disabled);
     }
-    
+
     var previousStatus;
     function updateTable(currentStatus) {
         var statusChanged = (previousStatus != currentStatus);
         if(statusChanged && !currentStatus){
-    	    table.clear().draw();
+            table.clear().draw();
         }
         if(statusChanged && currentStatus){
-    	    reload_table();    		
+            reload_table();
         }
         previousStatus = currentStatus;
     }
@@ -376,7 +376,6 @@ jQuery(document).ready(function () {
 
     // /Start ## Datatables ##################################################
     function drawTable(isSecured) {
-        var currentUser = sessionStorage.getItem("currentUser");
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -466,15 +465,13 @@ jQuery(document).ready(function () {
                     "title": "Action",
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        var unsecureEditAll = isSecured == false;
-                        var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
-                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;                        
-                        var disableButton = unsecureEditAll || securedEditOwn || allUserEditNoOwner;
-                        
-                        var disablingText = "";                        
-                        if(disableButton == false){                        	
-                        	disablingText = " disabled";
-                        } 
+                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(row, data)
+
+                        var disablingText = "";
+                        if(disableEditDeleteButtons == true){
+                            disablingText = " disabled";
+                        }
+
                         return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
                             + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
                             + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
@@ -495,6 +492,31 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
+    function isEditAndDeleteButtonsDisabled(row, data) {
+        var disableEditDeleteButtons = true
+        var currentUser = sessionStorage.getItem("currentUser");
+
+        var isAnonymousSubscription = row.ldapUserName == null || row.ldapUserName == undefined || row.ldapUserName.length == 0
+        var isCurrentUserLoggedIn = currentUser != null && currentUser != undefined && currentUser.length != 0
+
+        if (isSecured == false || isAnonymousSubscription == true) {
+            // Is NOT secured or is anonymous subscription
+            disableEditDeleteButtons = false
+        } else if (isCurrentUserLoggedIn == true) {
+            // Is secured and not anonymous subscription and user is logged in
+            var isCurrentUserOwner = row.ldapUserName == currentUser
+            if (isCurrentUserOwner == true) {
+                // Back end is secured, current user is owner to subscription
+                disableEditDeleteButtons = false
+            } else {
+                console.log("User is not owner of subscription: '" + data.subscriptionName + "'." )
+            }
+        } else {
+            console.log("User must be logged in to edit subscription: '" + data.subscriptionName + "'." )
+        }
+
+        return disableEditDeleteButtons
+    }
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################
@@ -672,11 +694,11 @@ jQuery(document).ready(function () {
             createUploadWindow();
         }
     });
-    // /END ## upload_subscriptions ################################################# 
+    // /END ## upload_subscriptions #################################################
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
         if(table != undefined) {
-    	    table.ajax.reload(null, false); // reload datatable ajax
+            table.ajax.reload(null, false); // reload datatable ajax
         }
     }
     // /Stop ## Reload Datatables ############################################
