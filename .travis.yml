@@ -59,7 +59,9 @@ jobs:
       script:
         - sudo apt-get update
         - sudo apt-get install -y openjdk-8-jdk
+        - echo $PATH
         - PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
+        - echo $PATH
         - java -version
         - mvn test -B
       after_script: skip
