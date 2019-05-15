@@ -501,8 +501,8 @@ jQuery(document).ready(function () {
         }
 
         // Check if subscriptionOwner is defined
-        var subscriptionOwnerDefined = isUserNameDefined(subscriptionOwner)
-        if (subscriptionOwnerDefined == false) {
+        var isSubscriptionOwnerDefined = isUserNameDefined(subscriptionOwner)
+        if (isSubscriptionOwnerDefined == false) {
             // LDAP is NOT activated or is anonymous subscription
             return false
         }
@@ -516,8 +516,8 @@ jQuery(document).ready(function () {
             return true
         }
 
-        var isSubscriptionOwner = subscriptionOwner == currentUser
-        if (isSubscriptionOwner == false) {
+        var isUserSubscriptionOwner = subscriptionOwner == currentUser
+        if (isUserSubscriptionOwner == false) {
             // Back end is secured, but current user is not owner to subscription
             console.log("User is not owner of subscription: '" + subscriptionName + "'." )
             return true
