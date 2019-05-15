@@ -21,7 +21,7 @@ stages:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y openjdk-11-jdk
+  - sudo apt-get remove -y openjdk-11-jdk
   - sudo apt-get install -y openjdk-8-jdk
   - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
   - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
@@ -60,6 +60,7 @@ jobs:
       install: skip
       script:
         - sudo apt-get update
+        - sudo apt-get remove -y openjdk-11-jdk
         - sudo apt-get install -y openjdk-8-jdk
         - echo $PATH
         - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
