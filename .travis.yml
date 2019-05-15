@@ -61,7 +61,6 @@ jobs:
       script:
         - sudo apt-get update
         - sudo apt-get install -y openjdk-8-jdk
-        - echo $PATH
         - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
         - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH 
         - echo $PATH
