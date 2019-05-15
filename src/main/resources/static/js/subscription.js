@@ -357,7 +357,7 @@ jQuery(document).ready(function () {
     function checkSecurityAndDrawTable() {
         var callback = {
             success: function (responseData, textStatus) {
-                ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
+                var ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
                 drawTable(ldapEnabled);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -465,6 +465,10 @@ jQuery(document).ready(function () {
                     "title": "Action",
                     "data": null,
                     "render": function (data, type, row, meta) {
+                        if (data == undefined || row == undefined) {
+                            window.logMessages("Error: Subscription data is not defined");
+                            return ''
+                        }
                         subscriptionOwner = row.ldapUserName
                         subscriptionName = data.subscriptionName
 
