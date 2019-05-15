@@ -65,6 +65,7 @@ jobs:
         - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
         - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH 
         - echo $PATH
+        - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
         - java -version
         - mvn test -B
       after_script: skip
