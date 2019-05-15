@@ -21,10 +21,10 @@ stages:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get remove -y openjdk-11-jdk
   - sudo apt-get install -y openjdk-8-jdk
   - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
   - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
+  - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - java -version
   - source src/main/docker/env.bash
   - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
@@ -60,7 +60,6 @@ jobs:
       install: skip
       script:
         - sudo apt-get update
-        - sudo apt-get remove -y openjdk-11-jdk
         - sudo apt-get install -y openjdk-8-jdk
         - echo $PATH
         - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
