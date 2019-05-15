@@ -516,8 +516,8 @@ jQuery(document).ready(function () {
             return true
         }
 
-        var isCurrentUserOwner = subscriptionOwner == currentUser
-        if (isCurrentUserOwner == false) {
+        var isSubscriptionOwner = subscriptionOwner == currentUser
+        if (isSubscriptionOwner == false) {
             // Back end is secured, but current user is not owner to subscription
             console.log("User is not owner of subscription: '" + subscriptionName + "'." )
             return true
