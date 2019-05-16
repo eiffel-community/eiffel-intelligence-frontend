@@ -7,8 +7,8 @@ jQuery(document).ready(function () {
             },
             success: function (responseData, textStatus) {
                 var currentUser = sessionStorage.getItem("currentUser");
-                var isSecured = responseData.security;
-                if (isSecured == false || (isSecured == true && currentUser != null)) {
+                var ldapEnabled = responseData.security;
+                if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
                     router.navigate('subscriptions');
                 }
             },
