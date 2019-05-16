@@ -1,5 +1,4 @@
 jQuery(document).ready(function () {
-    var router = new Navigo(null, true, '#');
 
     function checkBackendSecured() {
         var callback = {
@@ -9,11 +8,11 @@ jQuery(document).ready(function () {
                 var currentUser = getCurrentUserInSession();
                 var ldapEnabled = responseData.security;
                 if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
-                    router.navigate('subscriptions');
+                    navigateToRoute('subscriptions');
                 }
             },
             error: function (responseData) {
-                router.navigate('subscriptions');
+                navigateToRoute('subscriptions');
             },
             complete: function () {
             }
@@ -53,7 +52,7 @@ jQuery(document).ready(function () {
                 var currentUser = JSON.parse(ko.toJSON(responseData)).user;
                 $.jGrowl("Welcome " + currentUser, { sticky: false, theme: 'Notify' });
                 doIfUserLoggedIn(currentUser);
-                router.navigate('subscriptions');
+                navigateToRoute('subscriptions');
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.logMessages("Bad credentials");
