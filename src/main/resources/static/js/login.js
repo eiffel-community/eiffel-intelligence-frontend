@@ -6,7 +6,7 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (responseData, textStatus) {
-                var currentUser = localStorage.getItem("currentUser");
+                var currentUser = sessionStorage.getItem("currentUser");
                 var isSecured = responseData.security;
                 if (isSecured == false || (isSecured == true && currentUser != null)) {
                     router.navigate('subscriptions');
