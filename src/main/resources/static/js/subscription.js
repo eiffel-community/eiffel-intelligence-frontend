@@ -512,7 +512,7 @@ jQuery(document).ready(function () {
         }
 
         // Check if current user is logged in
-        var currentUser = sessionStorage.getItem("currentUser");
+        var currentUser = getCurrentUserInSession();
         var isCurrentUserLoggedIn = isUserNameDefined(currentUser)
         if (isCurrentUserLoggedIn == false) {
             // Current user is not logged in

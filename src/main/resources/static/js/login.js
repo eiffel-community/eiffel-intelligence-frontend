@@ -6,7 +6,7 @@ jQuery(document).ready(function () {
             beforeSend: function () {
             },
             success: function (responseData, textStatus) {
-                var currentUser = sessionStorage.getItem("currentUser");
+                var currentUser = getCurrentUserInSession();
                 var ldapEnabled = responseData.security;
                 if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
                     router.navigate('subscriptions');
