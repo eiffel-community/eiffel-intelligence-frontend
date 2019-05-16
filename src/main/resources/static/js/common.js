@@ -276,6 +276,10 @@ function checkLoggedInUser() {
     var contextPath = "/auth/login";
     ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
+
+function getCurrentUserInSession() {
+	return sessionStorage.getItem("currentUser");
+}
 // End ## Login and Security ##
 
 // Start ## Status Indicator ##
