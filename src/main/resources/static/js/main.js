@@ -18,7 +18,7 @@ jQuery(document).ready(function () {
         var callback = {
             complete: function () {
                 doIfUserLoggedOut();
-                router.navigate('*');
+                navigateToRoute('*');
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();

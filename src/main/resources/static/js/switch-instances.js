@@ -46,7 +46,7 @@ jQuery(document).ready(function () {
         }
         self.submit = function () {
             sessionStorage.selectedActive = selected.name;
-            navigateRoute('subscriptions');
+            navigateToRoute('subscriptions');
         }
     }
 

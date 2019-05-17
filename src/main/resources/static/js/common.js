@@ -141,7 +141,7 @@ function reloadRoute() {
     routes[currentUrl]();
 }
 
-function navigateRoute(route) {
+function navigateToRoute(route) {
     router.navigate(route);
 }
 // End ## Routing ##
