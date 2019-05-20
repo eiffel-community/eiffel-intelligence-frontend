@@ -1,28 +1,13 @@
 jQuery(document).ready(function () {
+    function reroutToSubscritpion() {
+        checkBackendSecured();
+        // if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
+        if (isLdapEnabled() && currentUser != null && currentUser != undefined || !isLdapEnabled()) {
+            navigateToRoute('subscriptions');
+        }
 
-    function checkBackendSecured() {
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (responseData, textStatus) {
-                var currentUser = getCurrentUserInSession();
-                var ldapEnabled = responseData.security;
-                if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
-                    navigateToRoute('subscriptions');
-                }
-            },
-            error: function (responseData) {
-                navigateToRoute('subscriptions');
-            },
-            complete: function () {
-            }
-        };
-        var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/auth";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
-
-    checkBackendSecured();
+    reroutToSubscritpion();
 
     // /Start ## Knockout ####################################################
     function loginModel() {
@@ -40,7 +25,7 @@ jQuery(document).ready(function () {
                 var token = window.btoa(dataJSON.ldapUserName + ":" + dataJSON.password);
                 sendLoginRequest(token);
             }
-        }
+        };
     }
 
     function sendLoginRequest(token) {
