@@ -17,22 +17,25 @@ function setLdapEnabled(value){
 // End   ## getters and setters
 
 function addBackendParameter(url) {
+    var parameterKey = "backendname";
+
+    if (!sessionStorage.selectedActive) {
+        return url;
+    }
+
+    // If String includes function does not exist (IE) add function.
     if (!String.prototype.includes) {
         String.prototype.includes = function (str) {
             return this.indexOf(str) !== -1;
         };
     }
-    if (!sessionStorage.selectedActive) {
-        return url;
-    }
-    var delimiter = "?";
-    var parameterKey = "backendname";
 
-    if (url.includes("?")) {
+    var delimiter = "?";
+    if (url.includes(delimiter)) {
+        // url has delimeter ?, then delimeter should be &
         delimiter = "&";
-    } else {
-        delimiter = "?";
     }
+
     url = url + delimiter + parameterKey + "=" + sessionStorage.selectedActive;
     return url;
 }

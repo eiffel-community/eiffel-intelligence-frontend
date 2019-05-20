@@ -374,11 +374,11 @@ jQuery(document).ready(function () {
                 "url": addBackendParameter(frontendServiceUrl + "/subscriptions"),
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
-                "error": function () {
-                    console.log("There was an ERROR!!!");
-                },
+                "error": function () { },
                 "complete": function(data) {
-                    console.log("data.responseJSON " + data.responseJSON);
+                    $("#check-all").click(function () {
+                        $(".data-check").prop('checked', $(this).prop('checked'));
+                    });
                     if(data.responseJSON != undefined && data.responseJSON.length > 0) {
                         toggleCheckboxesDisabled(false);
                     } else {
@@ -466,7 +466,6 @@ jQuery(document).ready(function () {
                             disablingText = " disabled";
                         }
 
-                        console.log("We do return!!!");
                         return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> ' +
                                '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> ' +
                                '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
@@ -474,10 +473,7 @@ jQuery(document).ready(function () {
                 }
             ],
             "initComplete": function () {
-                console.log("This Should print!!!");
-                console.log("is ldap NOT enabled? " + !isLdapEnabled());
                 if (!isLdapEnabled()) {
-                    console.log("OK!!!");
                     table.column(2).visible(false);
                 }
             }
@@ -507,15 +503,13 @@ jQuery(document).ready(function () {
         var currentUser = getCurrentUserInSession();
         var isCurrentUserLoggedIn = isUserNameDefined(currentUser);
         if (isCurrentUserLoggedIn == false) {
-            // Current user is not logged in
-            console.log("User must be logged in to edit subscription: '" + subscriptionName + "'." );
+            // Current user is not logged in, edit / delete disabled = true
             return true;
         }
 
         var isUserSubscriptionOwner = subscriptionOwner == currentUser ;
         if (isUserSubscriptionOwner == false) {
-            // Back end is secured, but current user is not owner to subscription
-            console.log("User is not owner of subscription: '" + subscriptionName + "'." );
+            // Back end is secured, but current user is not owner to subscription, edit / delete disabled = true
             return true;
         }
 
