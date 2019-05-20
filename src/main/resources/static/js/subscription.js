@@ -381,6 +381,9 @@ jQuery(document).ready(function () {
                     });
                     if(data.responseJSON != undefined && data.responseJSON.length > 0) {
                         toggleCheckboxesDisabled(false);
+                        if (!isLdapEnabled()) {
+                            table.column(2).visible(false);
+                        }
                     } else {
                         toggleCheckboxesDisabled(true);
                     }
@@ -471,12 +474,7 @@ jQuery(document).ready(function () {
                                '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
                     }
                 }
-            ],
-            "initComplete": function () {
-                if (!isLdapEnabled()) {
-                    table.column(2).visible(false);
-                }
-            }
+            ]
         });
     }
     checkSecurityAndDrawTable();

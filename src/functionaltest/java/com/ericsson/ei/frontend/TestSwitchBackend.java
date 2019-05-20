@@ -93,6 +93,9 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         mockClient2.when(request().withMethod("GET").withPath("/auth/checkStatus"))
                 .respond(response().withStatusCode(200).withBody(""));
 
+        mockClient2.when(request().withMethod("GET").withPath("/auth"))
+                .respond(response().withStatusCode(200).withBody("{\"security\":false}"));
+
         String newInstanceSubscriptionResponse = getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
         mockClient2.when(request().withMethod("GET").withPath("/subscriptions"))
                 .respond(response().withStatusCode(200).withBody(newInstanceSubscriptionResponse));
@@ -101,6 +104,12 @@ public class TestSwitchBackend extends SeleniumBaseClass {
                 DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
         mockClient1.when(request().withMethod("GET").withPath("/subscriptions"))
                 .respond(response().withStatusCode(200).withBody(defaultInstanceSubscriptionResponse));
+
+        mockClient1.when(request().withMethod("GET").withPath("/auth/checkStatus"))
+                .respond(response().withStatusCode(200).withBody(""));
+
+        mockClient1.when(request().withMethod("GET").withPath("/auth"))
+                .respond(response().withStatusCode(200).withBody("{\"security\":false}"));
     }
 
     @AfterClass

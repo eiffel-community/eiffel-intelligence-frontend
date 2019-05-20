@@ -279,7 +279,8 @@ function doIfSecurityOff() {
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
-            var ldapStatus = JSON.parse(ko.toJSON(responseData)).security
+            var response = JSON.parse(ko.toJSON(responseData));
+            var ldapStatus = response.security;
             setLdapEnabled(ldapStatus);
             if (isLdapEnabled()) {
                 checkLoggedInUser();
