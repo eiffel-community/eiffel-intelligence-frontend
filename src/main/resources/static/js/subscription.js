@@ -82,15 +82,15 @@ jQuery(document).ready(function () {
         $('#check-all').prop("disabled", disabled);
         $('.data-check').prop("disabled", disabled);
     }
-    
+
     var previousStatus;
     function updateTable(currentStatus) {
         var statusChanged = (previousStatus != currentStatus);
-        if(statusChanged && !currentStatus){
-    	    table.clear().draw();
+        if(statusChanged && !currentStatus && table != undefined){
+            table.clear().draw();
         }
         if(statusChanged && currentStatus){
-    	    reload_table();    		
+            reload_table();
         }
         previousStatus = currentStatus;
     }
@@ -357,8 +357,8 @@ jQuery(document).ready(function () {
     function checkSecurityAndDrawTable() {
         var callback = {
             success: function (responseData, textStatus) {
-                isSecured = JSON.parse(ko.toJSON(responseData)).security;
-                drawTable(isSecured);
+                var ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
+                drawTable(ldapEnabled);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 drawTable(false);
@@ -375,8 +375,7 @@ jQuery(document).ready(function () {
     }
 
     // /Start ## Datatables ##################################################
-    function drawTable(isSecured) {
-        var currentUser = sessionStorage.getItem("currentUser");
+    function drawTable(ldapEnabled) {
         table = $('#table').DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -466,23 +465,27 @@ jQuery(document).ready(function () {
                     "title": "Action",
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        var unsecureEditAll = isSecured == false;
-                        var securedEditOwn = row.ldapUserName == currentUser && row.ldapUserName != null;
-                        var allUserEditNoOwner = row.ldapUserName.length == 0 && currentUser != undefined;                        
-                        var disableButton = unsecureEditAll || securedEditOwn || allUserEditNoOwner;
-                        
-                        var disablingText = "";                        
-                        if(disableButton == false){                        	
-                        	disablingText = " disabled";
-                        } 
-                        return '<button id="view-' + data.subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
-                            + '<button id="edit-' + data.subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
-                            + '<button id="delete-' + data.subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
+                        if (data == undefined || row == undefined) {
+                            window.logMessages("Error: Subscription data is not defined");
+                            return ''
+                        }
+                        subscriptionOwner = row.ldapUserName
+                        subscriptionName = data.subscriptionName
+
+                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName, ldapEnabled)
+                        var disablingText = "";
+                        if(disableEditDeleteButtons == true){
+                            disablingText = " disabled";
+                        }
+
+                        return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> '
+                            + '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> '
+                            + '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
                     }
                 }
             ],
             "initComplete": function () {
-                if (isSecured == false) {
+                if (ldapEnabled == false) {
                     table.column(2).visible(false);
                 }
             }
@@ -495,6 +498,51 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
+    function isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName, ldapEnabled) {
+        if (ldapEnabled == false) {
+            // LDAP is NOT activated
+            return false
+        }
+
+        // Check if subscriptionOwner is defined
+        var isSubscriptionOwnerDefined = isUserNameDefined(subscriptionOwner)
+        if (isSubscriptionOwnerDefined == false) {
+            // LDAP is NOT activated or is anonymous subscription
+            return false
+        }
+
+        // Check if current user is logged in
+        var currentUser = getCurrentUserInSession();
+        var isCurrentUserLoggedIn = isUserNameDefined(currentUser)
+        if (isCurrentUserLoggedIn == false) {
+            // Current user is not logged in
+            console.log("User must be logged in to edit subscription: '" + subscriptionName + "'." )
+            return true
+        }
+
+        var isUserSubscriptionOwner = subscriptionOwner == currentUser
+        if (isUserSubscriptionOwner == false) {
+            // Back end is secured, but current user is not owner to subscription
+            console.log("User is not owner of subscription: '" + subscriptionName + "'." )
+            return true
+        }
+
+        return false
+    }
+
+    function isUserNameDefined(username) {
+        var isDefined = false
+        var userNameIsString = isString(username)
+        if (userNameIsString == true) {
+            isDefined = username.length != 0
+        }
+        return isDefined
+    }
+
+    function isString(value) {
+        var isString = typeof value === 'string' || value instanceof String
+        return isString
+    }
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################
@@ -672,11 +720,11 @@ jQuery(document).ready(function () {
             createUploadWindow();
         }
     });
-    // /END ## upload_subscriptions ################################################# 
+    // /END ## upload_subscriptions #################################################
     // /Start ## Reload Datatables ###########################################
     function reload_table() {
         if(table != undefined) {
-    	    table.ajax.reload(null, false); // reload datatable ajax
+            table.ajax.reload(null, false); // reload datatable ajax
         }
     }
     // /Stop ## Reload Datatables ############################################
