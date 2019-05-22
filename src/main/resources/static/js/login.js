@@ -1,8 +1,7 @@
 jQuery(document).ready(function () {
     function reroutToSubscritpion() {
         checkBackendSecured();
-        // if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
-        if (isLdapEnabled() && currentUser != null && currentUser != undefined || !isLdapEnabled()) {
+        if (!isLdapEnabled() || currentUser != null && currentUser != undefined) {
             navigateToRoute('subscriptions');
         }
 
