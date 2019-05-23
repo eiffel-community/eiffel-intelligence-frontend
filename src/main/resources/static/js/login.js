@@ -1,28 +1,13 @@
 jQuery(document).ready(function () {
+    function rerouteToSubscription() {
+        checkBackendSecured();
+        if ( !isLdapEnabled() || isStringDefined(getCurrentUser()) ) {
+            console.log("Ldap not enabled or user already logged in, this page should not be accessable!");
+            navigateToRoute('subscriptions');
+        }
 
-    function checkBackendSecured() {
-        var callback = {
-            beforeSend: function () {
-            },
-            success: function (responseData, textStatus) {
-                var currentUser = getCurrentUserInSession();
-                var ldapEnabled = responseData.security;
-                if (ldapEnabled == false || (ldapEnabled == true && currentUser != null)) {
-                    navigateToRoute('subscriptions');
-                }
-            },
-            error: function (responseData) {
-                navigateToRoute('subscriptions');
-            },
-            complete: function () {
-            }
-        };
-        var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/auth";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
     }
-
-    checkBackendSecured();
+    rerouteToSubscription();
 
     // /Start ## Knockout ####################################################
     function loginModel() {
@@ -40,10 +25,12 @@ jQuery(document).ready(function () {
                 var token = window.btoa(dataJSON.ldapUserName + ":" + dataJSON.password);
                 sendLoginRequest(token);
             }
-        }
+        };
     }
 
     function sendLoginRequest(token) {
+        $('#loginError').hide();
+        $('#loginError').removeClass("is-invalid");
         var callback = {
             beforeSend: function (XMLHttpRequest) {
                 XMLHttpRequest.setRequestHeader("Authorization", "Basic " + token);
@@ -55,14 +42,24 @@ jQuery(document).ready(function () {
                 navigateToRoute('subscriptions');
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Bad credentials");
+                if (XMLHttpRequest.status == 401) {
+                    window.logMessages("Bad credentials");
+                    $('#loginError').text("Invalid username and/or password!");
+                    $('#loginError').addClass("is-invalid");
+                    $('#loginError').show();
+                } else {
+                    window.logMessages("Unknown login error");
+                    $('#loginError').text("Unknown login error!");
+                    $('#loginError').addClass("is-invalid");
+                    $('#loginError').show();
+                }
             },
             complete: function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
         var contextPath = "/auth/login";
-        ajaxHttpSender.sendAjax(contextPath, "GET", token, callback);
+        ajaxHttpSender.sendAjax(contextPath, "GET", "", callback);
     }
 
     var observableObject = $("#viewModelDOMObject")[0];

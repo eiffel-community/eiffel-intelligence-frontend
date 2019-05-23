@@ -2,19 +2,47 @@ var router = new Navigo(null, true, '#');
 var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServiceBackEndPath = "/backend";
 var timerInterval;
+var ldapEnabled = true;
+
+// Start ## getters and setters
+
+function isLdapEnabled(){
+    return Boolean(ldapEnabled);
+}
+
+function setLdapEnabled(value){
+    ldapEnabled = Boolean(value);
+}
+
+function getCurrentUser() {
+    return sessionStorage.getItem("currentUser");
+}
+
+function setCurrentUser(user) {
+    sessionStorage.removeItem("currentUser");
+    sessionStorage.setItem("currentUser", user);
+}
+
+// End   ## getters and setters
+
+function stringContainsSubstring(string, substring) {
+    var isSubstring = string.indexOf(substring) !== -1;
+    return isSubstring;
+}
 
 function addBackendParameter(url) {
+    var parameterKey = "backendname";
+
     if (!sessionStorage.selectedActive) {
         return url;
     }
-    var delimiter = "";
-    var parameterKey = "backendname";
 
-    if (url.includes("?")) {
+    var delimiter = "?";
+    if (stringContainsSubstring(url, delimiter)) {
+        // url has delimeter ?, then delimeter should be &
         delimiter = "&";
-    } else {
-        delimiter = "?";
     }
+
     url = url + delimiter + parameterKey + "=" + sessionStorage.selectedActive;
     return url;
 }
@@ -32,7 +60,7 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
     if (!dataType) {
         dataType = "json";
     }
-    url = addBackendParameter(frontendServiceUrl+contextPath)
+    url = addBackendParameter(frontendServiceUrl+contextPath);
     $.ajax({
         url: url,
         type: type,
@@ -61,9 +89,10 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
             }
         }
     });
-}
+};
 // /Stop ## Global AJAX Sender function ##################################
 
+// Start ## Common functions ##
 function formatUrl(host, port, useHttps, contextPath) {
     var protocol = "http";
     if (useHttps) {
@@ -86,6 +115,21 @@ function formatUrl(host, port, useHttps, contextPath) {
 
     return protocol + "://" + host + port + contextPath;
 }
+
+function isString(value) {
+    var isString = typeof value === 'string' || value instanceof String;
+    return isString;
+}
+
+function isStringDefined(value) {
+    var isDefined = false;
+    if (isString(value)) {
+        isDefined = value.length != 0;
+    }
+    return isDefined;
+}
+
+// /Stop ## Common functions ##################################
 
 // Start ## Routing ##
 var routes = {};
@@ -164,20 +208,19 @@ function updateBackEndInstanceList() {
     });
 }
 
-function singleInstanceModel(name, host, port, contextPath, https, active) {
-    this.name = ko.observable(name),
-        this.host = ko.observable(host),
-        this.port = ko.observable(port),
-        this.contextPath = ko.observable(contextPath),
-        this.https = ko.observable(https),
-        this.active = ko.observable(active),
-        this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
+function singleInstanceModel(name, host, port, contextPath, https, active, defaultBackend) {
+    this.name = ko.observable(name);
+    this.host = ko.observable(host);
+    this.port = ko.observable(port);
+    this.contextPath = ko.observable(contextPath);
+    this.https = ko.observable(https);
+    this.active = ko.observable(active);
+    this.defaultBackend = ko.observable(defaultBackend);
+    this.information = name.toUpperCase() + " - " + host + " " + port + "/" + contextPath;
 }
 
-function viewModel(backendInstanceData) {
-    var self = this;
-    self.instances = ko.observableArray();
-    var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
+function getInstanceModels(jsonBackendInstanceData) {
+    instanceModels = [];
 
     for (var i = 0; i < jsonBackendInstanceData.length; i++) {
         var instanceData = jsonBackendInstanceData[i];
@@ -187,9 +230,10 @@ function viewModel(backendInstanceData) {
         var port = instanceData.port;
         var https = instanceData.https;
         var contextPath = instanceData.contextPath;
+        var defaultBackend = instanceData.defaultBackend;
 
         var thisInstanceShouldBeSelectedAsActive =
-            instanceData.defaultBackend == true && !sessionStorage.selectedActive ||
+            defaultBackend == true && !sessionStorage.selectedActive ||
             sessionStorage.selectedActive && sessionStorage.selectedActive == name;
 
         if (thisInstanceShouldBeSelectedAsActive) {
@@ -198,11 +242,23 @@ function viewModel(backendInstanceData) {
         }
 
         sessionStorage.setItem(name, formatUrl(host, port, https, contextPath));
-        var singleInstance = new singleInstanceModel(name, host, port, contextPath, https, isActive);
-        self.instances.push(singleInstance);
+        var singleInstance = new singleInstanceModel(name, host, port, contextPath, https, isActive, defaultBackend);
+        instanceModels.push(singleInstance);
     }
+    return instanceModels;
+}
 
+function viewModel(backendInstanceData) {
+    var self = this;
+
+    var jsonBackendInstanceData = JSON.parse(ko.toJSON(backendInstanceData));
+    var instanceModels = getInstanceModels(jsonBackendInstanceData);
     self.selectedActive = ko.observable(sessionStorage.selectedActive);
+
+    self.instances = ko.observableArray();
+    instanceModels.forEach(function (instanceModel) {
+        self.instances.push(instanceModel);
+    });
 
     self.onChange = function () {
         if (typeof self.selectedActive() !== "undefined") {
@@ -211,14 +267,13 @@ function viewModel(backendInstanceData) {
         } else {
             $.jGrowl("Please choose backend instance", { sticky: false, theme: 'Error' });
         }
-    }
+    };
 }
 // End ## Load Back end list ##
 
 // Start ## Login and Security ##
 function doIfUserLoggedIn(user) {
-    sessionStorage.removeItem("currentUser");
-    sessionStorage.setItem("currentUser", user);
+    setCurrentUser(user);
     $("#userItem").show();
     $("#userItem").addClass("user-login");
     $("#ldapUserName").text(user);
@@ -228,7 +283,7 @@ function doIfUserLoggedIn(user) {
 }
 
 function doIfUserLoggedOut() {
-    sessionStorage.removeItem("currentUser");
+    setCurrentUser("");
     $("#userItem").show();
     $("#userItem").removeClass("user-login");
     $("#ldapUserName").text("Guest");
@@ -246,8 +301,10 @@ function doIfSecurityOff() {
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
-            var ldapEnabled = JSON.parse(ko.toJSON(responseData)).security;
-            if (ldapEnabled == true) {
+            var response = JSON.parse(ko.toJSON(responseData));
+            var ldapStatus = response.security;
+            setLdapEnabled(ldapStatus);
+            if (isLdapEnabled()) {
                 checkLoggedInUser();
             } else {
                 doIfSecurityOff();
@@ -277,9 +334,6 @@ function checkLoggedInUser() {
     ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
 
-function getCurrentUserInSession() {
-	return sessionStorage.getItem("currentUser");
-}
 // End ## Login and Security ##
 
 // Start ## Status Indicator ##
@@ -293,7 +347,7 @@ var statusType = {
 var statusText = {
     backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
     test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
-}
+};
 
 function addStatusIndicator(statusType, statusText) {
     var statusIndicator = $(".content")[0].previousElementSibling;
