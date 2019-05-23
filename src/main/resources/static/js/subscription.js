@@ -491,14 +491,14 @@ jQuery(document).ready(function () {
         }
 
         // Check if subscriptionOwner is defined
-        var isSubscriptionOwnerDefined = isUserNameDefined(subscriptionOwner);
+        var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
         if (isSubscriptionOwnerDefined == false) {
             // LDAP is NOT activated or is anonymous subscription
             return false;
         }
 
         // Check if current user is logged in
-        var isCurrentUserLoggedIn = isUserNameDefined(getCurrentUser());
+        var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
         if (isCurrentUserLoggedIn == false) {
             // Current user is not logged in, edit / delete disabled = true
             return true;

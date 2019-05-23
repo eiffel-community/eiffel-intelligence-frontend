@@ -1,13 +1,13 @@
 jQuery(document).ready(function () {
-    function reroutToSubscritpion() {
+    function rerouteToSubscription() {
         checkBackendSecured();
-        if ( !isLdapEnabled() || isUserNameDefined(getCurrentUser()) ) {
+        if ( !isLdapEnabled() || isStringDefined(getCurrentUser()) ) {
             console.log("Ldap not enabled or user already logged in, this page should not be accessable!");
             navigateToRoute('subscriptions');
         }
 
     }
-    reroutToSubscritpion();
+    rerouteToSubscription();
 
     // /Start ## Knockout ####################################################
     function loginModel() {

@@ -35,7 +35,8 @@ function addBackendParameter(url) {
     // If String includes function does not exist (IE) add function.
     if (!String.prototype.includes) {
         String.prototype.includes = function (str) {
-            return this.indexOf(str) !== -1;
+            var needleFoundInHaystack = this.indexOf(str) !== -1;
+            return needleFoundInHaystack;
         };
     }
 
@@ -123,11 +124,10 @@ function isString(value) {
     return isString;
 }
 
-function isUserNameDefined(username) {
+function isStringDefined(value) {
     var isDefined = false;
-    var userNameIsString = isString(username);
-    if (userNameIsString == true) {
-        isDefined = username.length != 0;
+    if (isString(value)) {
+        isDefined = value.length != 0;
     }
     return isDefined;
 }
