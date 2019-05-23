@@ -1,7 +1,8 @@
 jQuery(document).ready(function () {
     function reroutToSubscritpion() {
         checkBackendSecured();
-        if (!isLdapEnabled() || currentUser != null && currentUser != undefined) {
+        if ( !isLdapEnabled() || isUserNameDefined(getCurrentUser()) ) {
+            console.log("Ldap not enabled or user already logged in, this page should not be accessable!");
             navigateToRoute('subscriptions');
         }
 
@@ -28,6 +29,8 @@ jQuery(document).ready(function () {
     }
 
     function sendLoginRequest(token) {
+        $('#loginError').hide();
+        $('#loginError').removeClass("is-invalid");
         var callback = {
             beforeSend: function (XMLHttpRequest) {
                 XMLHttpRequest.setRequestHeader("Authorization", "Basic " + token);
@@ -39,14 +42,24 @@ jQuery(document).ready(function () {
                 navigateToRoute('subscriptions');
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Bad credentials");
+                if (XMLHttpRequest.status == 401) {
+                    window.logMessages("Bad credentials");
+                    $('#loginError').text("Invalid username and/or password!");
+                    $('#loginError').addClass("is-invalid");
+                    $('#loginError').show();
+                } else {
+                    window.logMessages("Unknown login error");
+                    $('#loginError').text("Unknown login error!");
+                    $('#loginError').addClass("is-invalid");
+                    $('#loginError').show();
+                }
             },
             complete: function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
         var contextPath = "/auth/login";
-        ajaxHttpSender.sendAjax(contextPath, "GET", token, callback);
+        ajaxHttpSender.sendAjax(contextPath, "GET", "", callback);
     }
 
     var observableObject = $("#viewModelDOMObject")[0];

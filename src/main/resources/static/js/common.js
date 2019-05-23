@@ -14,6 +14,15 @@ function setLdapEnabled(value){
     ldapEnabled = Boolean(value);
 }
 
+function getCurrentUser() {
+    return sessionStorage.getItem("currentUser");
+}
+
+function setCurrentUser(user) {
+    sessionStorage.removeItem("currentUser");
+    sessionStorage.setItem("currentUser", user);
+}
+
 // End   ## getters and setters
 
 function addBackendParameter(url) {
@@ -85,6 +94,7 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
 };
 // /Stop ## Global AJAX Sender function ##################################
 
+// Start ## Common functions ##
 function formatUrl(host, port, useHttps, contextPath) {
     var protocol = "http";
     if (useHttps) {
@@ -107,6 +117,22 @@ function formatUrl(host, port, useHttps, contextPath) {
 
     return protocol + "://" + host + port + contextPath;
 }
+
+function isString(value) {
+    var isString = typeof value === 'string' || value instanceof String;
+    return isString;
+}
+
+function isUserNameDefined(username) {
+    var isDefined = false;
+    var userNameIsString = isString(username);
+    if (userNameIsString == true) {
+        isDefined = username.length != 0;
+    }
+    return isDefined;
+}
+
+// /Stop ## Common functions ##################################
 
 // Start ## Routing ##
 var routes = {};
@@ -250,8 +276,7 @@ function viewModel(backendInstanceData) {
 
 // Start ## Login and Security ##
 function doIfUserLoggedIn(user) {
-    sessionStorage.removeItem("currentUser");
-    sessionStorage.setItem("currentUser", user);
+    setCurrentUser(user);
     $("#userItem").show();
     $("#userItem").addClass("user-login");
     $("#ldapUserName").text(user);
@@ -261,7 +286,7 @@ function doIfUserLoggedIn(user) {
 }
 
 function doIfUserLoggedOut() {
-    sessionStorage.removeItem("currentUser");
+    setCurrentUser("");
     $("#userItem").show();
     $("#userItem").removeClass("user-login");
     $("#ldapUserName").text("Guest");
@@ -312,9 +337,6 @@ function checkLoggedInUser() {
     ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
 }
 
-function getCurrentUserInSession() {
-	return sessionStorage.getItem("currentUser");
-}
 // End ## Login and Security ##
 
 // Start ## Status Indicator ##

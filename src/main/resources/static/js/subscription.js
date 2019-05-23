@@ -463,7 +463,7 @@ jQuery(document).ready(function () {
                         subscriptionOwner = row.ldapUserName;
                         subscriptionName = data.subscriptionName;
 
-                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName);
+                        disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner);
                         var disablingText = "";
                         if(disableEditDeleteButtons == true){
                             disablingText = " disabled";
@@ -484,7 +484,7 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
-    function isEditAndDeleteButtonsDisabled(subscriptionOwner, subscriptionName) {
+    function isEditAndDeleteButtonsDisabled(subscriptionOwner) {
         if (!isLdapEnabled()) {
             // LDAP is NOT activated
             return false;
@@ -498,14 +498,13 @@ jQuery(document).ready(function () {
         }
 
         // Check if current user is logged in
-        var currentUser = getCurrentUserInSession();
-        var isCurrentUserLoggedIn = isUserNameDefined(currentUser);
+        var isCurrentUserLoggedIn = isUserNameDefined(getCurrentUser());
         if (isCurrentUserLoggedIn == false) {
             // Current user is not logged in, edit / delete disabled = true
             return true;
         }
 
-        var isUserSubscriptionOwner = subscriptionOwner == currentUser ;
+        var isUserSubscriptionOwner = subscriptionOwner == getCurrentUser() ;
         if (isUserSubscriptionOwner == false) {
             // Back end is secured, but current user is not owner to subscription, edit / delete disabled = true
             return true;
@@ -514,19 +513,6 @@ jQuery(document).ready(function () {
         return false;
     }
 
-    function isUserNameDefined(username) {
-        var isDefined = false;
-        var userNameIsString = isString(username);
-        if (userNameIsString == true) {
-            isDefined = username.length != 0;
-        }
-        return isDefined;
-    }
-
-    function isString(value) {
-        var isString = typeof value === 'string' || value instanceof String;
-        return isString;
-    }
     // /Stop ## Datatables ##################################################
 
     // /Start ## Add Subscription ########################################

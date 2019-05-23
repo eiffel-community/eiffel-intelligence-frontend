@@ -20,6 +20,7 @@
                                 <input class="form-check-input" type="checkbox" data-bind="checked: $root.remember" />
                                 Remember me</label>
                         </div>
+                        <span class="flex-non-important text-danger font-small" id="loginError"></span>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block"
                         data-bind="click: function(){$root.login($root.userState, $root.remember());}">Login
