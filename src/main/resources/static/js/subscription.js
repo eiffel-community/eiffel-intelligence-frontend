@@ -863,7 +863,7 @@ jQuery(document).ready(function () {
         }
 
         // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var regExpression =  /^[A-Za-z0-9_]+$;
+        var regExpression =  /(\W)/g;
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -896,7 +896,7 @@ jQuery(document).ready(function () {
             var emails = notificationMeta.split(",");
             for(var email of emails) {
                 email = email.trim();
-                var validEmailRegExpression = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$;
+                var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");
