@@ -25,6 +25,11 @@ function setCurrentUser(user) {
 
 // End   ## getters and setters
 
+function stringContainsSubstring(string, substring) {
+    var isSubstring = string.indexOf(substring) !== -1;
+    return isSubstring;
+}
+
 function addBackendParameter(url) {
     var parameterKey = "backendname";
 
@@ -32,16 +37,8 @@ function addBackendParameter(url) {
         return url;
     }
 
-    // If String includes function does not exist (IE) add function.
-    if (!String.prototype.includes) {
-        String.prototype.includes = function (str) {
-            var needleFoundInHaystack = this.indexOf(str) !== -1;
-            return needleFoundInHaystack;
-        };
-    }
-
     var delimiter = "?";
-    if (url.includes(delimiter)) {
+    if (stringContainsSubstring(url, delimiter)) {
         // url has delimeter ?, then delimeter should be &
         delimiter = "&";
     }
