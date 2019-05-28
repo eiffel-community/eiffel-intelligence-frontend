@@ -1,6 +1,6 @@
 /*
 This js file intend to keep the status information about the current selected back-end
-and depending weather the back end status has changed and or is online or not will
+and depending weather the back-end status has changed and or is online or not will
 enable or disable different kinds of status icons/fields.
 It may also fore page refresh pages, remove subscriptions from subscription list
 and reload subscriptions in subscription list depending on the back-end status.
@@ -15,7 +15,7 @@ var statusType = {
 };
 
 var statusText = {
-    backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
+    backend_down: "<strong>Back-end is down!</strong> Wait for it go up or switch to another back-end before continuing!",
     test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
 };
 
