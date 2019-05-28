@@ -23,6 +23,10 @@ function setCurrentUser(user) {
     sessionStorage.setItem("currentUser", user);
 }
 
+function getFrontEndServiceUrl() {
+    return frontendServiceUrl;
+}
+
 // End   ## getters and setters
 
 function stringContainsSubstring(string, substring) {
@@ -301,8 +305,7 @@ function doIfSecurityOff() {
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
-            var response = JSON.parse(ko.toJSON(responseData));
-            var ldapStatus = response.security;
+            var ldapStatus = responseData.security;
             setLdapEnabled(ldapStatus);
             if (isLdapEnabled()) {
                 checkLoggedInUser();
@@ -335,29 +338,3 @@ function checkLoggedInUser() {
 }
 
 // End ## Login and Security ##
-
-// Start ## Status Indicator ##
-var statusType = {
-    success: "alert-success",
-    info: "alert-info",
-    warning: "alert-warning",
-    danger: "alert-danger"
-};
-
-var statusText = {
-    backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
-    test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
-};
-
-function addStatusIndicator(statusType, statusText) {
-    var statusIndicator = $(".content")[0].previousElementSibling;
-    if (statusIndicator != null) {
-        $($(".content")[0].previousElementSibling).remove();
-    }
-    $(".content").before("<div class=\"subscription-alert alert " + statusType + "\">" + statusText + "</div>");
-}
-
-function removeStatusIndicator() {
-    $($(".content")[0].previousElementSibling).remove();
-}
-// End ## Status Indicator ##

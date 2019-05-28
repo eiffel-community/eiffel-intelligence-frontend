@@ -66,4 +66,10 @@ jQuery(document).ready(function () {
     ko.cleanNode(observableObject);
     var model = new loginModel();
     ko.applyBindings(model, observableObject);
+
+    // Check EI Backend Server Status ########################################
+
+    checkBackendStatus();
+
+    // END OF EI Backend Server check #########################################
 });

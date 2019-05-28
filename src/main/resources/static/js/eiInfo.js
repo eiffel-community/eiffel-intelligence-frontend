@@ -150,43 +150,8 @@ jQuery(document).ready(function () {
     getInstanceInfo();
 
     // Check EI Backend Server Status ########################################
-    var backendStatus;
-    var currentBackendStatus = false;
-    function checkBackendStatus() {
-        var callback = {
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (XMLHttpRequest.status == 401) {
-                    doIfUserLoggedOut();
-                    removeStatusIndicator();
-                    currentBackendStatus = true;
-                } else {
-                    doIfSecurityOff();
-                    addStatusIndicator(statusType.danger, statusText.backend_down);
-                    currentBackendStatus = false;
-                }
-            },
-            success: function (data, textStatus) {
-                checkBackendSecured();
-                removeStatusIndicator();
-                currentBackendStatus = true;
-            },
-            complete: function () {
-                if(backendStatus != undefined && backendStatus != currentBackendStatus) {
-                    reloadRoute();
-                }
-                backendStatus = currentBackendStatus;
-            }
-        };
-        var ajaxHttpSender = new AjaxHttpSender();
-        var contentType = "application/string; charset=utf-8";
-        var datatype = "text";
-        var contextPath = "/auth/checkStatus";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
-    }
-    checkBackendStatus();
 
-    // Check if EI Backend Server is online every X seconds
-    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    checkBackendStatus();
 
     // END OF EI Backend Server check #########################################
 });

@@ -1,7 +1,6 @@
 // Global vars
 var save_method;
 var table;
-var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 
@@ -9,53 +8,6 @@ jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
 
-    // Fetch injected URL from DOM
-    frontendServiceUrl = $('#frontendServiceUrl').text();
-
-    // Check EI Backend Server Status ########################################
-    var backendStatus = false;
-    function checkBackendStatus() {
-        var EIConnBtn = document.getElementById("btnEIConnection");
-        if (EIConnBtn == null) {
-            return;
-        }
-        var red = "#ff0000";
-        var green = "#00ff00";
-        var callback = {
-            success: function (responseData, textStatus) {
-                if (backendStatus == false) {
-                    checkBackendSecured();
-                }
-                EIConnBtn.style.background = green;
-                backendStatus = true;
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (XMLHttpRequest.status == 401) {
-                    doIfUserLoggedOut();
-                    EIConnBtn.style.background = green;
-                    backendStatus = true;
-                } else {
-                    doIfSecurityOff();
-                    EIConnBtn.style.background = red;
-                    backendStatus = false;
-                }
-            },
-            complete: function () {
-                if(table != undefined && table.rows().data().length == 0) {
-                    toggleCheckboxesDisabled(true);
-                } else {
-                    toggleCheckboxesDisabled(!backendStatus);
-                }
-                toggleOnBackendStatus(backendStatus);
-                setTimeout(loadSubButtons, 800);
-            }
-        };
-        var ajaxHttpSender = new AjaxHttpSender();
-        var contentType = "application/string; charset=utf-8";
-        var datatype = "text";
-        var contextPath = "/auth/checkStatus";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
-    }
     checkBackendStatus();
 
     function loadSubButtons() {
@@ -63,41 +15,14 @@ jQuery(document).ready(function () {
         $("#subButtons").show();
     }
 
-    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
-
-    // Check if buttons should be enabled or disabled
-    // Toggle warning text on and off
-    // Check backend status to shrink or increase space for warning to show
-    function toggleOnBackendStatus(backendStatus) {
-        if (!backendStatus) {
-            addStatusIndicator(statusType.danger, statusText.backend_down);
-        }
-        if (backendStatus) {
-            removeStatusIndicator();
-        }
-        updateTable(backendStatus);
-    }
-
     function toggleCheckboxesDisabled(disabled) {
         $('#check-all').prop("disabled", disabled);
         $('.data-check').prop("disabled", disabled);
     }
 
-    var previousStatus;
-    function updateTable(currentStatus) {
-        var statusChanged = (previousStatus != currentStatus);
-        if(statusChanged && !currentStatus && table != undefined){
-            table.clear().draw();
-        }
-        if(statusChanged && currentStatus){
-            reload_table();
-        }
-        previousStatus = currentStatus;
-    }
-
     // Check if EI Backend Server is online when Status Connection button is pressed.
     $("#btnEIConnection").click(function () {
-        checkBackendStatus();
+        updateBackendStatus();
     });
     // END OF EI Backend Server check #########################################
 
@@ -354,6 +279,14 @@ jQuery(document).ready(function () {
 
     // /Stop ## Knockout #####################################################
 
+    // /Start ## Reload Datatables ###########################################
+    function reload_table() {
+        if(table != undefined) {
+            table.ajax.reload(null, false); // reload datatable ajax
+        }
+    }
+    // /Stop ## Reload Datatables ############################################
+
     function checkSecurityAndDrawTable() {
         checkBackendSecured();
         drawTable();
@@ -371,7 +304,7 @@ jQuery(document).ready(function () {
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": addBackendParameter(frontendServiceUrl + "/subscriptions"),
+                "url": addBackendParameter(getFrontEndServiceUrl() + "/subscriptions"),
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
                 "error": function () { },
@@ -585,7 +518,7 @@ jQuery(document).ready(function () {
 
     function getTemplate() {
         var req = new XMLHttpRequest();
-        req.open("GET", frontendServiceUrl + '/download/subscriptionsTemplate', true);
+        req.open("GET", getFrontEndServiceUrl() + '/download/subscriptionsTemplate', true);
         req.responseType = "application/json;charset=utf-8";
         req.onload = function (event) {
             if (this.responseText == "") {
@@ -691,13 +624,6 @@ jQuery(document).ready(function () {
         }
     });
     // /END ## upload_subscriptions #################################################
-    // /Start ## Reload Datatables ###########################################
-    function reload_table() {
-        if(table != undefined) {
-            table.ajax.reload(null, false); // reload datatable ajax
-        }
-    }
-    // /Stop ## Reload Datatables ############################################
 
     function get_subscription_data(object, mode, event) {
         event.stopPropagation();
@@ -1092,4 +1018,6 @@ jQuery(document).ready(function () {
     function closeTooltip() {
         $('.tooltip').tooltip('hide');
     }
+
+    loadSubButtons();
 });
