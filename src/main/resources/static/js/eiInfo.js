@@ -142,8 +142,7 @@ jQuery(document).ready(function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/information";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.INFORMATION, "GET", null, callback);
     }
 
     createFrontEndGeneralInfo();

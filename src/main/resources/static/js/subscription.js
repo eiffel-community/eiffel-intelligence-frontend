@@ -1,6 +1,5 @@
 // Global vars
 var save_method;
-var table;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 
@@ -304,7 +303,7 @@ jQuery(document).ready(function () {
             "searching": true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": addBackendParameter(getFrontEndServiceUrl() + "/subscriptions"),
+                "url": addBackendParameter(getFrontEndServiceUrl() + backendEndpoints.SUBSCRIPTIONS),
                 "type": "GET",
                 "dataSrc": "",   // Flat structure from EI backend REST API
                 "error": function () { },
@@ -486,8 +485,7 @@ jQuery(document).ready(function () {
                 subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
             }
             var ajaxHttpSender = new AjaxHttpSender();
-            var contextPath = "/subscriptions/";
-            ajaxHttpSender.sendAjax(contextPath + subscriptionsToDeleteString, "DELETE", null, callback);
+            ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS + subscriptionsToDeleteString, "DELETE", null, callback);
         });
         $('.confirm-delete').modal('show');
     }
@@ -517,18 +515,18 @@ jQuery(document).ready(function () {
     // /Stop ## Bulk delete##################################################
 
     function getTemplate() {
-        var req = new XMLHttpRequest();
-        req.open("GET", getFrontEndServiceUrl() + '/download/subscriptionsTemplate', true);
-        req.responseType = "application/json;charset=utf-8";
-        req.onload = function (event) {
+        var request = new XMLHttpRequest();
+        request.open("GET", getFrontEndServiceUrl() + backendEndpoints.DOWNLOAD_SUBSCRIPTIONS_TEMPLATE);
+        request.responseType = "application/json;charset=utf-8";
+        request.onload = function (event) {
             if (this.responseText == "") {
                 window.logMessages("Failed to download template, Error: Could not contact the backend server.");
             } else {
-                var jsonData = JSON.stringify(JSON.parse(req.response), null, 2);
+                var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
             }
         };
-        req.send();
+        request.send();
     }
 
     // /Start ## get_subscription_template #################################################
@@ -598,8 +596,7 @@ jQuery(document).ready(function () {
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/subscriptions";
-        ajaxHttpSender.sendAjax(contextPath, "POST", ko.toJSON(subscriptionJson), callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS, "POST", ko.toJSON(subscriptionJson), callback);
     }
 
     // /Start ## upload_subscriptions #################################################
@@ -995,8 +992,7 @@ jQuery(document).ready(function () {
         } else if (save_method === 'edit') {  // Update existing
             type = "PUT";
         }
-        var contextPath = "/subscriptions";
-        ajaxHttpSender.sendAjax(contextPath, type, JSON.stringify(formDataToSend), callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
 

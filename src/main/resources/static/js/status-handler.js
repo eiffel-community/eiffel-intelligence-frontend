@@ -5,57 +5,12 @@ enable or disable different kinds of status icons/fields.
 It may also fore page refresh pages, remove subscriptions from subscription list
 and reload subscriptions in subscription list depending on the back-end status.
 */
-var pagesForStatusIndication = "subscriptions test-rules ei-info login";
-
-var statusType = {
-    success: "alert-success",
-    info: "alert-info",
-    warning: "alert-warning",
-    danger: "alert-danger"
-};
-
-var statusText = {
-    backend_down: "<strong>Back-end is down!</strong> Wait for it go up or switch to another back-end before continuing!",
-    test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
-};
-
-var backEndStatus = true;
-var previousBackEndStatus;
-var backEnsStatusTimerInterval;
-
-// Start ## getters and setters
-
-function isBackEndStatusOk() {
-    return Boolean(backEndStatus);
-}
-
-function setBackEndStatusOk(value) {
-    backEndStatus = Boolean(value);
-}
-
-function isBackEndStatusChanged() {
-    if (previousBackEndStatus === undefined) {
-        previousBackEndStatus = backEndStatus;
-        return false;
-    }
-    var statusChanged = previousBackEndStatus !== backEndStatus;
-    previousBackEndStatus = backEndStatus;
-    return Boolean(statusChanged);
-}
-
-function setBackEndStatusTimerInterval() {
-    if (backEnsStatusTimerInterval === undefined) {
-        backEnsStatusTimerInterval = window.setInterval(function () { updateBackendStatus(); }, 15000);
-    }
-}
-
-// End   ## getters and setters
 
 // Start ## Status Indicator ##
 
 function checkBackendStatus() {
     const currentUrl = router._lastRouteResolved.url;
-    var isWhitelistedPage = !stringContainsSubstring(pagesForStatusIndication, currentUrl);
+    var isWhitelistedPage = !stringContainsSubstring(getWhiteListedPages(), currentUrl);
     if (isWhitelistedPage) {
         return;
     }
@@ -63,7 +18,7 @@ function checkBackendStatus() {
     if (isBackEndStatusOk()) {
         removeStatusIndicator();
     } else {
-        addStatusIndicator(statusType.danger, statusText.backend_down);
+        addStatusIndicator(statusType.DANGER, statusText.BACKEND_DOWN);
     }
 
     routeSpecificFunctions(currentUrl);
@@ -138,14 +93,18 @@ function updateBackendStatus() {
     var ajaxHttpSender = new AjaxHttpSender();
     var contentType = "application/string; charset=utf-8";
     var datatype = "text";
-    var contextPath = "/auth/checkStatus";
-    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
+    ajaxHttpSender.sendAjax(backendEndpoints.CHECK_STATUS, "GET", null, callback, contentType, datatype);
 }
 
 function addStatusIndicator(statusType, statusText) {
-    var statusIndicator = $(".content")[0].previousElementSibling;
+    var contentElement = document.getElementsByClassName("content")[0];
+    if (contentElement == undefined) {
+        return;
+    }
+
+    var statusIndicator = contentElement.previousElementSibling;
     if (statusIndicator != null) {
-        $($(".content")[0].previousElementSibling).remove();
+        removeStatusIndicator();
     }
     $(".content").before("<div class=\"subscription-alert alert " + statusType + "\">" + statusText + "</div>");
 }
