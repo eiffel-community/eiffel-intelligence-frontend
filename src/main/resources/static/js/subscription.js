@@ -485,7 +485,8 @@ jQuery(document).ready(function () {
                 subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
             }
             var ajaxHttpSender = new AjaxHttpSender();
-            ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS + subscriptionsToDeleteString, "DELETE", null, callback);
+            var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "/" + subscriptionsToDeleteString;
+            ajaxHttpSender.sendAjax(endpointWithSubscriptionsToDelete, "DELETE", null, callback);
         });
         $('.confirm-delete').modal('show');
     }
