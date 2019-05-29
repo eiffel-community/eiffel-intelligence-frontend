@@ -831,9 +831,15 @@ jQuery(document).ready(function () {
             $('#subscriptionNameInput').addClass("is-invalid");
             error = true;
         }
-
+        
+        // When this regExp need to be changed then remember to change the one in the
+        // back-end (invalidSubscriptionNameRegex in SubscriptionValidator.java), which do the same
+        // invalid subscription name check. The two
+        // regEx always need to be the same for ensuring the same check.
         // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var regExpression = /(\W)/g;
+        var invalidSubscriptionNameRegex = "(\W)";
+        var regExpressionFlag = "g";
+        var regExpression =  new RegExp(invalidSubscriptionNameRegex, regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -866,6 +872,10 @@ jQuery(document).ready(function () {
             var emails = notificationMeta.split(",");
             emails.forEach(function(email){
                 email = email.trim();
+                // When this regExp need to be changed then remember to change the one in the
+                // back-end (validEmailRegExpression in SubscriptionValidator.java), which do the same
+                // email validation check. The two
+                // regEx always need to be the same for ensuring the same check.
                 var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
