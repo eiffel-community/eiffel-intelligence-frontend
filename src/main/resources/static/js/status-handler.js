@@ -15,6 +15,11 @@ function checkBackendStatus() {
         return;
     }
 
+    if (!isBackEndStatusUpdated()) {
+        addStatusIndicator(statusType.WARNING, statusText.UNKNOWN_BACK_END_STATUS);
+        return;
+    }
+
     if (isBackEndStatusOk()) {
         removeStatusIndicator();
     } else {

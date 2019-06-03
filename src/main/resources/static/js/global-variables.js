@@ -26,10 +26,12 @@ var statusType = {
 };
 var statusText = {
     BACKEND_DOWN: "<strong>Back-end is down!</strong> Wait for it go up or switch to another back-end before continuing!",
+    UNKNOWN_BACK_END_STATUS: "<strong>Back-end status is unknown!</strong> Wait for it to update or switch to another back-end before continuing!",
     TEST_RULES_DISABLED: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
 };
 
 var backEndStatus = true;
+var backEndStatusUpdated = false;
 var previousBackEndStatus;
 var backEnsStatusTimerInterval;
 // End Status variables
@@ -69,8 +71,13 @@ function isBackEndStatusOk() {
     return Boolean(backEndStatus);
 }
 
+function isBackEndStatusUpdated() {
+    return Boolean(backEndStatusUpdated);
+}
+
 function setBackEndStatusOk(value) {
     backEndStatus = Boolean(value);
+    backEndStatusUpdated = true;
 }
 
 function isBackEndStatusChanged() {
