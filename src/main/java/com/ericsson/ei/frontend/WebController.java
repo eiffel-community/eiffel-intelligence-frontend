@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ericsson.ei.frontend.utils.RegExProviderUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @Controller
@@ -30,6 +31,7 @@ public class WebController {
 
     @Autowired
     private WebControllerUtils frontEndUtils;
+
 
     @RequestMapping("/")
     public String greeting(Model model) {
@@ -42,6 +44,10 @@ public class WebController {
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+
+        model.addAttribute("invalidName", RegExProviderUtils.getRegEx("invalidName"));
+        model.addAttribute("validEmail", "From your controller");
+
         return "subscription";
     }
 

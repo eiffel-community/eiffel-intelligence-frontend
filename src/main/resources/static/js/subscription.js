@@ -5,12 +5,20 @@ var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 
+var invalidName;
+var validEmail;
+
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
 
     // Fetch injected URL from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();
+    
+    invalidName = $('#invalidName').text();
+    validEmail = $('#validEmail').text();
+    
+    
 
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
@@ -837,9 +845,19 @@ jQuery(document).ready(function () {
         // invalid subscription name check. The two
         // regEx always need to be the same for ensuring the same check.
         // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var invalidSubscriptionNameRegex = "(\W)";
+        
+//        var importIt = new JavaImporter(com.ericsson.ei.frontend.utils.RegExProviderUtils);
+//        var invalidSubscriptionNameRegex  = new com.ericsson.ei.frontend.utils.RegExProviderUtils();
+        console.log(invalidName, "INVALID NAMEddddd............");
+        console.log(validEmail, "validEmail............");
+        console.log(frontendServiceUrl, "FrontEnd...........");
+        
+//        var invalidSubscriptionNameRegex = "(\W)";
+//        console.log(invalidSubscriptionName);
+        var regExpression =  new RegExp(invalidName, regExpressionFlag);
+        
         var regExpressionFlag = "g";
-        var regExpression =  new RegExp(invalidSubscriptionNameRegex, regExpressionFlag);
+//        var regExpression =  new RegExp(invalidSubscriptionNameRegex, regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(

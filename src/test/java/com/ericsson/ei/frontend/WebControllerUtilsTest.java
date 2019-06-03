@@ -39,4 +39,41 @@ public class WebControllerUtilsTest {
       assertEquals(expectedUrl, controllerUtils.getFrontEndServiceUrl());
     }
 
+    @Test
+    public void test() throws Exception {
+        String regExForInvalidName = null;
+
+        try {
+            regExForInvalidName = getValue("invalidName");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        String regExForValidEmail = null;
+        try {
+            regExForValidEmail = getValue("validEmail");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        assertEquals(regExForInvalidName, "(\\W)");
+        assertEquals(regExForValidEmail,
+                "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
+    }
+
+    /**
+     * This function takes a key and returns the corresponding value from the
+     * JSONObject
+     *
+     * @param String
+     *            key
+     * @return String value
+     */
+    public String getValue(String key) {
+        String value = null;
+        value = controllerUtils.getRegEx(key);
+        return value;
+    }
+
 }
