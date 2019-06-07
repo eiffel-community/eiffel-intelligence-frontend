@@ -42,17 +42,20 @@ jQuery(document).ready(function () {
                 navigateToRoute('subscriptions');
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (XMLHttpRequest.status == 401) {
-                    window.logMessages("Bad credentials");
+                var statusCode = XMLHttpRequest.status;
+
+                if (statusCode == 401) {
+                    window.logMessages("Error Status code: 401 'Unauthorized or bad credentials'");
                     $('#loginError').text("Invalid username and/or password!");
-                    $('#loginError').addClass("is-invalid");
-                    $('#loginError').show();
+                } else if (statusCode == 500 && !isBackEndStatusOk()) {
+                    window.logMessages("Error back-end is not reachable!");
+                    $('#loginError').text("Back-end might be unavailable!");
                 } else {
-                    window.logMessages("Unknown login error");
-                    $('#loginError').text("Unknown login error!");
-                    $('#loginError').addClass("is-invalid");
-                    $('#loginError').show();
+                    window.logMessages("Error Status Code: " + statusCode + " 'Unknown server error'");
                 }
+
+                $('#loginError').addClass("is-invalid");
+                $('#loginError').show();
             },
             complete: function () {
             }
