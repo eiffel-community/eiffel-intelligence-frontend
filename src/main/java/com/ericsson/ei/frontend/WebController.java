@@ -44,10 +44,8 @@ public class WebController {
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
-
         model.addAttribute("invalidName", RegExProviderUtils.getRegEx("invalidName"));
-        model.addAttribute("validEmail", "From your controller");
-
+        model.addAttribute("validEmail", RegExProviderUtils.getRegEx("validEmail"));
         return "subscription";
     }
 

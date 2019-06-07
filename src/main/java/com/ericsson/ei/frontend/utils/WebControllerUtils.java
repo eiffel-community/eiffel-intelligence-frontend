@@ -22,13 +22,11 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.eiffelcommons.utils.RegExProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -114,15 +112,4 @@ public class WebControllerUtils {
 
         return backEndInformation.getUrlAsString();
     }
-    
-    public String getRegEx(String key) {
-        String regEx = "";
-        try {
-            regEx = RegExProvider.getRegExs().getString(key);
-        } catch (JSONException | IOException e) {
-//            LOGGER.error("Error message: " + e.getMessage(), e);
-        }
-        return regEx;
-    }
-
 }

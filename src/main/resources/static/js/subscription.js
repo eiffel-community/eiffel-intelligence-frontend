@@ -4,7 +4,6 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
-
 var invalidName;
 var validEmail;
 
@@ -12,13 +11,10 @@ jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
 
-    // Fetch injected URL from DOM
-    frontendServiceUrl = $('#frontendServiceUrl').text();
-    
+    // Fetch injected URL and Regular Expressions from DOM
+    frontendServiceUrl = $('#frontendServiceUrl').text();    
     invalidName = $('#invalidName').text();
     validEmail = $('#validEmail').text();
-    
-    
 
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
@@ -838,26 +834,10 @@ jQuery(document).ready(function () {
             $('#invalidSubscriptionName').text("SubscriptionName must not be empty");
             $('#subscriptionNameInput').addClass("is-invalid");
             error = true;
-        }
-        
-        // When this regExp need to be changed then remember to change the one in the
-        // back-end (invalidSubscriptionNameRegex in SubscriptionValidator.java), which do the same
-        // invalid subscription name check. The two
-        // regEx always need to be the same for ensuring the same check.
-        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        
-//        var importIt = new JavaImporter(com.ericsson.ei.frontend.utils.RegExProviderUtils);
-//        var invalidSubscriptionNameRegex  = new com.ericsson.ei.frontend.utils.RegExProviderUtils();
-        console.log(invalidName, "INVALID NAMEddddd............");
-        console.log(validEmail, "validEmail............");
-        console.log(frontendServiceUrl, "FrontEnd...........");
-        
-//        var invalidSubscriptionNameRegex = "(\W)";
-//        console.log(invalidSubscriptionName);
-        var regExpression =  new RegExp(invalidName, regExpressionFlag);
-        
+        }        
+        // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
         var regExpressionFlag = "g";
-//        var regExpression =  new RegExp(invalidSubscriptionNameRegex, regExpressionFlag);
+        var regExpression =  new RegExp(invalidName, regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -890,11 +870,8 @@ jQuery(document).ready(function () {
             var emails = notificationMeta.split(",");
             emails.forEach(function(email){
                 email = email.trim();
-                // When this regExp need to be changed then remember to change the one in the
-                // back-end (validEmailRegExpression in SubscriptionValidator.java), which do the same
-                // email validation check. The two
-                // regEx always need to be the same for ensuring the same check.
-                var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
+                var validEmailRegExpression = new RegExp(validEmail);
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");
