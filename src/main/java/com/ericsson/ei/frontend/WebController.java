@@ -23,8 +23,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ericsson.ei.frontend.utils.RegExProviderUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
+import com.ericsson.eiffelcommons.utils.RegExProvider;
 
 @Controller
 public class WebController {
@@ -44,8 +44,8 @@ public class WebController {
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
-        model.addAttribute("invalidName", RegExProviderUtils.getRegEx("invalidName"));
-        model.addAttribute("validEmail", RegExProviderUtils.getRegEx("validEmail"));
+        model.addAttribute("subscriptionNameRegex", RegExProvider.SUBSCRIPTION_NAME);
+        model.addAttribute("notificationMetaRegex", RegExProvider.NOTIFICATION_META);
         return "subscription";
     }
 

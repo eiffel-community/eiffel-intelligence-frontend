@@ -4,8 +4,8 @@ var table;
 var frontendServiceUrl;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
-var invalidName;
-var validEmail;
+var subscriptionNameRegex;
+var notificationMetaRegex;
 
 jQuery(document).ready(function () {
 
@@ -13,8 +13,8 @@ jQuery(document).ready(function () {
 
     // Fetch injected URL and Regular Expressions from DOM
     frontendServiceUrl = $('#frontendServiceUrl').text();    
-    invalidName = $('#invalidName').text();
-    validEmail = $('#validEmail').text();
+    subscriptionNameRegex = $('#subscriptionNameRegex').text();
+    notificationMetaRegex = $('#notificationMetaRegex').text();
 
     // Check EI Backend Server Status ########################################
     var backendStatus = false;
@@ -837,7 +837,7 @@ jQuery(document).ready(function () {
         }        
         // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
         var regExpressionFlag = "g";
-        var regExpression =  new RegExp(invalidName, regExpressionFlag);
+        var regExpression =  new RegExp(subscriptionNameRegex, regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -871,7 +871,7 @@ jQuery(document).ready(function () {
             emails.forEach(function(email){
                 email = email.trim();
                 // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
-                var validEmailRegExpression = new RegExp(validEmail);
+                var validEmailRegExpression = new RegExp(notificationMetaRegex);
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");
