@@ -67,8 +67,7 @@ jQuery(document).ready(function () {
             };
 
             var ajaxHttpSender = new AjaxHttpSender();
-            var contextPath = "/rules/rule-check/aggregation";
-            ajaxHttpSender.sendAjax(contextPath, "POST", JSON.stringify(rulesAndEventsJson), callback);
+            ajaxHttpSender.sendAjax(backendEndpoints.CHECK_AGGREGATION, "POST", JSON.stringify(rulesAndEventsJson), callback);
         };
 
         // This function for adding rule
@@ -285,7 +284,7 @@ jQuery(document).ready(function () {
         };
 
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/download/" + name;
+        var contextPath = backendEndpoints.DOWNLOAD + name;
         ajaxHttpSender.sendAjax(contextPath, "GET", "", callback);
     }
 
@@ -307,13 +306,13 @@ jQuery(document).ready(function () {
     function checkTestRulePageEnabled() {
         var callback = {
             error: function () {
-                addStatusIndicator(statusType.danger, statusText.backend_down);
+                addStatusIndicator(statusType.DANGER, statusText.BACKEND_DOWN);
                 elementsDisabled(true);
             },
             success: function (responseData) {
                 var isEnabled = responseData.status;
                 if (isEnabled != true) {
-                    addStatusIndicator(statusType.warning, statusText.test_rules_disabled);
+                    addStatusIndicator(statusType.WARNING, statusText.TEST_RULES_DISABLED);
                 } else {
                     removeStatusIndicator();
                 }
@@ -321,8 +320,7 @@ jQuery(document).ready(function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/rules/rule-check/testRulePageEnabled";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.TEST_RULES_PAGE_ENABLED, "GET", null, callback);
     }
     // Finish to check backend Test Rule Service status
 
@@ -331,33 +329,11 @@ jQuery(document).ready(function () {
         $('textarea').prop("disabled", disabled);
     }
 
-    // Check EI Backend Server Status ########################################
-    function checkBackendStatus() {
-        var callback = {
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (XMLHttpRequest.status == 401) {
-                    doIfUserLoggedOut();
-                } else {
-                    doIfSecurityOff();
-                }
-            },
-            success: function (responseData, textStatus) {
-                checkBackendSecured();
-            },
-            complete: function () {
-                checkTestRulePageEnabled();
-            }
-        };
-        var ajaxHttpSender = new AjaxHttpSender();
-        var contentType = "application/string; charset=utf-8";
-        var datatype = "text";
-        var contextPath = "/auth/checkStatus";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback, contentType, datatype);
-    }
-    checkBackendStatus();
+    checkTestRulePageEnabled();
 
-    // Check if EI Backend Server is online every X seconds
-    timerInterval = window.setInterval(function () { checkBackendStatus(); }, 15000);
+    // Check EI Backend Server Status ########################################
+
+    checkBackendStatus();
 
     // END OF EI Backend Server check #########################################
 });

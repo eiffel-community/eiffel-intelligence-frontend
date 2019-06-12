@@ -1,30 +1,3 @@
-var router = new Navigo(null, true, '#');
-var frontendServiceUrl = $('#frontendServiceUrl').text();
-var frontendServiceBackEndPath = "/backend";
-var timerInterval;
-var ldapEnabled = true;
-
-// Start ## getters and setters
-
-function isLdapEnabled(){
-    return Boolean(ldapEnabled);
-}
-
-function setLdapEnabled(value){
-    ldapEnabled = Boolean(value);
-}
-
-function getCurrentUser() {
-    return sessionStorage.getItem("currentUser");
-}
-
-function setCurrentUser(user) {
-    sessionStorage.removeItem("currentUser");
-    sessionStorage.setItem("currentUser", user);
-}
-
-// End   ## getters and setters
-
 function stringContainsSubstring(string, substring) {
     var isSubstring = string.indexOf(substring) !== -1;
     return isSubstring;
@@ -60,7 +33,7 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
     if (!dataType) {
         dataType = "json";
     }
-    url = addBackendParameter(frontendServiceUrl+contextPath);
+    var url = addBackendParameter(getFrontEndServiceUrl() + contextPath);
     $.ajax({
         url: url,
         type: type,
@@ -134,35 +107,29 @@ function isStringDefined(value) {
 // Start ## Routing ##
 var routes = {};
 routes["subscriptions"] = function () {
-    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("subscriptionpage.html");
 };
 routes["test-rules"] = function () {
-    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("testRules.html");
 };
 routes["ei-info"] = function () {
-    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("eiInfo.html");
 };
 routes["switch-backend"] = function () {
-    window.clearInterval(timerInterval);
     $(".app-header").addClass("header-bar-hidden");
     $(".main").load("switch-backend.html");
 };
 routes["add-backend"] = function () {
-    window.clearInterval(timerInterval);
     $(".app-header").addClass("header-bar-hidden");
     $(".main").load("add-instances.html");
 };
 routes["login"] = function () {
-    window.clearInterval(timerInterval);
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("login.html");
@@ -193,7 +160,7 @@ function navigateToRoute(route) {
 // Start ## Load Back end list ##
 function updateBackEndInstanceList() {
     $.ajax({
-        url: frontendServiceUrl + frontendServiceBackEndPath,
+        url: getFrontEndServiceUrl() + getFrontendServiceBackEndPath(),
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         cache: false,
@@ -301,8 +268,7 @@ function doIfSecurityOff() {
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
-            var response = JSON.parse(ko.toJSON(responseData));
-            var ldapStatus = response.security;
+            var ldapStatus = responseData.security;
             setLdapEnabled(ldapStatus);
             if (isLdapEnabled()) {
                 checkLoggedInUser();
@@ -315,8 +281,7 @@ function checkBackendSecured() {
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
-    var contextPath = "/auth";
-    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+    ajaxHttpSender.sendAjax(backendEndpoints.AUTH, "GET", null, callback);
 }
 
 function checkLoggedInUser() {
@@ -330,34 +295,7 @@ function checkLoggedInUser() {
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
-    var contextPath = "/auth/login";
-    ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+    ajaxHttpSender.sendAjax(backendEndpoints.LOGIN, "GET", null, callback);
 }
 
 // End ## Login and Security ##
-
-// Start ## Status Indicator ##
-var statusType = {
-    success: "alert-success",
-    info: "alert-info",
-    warning: "alert-warning",
-    danger: "alert-danger"
-};
-
-var statusText = {
-    backend_down: "<strong>Back end is down!</strong> Wait for it go up or switch to another back end before continuing!",
-    test_rules_disabled: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
-};
-
-function addStatusIndicator(statusType, statusText) {
-    var statusIndicator = $(".content")[0].previousElementSibling;
-    if (statusIndicator != null) {
-        $($(".content")[0].previousElementSibling).remove();
-    }
-    $(".content").before("<div class=\"subscription-alert alert " + statusType + "\">" + statusText + "</div>");
-}
-
-function removeStatusIndicator() {
-    $($(".content")[0].previousElementSibling).remove();
-}
-// End ## Status Indicator ##
