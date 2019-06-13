@@ -1,8 +1,6 @@
 package com.ericsson.ei.frontend.pageobjects;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -14,9 +12,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 public class TestRulesPage extends PageBaseClass {
+    private static final String ROUTE = "/#test-rules";
 
     public TestRulesPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) throws IOException {
         super(mockedHttpClient, driver, baseUrl);
+    }
+
+    public TestRulesPage loadPage() {
+        driver.get(baseUrl + ROUTE);
+        waitForJQueryToLoad();
+        return this;
     }
 
     public boolean presenceOfTestRulesHeader() {
