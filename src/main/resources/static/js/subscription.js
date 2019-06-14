@@ -6,7 +6,7 @@ var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" 
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-
+    
     checkBackendStatus();
 
     function loadSubButtons() {
@@ -754,16 +754,10 @@ jQuery(document).ready(function () {
             $('#invalidSubscriptionName').text("SubscriptionName must not be empty");
             $('#subscriptionNameInput').addClass("is-invalid");
             error = true;
-        }
-        
-        // When this regExp need to be changed then remember to change the one in the
-        // back-end (invalidSubscriptionNameRegex in SubscriptionValidator.java), which do the same
-        // invalid subscription name check. The two
-        // regEx always need to be the same for ensuring the same check.
-        // /(\W)/ Is a regex that matches anything that is not [A-Z,a-z,0-8] and _.
-        var invalidSubscriptionNameRegex = "(\W)";
+        }        
+        // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
         var regExpressionFlag = "g";
-        var regExpression =  new RegExp(invalidSubscriptionNameRegex, regExpressionFlag);
+        var regExpression =  new RegExp(getSubscriptionNameRegex(), regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -796,11 +790,8 @@ jQuery(document).ready(function () {
             var emails = notificationMeta.split(",");
             emails.forEach(function(email){
                 email = email.trim();
-                // When this regExp need to be changed then remember to change the one in the
-                // back-end (validEmailRegExpression in SubscriptionValidator.java), which do the same
-                // email validation check. The two
-                // regEx always need to be the same for ensuring the same check.
-                var validEmailRegExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
+                var validEmailRegExpression = new RegExp(getNotificationMetaRegex());
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");

@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
+import com.ericsson.eiffelcommons.utils.RegExProvider;
 
 @Controller
 public class WebController {
@@ -31,9 +32,12 @@ public class WebController {
     @Autowired
     private WebControllerUtils frontEndUtils;
 
+
     @RequestMapping("/")
     public String greeting(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        model.addAttribute("subscriptionNameRegex", RegExProvider.SUBSCRIPTION_NAME);
+        model.addAttribute("notificationMetaRegex", RegExProvider.NOTIFICATION_META);
         String eiffelDocumentationUrlLinks = String.format("%s", frontEndUtils.getEiffelDocumentationUrls());
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
         return "index";

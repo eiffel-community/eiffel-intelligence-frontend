@@ -38,5 +38,4 @@ public class WebControllerUtilsTest {
       controllerUtils = new WebControllerUtils(HOST, PORT, CONTEXT_PATH, false, null, null, null, null, null);
       assertEquals(expectedUrl, controllerUtils.getFrontEndServiceUrl());
     }
-
 }

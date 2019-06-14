@@ -112,5 +112,4 @@ public class WebControllerUtils {
 
         return backEndInformation.getUrlAsString();
     }
-
 }

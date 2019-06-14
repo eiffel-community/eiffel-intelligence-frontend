@@ -3,6 +3,8 @@ var frontendServiceUrl = $('#frontendServiceUrl').text();
 var frontendServiceBackEndPath = "/backend";
 var ldapEnabled = true;
 var table;
+var subscriptionNameRegex = $('#subscriptionNameRegex').text();
+var notificationMetaRegex = $('#notificationMetaRegex').text();
 
 var backendEndpoints = {
     AUTH: "/auth",
@@ -98,6 +100,14 @@ function setBackEndStatusTimerInterval() {
 
 function getWhiteListedPages() {
     return String(PAGES_FOR_STATUS_INDICATION);
+}
+
+function getSubscriptionNameRegex() {
+    return subscriptionNameRegex;
+}
+
+function getNotificationMetaRegex() {
+    return notificationMetaRegex;
 }
 
 // End   ## getters and setters status handling
