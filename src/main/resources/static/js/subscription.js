@@ -2,16 +2,10 @@
 var save_method;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
 var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
-var subscriptionNameRegex;
-var notificationMetaRegex;
 
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-
-    // Fetch Regular Expressions from DOM
-    subscriptionNameRegex = $('#subscriptionNameRegex').text();
-    notificationMetaRegex = $('#notificationMetaRegex').text();
     
     checkBackendStatus();
 
@@ -763,7 +757,7 @@ jQuery(document).ready(function () {
         }        
         // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
         var regExpressionFlag = "g";
-        var regExpression =  new RegExp(subscriptionNameRegex, regExpressionFlag);
+        var regExpression =  new RegExp(getSubscriptionNameRegex(), regExpressionFlag);
         if ((regExpression.test(subscriptionName))) {
             var invalidLetters = subscriptionName.match(regExpression);
             $('#invalidSubscriptionName').text(
@@ -797,7 +791,7 @@ jQuery(document).ready(function () {
             emails.forEach(function(email){
                 email = email.trim();
                 // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
-                var validEmailRegExpression = new RegExp(notificationMetaRegex);
+                var validEmailRegExpression = new RegExp(getNotificationMetaRegex());
                 var isValidEmailAddress = validEmailRegExpression.test(email);
                 if (!isValidEmailAddress) {
                     $('#invalidNotificationMeta').text(email + " not a valid email.");

@@ -36,6 +36,8 @@ public class WebController {
     @RequestMapping("/")
     public String greeting(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        model.addAttribute("subscriptionNameRegex", RegExProvider.SUBSCRIPTION_NAME);
+        model.addAttribute("notificationMetaRegex", RegExProvider.NOTIFICATION_META);
         String eiffelDocumentationUrlLinks = String.format("%s", frontEndUtils.getEiffelDocumentationUrls());
         model.addAttribute("eiffelDocumentationUrlLinks", eiffelDocumentationUrlLinks);
         return "index";
@@ -44,8 +46,6 @@ public class WebController {
     @RequestMapping("/subscriptionpage.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
-        model.addAttribute("subscriptionNameRegex", RegExProvider.SUBSCRIPTION_NAME);
-        model.addAttribute("notificationMetaRegex", RegExProvider.NOTIFICATION_META);
         return "subscription";
     }
 
