@@ -12,6 +12,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SwitchBackendPage extends PageBaseClass {
+    private static final String ROUTE = "/#switch-backend";
+
+    public SwitchBackendPage loadPage() {
+        driver.get(baseUrl + ROUTE);
+        waitForJQueryToLoad();
+        return this;
+    }
 
     public SwitchBackendPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws ClientProtocolException, IOException {

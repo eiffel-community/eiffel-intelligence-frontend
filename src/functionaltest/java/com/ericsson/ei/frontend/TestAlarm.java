@@ -22,19 +22,23 @@ public class TestAlarm extends SeleniumBaseClass {
     TestRulesPage testRulesPage;
 
     @Before
-    public void beforeTest() throws IOException {
+    public void before() throws IOException {
         initBaseMocks(mockedHttpClient);
         js = driver;
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
     }
 
+    /**
+     * This test checks that the alarm functionality is able to log error messages.
+     *
+     * @throws IOException
+     */
     @Test
     public void testAlarm() throws IOException {
         testRulesPage.loadPage();
         enableTestRulesButtons();
         clickTestRulesButtons();
-        clickAlarmButton();
-        assertTrue(driver.findElements(By.cssSelector(".alert-list .dropdown-item")).size() >= 2);
+        verifyAlarmFunctionality();
     }
 
     private void enableTestRulesButtons() {
@@ -46,9 +50,8 @@ public class TestAlarm extends SeleniumBaseClass {
         testRulesPage.clickRemoveEventNumber(0);
     }
 
-    private void clickAlarmButton() {
-        for (int i = 0; i < 5; i++) {
-            testRulesPage.clickAlarmButton();
-        }
+    private void verifyAlarmFunctionality() {
+        testRulesPage.clickAlarmButton();
+        assertTrue(driver.findElements(By.cssSelector(".alert-list .dropdown-item")).size() >= 2);
     }
 }
