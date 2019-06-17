@@ -19,11 +19,11 @@ public class TestNavigation extends SeleniumBaseClass {
     @Before
     public void before() {
         indexPage = new IndexPage(mockedHttpClient, driver, baseUrl);
+        indexPage.loadPage();
     }
 
     @Test
     public void testPageNavigationButtons() throws IOException {
-        indexPage.loadPage();
         indexPage.clickTestRulesPage();
         indexPage.clickEiInfoBtn();
         indexPage.clickAdminBackendInstancesBtn();

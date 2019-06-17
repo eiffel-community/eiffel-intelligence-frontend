@@ -18,14 +18,15 @@ public class TestAlarm extends SeleniumBaseClass {
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
 
-    JavascriptExecutor js;
-    TestRulesPage testRulesPage;
+    private JavascriptExecutor js;
+    private TestRulesPage testRulesPage;
 
     @Before
     public void before() throws IOException {
         initBaseMocks(mockedHttpClient);
         js = driver;
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
+        testRulesPage.loadPage();
     }
 
     /**
@@ -35,7 +36,6 @@ public class TestAlarm extends SeleniumBaseClass {
      */
     @Test
     public void testAlarm() throws IOException {
-        testRulesPage.loadPage();
         enableTestRulesButtons();
         clickTestRulesButtons();
         verifyAlarmFunctionality();

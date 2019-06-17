@@ -57,7 +57,6 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
         mockClient1.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
 
         mockClient2.verifyZeroInteractions();
-
     }
 
     /**

@@ -55,25 +55,23 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @Before
     public void before() throws IOException {
         js = driver;
-        testRulesPage = new TestRulesPage(null, driver, baseUrl);
         portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
+        testRulesPage = new TestRulesPage(null, driver, baseUrl);
+        testRulesPage.loadPage();
     }
 
     @Test
     public void testJourneyToFindAggregatedObjectButton() throws Exception {
-        testRulesPage.loadPage();
         enableTestRulesButtons();
         verifyDownloadRulesTemplateButton();
         verifyUploadRulesFile();
         verifyDownloadRulesButton();
-        testRulesPage.clickAddRuleButton();
-        verifyRemoveRuleButton();
+        verifyAddAndRemoveRuleButton();
         verifyDownloadEventsTemplateButton();
         verifyUploadEventsFile();
-        testRulesPage.clickAddEventButton();
-        verifyRemoveEventButton();
+        verifyAddAndRemoveEventButton();
         verifyAggregatedObjectButton();
     }
 
@@ -86,7 +84,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         assertEquals(findAggregatedObjectResponse, testRulesPage.getAggregatedResultData());
     }
 
-    private void verifyRemoveEventButton() {
+    private void verifyAddAndRemoveEventButton() {
+        testRulesPage.clickAddEventButton();
         testRulesPage.clickRemoveEventNumber(3);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfEventNumber(3)));
     }
@@ -108,7 +107,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         assertEquals(downloadEventsTemplateMockedResponse, downloadedEventsTemplate);
     }
 
-    private void verifyRemoveRuleButton() {
+    private void verifyAddAndRemoveRuleButton() {
+        testRulesPage.clickAddRuleButton();
         testRulesPage.clickRemoveRuleNumber(3);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfRuleNumber(3)));
     }
