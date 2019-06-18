@@ -34,8 +34,6 @@ public class TestSwitchBackend extends SeleniumBaseClass {
             "responses", "NewInstanceSubscriptionResponse.json");
     private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "DefaultInstanceSubscriptionResponse.json");
-    private static final String INFORMATION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
-            "InformationResponse.json");
 
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
@@ -57,54 +55,54 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     @Test
     public void testSwitchBackend() throws Exception {
         addAndVerifySecondBackendInstance();
-        switchToSecondBackendInstance(); 
+        switchToSecondBackendInstance();
         verifySubscriptionForSecondBackendInstance();
         switchToFirstBackendInstance();
         verifySubscriptionForFirstBackendInstance();
         removeAndVerifySecondBackendInstance();
     }
-    
+
     private void addAndVerifySecondBackendInstance() throws ClientProtocolException, IOException {
         addBackendPage.loadPage();
         addSecondBackendInstance();
         switchBackendPage.loadPage();
         verifyAddedBackendInstance();
     }
-    
+
     private void removeAndVerifySecondBackendInstance() {
         switchBackendPage.loadPage();
         switchBackendPage.removeInstanceNumber(1);
         assertEquals("switchBackendPage.presenceOfInstance returned true when it should have been false", false,
                 switchBackendPage.presenceOfInstance(1));
     }
-    
+
     private void switchToSecondBackendInstance() {
         switchBackendInstance(1);
     }
-    
+
     private void switchToFirstBackendInstance() {
         switchBackendInstance(0);
     }
-    
+
     private void switchBackendInstance(int instance) {
         switchBackendPage.loadPage();
         switchBackendPage.switchToBackendInstance(instance);
     }
-    
+
     private void verifySubscriptionForFirstBackendInstance() {
         verifySubscription("default_instance_subscription");
     }
-    
+
     private void verifySubscriptionForSecondBackendInstance() {
         verifySubscription("new_instance_subscription");
     }
-    
+
     private void verifySubscription(String subscription) {
         subscriptionPage.loadPage();
         assertEquals(subscription, subscriptionPage.getSubscriptionNameFromSubscription());
     }
-    
-    private void verifyAddedBackendInstance() {  
+
+    private void verifyAddedBackendInstance() {
         assertEquals("new_instance", switchBackendPage.getInstanceNameAtPosition(1));
     }
 
@@ -114,9 +112,6 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     }
 
     private static void setupMockEndpoints() throws IOException {
-        String informationResponse = getJSONStringFromFile(INFORMATION_RESPONSE_FILEPATH);
-        mockClient2.when(request().withMethod("GET").withPath("/information")).respond(response().withStatusCode(200).withBody(informationResponse));
-
         mockClient2.when(request().withMethod("GET").withPath("/auth/checkStatus")).respond(response().withStatusCode(200).withBody(""));
 
         mockClient2.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
