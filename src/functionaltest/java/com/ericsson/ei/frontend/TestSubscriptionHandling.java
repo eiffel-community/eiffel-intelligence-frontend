@@ -123,6 +123,17 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         verifyUnauthorizedSubscriptionCRUD();
     }
 
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
+        mockServer = startClientAndServer();
+        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
+    }
+
+    @AfterClass
+    public static void tearDownMocks() throws IOException {
+        mockClient.stop();
+    }
+
     private void loadAndRefreshSubscriptionPage() {
         subscriptionPage.loadPage();
         subscriptionPage.refreshPage();
@@ -274,16 +285,5 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         String responseUser = "{\"user\":\"" + user + "\"}";
         mockClient.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody(responseAuth));
         mockClient.when(request().withMethod("GET").withPath("/auth/login")).respond(response().withStatusCode(200).withBody(responseUser));
-    }
-
-    @BeforeClass
-    public static void setUpMocks() throws IOException {
-        mockServer = startClientAndServer();
-        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
-    }
-
-    @AfterClass
-    public static void tearDownMocks() throws IOException {
-        mockClient.stop();
     }
 }

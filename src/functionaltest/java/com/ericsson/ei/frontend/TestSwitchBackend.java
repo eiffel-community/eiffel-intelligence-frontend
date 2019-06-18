@@ -62,6 +62,26 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         removeAndVerifySecondBackendInstance();
     }
 
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
+        mockServer1 = startClientAndServer();
+        mockServer2 = startClientAndServer();
+
+        mockClient1 = new MockServerClient(BASE_URL, mockServer1.getLocalPort());
+        mockClient2 = new MockServerClient(BASE_URL, mockServer2.getLocalPort());
+
+        setupMockEndpoints();
+    }
+
+    @AfterClass
+    public static void tearDownMocks() throws IOException {
+        mockClient1.stop();
+        mockClient2.stop();
+
+        mockServer1.stop();
+        mockServer2.stop();
+    }
+
     private void addAndVerifySecondBackendInstance() throws ClientProtocolException, IOException {
         addBackendPage.loadPage();
         addSecondBackendInstance();
@@ -127,25 +147,5 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         mockClient1.when(request().withMethod("GET").withPath("/auth/checkStatus")).respond(response().withStatusCode(200).withBody(""));
 
         mockClient1.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
-    }
-
-    @BeforeClass
-    public static void setUpMocks() throws IOException {
-        mockServer1 = startClientAndServer();
-        mockServer2 = startClientAndServer();
-
-        mockClient1 = new MockServerClient(BASE_URL, mockServer1.getLocalPort());
-        mockClient2 = new MockServerClient(BASE_URL, mockServer2.getLocalPort());
-
-        setupMockEndpoints();
-    }
-
-    @AfterClass
-    public static void tearDownMocks() throws IOException {
-        mockClient1.stop();
-        mockClient2.stop();
-
-        mockServer1.stop();
-        mockServer2.stop();
     }
 }

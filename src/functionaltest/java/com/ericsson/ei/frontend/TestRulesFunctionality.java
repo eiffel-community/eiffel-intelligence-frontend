@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -47,15 +46,14 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     protected CloseableHttpClient mockedHttpClient;
 
     private TestRulesPage testRulesPage;
-    private int portServer;
     private String downloadedRulesTemplate = "";
     private String downloadedEventsTemplate = "";
 
     @Before
     public void before() throws IOException {
-        portServer = mockServer.getLocalPort();
+        int serverPort = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
+        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", serverPort, "", true);
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
         testRulesPage.loadPage();
     }
@@ -71,6 +69,17 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         verifyUploadEventsFile();
         verifyAddAndRemoveEventButton();
         verifyAggregatedObjectButton();
+    }
+
+    @BeforeClass
+    public static void setUpMocks() throws IOException {
+        mockServer = startClientAndServer();
+        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
+    }
+
+    @AfterClass
+    public static void tearDownMocks() throws IOException {
+        mockClient.stop();
     }
 
     private void verifyAggregatedObjectButton() throws IOException {
@@ -139,16 +148,4 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private void enableTestRulesButtons() {
         driver.executeScript("$('button.btn').prop(\"disabled\", false);");
     }
-
-    @BeforeClass
-    public static void setUpMocks() throws IOException {
-        mockServer = startClientAndServer();
-        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
-    }
-
-    @AfterClass
-    public static void tearDownMocks() throws IOException {
-        mockClient.stop();
-    }
-
 }

@@ -85,16 +85,6 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
         mockClient1.verifyZeroInteractions();
     }
 
-    private void setupMockEndpoints() {
-        mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
-        mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
-        mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
-
-        mockClient2.when(request().withMethod("GET")).respond(response().withStatusCode(200));
-        mockClient2.when(request().withMethod("POST")).respond(response().withStatusCode(200));
-        mockClient2.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
-    }
-
     @After
     public void after() throws IOException {
         mockClient1.clear(request());
@@ -116,5 +106,15 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
     public static void tearDownMocks() throws IOException {
         mockClient1.stop();
         mockClient2.stop();
+    }
+
+    private void setupMockEndpoints() {
+        mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
+
+        mockClient2.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
     }
 }
