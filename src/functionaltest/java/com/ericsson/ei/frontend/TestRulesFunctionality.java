@@ -46,7 +46,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
 
-    private JavascriptExecutor js;
     private TestRulesPage testRulesPage;
     private int portServer;
     private String downloadedRulesTemplate = "";
@@ -54,7 +53,6 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     @Before
     public void before() throws IOException {
-        js = driver;
         portServer = mockServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer, "", true);
@@ -139,7 +137,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     }
 
     private void enableTestRulesButtons() {
-        js.executeScript("$('button.btn').prop(\"disabled\", false);");
+        driver.executeScript("$('button.btn').prop(\"disabled\", false);");
     }
 
     @BeforeClass

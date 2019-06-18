@@ -18,13 +18,11 @@ public class TestAlarm extends SeleniumBaseClass {
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
 
-    private JavascriptExecutor js;
     private TestRulesPage testRulesPage;
 
     @Before
     public void before() throws IOException {
         initBaseMocks(mockedHttpClient);
-        js = driver;
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
         testRulesPage.loadPage();
     }
@@ -42,7 +40,7 @@ public class TestAlarm extends SeleniumBaseClass {
     }
 
     private void enableTestRulesButtons() {
-        js.executeScript("$('button.btn').prop(\"disabled\", false);");
+        driver.executeScript("$('button.btn').prop(\"disabled\", false);");
     }
 
     private void clickTestRulesButtons() {
