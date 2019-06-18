@@ -188,6 +188,12 @@ body {
 .nav-item .fa:hover {
     color: #fff;
 }
+.user-login-icon {
+    color: #4FFD05 !important;
+}
+.user-login-icon:hover {
+    color: #4FFD05 !important;
+}
 .nav-item[type="button"] {
     outline: 0;
     line-height: 0;
@@ -197,6 +203,7 @@ body {
 }
 .nav-link {
     padding: 0;
+    padding-right: 10px !important;
 }
 .nav-link:focus {
     outline: 0;

@@ -239,25 +239,60 @@ function viewModel(backendInstanceData) {
 // End ## Load Back end list ##
 
 // Start ## Login and Security ##
-function doIfUserLoggedIn(user) {
-    setCurrentUser(user);
+function doIfUserLoggedIn(username) {
+    setCurrentUser(username);
+    showLoggedInUserInformation(username);
+    unlockSubscriptionButtons();
+}
+
+function showLoggedInUserInformation(username) {
     $("#userItem").show();
-    $("#userItem").addClass("user-login");
-    $("#ldapUserName").text(user);
+    $("#login-nav-bar-icon").addClass("user-login-icon");
+    $("#login-nav-bar-text").text(cropUsername(username));
+    $("#ldapUserName").text(username);
     $("#loginBlock").hide();
     $("#logoutBlock").show();
+}
+
+function unlockSubscriptionButtons() {
+    $(".logged-out-buttons").addClass("hidden_by_default");
+    $(".logged-in-buttons").removeClass("hidden_by_default");
     $(".show_if_authorized").prop('disabled', false);
+    $(".show_if_authorized").prop('title', "");
+}
+
+function cropUsername(username) {
+    var usernameMaxLength = 15;
+
+    if (username.length <= usernameMaxLength) {
+        return username;
+    }
+
+    var breakUsernameAtIndex = usernameMaxLength - 3;
+    return username.substr(0, breakUsernameAtIndex) + "...";
 }
 
 function doIfUserLoggedOut() {
     setCurrentUser("");
+    showUserLoggedOutInformation();
+    lockSubscriptionButtons();
+    sessionStorage.setItem('errorsStore', []);
+}
+
+function showUserLoggedOutInformation() {
     $("#userItem").show();
-    $("#userItem").removeClass("user-login");
+    $("#login-nav-bar-icon").removeClass("user-login-icon");
+    $("#login-nav-bar-text").text("Login");
     $("#ldapUserName").text("Guest");
     $("#loginBlock").show();
     $("#logoutBlock").hide();
+}
+
+function lockSubscriptionButtons() {
+    $(".logged-out-buttons").removeClass("hidden_by_default");
+    $(".logged-in-buttons").addClass("hidden_by_default");
     $(".show_if_authorized").prop('disabled', true);
-    sessionStorage.setItem('errorsStore', []);
+    $(".show_if_authorized").prop('title', 'Please login to enable!');
 }
 
 function doIfSecurityOff() {

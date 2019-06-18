@@ -26,19 +26,27 @@
         </div>
         <div id="subButtons" class="pb-1 col-12 hidden_by_default">
             <button id="addSubscription" class="mt-1 btn btn-success add_subscription show_if_authorized">
-                <i class="fa fa-fw fa-plus"></i> Add Subscription
+                <i class="fa fa-fw fa-plus logged-in-buttons"></i>
+                <i class="fa fa-fw fa-lock logged-out-buttons hidden_by_default"></i>
+                Add Subscription
             </button>
             <button id="uploadSubscription" class="mt-1 btn btn-success upload_subscriptions show_if_authorized">
-                <i class="fa fa-fw fa-upload"></i>Upload Subscriptions
+                <i class="fa fa-fw fa-upload logged-in-buttons"></i>
+                <i class="fa fa-fw fa-lock logged-out-buttons hidden_by_default"></i>
+                Upload Subscriptions
             </button>
             <button id="bulkDelete" class="mt-1 btn btn-danger bulk_delete show_if_authorized">
-                <i class="fa fa-fw fa-trash"></i> Bulk Delete
+                <i class="fa fa-fw fa-trash logged-in-buttons"></i>
+                <i class="fa fa-fw fa-lock logged-out-buttons hidden_by_default"></i>
+                Bulk Delete
             </button>
             <button id="reloadButton" class="mt-1 btn btn-primary table_reload">
-                <i class="fa fa-fw fa-refresh"></i> Reload
+                <i class="fa fa-fw fa-refresh"></i>
+                Reload
             </button>
             <button id="getTemplateButton" class="mt-1 btn btn-primary get_subscription_template">
-                <i class="fa fa-fw fa-download"></i> Get Template
+                <i class="fa fa-fw fa-download"></i>
+                Get Template
             </button>
             <input class="hide" type='file' id='upload_sub' name='file' />
         </div>

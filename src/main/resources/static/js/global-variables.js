@@ -35,7 +35,7 @@ var statusText = {
 var backEndStatus = true;
 var backEndStatusUpdated = false;
 var previousBackEndStatus;
-var backEnsStatusTimerInterval;
+var backEndStatusTimerInterval;
 // End Status variables
 
 // Start ## getters and setters
@@ -93,8 +93,8 @@ function isBackEndStatusChanged() {
 }
 
 function setBackEndStatusTimerInterval() {
-    if (backEnsStatusTimerInterval === undefined) {
-        backEnsStatusTimerInterval = window.setInterval(function () { updateBackendStatus(); }, 15000);
+    if (backEndStatusTimerInterval === undefined) {
+        backEndStatusTimerInterval = window.setInterval(function () { updateBackendStatus(); }, 15000);
     }
 }
 
