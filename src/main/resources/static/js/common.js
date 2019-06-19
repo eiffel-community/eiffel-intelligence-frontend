@@ -262,14 +262,13 @@ function unlockSubscriptionButtons() {
 }
 
 function cropUsername(username) {
-    var numberOfDotsAfterUsernameOnTooLongName = 3;
     var ellipses = "...";
 
     if (username.length <= getUsernameMaxDisplayLength()) {
         return username;
     }
 
-    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - numberOfDotsAfterUsernameOnTooLongName;
+    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipses.leangth;
     return username.substr(0, breakUsernameAtIndex) + ellipses;
 }
 
