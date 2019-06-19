@@ -80,10 +80,10 @@ function updateBackendStatus() {
     var callback = {
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             if (XMLHttpRequest.status == 401) {
-                doIfUserLoggedOut();
+                functionsToExecuteIfUserIsLoggedOut();
                 setBackEndStatusOk(true);
             } else {
-                doIfSecurityOff();
+                executeIfLdapIsDeactivated();
                 setBackEndStatusOk(false);
             }
         },

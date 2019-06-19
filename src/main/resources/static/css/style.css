@@ -136,6 +136,13 @@
     font-size: 12pt;
     color: #dc3545;
 }
+#login-nav-bar-text{
+    max-width: 100px;
+    min-width: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
 /* The switch - the box around the slider */
 .switch {
     position: relative;

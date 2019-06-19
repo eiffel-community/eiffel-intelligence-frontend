@@ -239,7 +239,7 @@ function viewModel(backendInstanceData) {
 // End ## Load Back end list ##
 
 // Start ## Login and Security ##
-function doIfUserLoggedIn(username) {
+function functionsToExecuteIfUserIsLoggedIn(username) {
     setCurrentUser(username);
     showLoggedInUserInformation(username);
     unlockSubscriptionButtons();
@@ -262,17 +262,18 @@ function unlockSubscriptionButtons() {
 }
 
 function cropUsername(username) {
-    var usernameMaxLength = 15;
+    var numberOfDotsAfterUsernameOnTooLongName = 3;
+    var ellipses = "...";
 
-    if (username.length <= usernameMaxLength) {
+    if (username.length <= getUsernameMaxDisplayLength()) {
         return username;
     }
 
-    var breakUsernameAtIndex = usernameMaxLength - 3;
-    return username.substr(0, breakUsernameAtIndex) + "...";
+    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - numberOfDotsAfterUsernameOnTooLongName;
+    return username.substr(0, breakUsernameAtIndex) + ellipses;
 }
 
-function doIfUserLoggedOut() {
+function functionsToExecuteIfUserIsLoggedOut() {
     setCurrentUser("");
     showUserLoggedOutInformation();
     lockSubscriptionButtons();
@@ -295,7 +296,7 @@ function lockSubscriptionButtons() {
     $(".show_if_authorized").prop('title', 'Please login to enable!');
 }
 
-function doIfSecurityOff() {
+function executeIfLdapIsDeactivated() {
     $("#userItem").hide();
     $("#ldapUserName").text("");
 }
@@ -308,11 +309,11 @@ function checkBackendSecured() {
             if (isLdapEnabled()) {
                 checkLoggedInUser();
             } else {
-                doIfSecurityOff();
+                executeIfLdapIsDeactivated();
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            doIfSecurityOff();
+            executeIfLdapIsDeactivated();
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
@@ -323,10 +324,10 @@ function checkLoggedInUser() {
     var callback = {
         success: function (responseData, textStatus) {
             var userFromBackEnd = responseData.user;
-            doIfUserLoggedIn(userFromBackEnd);
+            functionsToExecuteIfUserIsLoggedIn(userFromBackEnd);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            doIfUserLoggedOut();
+            functionsToExecuteIfUserIsLoggedOut();
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
