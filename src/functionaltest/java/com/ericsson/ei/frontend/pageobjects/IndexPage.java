@@ -97,11 +97,4 @@ public class IndexPage extends PageBaseClass {
         waitForJQueryToLoad();
         return infoPage;
     }
-
-    public void clickAlarmButton(){
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsLink")));
-        WebElement alarmBtn = driver.findElement(By.id("alertsLink"));
-        alarmBtn.click();
-        waitForJQueryToLoad();
-    }
 }
