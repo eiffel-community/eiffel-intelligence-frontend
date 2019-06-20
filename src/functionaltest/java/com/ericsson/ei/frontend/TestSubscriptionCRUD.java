@@ -46,20 +46,16 @@ public class TestSubscriptionCRUD extends TestBaseClass {
 
         String auth = ADMIN + ":" + ADMIN;
         encodedAuth = StringUtils.newStringUtf8(Base64.encodeBase64(auth.getBytes()));
-        responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}")
-                .toString();
-        responseBodyPut = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}")
-                .toString();
-        responseBodyDelete = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}")
-                .toString();
+        responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}").toString();
+        responseBodyPut = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}").toString();
+        responseBodyDelete = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}").toString();
     }
 
     @Test
     public void testCreateSubscriptionSuccess() throws Exception {
         mockSubscriptionEndpointForPostAndPut("POST", responseBodyPost);
-        mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+        mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+                .content(subscriptionRequestBody).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andExpect(content().string(responseBodyPost)).andReturn();
     }
 
@@ -67,16 +63,14 @@ public class TestSubscriptionCRUD extends TestBaseClass {
     public void testCreateSubscriptionNotFound() throws Exception {
         mockSubscriptionEndpointForPostAndPut("POST", responseBodyPost);
         mockMvc.perform(post(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
     }
 
     @Test
     public void testUpdateSubscriptionSuccess() throws Exception {
         mockSubscriptionEndpointForPostAndPut("PUT", responseBodyPut);
-        mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+        mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+                .content(subscriptionRequestBody).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andExpect(content().string(responseBodyPut)).andReturn();
     }
 
@@ -84,64 +78,58 @@ public class TestSubscriptionCRUD extends TestBaseClass {
     public void testUpdateSubscriptionNotFound() throws Exception {
         mockSubscriptionEndpointForPostAndPut("PUT", responseBodyPut);
         mockMvc.perform(put(SUBSCRIPTION_ENDPOINT).servletPath(SUBSCRIPTION_ENDPOINT).content(subscriptionRequestBody)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
     }
 
     @Test
     public void testDeleteSubscriptionSuccess() throws Exception {
         mockSubscriptionEndpointForDelete();
         mockMvc.perform(delete(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andExpect(content().string(responseBodyDelete)).andReturn();
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+                .andExpect(content().string(responseBodyDelete)).andReturn();
     }
 
     @Test
     public void testDeleteSubscriptionNotFound() throws Exception {
         mockSubscriptionEndpointForDelete();
-        mockMvc.perform(delete(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound())
-                .andExpect(content().string(NOT_FOUND)).andReturn();
+        mockMvc.perform(delete(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
     }
 
     @Test
     public void testGetSubscriptionSuccess() throws Exception {
         mockSubscriptionEndpointForGet();
-        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT)
-                .servletPath(SUBSCRIPTION_DELETE_ENDPOINT).header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andExpect(content().string(subscriptionRequestBody)).andReturn();
     }
 
     @Test
     public void testGetSubscriptionNotFound() throws Exception {
         mockSubscriptionEndpointForGet();
-        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT)
-                .servletPath(SUBSCRIPTION_DELETE_ENDPOINT).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.get(SUBSCRIPTION_DELETE_ENDPOINT).servletPath(SUBSCRIPTION_DELETE_ENDPOINT)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound()).andExpect(content().string(NOT_FOUND)).andReturn();
     }
 
     private void mockSubscriptionEndpointForPostAndPut(String method, String responseBody) {
         mockServerClient
                 .when(request().withMethod(method).withPath(SUBSCRIPTION_ENDPOINT).withBody(subscriptionRequestBody)
                         .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(responseBody).withStatusCode(200).withHeader(HttpHeaders.AUTHORIZATION,
-                        "Basic " + encodedAuth));
+                .respond(response().withBody(responseBody).withStatusCode(200).withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
     }
 
     private void mockSubscriptionEndpointForDelete() {
         mockServerClient
-                .when(request().withMethod("DELETE").withPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(responseBodyDelete).withStatusCode(200)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
+                .when(request().withMethod("DELETE").withPath(SUBSCRIPTION_DELETE_ENDPOINT).withHeader(HttpHeaders.AUTHORIZATION,
+                        "Basic " + encodedAuth))
+                .respond(response().withBody(responseBodyDelete).withStatusCode(200).withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
     }
 
     private void mockSubscriptionEndpointForGet() {
         mockServerClient
-                .when(request().withMethod("GET").withPath(SUBSCRIPTION_DELETE_ENDPOINT)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
-                .respond(response().withBody(subscriptionRequestBody).withStatusCode(200)
-                        .withHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
+                .when(request().withMethod("GET").withPath(SUBSCRIPTION_DELETE_ENDPOINT).withHeader(HttpHeaders.AUTHORIZATION,
+                        "Basic " + encodedAuth))
+                .respond(response().withBody(subscriptionRequestBody).withStatusCode(200).withHeader(HttpHeaders.AUTHORIZATION,
+                        "Basic " + encodedAuth));
     }
 }

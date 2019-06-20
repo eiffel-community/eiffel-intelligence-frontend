@@ -11,13 +11,20 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AddBackendPage extends PageBaseClass {
+    private static final String ROUTE = "/#add-backend";
+
+    public AddBackendPage loadPage() {
+        driver.get(baseUrl + ROUTE);
+        waitForJQueryToLoad();
+        return this;
+    }
 
     public AddBackendPage(CloseableHttpClient mockedHttpClient,
             FirefoxDriver driver, String baseUrl) throws ClientProtocolException, IOException {
         super(mockedHttpClient, driver, baseUrl);
     }
 
-    public SwitchBackendPage addBackendInstance(String name, String host, int port, String contextPath) throws ClientProtocolException, IOException {
+    public void addBackendInstance(String name, String host, int port, String contextPath) throws ClientProtocolException, IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("backEndName")));
         WebElement backEndNameInput = driver.findElement(By.id("backEndName"));
         backEndNameInput.sendKeys(name);
@@ -37,9 +44,5 @@ public class AddBackendPage extends PageBaseClass {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("addInstanceBtn2")));
         WebElement addInstanceBtn2 = driver.findElement(By.id("addInstanceBtn2"));
         addInstanceBtn2.click();
-
-        SwitchBackendPage addBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
-        waitForJQueryToLoad();
-        return addBackendPage;
     }
 }

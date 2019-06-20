@@ -13,9 +13,17 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SubscriptionPage extends PageBaseClass {
+    private static final String ROUTE = "/#subscriptions";
+
     public SubscriptionPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl)
             throws IOException {
         super(mockedHttpClient, driver, baseUrl);
+    }
+
+    public SubscriptionPage loadPage() {
+        driver.get(baseUrl + ROUTE);
+        waitForJQueryToLoad();
+        return this;
     }
 
     public boolean presenceOfHeader(String loc) {

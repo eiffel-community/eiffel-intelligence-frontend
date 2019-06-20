@@ -37,19 +37,11 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
     @Before
     public void before() throws Exception {
         backEndInstancesUtils.setDefaultBackEndInstance("test", BASE_URL, mockServer1.getLocalPort(), "", true);
-
-        mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
-        mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
-        mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
-
-        mockClient2.when(request().withMethod("GET")).respond(response().withStatusCode(200));
-        mockClient2.when(request().withMethod("POST")).respond(response().withStatusCode(200));
-        mockClient2.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
+        setupMockEndpoints();
     }
 
     /**
-     * This test does a normal request to the bridge and ensures it uses the
-     * default specified back end.
+     * This test does a normal request to the bridge and ensures it uses the default specified back end.
      *
      * @throws Exception
      */
@@ -65,24 +57,21 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
         mockClient1.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
 
         mockClient2.verifyZeroInteractions();
-
     }
 
     /**
-     * This test ensures that a back end specified by a URL parameter is
-     * overriding the default back end and uses the input one instead.
+     * This test ensures that a back end specified by a URL parameter is overriding the default back end and uses the input one instead.
      *
      * @throws Exception
      */
     @Test
     public void testHandleSubscriptionsUserSpecifiedBackend() throws Exception {
         URIBuilder builder = new URIBuilder();
-        builder.setParameter(BACKEND_PARAM, mockServer2Url).setPath(SUBSCRIPTION_ENDPOINT).setHost(BASE_URL)
-                .setPort(testServerPort).setScheme("http");
+        builder.setParameter(BACKEND_PARAM, mockServer2Url).setPath(SUBSCRIPTION_ENDPOINT).setHost(BASE_URL).setPort(testServerPort)
+                .setScheme("http");
 
         /**
-         * Since MockMvc has problem including real parameters in a request we
-         * use a real http request and sends this request to the bridge.
+         * Since MockMvc has problem including real parameters in a request we use a real http request and sends this request to the bridge.
          */
         HttpClientBuilder.create().build().execute(new HttpGet(builder.toString()));
         mockClient2.verify(request().withMethod("GET").withPath(SUBSCRIPTION_ENDPOINT));
@@ -117,5 +106,15 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
     public static void tearDownMocks() throws IOException {
         mockClient1.stop();
         mockClient2.stop();
+    }
+
+    private void setupMockEndpoints() {
+        mockClient1.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient1.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
+
+        mockClient2.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("POST")).respond(response().withStatusCode(200));
+        mockClient2.when(request().withMethod("PUT")).respond(response().withStatusCode(200));
     }
 }

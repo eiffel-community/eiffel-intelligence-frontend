@@ -9,11 +9,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
 
 import org.mockito.Mockito;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.mockito.Mockito.when;
@@ -57,5 +60,12 @@ public class PageBaseClass {
         when(mockedHttpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, httpStatus, "DUMMYRIGHTNOW"));
         when(mockedHttpResponse.getEntity()).thenReturn(entity);
         return mockedHttpResponse;
+    }
+
+    public void clickAlarmButton(){
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsLink")));
+        WebElement alarmBtn = driver.findElement(By.id("alertsLink"));
+        alarmBtn.click();
+        waitForJQueryToLoad();
     }
 }
