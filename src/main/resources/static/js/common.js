@@ -268,7 +268,7 @@ function cropUsername(username) {
         return username;
     }
 
-    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipses.leangth;
+    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipses.length;
     return username.substr(0, breakUsernameAtIndex) + ellipses;
 }
 
