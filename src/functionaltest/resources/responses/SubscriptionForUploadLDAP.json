@@ -2,7 +2,7 @@
   {
     "aggregationtype":"eiffel-intelligence",
     "created":1524037895385,
-    "ldapUserName" : "ABCD",
+    "ldapUserName" : "ABCDEFGHIJKLMNOPQRSTUVXY",
     "notificationMeta":"http://eiffel-jenkins1:8080/job/ei-artifact-triggered-job/build",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/x-www-form-urlencoded",
@@ -59,7 +59,7 @@
   {
     "aggregationtype":"eiffel-intelligence",
     "created":1524223397628,
-    "ldapUserName" : "ABCD",
+    "ldapUserName" : "ABCDEFGHIJKLMNOPQRSTUVXY",
     "notificationMeta":"http://<MyHost:port>/api/doit",
     "notificationType":"REST_POST",
     "restPostBodyMediaType":"application/json",
