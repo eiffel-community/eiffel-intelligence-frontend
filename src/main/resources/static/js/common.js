@@ -262,14 +262,14 @@ function unlockSubscriptionButtons() {
 }
 
 function cropUsername(username) {
-    var ellipses = "...";
+    var ellipsis = "...";
 
     if (username.length <= getUsernameMaxDisplayLength()) {
         return username;
     }
 
-    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipses.length;
-    return username.substr(0, breakUsernameAtIndex) + ellipses;
+    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipsis.length;
+    return username.substr(0, breakUsernameAtIndex) + ellipsis;
 }
 
 function functionsToExecuteIfUserIsLoggedOut() {

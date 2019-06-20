@@ -6,7 +6,7 @@ var table;
 var subscriptionNameRegex = $('#subscriptionNameRegex').text();
 var notificationMetaRegex = $('#notificationMetaRegex').text();
 
-// Minimum leangth is 4 due to ellipses being 3 long
+// Minimum leangth is 4 due to ellipsis being 3 long
 var usernameMaxDisplayLength = 15;
 
 var backendEndpoints = {
@@ -115,7 +115,7 @@ function getNotificationMetaRegex() {
 
 function getUsernameMaxDisplayLength() {
     if (usernameMaxDisplayLength < 4) {
-        // Minimum leangth is 4 due to ellipses being 3 long
+        // Minimum leangth is 4 due to ellipsis being 3 long
         return 4;
     }
     return usernameMaxDisplayLength;
