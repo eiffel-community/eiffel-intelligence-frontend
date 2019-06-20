@@ -75,7 +75,9 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @Test
     public void testSubscriptionButtons() throws Exception {
-        setupMockEndpoints(false, "");
+        final boolean security = false;
+        final String username = "";
+        setupMockEndpoints(security, username);
         removeAllSubscriptions();
         clickAndVerifyGetTemplateButton();
         uploadSubscriptions();
@@ -84,7 +86,9 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @Test
     public void testAddSubscriptionAndVerifyForm() throws Exception {
-        setupMockEndpoints(false, "");
+        final boolean security = false;
+        final String username = "";
+        setupMockEndpoints(security, username);
         loadAndRefreshSubscriptionPage();
         clickAddSubscriptionAndVerifyFormOpen();
         clickFormCancelAndVerifyFormClosed();
@@ -102,7 +106,9 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @Test
     public void testSubscriptionHandlingWithLDAPDisabled() throws Exception {
-        setupMockEndpoints(false, "");
+        final boolean security = false;
+        final String username = "";
+        setupMockEndpoints(security, username);
         loadAndRefreshSubscriptionPage();
         verifyAuthorizedSubscriptionCRUD();
         verifyViewButtonOnSubscription();
@@ -110,14 +116,18 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @Test
     public void testSubscriptionHandlingWithLDAPEnabledInvalidUser() throws Exception {
-        setupMockEndpoints(true, "");
+        final boolean security = true;
+        final String username = "";
+        setupMockEndpoints(security, username);
         loadAndRefreshSubscriptionPage();
         verifyUnauthorizedSubscriptionCRUD();
     }
 
     @Test
     public void testSubscriptionHandlingWithLDAPEnabled() throws Exception {
-        setupMockEndpoints(true, "ABCD");
+        final boolean security = true;
+        final String username = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        setupMockEndpoints(security, username);
         loadAndRefreshSubscriptionPage();
         verifyAuthorizedSubscriptionCRUD();
         verifyUnauthorizedSubscriptionCRUD();
