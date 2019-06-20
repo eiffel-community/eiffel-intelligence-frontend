@@ -25,7 +25,8 @@ public class TestSubscriptionCRUD extends TestBaseClass {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
-    private static final String ADMIN = "admin";
+    private static final String USERNAME = "mySuperDuperBestUsernameEver";
+    private static final String PASSWORD = "password";
     private static final String NOT_FOUND = "[]";
     private String subscriptionRequestBody;
     private String responseBodyPost;
@@ -44,7 +45,7 @@ public class TestSubscriptionCRUD extends TestBaseClass {
         backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
         subscriptionRequestBody = getJSONStringFromFile(SUBSCRIPTION_FILE_PATH);
 
-        String auth = ADMIN + ":" + ADMIN;
+        String auth = USERNAME + ":" + PASSWORD;
         encodedAuth = StringUtils.newStringUtf8(Base64.encodeBase64(auth.getBytes()));
         responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}").toString();
         responseBodyPut = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}").toString();

@@ -6,6 +6,9 @@ var table;
 var subscriptionNameRegex = $('#subscriptionNameRegex').text();
 var notificationMetaRegex = $('#notificationMetaRegex').text();
 
+// Minimum leangth is 4 due to ellipsis being 3 long
+var usernameMaxDisplayLength = 15;
+
 var backendEndpoints = {
     AUTH: "/auth",
     LOGIN: "/auth/login",
@@ -35,7 +38,7 @@ var statusText = {
 var backEndStatus = true;
 var backEndStatusUpdated = false;
 var previousBackEndStatus;
-var backEnsStatusTimerInterval;
+var backEndStatusTimerInterval;
 // End Status variables
 
 // Start ## getters and setters
@@ -93,8 +96,8 @@ function isBackEndStatusChanged() {
 }
 
 function setBackEndStatusTimerInterval() {
-    if (backEnsStatusTimerInterval === undefined) {
-        backEnsStatusTimerInterval = window.setInterval(function () { updateBackendStatus(); }, 15000);
+    if (backEndStatusTimerInterval === undefined) {
+        backEndStatusTimerInterval = window.setInterval(function () { updateBackendStatus(); }, 15000);
     }
 }
 
@@ -108,6 +111,14 @@ function getSubscriptionNameRegex() {
 
 function getNotificationMetaRegex() {
     return notificationMetaRegex;
+}
+
+function getUsernameMaxDisplayLength() {
+    if (usernameMaxDisplayLength < 4) {
+        // Minimum leangth is 4 due to ellipsis being 3 long
+        return 4;
+    }
+    return usernameMaxDisplayLength;
 }
 
 // End   ## getters and setters status handling

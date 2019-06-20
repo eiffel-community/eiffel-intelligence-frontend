@@ -239,28 +239,63 @@ function viewModel(backendInstanceData) {
 // End ## Load Back end list ##
 
 // Start ## Login and Security ##
-function doIfUserLoggedIn(user) {
-    setCurrentUser(user);
-    $("#userItem").show();
-    $("#userItem").addClass("user-login");
-    $("#ldapUserName").text(user);
-    $("#loginBlock").hide();
-    $("#logoutBlock").show();
-    $(".show_if_authorized").prop('disabled', false);
+function functionsToExecuteIfUserIsLoggedIn(username) {
+    setCurrentUser(username);
+    showLoggedInUserInformation(username);
+    unlockSubscriptionButtons();
 }
 
-function doIfUserLoggedOut() {
-    setCurrentUser("");
+function showLoggedInUserInformation(username) {
     $("#userItem").show();
-    $("#userItem").removeClass("user-login");
-    $("#ldapUserName").text("Guest");
-    $("#loginBlock").show();
-    $("#logoutBlock").hide();
-    $(".show_if_authorized").prop('disabled', true);
+    $("#login-nav-bar-icon").addClass("user-login-icon");
+    $("#login-nav-bar-text").text(cropUsername(username));
+    $("#ldapUserName").text(username);
+    $("#loginBlock").hide();
+    $("#logoutBlock").show();
+}
+
+function unlockSubscriptionButtons() {
+    $(".logged-out-buttons").addClass("hidden_by_default");
+    $(".logged-in-buttons").removeClass("hidden_by_default");
+    $(".show_if_authorized").prop('disabled', false);
+    $(".show_if_authorized").prop('title', "");
+}
+
+function cropUsername(username) {
+    var ellipsis = "...";
+
+    if (username.length <= getUsernameMaxDisplayLength()) {
+        return username;
+    }
+
+    var breakUsernameAtIndex = getUsernameMaxDisplayLength() - ellipsis.length;
+    return username.substr(0, breakUsernameAtIndex) + ellipsis;
+}
+
+function functionsToExecuteIfUserIsLoggedOut() {
+    setCurrentUser("");
+    showUserLoggedOutInformation();
+    lockSubscriptionButtons();
     sessionStorage.setItem('errorsStore', []);
 }
 
-function doIfSecurityOff() {
+function showUserLoggedOutInformation() {
+    $("#userItem").show();
+    $("#login-nav-bar-icon").removeClass("user-login-icon");
+    $("#login-nav-bar-text").text("Login");
+    $("#ldapUserName").text("Guest");
+    $("#loginBlock").show();
+    $("#logoutBlock").hide();
+}
+
+function lockSubscriptionButtons() {
+    $(".logged-out-buttons").removeClass("hidden_by_default");
+    $(".logged-in-buttons").addClass("hidden_by_default");
+    $(".show_if_authorized").prop('disabled', true);
+    $(".show_if_authorized").prop('title', 'Please login to enable!');
+}
+
+function executeIfLdapIsDeactivated() {
     $("#userItem").hide();
     $("#ldapUserName").text("");
 }
@@ -273,11 +308,11 @@ function checkBackendSecured() {
             if (isLdapEnabled()) {
                 checkLoggedInUser();
             } else {
-                doIfSecurityOff();
+                executeIfLdapIsDeactivated();
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            doIfSecurityOff();
+            executeIfLdapIsDeactivated();
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
@@ -288,10 +323,10 @@ function checkLoggedInUser() {
     var callback = {
         success: function (responseData, textStatus) {
             var userFromBackEnd = responseData.user;
-            doIfUserLoggedIn(userFromBackEnd);
+            functionsToExecuteIfUserIsLoggedIn(userFromBackEnd);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            doIfUserLoggedOut();
+            functionsToExecuteIfUserIsLoggedOut();
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();

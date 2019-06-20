@@ -38,7 +38,7 @@ jQuery(document).ready(function () {
             success: function (responseData, textStatus) {
                 var currentUser = JSON.parse(ko.toJSON(responseData)).user;
                 $.jGrowl("Welcome " + currentUser, { sticky: false, theme: 'Notify' });
-                doIfUserLoggedIn(currentUser);
+                functionsToExecuteIfUserIsLoggedIn(currentUser);
                 navigateToRoute('subscriptions');
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
