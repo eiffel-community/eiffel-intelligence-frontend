@@ -464,7 +464,7 @@ body {
         align-self: flex-end;
         max-width: 100%;
         width: 100%;
-        margin: 0 10px 10px 10px;
+        margin: 0 10px 5px 10px;
     }
     .app-header .navbar-nav {
         order: 3;
