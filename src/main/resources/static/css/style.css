@@ -20,11 +20,6 @@
 .card-standard {
     width: 25rem;
 }
-.top-nav-bar-text{
-    color: #c1c1c1;
-    padding-left: 0px;
-    font-size: 90%;
-}
 .sticky-button-bar{
     position: -webkit-sticky; /* Safari */
     position: sticky;

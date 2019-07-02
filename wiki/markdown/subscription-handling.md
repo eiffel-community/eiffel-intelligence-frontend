@@ -12,16 +12,16 @@ the Eiffel Intelligence front-end, once the authentication (if enabled) is done.
 #### _Add Subscription_
 This button opens a form with a number of fields to create a subscription
 through subscription endpoint (POST /subscriptions).
-#### _Reload_
-This button reloads the data from the database and refresh the data in the
-subscription table
+#### _Upload Subscriptions_
+This button help uploads a subscription by opening a file explorer
 #### _Bulk Delete_
 This button deletes all the selected subscriptions in the table from the
 database.
+#### _Reload_
+This button reloads the data from the database and refresh the data in the
+subscription table
 #### _Get Template_
 This button downloads a subscription template
-#### _Upload Subscriptions_
-This button help uploads a subscription by opening a file explorer
 #### _EI Back-end Status_
 This button indicates, through its color, whether a back-end instance is
 connected with front-end or not. The green color means back-end is connected

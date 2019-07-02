@@ -7,9 +7,9 @@ language: java
 services:
   - docker
 
+# All environment variables must be in one line to trigger a single build.
 env:
-  - EI_BACKEND_PORT=8099
-  - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+  - EI_BACKEND_PORT=8099 JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
 # Using default 'test' stage for our tests, and only running deploy stage
 # (after merge) on master branch
