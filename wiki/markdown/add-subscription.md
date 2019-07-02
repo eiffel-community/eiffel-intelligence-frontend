@@ -40,9 +40,13 @@ used as a password for authentication against the entire jenkins instance.
 <img src="images/subscription_add_form2.png">
 </img>
 
-**Authorization:** A list to select authorization type. Currently, only one
-authorization type is supported, which is “BASIC_AUTH”. The option “NO_AUTH”
-implies that authorization is not required.
+**Authorization:** A list to select authorization type.
+* NO_AUTH: _No Authorization used_
+* BASIC_AUTH: _Username and password will be Base 64 encoded_
+* BASIC_AUTH _Jenkins CSRF Protection (crumb): Username and password will be Base 64 encoded.
+A crumb will be fetched automatically before request is made.
+(Currently default in many Jenkins instances)._
+
 
 **Repeat:** It is possible to enable repeat, e.g. whether same subscription
 should be re-triggered for new additions to the aggregated object. If disabled,

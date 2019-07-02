@@ -6,7 +6,7 @@ var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" 
 jQuery(document).ready(function () {
 
     $('.modal-dialog').draggable({ handle: ".modal-header", cursor: 'move' });
-    
+
     checkBackendStatus();
 
     function loadSubButtons() {
@@ -175,7 +175,8 @@ jQuery(document).ready(function () {
         ]);
         self.authenticationType_in = ko.observableArray([
             { "text": "NO_AUTH", value: "NO_AUTH" },
-            { "text": "BASIC_AUTH", value: "BASIC_AUTH" }
+            { "text": "BASIC_AUTH", value: "BASIC_AUTH" },
+            { "text": "BASIC_AUTH Jenkins CSRF Protection (crumb)", value: "BASIC_AUTH_CRUMB" }
         ]);
         self.repeat_in = ko.observableArray([
             { "value": true, "label": "Activate Repeat" }
@@ -754,7 +755,7 @@ jQuery(document).ready(function () {
             $('#invalidSubscriptionName').text("SubscriptionName must not be empty");
             $('#subscriptionNameInput').addClass("is-invalid");
             error = true;
-        }        
+        }
         // This regular expression is fetched from the Eiffel-Commons. It is same for both front-end and back-end
         var regExpressionFlag = "g";
         var regExpression =  new RegExp(getSubscriptionNameRegex(), regExpressionFlag);
