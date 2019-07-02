@@ -6,7 +6,6 @@ body {
 .app-header {
     position: fixed;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     z-index: 1030;
     width: 100%;
@@ -34,7 +33,7 @@ body {
 }
 .app-header .navbar-logo {
     display: flex;
-    width: 200px;
+    min-width: 200px;
     align-items: center;
     justify-content: flex-start;
     padding-left: 10px;
@@ -48,7 +47,7 @@ body {
 }
 .app-header .header-bar {
     visibility: visible;
-    max-width: 40%;
+    max-width: 500px;
     min-width: 10%;
     outline: 0;
 }
@@ -61,6 +60,8 @@ body {
 .app-header .navbar-nav {
     flex-direction: row;
     padding-left: 10px;
+    min-width: 290px;
+    justify-content: flex-end;
 }
 .app-header .navbar-toggler {
     margin-right: 10px;
@@ -434,6 +435,7 @@ body {
         margin-left: 200px;
     }
     .app-header {
+        flex-wrap: wrap;
         align-items: flex-start;
         height: 80px;
         padding-top: 5px;
@@ -469,6 +471,7 @@ body {
     .app-header .navbar-nav {
         order: 3;
         align-self: center;
+        min-width: 0;
     }
     .app-header .nav-item.dropdown .dropdown-menu {
         position: fixed !important;
@@ -523,9 +526,6 @@ body {
     .app-header .nav-item.dropdown .badge {
         margin-left: -0.8rem;
     }
-}
-
-@media (max-width: 575.98px) {
 }
 
 @media (hover: none) {
