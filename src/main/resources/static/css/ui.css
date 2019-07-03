@@ -214,6 +214,8 @@ body {
 }
 .nav-link > span {
     color: #c1c1c1;
+}
+.app-header .nav-link > span {
     font-size: 90%;
 }
 .nav-link:hover > span{
@@ -389,6 +391,7 @@ body {
     }
     .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item > .nav-link {
         color: transparent;
+        padding-right: 0 !important;
     }
     .sidebar.sidebar-minimized .sidebar-nav .nav > .nav-item .fa {
         width: 50px;
