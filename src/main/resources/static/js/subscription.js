@@ -176,7 +176,7 @@ jQuery(document).ready(function () {
         self.authenticationType_in = ko.observableArray([
             { "text": "NO_AUTH", value: "NO_AUTH" },
             { "text": "BASIC_AUTH", value: "BASIC_AUTH" },
-            { "text": "BASIC_AUTH Jenkins CSRF Protection (crumb)", value: "BASIC_AUTH_CRUMB" }
+            { "text": "BASIC_AUTH Jenkins CSRF Protection (crumb)", value: "BASIC_AUTH_JENKINS_CSRF" }
         ]);
         self.repeat_in = ko.observableArray([
             { "value": true, "label": "Activate Repeat" }

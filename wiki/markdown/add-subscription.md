@@ -3,7 +3,7 @@
 This form is used to add subscription through front-end GUI. Here is a
 description of the elements available on this form.
 
-<img src="images/subscription_add_form1.png">
+<img border="1" src="images/subscription_add_part1.png">
 </img>
 
 **Load Subscription Template:** In this dropdown list, options are given to
@@ -13,6 +13,9 @@ Mail Trigger.
 
 **SubscriptionName:** A field to give a name to the current subscription. Only
 letters, underscore and numbers are allowed in this field.
+
+<img border="1" src="images/subscription_add_part2.png">
+</img>
 
 **NotificationType:** There are two options: REST POST and
 Mail Trigger, depending on how a subscriber want to be notified when a
@@ -37,27 +40,30 @@ Parameters such as a Jenkins job-token can be included in this field.
 **Note**: The job-token should not be mistaken for the API token that is
 used as a password for authentication against the entire jenkins instance.
 
-<img src="images/subscription_add_form2.png">
+<img border="1" src="images/subscription_add_part3.png">
 </img>
 
 **Authorization:** A list to select authorization type.
 * NO_AUTH: _No Authorization used_
 * BASIC_AUTH: _Username and password will be Base 64 encoded_
-* BASIC_AUTH _Jenkins CSRF Protection (crumb): Username and password will be Base 64 encoded.
-A crumb will be fetched automatically before request is made.
-(Currently default in many Jenkins instances)._
+* BASIC_AUTH Jenkins CSRF Protection (crumb): _Username and password will
+be Base 64 encoded. A crumb will be fetched automatically before request is made.
+(Currently default in many Jenkins instances). **Note**: Will work even when CSRF
+is disabled in Jenkins._
 
+<img border="1" src="images/subscription_add_part4.png">
+</img>
 
 **Repeat:** It is possible to enable repeat, e.g. whether same subscription
 should be re-triggered for new additions to the aggregated object. If disabled,
 the notification will be triggered only the first time when conditions are
 fulfilled.
 
-**Requirement:** It is used to add a requirement, which need to be fulfilled
-before a subscription is triggered. Requirement is added in the form of a
-condition (with a specific format). More than one conditions may be added under
-one requirement by using “Add Condition” button. It should be noted that
-conditions under one requirement are connected by logical “AND”. Thus all
-conditions udder one requirement need to be satisfied before a subscription is
-triggered. More than one requirements may be added by “Add Requirement” button.
+**Requirement and Conditions:** It is used to add a requirement, which need to
+be fulfilled before a subscription is triggered. Requirement is added in the form
+of a condition (with a specific format). More than one conditions may be added
+under one requirement by using “Add Condition” button. It should be noted
+that conditions under one requirement are connected by logical “AND”.
+Thus all conditions udder one requirement need to be satisfied before a subscription
+is triggered. More than one requirements may be added by “Add Requirement” button.
 Requirements are connected by logical “OR”.
