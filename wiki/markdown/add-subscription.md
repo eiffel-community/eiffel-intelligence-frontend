@@ -44,7 +44,7 @@ used as a password for authentication against the entire jenkins instance.
 </img>
 
 **Authorization:** A list to select authorization type.
-* NO_AUTH: _No Authorization used_
+* NO_AUTH: _No Authentication used_
 * BASIC_AUTH: _Username and password will be Base 64 encoded_
 * BASIC_AUTH Jenkins CSRF Protection (crumb): _Username and password will
 be Base 64 encoded. A crumb will be fetched automatically before request is made.
