@@ -43,7 +43,7 @@ used as a password for authentication against the entire jenkins instance.
 <img border="1" src="images/subscription_add_part3.png">
 </img>
 
-**Authorization:** A list to select authorization type.
+**Authentication:** A list to select authentication type.
 * NO_AUTH: _No Authentication used_
 * BASIC_AUTH: _Username and password will be Base 64 encoded_
 * BASIC_AUTH Jenkins CSRF Protection (crumb): _Username and password will
