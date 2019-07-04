@@ -60,8 +60,8 @@ public class BackEndInformationControllerUtils {
         } catch (Exception e) {
             LOG.error("ERROR!\n" + e.getMessage());
             return new ResponseEntity<>(
-                    "[{\"name\":\"Unable to load instances\",\"host\":\"NO HOST\",\"port\":\"NO PORT\",\"contextPath\":\"/\"}]",
-                    getHeaders(), HttpStatus.OK);
+                    "{\"message\": \"Failure when trying to load backend instances\"}",
+                    getHeaders(), HttpStatus.NOT_FOUND);
         }
     }
 

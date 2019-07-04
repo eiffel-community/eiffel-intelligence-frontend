@@ -389,7 +389,7 @@ jQuery(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row, meta) {
                         if (data == undefined || row == undefined) {
-                            window.logMessages("Error: Subscription data is not defined");
+                            logMessage("Error: Subscription data is not defined");
                             return '';
                         }
                         subscriptionOwner = row.ldapUserName;
@@ -471,7 +471,7 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    window.logMessages("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
+                    logMessage("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
             }
         };
@@ -502,7 +502,7 @@ jQuery(document).ready(function () {
 
         // Check if no Subscription has been marked to be deleted.
         if (subscriptionsToDelete.length < 1) {
-            window.logMessages("No subscriptions has been marked to be deleted.");
+            logMessage("No subscriptions has been marked to be deleted.");
             return;
         }
 
@@ -521,7 +521,7 @@ jQuery(document).ready(function () {
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
             if (this.responseText == "") {
-                window.logMessages("Failed to download template, Error: Could not contact the backend server.");
+                logMessage("Failed to download template, Error: Could not contact the backend server.");
             } else {
                 var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");
@@ -560,7 +560,7 @@ jQuery(document).ready(function () {
             return true;
         } catch (e) {
             if (logError) {
-                window.logMessages("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
+                logMessage("JSON Format Check Failed:\n" + e.name + "\n" + e.message);
             }
             return false;
         }
@@ -586,13 +586,8 @@ jQuery(document).ready(function () {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                var errorMessage = "";
                 reload_table();
-                var responseJSON = JSON.parse(XMLHttpRequest.responseText);
-                for (var i = 0; i < responseJSON.length; i++) {
-                    errorMessage = errorMessage + responseJSON[i].subscription + " :: " + responseJSON[i].reason + "\n";
-                }
-                window.logMessages("Failed to create Subscriptions:\n" + errorMessage);
+                parseAndLogMessage(XMLHttpRequest.responseText);
             }
         };
         // Perform AJAX
@@ -632,9 +627,6 @@ jQuery(document).ready(function () {
         var callback = {
             success: function (responseData, textStatus) {
                 populate_json(responseData, mode);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.logMessages("Error: " + XMLHttpRequest.responseText);
             }
         };
         // Perform AJAX

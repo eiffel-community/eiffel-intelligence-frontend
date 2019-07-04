@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
                 contentType: 'application/json; charset=utf-8',
                 cache: false,
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    window.logMessages(XMLHttpRequest.responseText);
+                    parseAndLogMessage(XMLHttpRequest.responseText);
                 },
                 success: function (responseData, XMLHttpRequest, textStatus) {
                     $.jGrowl(responseData.message, { sticky: false, theme: 'Notify' });
@@ -50,7 +50,7 @@ jQuery(document).ready(function () {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            window.logMessages("Failure when trying to load backend instances");
+            parseAndLogMessage(XMLHttpRequest.responseText);
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
             var observableObject = $("#instancesModel")[0];

@@ -89,7 +89,7 @@ body {
     cursor: pointer;
 }
 .app-header .alert-menu .alert-list .alert-message.expand {
-    white-space: normal;
+    white-space: pre-line;
 }
 .app-header .alert-menu .alert-list .alert-remove {
     display: flex;

@@ -20,7 +20,7 @@ jQuery(document).ready(function () {
         this.login = function (userState, remember) {
             var dataJSON = JSON.parse(ko.toJSON(userState));
             if (dataJSON.ldapUserName == "" || dataJSON.password == "") {
-                window.logMessages("Username and password fields cannot be empty");
+                logMessage("Username and password fields cannot be empty");
             } else {
                 var token = window.btoa(dataJSON.ldapUserName + ":" + dataJSON.password);
                 sendLoginRequest(token);
@@ -44,14 +44,15 @@ jQuery(document).ready(function () {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var statusCode = XMLHttpRequest.status;
 
+                // These error messages are not standardized.
                 if (statusCode == 401) {
-                    window.logMessages("Error Status code: 401 'Unauthorized or bad credentials'");
+                    logMessage("Error Status code: 401 'Unauthorized or bad credentials'");
                     $('#loginError').text("Invalid username and/or password!");
                 } else if (statusCode == 500 && !isBackEndStatusOk()) {
-                    window.logMessages("Error back-end is not reachable!");
+                    logMessage("Error back-end is not reachable!");
                     $('#loginError').text("Back-end might be unavailable!");
                 } else {
-                    window.logMessages("Error Status Code: " + statusCode + " 'Unknown server error'");
+                    logMessage("Error Status Code: " + statusCode + " 'Unknown server error'");
                 }
 
                 $('#loginError').addClass("is-invalid");
