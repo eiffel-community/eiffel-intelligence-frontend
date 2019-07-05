@@ -389,7 +389,7 @@ jQuery(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row, meta) {
                         if (data == undefined || row == undefined) {
-                            logMessage("Error: Subscription data is not defined");
+                            logMessage("Subscription data is not defined");
                             return '';
                         }
                         subscriptionOwner = row.ldapUserName;
@@ -471,7 +471,7 @@ jQuery(document).ready(function () {
                 reload_table();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
-                    logMessage("Error deleting subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
+                    logMessage("Failed to delete subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
                 }
             }
         };
@@ -521,7 +521,7 @@ jQuery(document).ready(function () {
         request.responseType = "application/json;charset=utf-8";
         request.onload = function (event) {
             if (this.responseText == "") {
-                logMessage("Failed to download template, Error: Could not contact the backend server.");
+                logMessage("Failed to download template. Could not contact the backend server.");
             } else {
                 var jsonData = JSON.stringify(JSON.parse(request.response), null, 2);
                 downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsTemplate.json");

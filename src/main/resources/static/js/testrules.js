@@ -16,7 +16,7 @@ jQuery(document).ready(function () {
             var context = ko.contextFor(event.target);
             self.rulesBindingList.splice(context.$index(), 1);
             if (self.rulesBindingList().length == 0) {
-                logMessage("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
+                logMessage("All rule types were deleted, but we need at least one, so we add a default rule.");
                 self.addRule(ruleTemplate);
             }
         };
@@ -26,7 +26,7 @@ jQuery(document).ready(function () {
             var context = ko.contextFor(event.target);
             self.eventsBindingList.splice(context.$index(), 1);
             if (self.eventsBindingList().length == 0) {
-                logMessage("Deleted all events, but we need atleast one event.");
+                logMessage("All events were deleted, but we need at least one, so we add an empty one.");
                 self.addEvent({});
             }
         };

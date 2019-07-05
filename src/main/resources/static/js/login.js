@@ -46,13 +46,13 @@ jQuery(document).ready(function () {
 
                 // These error messages are not standardized.
                 if (statusCode == 401) {
-                    logMessage("Error Status code: 401 'Unauthorized or bad credentials'");
+                    logMessage("Status code: 401, 'Unauthorized or bad credentials'");
                     $('#loginError').text("Invalid username and/or password!");
                 } else if (statusCode == 500 && !isBackEndStatusOk()) {
-                    logMessage("Error back-end is not reachable!");
+                    logMessage("Status code: 500, Could not reach back-end");
                     $('#loginError').text("Back-end might be unavailable!");
                 } else {
-                    logMessage("Error Status Code: " + statusCode + " 'Unknown server error'");
+                    logMessage("Status Code: " + statusCode + ", 'Unknown server error'");
                 }
 
                 $('#loginError').addClass("is-invalid");
