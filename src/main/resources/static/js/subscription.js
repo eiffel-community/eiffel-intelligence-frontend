@@ -1,7 +1,6 @@
 // Global vars
 var save_method;
 var defaultFormKeyValuePair = { "formkey": "", "formvalue": "" };
-var defaultFormKeyValuePairAuth = { "formkey": "Authorization", "formvalue": "" };
 
 jQuery(document).ready(function () {
 
