@@ -27,7 +27,7 @@ jQuery(document).ready(function () {
 					contentType: 'application/json; charset=utf-8',
 					cache: false,
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						window.logMessages(JSON.parse(XMLHttpRequest.responseText)["message"]);
+						parseAndLogMessage(XMLHttpRequest.responseText);
 					},
 					success: function (responseData, XMLHttpRequest, textStatus) {
 						$.jGrowl(responseData.message, { sticky: false, theme: 'Notify' });

@@ -68,11 +68,15 @@ ko.cleanNode($("#alertsItem")[0]);
 ko.applyBindings(vm, $("#alertsItem")[0]);
 vm.stopPropagation();
 
-function logMessages(message) {
+function logMessage(message) {
     $.jGrowl(message, { sticky: false, theme: 'Error', position: 'center' });
     vm.addErrorMessage(message);
     vm.storeErrorMessage(message);
     vm.stopPropagation();
+}
+
+function parseAndLogMessage(message) {
+    logMessage(JSON.parse(message).message);
 }
 
 $('#alertsLink').on('click', function (event) {
