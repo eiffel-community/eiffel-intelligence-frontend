@@ -49,6 +49,8 @@ AjaxHttpSender.prototype.sendAjax = function (contextPath, type, data, callback,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             if(typeof callback.error === 'function') {
                 callback.error(XMLHttpRequest, textStatus, errorThrown);
+            } else {
+                parseAndLogMessage(XMLHttpRequest.responseText);
             }
         },
         success: function (responseData, textStatus) {
@@ -165,7 +167,7 @@ function updateBackEndInstanceList() {
         contentType: 'application/json; charset=utf-8',
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            window.logMessages("Failure when trying to load backend instances");
+            parseAndLogMessage(XMLHttpRequest.responseText);
         },
         success: function (responseData, XMLHttpRequest, textStatus) {
             var observableObject = $("#selectInstances")[0];

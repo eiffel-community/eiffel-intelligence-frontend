@@ -16,7 +16,7 @@ jQuery(document).ready(function () {
             var context = ko.contextFor(event.target);
             self.rulesBindingList.splice(context.$index(), 1);
             if (self.rulesBindingList().length == 0) {
-                logMessages("Deleted all rule types, but we need atleast one Rule type, Here add default rule type");
+                logMessage("All rule types were deleted, but we need at least one, so we add a default rule.");
                 self.addRule(ruleTemplate);
             }
         };
@@ -26,7 +26,7 @@ jQuery(document).ready(function () {
             var context = ko.contextFor(event.target);
             self.eventsBindingList.splice(context.$index(), 1);
             if (self.eventsBindingList().length == 0) {
-                logMessages("Deleted all events, but we need atleast one event.");
+                logMessage("All events were deleted, but we need at least one, so we add an empty one.");
                 self.addEvent({});
             }
         };
@@ -37,7 +37,7 @@ jQuery(document).ready(function () {
                 try {
                     array.push(JSON.parse(element.data()));
                 } catch (e) {
-                    logMessages("Invalid json rule format :\n" + element.data());
+                    logMessage("Invalid json rule format :\n" + element.data());
                     return false;
                 }
             });
@@ -55,13 +55,6 @@ jQuery(document).ready(function () {
                     if (responseData.length > 0) {
                         $('#aggregatedObjectContent').text(JSON.stringify(responseData, null, 2));
                         $('#aggregatedObjectModal').modal('show');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    if (XMLHttpRequest.responseText == "") {
-                        logMessages("Failed to generate the aggregated object, Error: Could not contact the backend server.");
-                    } else {
-                        logMessages("Failed to generate the aggregated object, Error: " + XMLHttpRequest.responseText);
                     }
                 }
             };
@@ -127,7 +120,7 @@ jQuery(document).ready(function () {
             try {
                 jsonLintResult = jsonlint.parse(fileContent);
             } catch (e) {
-                logMessages("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
+                logMessage("JSON events Format Check Failed:\n" + e.name + "\n" + e.message);
                 return false;
             }
             $.jGrowl('JSON events Format Check Succeeded', {
@@ -241,7 +234,7 @@ jQuery(document).ready(function () {
             try {
                 formRules.push(JSON.parse($(this).val()));
             } catch (e) {
-                logMessages("Invalid json format :\n" + $(this).val());
+                logMessage("Invalid json format :\n" + $(this).val());
                 return false;
             }
         });
@@ -249,7 +242,7 @@ jQuery(document).ready(function () {
             var jsonData = JSON.stringify(formRules, null, 2);
             downloadFile(jsonData, "application/json;charset=utf-8", "rules.json");
         } else {
-            logMessages("Data not available for download!");
+            logMessage("Data not available for download!");
         }
     });
 
@@ -260,7 +253,7 @@ jQuery(document).ready(function () {
             try {
                 formEvents.push(JSON.parse($(this).val()));
             } catch (e) {
-                logMessages("Invalid json format :\n" + $(this).val());
+                logMessage("Invalid json format :\n" + $(this).val());
                 return false;
             }
         });
@@ -268,7 +261,7 @@ jQuery(document).ready(function () {
             var jsonData = JSON.stringify(formEvents, null, 2);
             downloadFile(jsonData, "application/json;charset=utf-8", "events.json");
         } else {
-            logMessages("Data not available for download!");
+            logMessage("Data not available for download!");
         }
     });
 
@@ -279,7 +272,7 @@ jQuery(document).ready(function () {
                 downloadFile(jsonString, "application/json;charset=utf-8", name + ".json");
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                logMessages("Failed to download template, Error: Could not contact the backend server.");
+                logMessage("Failed to download template, Error: Could not contact the backend server.");
             }
         };
 
