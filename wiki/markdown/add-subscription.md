@@ -67,3 +67,4 @@ that conditions under one requirement are connected by logical “AND”.
 Thus all conditions udder one requirement need to be satisfied before a subscription
 is triggered. More than one requirements may be added by “Add Requirement” button.
 Requirements are connected by logical “OR”.
+**_More information about how to write Requirement and Conditions can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/subscriptions.md#writing-requirements-and-conditions)._**
