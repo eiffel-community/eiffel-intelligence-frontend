@@ -1,7 +1,5 @@
 package com.ericsson.ei.frontend.config;
 
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -12,16 +10,17 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class CheckEIConfigurations {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckEIConfigurations.class);
-    
+public class ConfigurationLogger {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            ConfigurationLogger.class);
+
     @Autowired
     Environment env;
-    
+
     @PostConstruct
     public void logAndCheckConfiguration() {
-            
+
         LOGGER.debug("EI Frontend started with following configurations:\n"
                 + "server.port: " + env.getProperty("server.port") + "\n"
                 + "ei.frontend.service.port: " + env.getProperty("ei.frontend.service.port") + "\n"
@@ -34,6 +33,7 @@ public class CheckEIConfigurations {
                 + "logging.level.root: " + env.getProperty("logging.level.root") + "\n"
                 + "logging.level.org.springframework.web: " + env.getProperty("logging.level.org.springframework.web") + "\n"
                 + "logging.level.com.ericsson.ei: " + env.getProperty("logging.level.com.ericsson.ei") + "\n"
-                + "\nThese properties is only some of the configurations, more configurations may have been provided.\n");
+                + "\nThese properties are only some of the configurations, " +
+                             "more configurations may have been provided.\n");
     }
 }
