@@ -17,6 +17,11 @@
 
 <img src="./images/eiffel-intelligence-logo.png" alt="Eiffel Intelligence" width="350"/>
 
+[![Build Status](https://travis-ci.org/eiffel-community/eiffel-intelligence-frontend.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-intelligence-frontend)
+[![Coverage Status](https://coveralls.io/repos/github/eiffel-community/eiffel-intelligence-frontend/badge.svg?branch=master)](https://coveralls.io/github/eiffel-community/eiffel-intelligence-frontend?branch=master)
+[![](https://jitpack.io/v/eiffel-community/eiffel-intelligence-frontend.svg)](https://jitpack.io/#eiffel-community/eiffel-intelligence-frontend)
+
+
 # Eiffel Intelligence Frontend
 Eiffel Intelligence Frontend is part of the [Eiffel Intelligence](https://github.com/eiffel-community/eiffel-intelligence) implementation of the [Eiffel Protocol](https://github.com/eiffel-community/eiffel). Eiffel Intelligence Frontend allows the configuration of subscription and aggregation rules in Eiffel Intelligence.
 
