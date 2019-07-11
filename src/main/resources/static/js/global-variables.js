@@ -12,12 +12,12 @@ var usernameMaxDisplayLength = 15;
 var backendEndpoints = {
     AUTH: "/auth",
     LOGIN: "/auth/login",
-    CHECK_STATUS: "/auth/checkStatus",
+    CHECK_STATUS: "/auth/check-status",
     SUBSCRIPTIONS: "/subscriptions",
     DOWNLOAD: "/download/",
-    DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/download/subscriptionsTemplate",
+    DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/download/subscriptions-template",
     INFORMATION: "/information",
-    TEST_RULES_PAGE_ENABLED: "/rules/rule-check/testRulePageEnabled",
+    TEST_RULES_PAGE_ENABLED: "/rules/rule-check/test-rule-page-enabled",
     CHECK_AGGREGATION: "/rules/rule-check/aggregation"
 };
 

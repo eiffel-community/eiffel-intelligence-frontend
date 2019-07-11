@@ -283,12 +283,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
                 .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
 
         String responseStatus = "{\"status\":\"OK\"}";
-        mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus")).respond(response().withStatusCode(200).withBody(responseStatus));
+        mockClient.when(request().withMethod("GET").withPath("/auth/check-status")).respond(response().withStatusCode(200).withBody(responseStatus));
 
         String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
         mockClient.when(request().withMethod("DELETE").withPath("/subscriptions/Subscription1,Subscription2,Subscription3"))
                 .respond(response().withStatusCode(200).withBody(""));
-        mockClient.when(request().withMethod("GET").withPath("/download/subscriptionsTemplate"))
+        mockClient.when(request().withMethod("GET").withPath("/download/subscriptions-template"))
                 .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
 
         String responseAuth = "{\"security\":" + security + "}";

@@ -66,7 +66,7 @@ public class SeleniumBaseClass extends TestBaseClass {
     protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {
         CloseableHttpResponse responseData = createMockedHTTPResponse("\"\":\"\"", 200);
         Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth/checkStatus")));
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth/check-status")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth")));
@@ -75,7 +75,7 @@ public class SeleniumBaseClass extends TestBaseClass {
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptions")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                .argThat(request -> (request).getURI().toString().contains("/rules/rule-check/testRulePageEnabled")));
+                .argThat(request -> (request).getURI().toString().contains("/rules/rule-check/test-rule-page-enabled")));
 
     }
 

@@ -12,7 +12,7 @@ Feature: Authentication test
   @AuthCheckStatusScenario
   Scenario: Check status test
     Given frontend is up and running
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
+    When a 'GET' request is prepared for REST API '/auth/check-status'
     And username "gauss" and password "password" is used as credentials
     And request is sent
     Then response code 200 is received
@@ -75,13 +75,13 @@ Feature: Authentication test
     Given frontend is up and running
     
     # Invalid Username
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
+    When a 'GET' request is prepared for REST API '/auth/check-status'
     And username "invalid_username" and password "password" is used as credentials
     And request is sent
     Then response code 401 is received
     
     # Invalid Password
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
+    When a 'GET' request is prepared for REST API '/auth/check-status'
     And username "gauss" and password "invalid_password" is used as credentials
     And request is sent
     Then response code 401 is received

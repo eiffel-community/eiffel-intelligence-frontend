@@ -132,7 +132,7 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     }
 
     private static void setupMockEndpoints() throws IOException {
-        mockClient2.when(request().withMethod("GET").withPath("/auth/checkStatus")).respond(response().withStatusCode(200).withBody(""));
+        mockClient2.when(request().withMethod("GET").withPath("/auth/check-status")).respond(response().withStatusCode(200).withBody(""));
 
         mockClient2.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
 
@@ -144,7 +144,7 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         mockClient1.when(request().withMethod("GET").withPath("/subscriptions"))
                 .respond(response().withStatusCode(200).withBody(defaultInstanceSubscriptionResponse));
 
-        mockClient1.when(request().withMethod("GET").withPath("/auth/checkStatus")).respond(response().withStatusCode(200).withBody(""));
+        mockClient1.when(request().withMethod("GET").withPath("/auth/check-status")).respond(response().withStatusCode(200).withBody(""));
 
         mockClient1.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
     }

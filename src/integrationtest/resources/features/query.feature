@@ -4,7 +4,7 @@ Feature: Query test
   @QueryMissedNotificationsScenario
   Scenario: Query missed notifications
     Given frontend is up and running
-    When a 'GET' request is prepared for REST API '/queryMissedNotifications'
+    When a 'GET' request is prepared for REST API '/query/missed-notifications'
     And param key 'SubscriptionName' with value 'NonExistingSubscription' is added
     And request is sent
     Then response code 200 is received
@@ -14,7 +14,7 @@ Feature: Query test
   Scenario: Query aggregated object by ID
     Given frontend is up and running
     And an aggregated object is created
-    When a 'GET' request is prepared for REST API '/queryAggregatedObject'
+    When a 'GET' request is prepared for REST API '/query/aggregated-object'
     And param key 'ID' with value '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43' is added
     And request is sent for 30 seconds until reponse code no longer matches 204
     And response body contains '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43'

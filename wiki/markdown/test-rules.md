@@ -255,7 +255,7 @@ It is possible to use curl to get required information. To get information
 about test rules status, if this functionality is enabled in back-end or
 not, you can execute command below.
 
-    curl -X GET http://<host>:8080/rules/rule-check/testRulePageEnabled?backendurl="http://127.0.0.1:8090/"
+    curl -X GET http://<host>:8080/rules/rule-check/test-rule-page-enabled?backendurl="http://127.0.0.1:8090/"
 
 To execute rules on specific events with curl, you need to create a JSON
 file with rules and events. File should contain:

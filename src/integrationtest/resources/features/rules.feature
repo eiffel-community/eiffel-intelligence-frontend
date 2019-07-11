@@ -4,7 +4,7 @@ Feature: Rules test
   @RulesPageEnabledScenario
   Scenario: Rules page enabled
     Given frontend is up and running
-    When a 'GET' request is prepared for REST API '/rules/rule-check/testRulePageEnabled'
+    When a 'GET' request is prepared for REST API '/rules/rule-check/test-rule-page-enabled'
     And request is sent
     Then response code 200 is received
     And response body '{"status":true}' is received

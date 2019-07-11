@@ -55,7 +55,7 @@ public class EIRequestControllerTest {
     private static final String SUBSCRIPTIONS_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTIONS_ONE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String INFORMATION_ENDPOINT = "/information";
-    private static final String DOWNLOAD_RULES_TEMPLATE_ENDPOINT = "/download/rulesTemplate";
+    private static final String DOWNLOAD_RULES_TEMPLATE_ENDPOINT = "/download/rules-template";
     private static final String AUTH_ENDPOINT = "/auth";
     private static final String AUTH_LOGIN_ENDPOINT = "/auth/login";
 

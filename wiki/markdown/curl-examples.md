@@ -54,7 +54,7 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
         <td>Check if LDAP security is enabled</td>
     </tr>
     <tr>
-        <td>/auth/checkStatus</td>
+        <td>/auth/check-status</td>
         <td>GET</td>
         <td>Used to check the back-end status</td>
     </tr>
@@ -196,17 +196,17 @@ In the below command the JSON object is put in a file and sent along with the re
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/download/subscriptionsTemplate</td>
+        <td>/download/subscriptions-template</td>
         <td>GET</td>
         <td>Downloads a template with several predefined subscriptions</td>
     </tr>
     <tr>
-        <td>/download/rulesTemplate</td>
+        <td>/download/rules-template</td>
         <td>GET</td>
         <td>Downloads a template with predefined rules</td>
     </tr>
     <tr>
-        <td>/download/eventsTemplate</td>
+        <td>/download/events-template</td>
         <td>GET</td>
         <td>Downloads a template with predefined events</td>
     </tr>
@@ -218,15 +218,15 @@ The EI front-end supports these endpoints. More information can be found in the 
 
 This command would return a list of rules.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/rulesTemplate
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/rules-template
 
 This command returns a list of predefined template events.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/eventsTemplate
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/events-template
 
 This command returns a list of several subscriptions. It is also possible to specify a file in which to save the downloaded objects in to.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/download/subscriptionsTemplate --output myFile.json
+    curl -X GET -H "Content-type: application/json" localhost:8080/download/subscriptions-template --output myFile.json
 
 
 ## <a id="information" />/information
@@ -258,12 +258,12 @@ The response is a json object containing all the connected components and data a
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/queryAggregatedObject</td>
+        <td>/query/aggregated-object</td>
         <td>GET</td>
         <td>Download a subscription template json file</td>
     </tr>
     <tr>
-        <td>/queryMissedNotifications</td>
+        <td>/query/missed-notifications</td>
         <td>GET</td>
         <td>Queries any missed notifications</td>
     </tr>
@@ -286,7 +286,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/rules/rule-check/testRulePageEnabled</td>
+        <td>/rules/rule-check/test-rule-page-enabled</td>
         <td>GET</td>
         <td>Check if TestRules is enabled in the back-end</td>
     </tr>
@@ -300,7 +300,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 For these endpoints to be reachable the Eiffel Intelligence back-end [needs to be configured](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties) with `testaggregated.enabled: true`.
 The below command would result in a json response of `{"status":true}` if this functionality is enabled.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/rules/rule-check/testRulePageEnabled
+    curl -X GET -H "Content-type: application/json" localhost:8080/rules/rule-check/test-rule-page-enabled
 
 
 Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/running-rules-on-objects.md)

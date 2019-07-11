@@ -105,7 +105,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private void verifyDownloadEventsTemplateButton() throws IOException {
         String downloadEventsTemplateMockedResponse = getJSONStringFromFile(EVENTS_TEMPLATE_FILE_PATH);
-        mockClient.when(request().withMethod("GET").withPath("/download/eventsTemplate"))
+        mockClient.when(request().withMethod("GET").withPath("/download/events-template"))
                 .respond(response().withStatusCode(200).withBody(downloadEventsTemplateMockedResponse));
 
         testRulesPage.clickDownloadEventsTemplate();
@@ -137,7 +137,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private void verifyDownloadRulesTemplateButton() throws IOException {
         String mockedResponse = getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
-        mockClient.when(request().withMethod("GET").withPath("/download/rulesTemplate"))
+        mockClient.when(request().withMethod("GET").withPath("/download/rules-template"))
                 .respond(response().withStatusCode(200).withBody(mockedResponse));
         testRulesPage.clickDownloadRulesTemplate();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
