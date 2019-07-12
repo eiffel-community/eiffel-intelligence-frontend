@@ -11,7 +11,7 @@ jsonActT1 = """{
   "msgParams": {
     "meta": {
       "type": "EiffelActivityTriggeredEvent",
-      "version": "3.0.0",
+      "version": "4.0.0",
       "tags": [],
       "source": {
         "domainId": "",

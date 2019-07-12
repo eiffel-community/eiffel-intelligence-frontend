@@ -18,8 +18,6 @@ def jsonArtP1 = """
 	        "host": "",
 	        "name": "",
 	        "uri": ""
-	      },
-	      "security": {
 	      }
 	    }
 	  },
