@@ -6,8 +6,6 @@ jQuery(document).ready(function () {
     var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
     var frontEndAppName = $('#frontendAppName').text();
 
-    var backEndServerUrl = $('#backendServerUrl').text();
-
     var body = document.getElementById('eiPageFrame');
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
@@ -23,13 +21,6 @@ jQuery(document).ready(function () {
         label.innerHTML = inputText;
         label.setAttribute('class', 'section-p-text table-text-setting');
         return label;
-    }
-
-    function createErrorMessage(inputText) {
-        var element = document.createElement('h4');
-        element.innerHTML = inputText;
-        element.setAttribute('class', 'table-text-setting alert-danger text-center');
-        return element;
     }
 
     function createFrontEndGeneralInfo() {

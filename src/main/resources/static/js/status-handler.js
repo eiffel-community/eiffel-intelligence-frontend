@@ -115,7 +115,11 @@ function addStatusIndicator(statusType, statusText) {
 }
 
 function removeStatusIndicator() {
-    $($(".content")[0].previousElementSibling).remove();
+    var element = $(".content")[0];
+    if (element != undefined) {
+        $(element.previousElementSibling).remove();
+    }
+    
 }
 // End ## Status Indicator ##
 

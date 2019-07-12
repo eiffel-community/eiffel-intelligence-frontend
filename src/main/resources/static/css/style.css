@@ -107,9 +107,14 @@
 .pre {
     display: block;
     font-family: monospace;
-    white-space: pre;
+    white-space: pre-wrap;
     margin: 1em;
     font-size: medium;
+}
+.code-block {
+    border: 1px solid #e6e6e6;
+    background: #f7f7f7;
+    padding: 10px;
 }
 .showPasswordButton{
     margin-top: 10px;

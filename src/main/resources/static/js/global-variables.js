@@ -17,6 +17,7 @@ var backendEndpoints = {
     DOWNLOAD: "/download/",
     DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/download/subscriptionsTemplate",
     INFORMATION: "/information",
+    RULES: "/rules",
     TEST_RULES_PAGE_ENABLED: "/rules/rule-check/testRulePageEnabled",
     CHECK_AGGREGATION: "/rules/rule-check/aggregation"
 };
