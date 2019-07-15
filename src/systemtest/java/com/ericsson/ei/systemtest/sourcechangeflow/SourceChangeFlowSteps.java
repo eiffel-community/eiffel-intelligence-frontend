@@ -40,7 +40,7 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
         boolean success = StepsUtils.createJenkinsJob(
                 jenkinsJobName,
                 scriptFileName,
-                config.getJenkinsBaseUrl(),
+                config.getJenkinsExternalBaseUrl(),
                 config.getJenkinsUsername(),
                 config.getJenkinsPassword(),
                 config.getRemremBaseUrl(),
@@ -63,7 +63,7 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
     @Given("^subscription object \"([^\"]*)\" is created which will trigger \"([^\"]*)\"(.*)$")
     public void subscription_is_created(String subscriptionName, String nameOfTriggeredJob, String hasParameters) throws Throwable {
         StepsUtils.createSubscription(subscriptionName, nameOfTriggeredJob, config.getJenkinsUsername(), config.getJenkinsPassword(),
-                config.getJenkinsBaseUrl(), !hasParameters.isEmpty());
+                config.getJenkinsInternalBaseUrl(), !hasParameters.isEmpty());
     }
 
     @When("^notification with key \"([^\"]*)\" and value \"([^\"]*)\" is added to \"([^\"]*)\"$")
