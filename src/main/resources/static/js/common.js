@@ -145,8 +145,8 @@ routes["login"] = function () {
 router.on({
     'subscriptions': routes["subscriptions"],
     'test-rules': routes["test-rules"],
-    'ei-info': routes["ei-info"],
-    'ei-rules': routes["ei-rules"],
+    'information': routes["information"],
+    'rules': routes["rules"],
     'switch-backend': routes["switch-backend"],
     'add-backend': routes["add-backend"],
     'login': routes["login"],
