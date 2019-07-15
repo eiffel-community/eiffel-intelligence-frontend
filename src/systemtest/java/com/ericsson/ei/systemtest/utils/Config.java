@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public class Config {
 
-    private String jenkinsBaseUrl;
+    private String jenkinsExternalBaseUrl;
+    private String jenkinsInternalBaseUrl;
     private String jenkinsUsername;
     private String jenkinsPassword;
 
@@ -37,11 +38,13 @@ public class Config {
     * @return
     */
     public void initJenkinsConfig() {
-        jenkinsBaseUrl = System.getProperty("jenkins.url");
+        jenkinsExternalBaseUrl = System.getProperty("jenkins.external.url");
+        jenkinsInternalBaseUrl = System.getProperty("jenkins.internal.url");
         jenkinsUsername = System.getProperty("jenkins.username");
         jenkinsPassword = System.getProperty("jenkins.password");
 
-        assertNotNull(jenkinsBaseUrl);
+        assertNotNull(jenkinsExternalBaseUrl);
+        assertNotNull(jenkinsInternalBaseUrl);
         assertNotNull(jenkinsUsername);
         assertNotNull(jenkinsPassword);
     }
