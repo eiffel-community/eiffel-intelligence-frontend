@@ -45,7 +45,7 @@ jQuery(document).ready(function () {
         var tableContent = [
             { key: 'Application Name', value: data.applicationName },
             { key: 'Version', value: data.version },
-            { key: 'Rules File Path', value: data.rulesPath },
+            { key: 'Rules Path', value: data.rulesPath },
             { key: 'EI Back-End Connected Server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
             { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
         ];

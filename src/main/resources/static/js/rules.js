@@ -1,7 +1,10 @@
 jQuery(document).ready(function () {
     var callback = {
         success: function (responseData, textStatus) {
-            $("#rulesContent").text(JSON.stringify(responseData, null, 2));
+            var path = responseData.path;
+            var content = JSON.parse(responseData.content);
+            $("#rulesPath").text("Rules Path: " + path);
+            $("#rulesContent").text(JSON.stringify(content, null, 2));
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
