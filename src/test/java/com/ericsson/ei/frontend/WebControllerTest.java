@@ -60,17 +60,22 @@ public class WebControllerTest {
 
     @Test
     public void testSubscription() throws Exception {
-        testGet("/subscriptionpage.html");
+        testGet("/subscriptions.html");
     }
 
     @Test
     public void testRules() throws Exception {
-        testGet("/testRules.html");
+        testGet("/test-rules.html");
     }
 
     @Test
     public void testEiInfo() throws Exception {
-        testGet("/eiInfo.html");
+        testGet("/ei-info.html");
+    }
+
+    @Test
+    public void testEiRules() throws Exception {
+        testGet("/ei-rules.html");
     }
 
     @Test

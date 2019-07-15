@@ -1,7 +1,6 @@
 jQuery(document).ready(function () {
     var callback = {
         success: function (responseData, textStatus) {
-            console.log(responseData);
             $("#rulesContent").text(JSON.stringify(responseData, null, 2));
         }
     };
