@@ -55,19 +55,20 @@ public class WebController {
         return "test-rules";
     }
 
-    @RequestMapping("/ei-info.html")
-    public String eiInfo(Model model, HttpServletRequest request) {
+    @RequestMapping("/information.html")
+    public String info(Model model, HttpServletRequest request) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("version", frontEndUtils.getVersion());
         model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());
         model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
         model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
-        return "ei-info";
+        return "information";
     }
 
-    @RequestMapping("/ei-rules.html")
-    public String eiRules(Model model, HttpServletRequest request) {
-        return "ei-rules";
+    @RequestMapping("/rules.html")
+    public String rules(Model model, HttpServletRequest request) {
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        return "rules";
     }
 
     @RequestMapping("/login.html")

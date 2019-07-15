@@ -26,6 +26,8 @@ public class TestNavigation extends SeleniumBaseClass {
     public void testPageNavigationButtons() throws IOException {
         indexPage.clickTestRulesPage();
         indexPage.clickEiInfoBtn();
+        indexPage.clickInformationBtn();
+        indexPage.clickRulesBtn();
         indexPage.clickAdminBackendInstancesBtn();
         indexPage.clickAddBackendInstanceBtn();
         indexPage.clickSwitchBackendInstanceBtn();

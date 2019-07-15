@@ -118,15 +118,15 @@ routes["test-rules"] = function () {
     $(".app-header").removeClass("header-bar-hidden");
     $(".main").load("test-rules.html");
 };
-routes["ei-info"] = function () {
+routes["information"] = function () {
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
-    $(".main").load("ei-info.html");
+    $(".main").load("information.html");
 };
-routes["ei-rules"] = function () {
+routes["rules"] = function () {
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
-    $(".main").load("ei-rules.html");
+    $(".main").load("rules.html");
 };
 routes["switch-backend"] = function () {
     $(".app-header").addClass("header-bar-hidden");
