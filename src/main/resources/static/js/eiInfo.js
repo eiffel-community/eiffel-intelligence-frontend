@@ -139,6 +139,10 @@ jQuery(document).ready(function () {
                 generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
                 generateEIInformationBasedOnList([responseData.erUrl], "End point for downstream/upstream search in EventRepository");
                 generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence Backend LDAP Settings");
+            },
+            error: function() {
+                // Dummy callback, default behavior is to log if no error callback is present and log response message.
+                // This request however has no response message resulting in an empty log message if not overridden.
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
