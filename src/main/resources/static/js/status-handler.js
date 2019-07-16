@@ -32,7 +32,7 @@ function checkBackendStatus() {
 
 function routeSpecificFunctions(currentUrl) {
     var isStatusChanged = isBackEndStatusChanged();
-    if (currentUrl === "subscriptions" || "") {
+    if (currentUrl === "subscriptions") {
         reDrawTable(isStatusChanged);
         updateConnectionButtonsStatus();
     }
