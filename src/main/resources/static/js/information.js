@@ -19,7 +19,7 @@ jQuery(document).ready(function () {
     function createLabel(inputText) {
         var label = document.createElement('p');
         label.innerHTML = inputText;
-        label.setAttribute('class', 'section-p-text table-text-setting');
+        label.setAttribute('class', 'section-p-text table-text-setting font-weight-bold');
         return label;
     }
 
@@ -28,9 +28,9 @@ jQuery(document).ready(function () {
             frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
         }
         var tableContent = [
-            { key: 'Application Name', value: frontEndAppName },
+            { key: 'Application name', value: frontEndAppName },
             { key: 'Version', value: frontEndVersion },
-            { key: 'EI Front-End URL', value: frontEndServiceUrl }
+            { key: 'EI front-end URL', value: frontEndServiceUrl }
         ];
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
@@ -43,11 +43,11 @@ jQuery(document).ready(function () {
         }
 
         var tableContent = [
-            { key: 'Application Name', value: data.applicationName },
+            { key: 'Application name', value: data.applicationName },
             { key: 'Version', value: data.version },
-            { key: 'Rules Path', value: data.rulesPath },
-            { key: 'EI Back-End Connected Server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
-            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
+            { key: 'Rules path', value: data.rulesPath },
+            { key: 'EI back-end connected server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
+            { key: 'EI test rules functionality enabled', value: data.testRulesEnabled }
         ];
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);

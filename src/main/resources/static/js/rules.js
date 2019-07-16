@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
         success: function (responseData, textStatus) {
             var path = responseData.path;
             var content = JSON.parse(responseData.content);
-            $("#rulesPath").text("Rules Path: " + path);
+            $("#rulesPath").text(path);
             $("#rulesContent").text(JSON.stringify(content, null, 2));
         }
     };
