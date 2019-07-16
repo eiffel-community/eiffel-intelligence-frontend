@@ -9,7 +9,8 @@ and reload subscriptions in subscription list depending on the back-end status.
 // Start ## Status Indicator ##
 
 function checkBackendStatus() {
-    const currentUrl = router._lastRouteResolved.url;
+    var currentUrl = router._lastRouteResolved.url;
+    currentUrl = currentUrl.replace(/^\//, '');
     var isWhitelistedPage = !stringContainsSubstring(getWhiteListedPages(), currentUrl);
     if (isWhitelistedPage) {
         return;
@@ -34,7 +35,6 @@ function routeSpecificFunctions(currentUrl) {
     if (currentUrl === "subscriptions") {
         reDrawTable(isStatusChanged);
         updateConnectionButtonsStatus();
-
     }
 
     if (currentUrl !== "subscriptions") {
@@ -115,7 +115,10 @@ function addStatusIndicator(statusType, statusText) {
 }
 
 function removeStatusIndicator() {
-    $($(".content")[0].previousElementSibling).remove();
+    var parentContent = $(".content")[0];
+    if (parentContent != undefined) {
+        $(parentContent.previousElementSibling).remove();
+    }
 }
 // End ## Status Indicator ##
 
