@@ -1,6 +1,11 @@
 .content {
     padding: 10px;
 }
+@media (max-width: 576px) {
+    .container {
+        max-width: 480px;
+    }
+}
 .subscription-alert {
     width: 100%;
     padding: 2px;
@@ -10,9 +15,6 @@
 }
 #table {
     border-spacing: 0px;
-}
-.modal-subscription {
-    max-width: 650px;
 }
 .sub-action-column {
     min-width: 160px;
@@ -247,8 +249,61 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:b
 table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     word-break: break-word;
 }
+.modal-subscription {
+    height: 100%;
+    padding-left: 0 !important;
+}
+.modal-open .modal.modal-subscription {
+    overflow: hidden;
+}
+.modal-subscription .modal-dialog {
+    width: 650px;
+    height: inherit;
+    padding-bottom: 1.75rem;
+}
 @media (max-width: 576px) {
-    .container {
-        max-width: 480px;
+    .modal.modal-subscription .modal-dialog {
+        width: auto;
     }
+}
+.modal-subscription .modal-content {
+    height: 99%;
+}
+.modal-subscription .modal-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.scrollbar-mobile::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.scrollbar-mobile::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+.scrollbar-mobile::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+.scrollbar-mobile::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+}
+.scrollbar-mobile::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+/* Up */
+.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent #555555 transparent;
+}
+.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    border-color: transparent transparent #777777 transparent;
+}
+  /* Down */
+.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 8px 8px 0 8px;
+    border-color: #555555 transparent transparent transparent;
+}
+.scrollbar-mobile::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+    border-color: #777777 transparent transparent transparent;
 }
