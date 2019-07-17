@@ -69,10 +69,12 @@ ko.applyBindings(vm, $("#alertsItem")[0]);
 vm.stopPropagation();
 
 function logMessage(message) {
-    $.jGrowl(message, { sticky: false, theme: 'Error', position: 'center' });
-    vm.addErrorMessage(message);
-    vm.storeErrorMessage(message);
-    vm.stopPropagation();
+    if (message != undefined && message != "") {
+        $.jGrowl(message, { sticky: false, theme: 'Error', position: 'center' });
+        vm.addErrorMessage(message);
+        vm.storeErrorMessage(message);
+        vm.stopPropagation();
+    }
 }
 
 function parseAndLogMessage(message) {

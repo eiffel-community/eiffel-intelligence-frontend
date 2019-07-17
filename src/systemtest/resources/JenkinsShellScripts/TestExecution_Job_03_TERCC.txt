@@ -1,0 +1,61 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////TERCC////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathTERCC = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelTestExecutionRecipeCollectionCreatedEvent";
+def jsonTERCC = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelTestExecutionRecipeCollectionCreatedEvent",
+        "version": "4.0.0",
+        "tags": []
+      }
+    },
+    "eventParams": {
+      "data": {
+        "selectionStrategy": {
+          "tracker": "",
+          "id": "",
+          "uri": ""
+        },
+        "batchesUri": "",
+        "batches": [
+          {
+            "name": "systemtest_batch",
+            "priority": "1",
+            "recipes": [],
+            "dependencies": []
+          }
+        ],
+        "customData": []
+      },
+      "links": [
+        {
+          "type": "CONTEXT",
+          "target": \"""" + build.environment.EVENT_ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathTERCC, jsonTERCC);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

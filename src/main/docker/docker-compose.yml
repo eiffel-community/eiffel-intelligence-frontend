@@ -75,9 +75,9 @@ services:
     restart: always
     image: ${EIFFEL_ER_IMAGE}
     expose:
-      - "8080"
+      - "${EIFFEL_ER_INTERNAL_PORT}"
     ports:
-      - "${EIFFEL_ER_PORT}:8080"
+      - "${EIFFEL_ER_PORT}:${EIFFEL_ER_INTERNAL_PORT}"
     depends_on:
       - rabbitmq
       - mongodb
@@ -89,7 +89,7 @@ services:
       # No config file copied to catalina folder in Dockerfile, only uses env vars below ;-)
       # /eventrepository removed in contextpath
       - server.contextPath=/
-      - server.port=8080
+      - server.port=${EIFFEL_ER_INTERNAL_PORT}
       - rabbitmq.host=rabbitmq
       - rabbitmq.componentName=eventrepository
       - rabbitmq.port=5672
@@ -184,9 +184,8 @@ services:
     environment:
       - server.port=8080
       - jasypt.encryptor.password=
-      - rabbitmq.instances.jsonlist=${REMREM_PUBLISH_RABBITMQ_INSTANCES_LIST}
       - generate.server.uri=http://generate:8080
-      - generate.server.path=
+      - generate.server.path=/
       - activedirectory.publish.enabled=false
       - activedirectory.ldapUrl=
       - activedirectory.managerPassword=
@@ -197,6 +196,7 @@ services:
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.eiffel.remrem.producer=DEBUG
       - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
+      - rabbitmq.instances.jsonlist=${REMREM_PUBLISH_RABBITMQ_INSTANCES_LIST}
     networks:
       eiffel_2.0_1:
         aliases:
@@ -242,7 +242,7 @@ services:
     environment:       # Overrides settings in application config file
       - SpringApplicationName=ei-backend-artifact
       - server.port=8080
-      - rules.path=/ArtifactRules.json
+      - rules.path=/rules/ArtifactRules-Eiffel-Agen-Version.json
       - rabbitmq.host=rabbitmq
       - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
@@ -259,7 +259,7 @@ services:
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
@@ -287,7 +287,7 @@ services:
     environment:       # Overrides settings in application config file
       - SpringApplicationName=ei-backend-sourcechange
       - server.port=8080
-      - rules.path=/SourceChangeObjectRules.json
+      - rules.path=/rules/SourceChangeObjectRules-Eiffel-Agen-Version.json
       - rabbitmq.host=rabbitmq
       - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
@@ -304,7 +304,7 @@ services:
       - aggregated.object.name=aggregatedObject
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
@@ -332,7 +332,7 @@ services:
     environment:       # Overrides settings in application config file
       - SpringApplicationName=ei-backend-testexecution
       - server.port=8080
-      - rules.path=/TestExecutionObjectRules.json
+      - rules.path=/rules/TestExecutionObjectRules-Eiffel-Agen-Version.json
       - rabbitmq.host=rabbitmq
       - rabbitmq.port=${RABBITMQ_AMQP_PORT}
       - rabbitmq.domainId=ei-domain
@@ -353,7 +353,7 @@ services:
       - spring.mail.password=
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
-      - er.url=eiffel-er:${EIFFEL_ER_PORT}/search/
+      - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
       - logging.level.root=OFF
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
