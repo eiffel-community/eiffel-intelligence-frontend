@@ -110,6 +110,7 @@ public class StepsUtils {
             notificationMeta += "/build";
         }
         subscription.setNotificationMeta(notificationMeta);
+        subscription.setAuthenticationType("BASIC_AUTH_JENKINS_CSRF");
         subscriptions.put(subscriptionName, subscription);
     }
 

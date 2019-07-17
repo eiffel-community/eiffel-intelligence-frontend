@@ -15,6 +15,7 @@ env:
 # (after merge) on master branch
 stages:
   - test
+  - systemTest
   - name: deploy
     if: branch = master
 
@@ -27,17 +28,32 @@ before_install:
   - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - java -version
   - source src/main/docker/env.bash
-  - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
-
+  - echo ${HOST}
 
 install:
-  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
-  - cd eiffel-intelligence
-  - chmod +x pom.xml
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - export EIFFEL_WAR=$(ls target/*.war)
-  - java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
-  - cd ..
+  - |
+    if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
+      docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
+      git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+      cd eiffel-intelligence
+      chmod +x pom.xml
+      mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      export EIFFEL_WAR=$(ls target/*.war)
+      java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
+      cd ..
+    fi
+  - |
+    if [[ $TRAVIS_JOB_NAME = systemTests ]]; then
+      # building EI frontend image
+      mvn package -DskipTests=true
+      git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+      cd eiffel-intelligence
+      mvn package -DskipTests=true
+      cd ..
+      docker-compose -f src/main/docker/docker-compose.yml up -d --build
+      sleep 2m    # wait for environment to start up properly
+    fi
+
 
 after_script:
   - docker-compose -f src/main/docker/docker-compose.yml down
@@ -61,7 +77,7 @@ jobs:
         - sudo apt-get update
         - sudo apt-get install -y openjdk-8-jdk
         - export PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
-        - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH 
+        - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
         - echo $PATH
         - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
         - java -version
@@ -71,6 +87,27 @@ jobs:
       name: integrationTests
       script:
         - "mvn verify -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
+    - stage: systemTest
+      name: systemTests
+      script:
+        - |
+          mvn -P systemTest -Dit.test=ArtifactFlowRunner \
+          -Djenkins.external.url=http://${HOST}:8082 \
+          -Dremrem.publish.url=http://${HOST}:8096 \
+          -Dei.frontend.url=http://${HOST}:8081 \
+          verify
+          - |
+          mvn -P systemTest -Dit.test=SourceChangeFlowRunner \
+          -Djenkins.external.url=http://${HOST}:8082 \
+          -Dremrem.publish.url=http://${HOST}:8096 \
+          -Dei.frontend.url=http://${HOST}:8081 \
+          verify
+          - |
+          mvn -P systemTest -Dit.test=TestExecutionFlowRunner \
+          -Djenkins.external.url=http://${HOST}:8082 \
+          -Dremrem.publish.url=http://${HOST}:8096 \
+          -Dei.frontend.url=http://${HOST}:8081 \
+          verify
     - stage: deploy
       name: deployGitHubPages
       before_install: skip    # do not run again
