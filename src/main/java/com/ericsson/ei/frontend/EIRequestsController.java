@@ -71,7 +71,7 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/subscriptions/*", "/information", "/download/*", "/auth", "/auth/*",
-            "/queryAggregatedObject", "/queryMissedNotifications", "/query",
+            "/queryAggregatedObject", "/queryMissedNotifications", "/query", "/rules",
             "/rules/rule-check/testRulePageEnabled" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest incomingRequest) {
         String eiRequestUrl;

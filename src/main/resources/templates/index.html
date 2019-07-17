@@ -109,25 +109,37 @@
               <span>Test Rules</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#ei-info" data-navigo>
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#ei-info" data-toggle="collapse" aria-expanded="false">
               <i class="fa fa-fw fa-info" aria-hidden="true"></i>
               <span>Eiffel Intelligence Info</span>
             </a>
+            <ul class="collapse" id="ei-info">
+              <li class="nav-item">
+                <a class="nav-link" href="#information" data-navigo>
+                  <span>Information</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#rules" data-navigo>
+                  <span>Rules</span>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#docLinks" data-toggle="collapse" aria-expanded="false">
+            <a class="nav-link" href="#doc-links" data-toggle="collapse" aria-expanded="false">
               <i class="fa fa-fw fa-link" aria-hidden="true"></i>
               <span>Documentation Links</span>
             </a>
-            <ul class="collapse" id="docLinks"></ul>
+            <ul class="collapse" id="doc-links"></ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#confBackend" data-toggle="collapse" aria-expanded="false">
+            <a class="nav-link" href="#conf-backend" data-toggle="collapse" aria-expanded="false">
               <i class="fa fa-fw fa-cog" aria-hidden="true"></i>
               <span>Configure back-end Instances</span>
             </a>
-            <ul class="collapse" id="confBackend">
+            <ul class="collapse" id="conf-backend">
               <li class="nav-item">
                 <a class="nav-link" href="#add-backend" data-navigo>
                   <span>Add back-end instance</span>
@@ -185,7 +197,7 @@
   <script type="text/javascript" src="assets/navigo/7.1.2/navigo.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/global-variables.js"></script>
-  <script type="text/javascript" src="js/errorMessages.js"></script>
+  <script type="text/javascript" src="js/error-messages.js"></script>
   <script type="text/javascript" src="js/common.js"></script>
   <script type="text/javascript" src="js/status-handler.js"></script>
   <script src="js/ui.js"></script>
