@@ -22,7 +22,6 @@
         <java.version>1.8</java.version>
         <output-relative-path>src/main/java</output-relative-path>
         <skipTests>false</skipTests>
-        <skipITs>${skipTests}</skipITs>
         <skipUTs>${skipTests}</skipUTs>
         <springBootVersion>${project.parent.version}</springBootVersion>
         <forkCountTests>2.5C</forkCountTests>
@@ -45,13 +44,6 @@
             </plugin>
         </plugins>
     </reporting>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -81,12 +73,20 @@
             <version>${springBootVersion}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${springBootVersion}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -132,6 +132,12 @@
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-client-java</artifactId>
             <version>5.4.1</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>com.vaadin.external.google</groupId>
+            		<artifactId>android-json</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-netty -->
         <dependency>
@@ -177,7 +183,20 @@
             <artifactId>eiffel-commons</artifactId>
             <version>0.0.12</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+        </dependency>
     </dependencies>
+    <dependencyManagement>
+    </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <resources>
@@ -237,12 +256,13 @@
                                 <source>src/functionaltest/resources</source>
                                 <source>src/integrationtest/java</source>
                                 <source>src/integrationtest/resources</source>
+                                <source>src/systemtest/java</source>
+                                <source>src/systemtest/resources</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -258,41 +278,14 @@
                         <exclude>TestBaseClass</exclude>
                         <exclude>SeleniumBaseClass</exclude>
                         <exclude>CommonSteps</exclude>
+                        <exclude>**/systemtest/**</exclude>
                     </excludes>
                     <includes>
                         <include>${someModule.test.includes}</include>
                     </includes>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <skipTests>${skipTests}</skipTests>
-                    <skipITs>${skipITs}</skipITs>
-                    <systemPropertyVariables>
-                        <rabbit.host>localhost</rabbit.host>
-                        <rabbit.port>5672</rabbit.port>
-                        <rabbit.username>myuser</rabbit.username>
-                        <rabbit.password>myuser</rabbit.password>
-                        <rabbit.exchange>ei-exchange</rabbit.exchange>
-                        <rabbit.key>#</rabbit.key>
-                    </systemPropertyVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <phase>integration-test</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -300,7 +293,7 @@
                 <configuration>
                     <!-- This is where site.xml is located -->
                     <siteDirectory>${basedir}/wiki</siteDirectory>
-                    <!-- Github pages only generates documentation from docs
+                    <!-- Github pages only generates documentation from docs 
                         directory -->
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -312,7 +305,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
@@ -325,7 +317,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- plugin requires all resources to exist within
+                            <!-- plugin requires all resources to exist within 
                                 resources/ directory -->
                             <!-- but we don't want to break links in documentation -->
                             <outputDirectory>${basedir}/wiki/resources/images</outputDirectory>
@@ -341,7 +333,92 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
+    <profiles>
+        <!-- The Configuration of the integration-test profile -->
+        <profile>
+            <id>integrationTest</id>
+            <properties>
+                <skipUTs>true</skipUTs>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.22.0</version>
+                        <configuration>
+                            <skipTests>${skipTests}</skipTests>
+                            <skipITs>${skipITs}</skipITs>
+                            <systemPropertyVariables>
+                                <rabbitmq.host>localhost</rabbitmq.host>
+                                <rabbitmq.port>5672</rabbitmq.port>
+                                <rabbitmq.username>myuser</rabbitmq.username>
+                                <rabbitmq.password>myuser</rabbitmq.password>
+                                <rabbitmq.exchange>ei-exchange</rabbitmq.exchange>
+                                <rabbitmq.key>#</rabbitmq.key>
+                            </systemPropertyVariables>
+                            <excludes>
+                                <exclude>**/systemtest/**</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <phase>integration-test</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- The Configuration of the system-test profile -->
+        <profile>
+            <id>systemTest</id>
+            <properties>
+                <skipUTs>true</skipUTs>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.22.0</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <ei.config.properties.file.path>${systemtestProperties}</ei.config.properties.file.path>
+                            </systemPropertyVariables>
+                            <excludes>
+                                <exclude>**/frontend/*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/systemtest/**</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>systemTest</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

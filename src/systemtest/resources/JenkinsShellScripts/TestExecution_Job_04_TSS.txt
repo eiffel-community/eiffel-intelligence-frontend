@@ -1,0 +1,51 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////TSS//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathTSS = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelTestSuiteStartedEvent";
+def jsonTSS = """
+  {
+    "msgParams": {
+      "meta": {
+        "type": "EiffelTestSuiteStartedEvent",
+        "version": "3.0.0",
+        "tags": []
+      }
+    },
+    "eventParams": {
+      "data": {
+        "name": "systemtest_suite",
+        "categories": [],
+        "types": [],
+        "liveLogs": [],
+        "customData": []
+      },
+      "links": [
+        {
+          "type": "CONTEXT",
+          "target": \"""" + build.environment.EVENT_ID + """\"
+        }
+      ]
+    }
+  }
+""";
+
+generateEiffelEventAndPublish(uriPathTSS, jsonTSS);
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+      
+  responseText = post.getInputStream().getText();
+    
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

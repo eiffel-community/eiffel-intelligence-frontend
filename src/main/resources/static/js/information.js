@@ -6,8 +6,6 @@ jQuery(document).ready(function () {
     var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
     var frontEndAppName = $('#frontendAppName').text();
 
-    var backEndServerUrl = $('#backendServerUrl').text();
-
     var body = document.getElementById('eiPageFrame');
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
@@ -21,15 +19,8 @@ jQuery(document).ready(function () {
     function createLabel(inputText) {
         var label = document.createElement('p');
         label.innerHTML = inputText;
-        label.setAttribute('class', 'section-p-text table-text-setting');
+        label.setAttribute('class', 'section-p-text table-text-setting font-weight-bold');
         return label;
-    }
-
-    function createErrorMessage(inputText) {
-        var element = document.createElement('h4');
-        element.innerHTML = inputText;
-        element.setAttribute('class', 'table-text-setting alert-danger text-center');
-        return element;
     }
 
     function createFrontEndGeneralInfo() {
@@ -37,9 +28,9 @@ jQuery(document).ready(function () {
             frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
         }
         var tableContent = [
-            { key: 'Application Name', value: frontEndAppName },
+            { key: 'Application name', value: frontEndAppName },
             { key: 'Version', value: frontEndVersion },
-            { key: 'EI Front-End URL', value: frontEndServiceUrl }
+            { key: 'EI front-end URL', value: frontEndServiceUrl }
         ];
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
@@ -52,11 +43,11 @@ jQuery(document).ready(function () {
         }
 
         var tableContent = [
-            { key: 'Application Name', value: data.applicationName },
+            { key: 'Application name', value: data.applicationName },
             { key: 'Version', value: data.version },
-            { key: 'Rules File Path', value: data.rulesPath },
-            { key: 'EI Back-End Connected Server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
-            { key: 'EI Test Rules functionality enabled', value: data.testRulesEnabled }
+            { key: 'Rules path', value: data.rulesPath },
+            { key: 'EI back-end connected server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
+            { key: 'EI test rules functionality enabled', value: data.testRulesEnabled }
         ];
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);

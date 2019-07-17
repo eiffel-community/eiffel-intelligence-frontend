@@ -66,8 +66,8 @@ public class IndexPage extends PageBaseClass {
 
 
     public void clickAdminBackendInstancesBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#confBackend']")));
-        WebElement adminBackendInstancesBtn = driver.findElement(By.xpath("//a[@href='#confBackend']"));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#conf-backend']")));
+        WebElement adminBackendInstancesBtn = driver.findElement(By.xpath("//a[@href='#conf-backend']"));
         adminBackendInstancesBtn.click();
     }
 
@@ -89,9 +89,24 @@ public class IndexPage extends PageBaseClass {
         return switchBackendPage;
     }
 
-    public InfoPage clickEiInfoBtn() {
+    public void clickEiInfoBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#ei-info']")));
-        WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#ei-info']"));
+        WebElement eiffelInfoBtn = driver.findElement(By.xpath("//a[@href='#ei-info']"));
+        eiffelInfoBtn.click();
+    }
+
+    public InfoPage clickInformationBtn() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#information']")));
+        WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#information']"));
+        eiInfoBtn.click();
+        InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);
+        waitForJQueryToLoad();
+        return infoPage;
+    }
+
+    public InfoPage clickRulesBtn() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#rules']")));
+        WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#rules']"));
         eiInfoBtn.click();
         InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);
         waitForJQueryToLoad();

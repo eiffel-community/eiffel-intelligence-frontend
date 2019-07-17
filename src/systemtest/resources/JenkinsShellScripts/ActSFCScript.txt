@@ -1,0 +1,130 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActS1////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathActS1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityStartedEvent";
+def jsonActS1 = """{
+  "msgParams": {
+   "meta": {
+     "type": "EiffelActivityStartedEvent",
+     "version": "4.0.0",
+     "tags": [],
+     "source": {
+       "domainId": "",
+       "host": "",
+       "name": "",
+       "uri": ""
+     }
+   }
+  },
+  "eventParams": {
+    "data": {
+     "executionUri": ""
+    },
+   "links": [
+     {
+       "type": "ACTIVITY_EXECUTION",
+       "target": \""""+ build.environment.EVENT_ID + """\"
+     }
+   ]
+  }
+}""";
+
+ActS1ID = generateEiffelEventAndPublish(uriPathActS1, jsonActS1);
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActF1////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathActF1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityFinishedEvent";
+def jsonActF1 = """{
+  "msgParams": {
+    "meta": {
+     "type": "EiffelActivityFinishedEvent",
+     "version": "3.0.0",
+     "tags": [],
+     "source": {
+       "domainId": "",
+       "host": "",
+       "name": "",
+       "uri": ""
+     }
+   }
+  },
+  "eventParams": {
+    "data": {
+     "outcome": {
+       "conclusion": "SUCCESSFUL",
+       "description": ""
+     }
+    },
+    "links": [
+      {
+        "type": "ACTIVITY_EXECUTION",
+        "target": \""""+ build.environment.EVENT_ID + """\"
+      }
+    ]
+  }
+}""";
+
+ActF1ID = generateEiffelEventAndPublish(uriPathActF1, jsonActF1);
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActC1////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+def uriPathActC1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityCanceledEvent";
+def jsonActC1 = """{
+  "msgParams": {
+    "meta": {
+     "type": "EiffelActivityCanceledEvent",
+     "version": "3.0.0",
+     "tags": [],
+     "source": {
+       "domainId": "",
+       "host": "",
+       "name": "",
+       "uri": ""
+     }
+    }
+  },
+  "eventParams": {
+    "data": {
+     "reason": ""
+    },
+    "links": [
+      {
+        "type": "ACTIVITY_EXECUTION",
+        "target": \""""+ build.environment.EVENT_ID + """\"
+      }
+    ]
+  }
+}""";
+
+
+ActC1ID = generateEiffelEventAndPublish(uriPathActC1, jsonActC1);
+
+
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+
+  responseText = post.getInputStream().getText();
+
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}
+

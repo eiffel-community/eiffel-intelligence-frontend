@@ -111,17 +111,22 @@ var routes = {};
 routes["subscriptions"] = function () {
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
-    $(".main").load("subscriptionpage.html");
+    $(".main").load("subscriptions.html");
 };
 routes["test-rules"] = function () {
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
-    $(".main").load("testRules.html");
+    $(".main").load("test-rules.html");
 };
-routes["ei-info"] = function () {
+routes["information"] = function () {
     updateBackEndInstanceList();
     $(".app-header").removeClass("header-bar-hidden");
-    $(".main").load("eiInfo.html");
+    $(".main").load("information.html");
+};
+routes["rules"] = function () {
+    updateBackEndInstanceList();
+    $(".app-header").removeClass("header-bar-hidden");
+    $(".main").load("rules.html");
 };
 routes["switch-backend"] = function () {
     $(".app-header").addClass("header-bar-hidden");
@@ -140,7 +145,8 @@ routes["login"] = function () {
 router.on({
     'subscriptions': routes["subscriptions"],
     'test-rules': routes["test-rules"],
-    'ei-info': routes["ei-info"],
+    'information': routes["information"],
+    'rules': routes["rules"],
     'switch-backend': routes["switch-backend"],
     'add-backend': routes["add-backend"],
     'login': routes["login"],
