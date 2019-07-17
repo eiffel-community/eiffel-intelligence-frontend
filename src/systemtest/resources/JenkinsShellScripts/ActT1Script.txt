@@ -1,0 +1,63 @@
+import groovy.json.JsonSlurper
+def baseUrl = "REMREM_BASE_URL_TO_BE_REPLACED";
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////ActT1////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+uriPathActT1 = baseUrl + "/generateAndPublish?mp=eiffelsemantics&msgType=EiffelActivityTriggeredEvent";
+jsonActT1 = """{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelActivityTriggeredEvent",
+      "version": "4.0.0",
+      "tags": [],
+      "source": {
+        "domainId": "",
+        "host": "",
+        "name": "",
+        "uri": ""
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+      "name": "TriggeredOnSourceChangeSubmitted",
+      "categories": ["system_test"],
+      "triggers": [
+        {
+          "type": "SOURCE_CHANGE",
+          "description": "Code merged"
+        }
+      ],
+      "executionType": "AUTOMATED"
+    },
+    "links": [
+      {
+        "type": "CAUSE",
+        "target": \""""+ build.environment.EVENT_ID + """\"
+      }
+    ]
+  }
+}""";
+
+
+ActT1ID = generateEiffelEventAndPublish(uriPathActT1, jsonActT1);
+
+
+
+def generateEiffelEventAndPublish(uriPath, json){
+  def post = new URL(uriPath).openConnection();
+  def message = json
+  post.setRequestMethod("POST")
+  post.setDoOutput(true)
+  post.setRequestProperty("Content-Type", "application/json")
+  post.getOutputStream().write(message.getBytes("UTF-8"));
+
+  responseText = post.getInputStream().getText();
+
+  def jsonSlurper = new JsonSlurper()
+  responseJson = jsonSlurper.parseText(responseText);
+  return responseJson["events"][0]["id"].toString();
+}

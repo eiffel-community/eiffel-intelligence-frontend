@@ -50,12 +50,12 @@ public class CommonSteps extends AbstractTestExecutionListener {
     private String frontEndHost = "localhost";
     private String protocol = "http";
     private String baseURL;
-    private String rabbitHost;
-    private int rabbitPort;
-    private String rabbitUsername;
-    private String rabbitPassword;
-    private String rabbitExchange;
-    private String rabbitKey;
+    private String rabbitmqHost;
+    private int rabbitmqPort;
+    private String rabbitmqUsername;
+    private String rabbitmqPassword;
+    private String rabbitmqExchange;
+    private String rabbitmqKey;
 
     private List<HttpRequest> httpRequestList = new ArrayList<>();
     private HttpRequest httpRequest;
@@ -75,12 +75,12 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @Before("@QueryByIdScenario or @QueryFreestyleScenario")
     public void beforeQueryScenario() {
-        rabbitHost = System.getProperty("rabbit.host");
-        rabbitPort = Integer.getInteger("rabbit.port");
-        rabbitUsername = System.getProperty("rabbit.username");
-        rabbitPassword = System.getProperty("rabbit.password");
-        rabbitExchange = System.getProperty("rabbit.exchange");
-        rabbitKey = System.getProperty("rabbit.key");
+        rabbitmqHost = System.getProperty("rabbitmq.host");
+        rabbitmqPort = Integer.getInteger("rabbitmq.port");
+        rabbitmqUsername = System.getProperty("rabbitmq.username");
+        rabbitmqPassword = System.getProperty("rabbitmq.password");
+        rabbitmqExchange = System.getProperty("rabbitmq.exchange");
+        rabbitmqKey = System.getProperty("rabbitmq.key");
     }
 
     @Given("^frontend is up and running$")
@@ -95,8 +95,8 @@ public class CommonSteps extends AbstractTestExecutionListener {
         String eventFilePath = Paths.get(RESOURCE_PATH, EIFFEL_EVENT_FILE).toString();
         String eventFileContent = FileUtils.readFileToString(new File(eventFilePath), "UTF-8");
 
-        AMQPCommunication amqp = new AMQPCommunication(rabbitHost, rabbitPort, rabbitUsername, rabbitPassword);
-        assertEquals(true, amqp.produceMessage(eventFileContent, rabbitExchange, rabbitKey));
+        AMQPCommunication amqp = new AMQPCommunication(rabbitmqHost, rabbitmqPort, rabbitmqUsername, rabbitmqPassword);
+        assertEquals(true, amqp.produceMessage(eventFileContent, rabbitmqExchange, rabbitmqKey));
         amqp.closeConnection();
         LOGGER.debug("Eiffel events sent.");
     }

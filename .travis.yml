@@ -39,7 +39,6 @@ install:
   - java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
   - cd ..
 
-
 after_script:
   - docker-compose -f src/main/docker/docker-compose.yml down
   - fuser -k ${EI_BACKEND_PORT}/tcp
