@@ -3,7 +3,7 @@
 This form is used to add subscription through front-end GUI. Here is a
 description of the elements available on this form.
 
-<img border="1" src="images/subscription_add_part1.png">
+<img style="border:1px solid black" src="images/subscription_add_part1.png">
 </img>
 
 **Load Subscription Template:** In this dropdown list, options are given to
@@ -14,7 +14,7 @@ Mail Trigger.
 **SubscriptionName:** A field to give a name to the current subscription. Only
 letters, underscore and numbers are allowed in this field.
 
-<img border="1" src="images/subscription_add_part2.png">
+<img style="border:1px solid black" src="images/subscription_add_part2.png">
 </img>
 
 **NotificationType:** There are two options: REST POST and
@@ -40,7 +40,7 @@ Parameters such as a Jenkins job-token can be included in this field.
 **Note**: The job-token should not be mistaken for the API token that is
 used as a password for authentication against the entire jenkins instance.
 
-<img border="1" src="images/subscription_add_part3.png">
+<img style="border:1px solid black" src="images/subscription_add_part3.png">
 </img>
 
 **Authentication:** A list to select authentication type.
@@ -51,7 +51,7 @@ be Base 64 encoded. A crumb will be fetched automatically before request is made
 (Currently default in many Jenkins instances). **Note**: Will work even when CSRF
 is disabled in Jenkins._
 
-<img border="1" src="images/subscription_add_part4.png">
+<img style="border:1px solid black" src="images/subscription_add_part4.png">
 </img>
 
 **Repeat:** It is possible to enable repeat, e.g. whether same subscription
