@@ -14,7 +14,7 @@ env:
 # Using default 'test' stage for our tests, and only running deploy stage
 # (after merge) on master branch
 stages:
-  - test
+  #- test
   - systemTest
   - name: deploy
     if: branch = master
