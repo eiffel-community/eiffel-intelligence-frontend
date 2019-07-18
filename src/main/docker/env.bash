@@ -17,8 +17,11 @@ export JENKINS_IMAGE="bitnami/jenkins:2.138.3"
 export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:1.0.2"
 export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:1.0.3"
 
-export EI_FRONTEND_WAR_FILE="target/*.war"
-export EI_BACKEND_WAR_FILE="eiffel-intelligence/target/*.war"
+
+## Set variables for Eiffel Intelligence war files. These has to be built before
+export EI_FRONTEND_WAR_FILE=$(ls target/*.war)
+export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
+
 
 export MONGODB_PORT=27017
 export RABBITMQ_AMQP_PORT=5672

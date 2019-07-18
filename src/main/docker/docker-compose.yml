@@ -228,7 +228,12 @@ services:
   ei-backend-artifact:
     restart: always
     image: ${EI_BACKEND_IMAGE}
-    build: eiffel-intelligence/src/main/docker/Dockerfile
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../eiffel-intelligence
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -241,7 +246,6 @@ services:
         aliases:
           - ei-backend-artifact
     environment:       # Overrides settings in application config file
-      - URL=${EI_BACKEND_WAR_FILE}
       - SpringApplicationName=ei-backend-artifact
       - server.port=8080
       - rules.path=/rules/ArtifactRules-Eiffel-Agen-Version.json
@@ -275,7 +279,12 @@ services:
   ei-backend-sourcechange:
     restart: always
     image: ${EI_BACKEND_IMAGE}
-    build: eiffel-intelligence/src/main/docker/Dockerfile
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../eiffel-intelligence
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -288,7 +297,6 @@ services:
         aliases:
           - ei-backend-sourcechange
     environment:       # Overrides settings in application config file
-      - URL=${EI_BACKEND_WAR_FILE}
       - SpringApplicationName=ei-backend-sourcechange
       - server.port=8080
       - rules.path=/rules/SourceChangeObjectRules-Eiffel-Agen-Version.json
@@ -322,7 +330,12 @@ services:
   ei-backend-testexecution:
     restart: always
     image: ${EI_BACKEND_IMAGE}
-    build: eiffel-intelligence/src/main/docker/Dockerfile
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../eiffel-intelligence
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -335,7 +348,6 @@ services:
         aliases:
           - ei-backend-testexecution
     environment:       # Overrides settings in application config file
-      - URL=${EI_BACKEND_WAR_FILE}
       - SpringApplicationName=ei-backend-testexecution
       - server.port=8080
       - rules.path=/rules/TestExecutionObjectRules-Eiffel-Agen-Version.json
@@ -371,7 +383,12 @@ services:
   ei-frontend:
     restart: always
     image: ${EI_FRONTEND_IMAGE}
-    build: src/main/docker/Dockerfile
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ${EI_FRONTEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -385,7 +402,6 @@ services:
         aliases:
           - ei-frontend
     environment:      # Overrides settings in application config file
-      - URL=${EI_FRONTEND_WAR_FILE}
       - spring.application.name=eiffel-intelligence-frontend
       - server.port=8080
       - ei.frontend.service.host=${HOST}
