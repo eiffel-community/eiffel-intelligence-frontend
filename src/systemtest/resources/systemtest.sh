@@ -26,6 +26,10 @@ function do_build {
 function do_start {
     echo "Starting up Docker environment"
 
+    ## Set variables for Eiffel Intelligence war files. These has to be built before
+    export EI_FRONTEND_WAR_FILE=$(ls target/*.war)
+    export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
+
     # Sets Docker image names and ports for containers.
     # Also sets host variable and war files for Eiffel Intelligence
     source src/main/docker/env.bash
