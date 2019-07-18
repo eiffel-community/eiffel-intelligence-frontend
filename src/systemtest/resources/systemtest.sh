@@ -6,7 +6,7 @@
 STATUS=0
 
 export CURRENT_DIR=$(pwd)
-echo "Executing script from directory: " ${CURRENT_DIR}
+echo "Executing script ${0} from directory: " ${CURRENT_DIR}
 
 function do_build {
     echo "Building Eiffel Intelligence front-end war file"
@@ -66,6 +66,9 @@ function do_stop {
     # Sourcing environment variables to avoid warnings
     source src/main/docker/env.bash
     docker-compose -f src/main/docker/docker-compose.yml down
+
+    # Cleaning up dangling docker images which were built using docker-compose command
+    # docker rmi $(docker images -f "dangling=true" -q)
 }
 
 case "$1" in
@@ -94,7 +97,7 @@ case "$1" in
             do_test
             ;;
         *)
-            echo $"Usage: $0 [ start|stop|test|build|only_test ]"
+            echo $"Usage: $0 [ start|stop|test|check|build|only_test ]"
             exit 1
 esac
 
