@@ -32,12 +32,14 @@ before_install:
   - export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
   - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - java -version
-  - source src/main/docker/env.bash
-  - echo ${HOST}
+  - |
+    if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
+      source src/main/docker/env.bash
+      docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
+    fi
 
 
 install:
-  - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
   - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
   - cd eiffel-intelligence
   - chmod +x pom.xml
