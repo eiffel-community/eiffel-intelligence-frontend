@@ -296,19 +296,24 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     border-radius: 10px;
     background-color: #ffffff;
 }
-/* Up */
-.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:decrement {
-    border-width: 0 8px 8px 8px;
+::-webkit-scrollbar-button:single-button {
+    background-color: #ffffff;
+    display: block;
+    border-style: solid;
+    height: 12px;
+    width: 12px;
+}
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0px 6px 6px 6px;
     border-color: transparent transparent #555555 transparent;
 }
-.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
     border-color: transparent transparent #777777 transparent;
 }
-  /* Down */
-.scrollbar-mobile::-webkit-scrollbar-button:single-button:vertical:increment {
-    border-width: 8px 8px 0 8px;
+::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 6px 6px 0 6px;
     border-color: #555555 transparent transparent transparent;
 }
-.scrollbar-mobile::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+::-webkit-scrollbar-button:vertical:single-button:increment:hover {
     border-color: #777777 transparent transparent transparent;
 }
