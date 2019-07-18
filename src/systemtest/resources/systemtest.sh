@@ -35,10 +35,10 @@ function do_start {
     source src/main/docker/env.bash
 
     # Set up docker containers and build the images of EI frontend and backend
-    docker-compose -f src/main/docker/docker-compose.yml up -d --build jenkins
+    docker-compose -f src/main/docker/docker-compose.yml up -d --build
 
     echo "Sleeping for 2 minutes, to let containers start up properly"
-    #sleep 2m
+    sleep 2m
 }
 
 function do_check {

@@ -35,7 +35,6 @@ before_install:
   - |
     if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
       git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
-      ls
       source src/main/docker/env.bash
       docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
     fi
