@@ -11,24 +11,16 @@ echo "Executing script from directory: " ${CURRENT_DIR}
 function do_build {
     echo "Building Eiffel Intelligence front-end war file"
     # Building war file from latest code changes in EI frontend
-    mvn clean
-    mvn package -DskipTests
+    mvn clean -q
+    mvn package -DskipTests=true -q
 
     # Cloning EI backend and build war file
     echo "Cloning Eiffel Intelligence back-end and building war file"
     if [[ -d "eiffel-intelligence" ]]; then rm -Rf eiffel-intelligence; fi
-    git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+    git clone -q --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
     cd eiffel-intelligence
-    mvn package -DskipTests=true
+    mvn package -DskipTests=true -q
     cd ..
-}
-
-function do_test {
-    echo "Starting system test"
-    # Set host variable
-    source src/main/docker/env.bash
-    mvn verify -P systemTest -Dei.frontend.url:http://${HOST}:8081 -Djenkins.external.url:http://${HOST}:8082
-    STATUS=$?
 }
 
 function do_start {
@@ -57,6 +49,14 @@ function do_check {
     printf " Jenkins container is up and running!\n"
 }
 
+function do_test {
+    echo "Starting system test"
+    # Set host variable
+    source src/main/docker/env.bash
+    mvn verify -P systemTest -Dei.frontend.url:http://${HOST}:8081 -Djenkins.external.url:http://${HOST}:8082 -B
+    STATUS=$?
+}
+
 function do_stop {
     echo "Stopping Docker containers ..."
     # Sourcing environment variables to avoid warnings
@@ -80,6 +80,7 @@ case "$1" in
             do_stop
             ;;
         test)
+            do_build
             do_start
             do_check
             do_test
