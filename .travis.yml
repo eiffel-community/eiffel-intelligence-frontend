@@ -34,13 +34,14 @@ before_install:
   - java -version
   - |
     if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
+      git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+      ls
       source src/main/docker/env.bash
       docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
     fi
 
-
+# Only used before integrationTests
 install:
-  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
   - cd eiffel-intelligence
   - chmod +x pom.xml
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -80,7 +81,7 @@ jobs:
     - stage: test
       name: integrationTests
       script:
-        - "mvn verify -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
+        - "mvn verify -P integrationTest -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
     - stage: systemTest
       name: systemTests
       install: skip

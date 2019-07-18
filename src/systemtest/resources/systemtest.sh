@@ -35,10 +35,10 @@ function do_start {
     source src/main/docker/env.bash
 
     # Set up docker containers and build the images of EI frontend and backend
-    docker-compose -f src/main/docker/docker-compose.yml up -d --build
+    docker-compose -f src/main/docker/docker-compose.yml up -d --build jenkins
 
     echo "Sleeping for 2 minutes, to let containers start up properly"
-    sleep 2m
+    #sleep 2m
 }
 
 function do_check {
@@ -57,7 +57,7 @@ function do_test {
     echo "Starting system test"
     # Set host variable
     source src/main/docker/env.bash
-    mvn verify -P systemTest -Dei.frontend.url:http://${HOST}:8081 -Djenkins.external.url:http://${HOST}:8082 -B
+    mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B
     STATUS=$?
 }
 
