@@ -286,6 +286,11 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <th>Explanation</th>
     </tr>
     <tr>
+        <td>/rules</td>
+        <td>GET</td>
+        <td>Get the current rules content</td>
+    </tr>
+    <tr>
         <td>/rules/rule-check/testRulePageEnabled</td>
         <td>GET</td>
         <td>Check if TestRules is enabled in the back-end</td>
