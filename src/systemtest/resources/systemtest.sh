@@ -6,15 +6,15 @@
 STATUS=0
 
 export CURRENT_DIR=$(pwd)
-echo "Executing script ${0} from directory: " ${CURRENT_DIR}
+echo "Executing script: ${0} from directory: " ${CURRENT_DIR}
 
 function do_build {
     echo "Building Eiffel Intelligence front-end war file"
-    # Building war file from latest code changes in EI frontend
+    # Build war file from latest code changes in EI front-end
     mvn clean -q
     mvn package -DskipTests=true -q
 
-    # Cloning EI backend and build war file
+    # Clone EI back-end and build war file
     echo "Cloning Eiffel Intelligence back-end and building war file"
     if [[ -d "eiffel-intelligence" ]]; then rm -Rf eiffel-intelligence; fi
     git clone -q --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
@@ -26,15 +26,15 @@ function do_build {
 function do_start {
     echo "Starting up Docker environment"
 
-    ## Set variables for Eiffel Intelligence war files. These has to be built before
+    ## Set variables for Eiffel Intelligence war files.
     export EI_FRONTEND_WAR_FILE=$(ls target/*.war)
     export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
 
     # Sets Docker image names and ports for containers.
-    # Also sets host variable and war files for Eiffel Intelligence
+    # Also sets host variable
     source src/main/docker/env.bash
 
-    # Set up docker containers and build the images of EI frontend and backend
+    # Set up docker containers and build the images of EI front-end, back-end and Jenkins
     docker-compose -f src/main/docker/docker-compose.yml up -d --build
 
     echo "Sleeping for 2 minutes, to let containers start up properly"
