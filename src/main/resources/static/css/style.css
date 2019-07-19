@@ -257,7 +257,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     overflow: hidden;
 }
 .modal-subscription .modal-dialog {
-    width: 650px;
+    max-width: 650px;
     height: inherit;
     padding-bottom: 1.75rem;
 }
