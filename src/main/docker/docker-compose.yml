@@ -236,10 +236,10 @@ services:
     image: ${EI_BACKEND_IMAGE}
     build:
       # The Docker image will be built using the specified image tag above
-      context: ../../../eiffel-intelligence
+      context: ../../../
       dockerfile: ./src/main/docker/Dockerfile
       args:
-        URL: ./${EI_BACKEND_WAR_FILE}
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -287,10 +287,10 @@ services:
     image: ${EI_BACKEND_IMAGE}
     build:
       # The Docker image will be built using the specified image tag above
-      context: ../../../eiffel-intelligence
+      context: ../../../
       dockerfile: ./src/main/docker/Dockerfile
       args:
-        URL: ./${EI_BACKEND_WAR_FILE}
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -338,10 +338,10 @@ services:
     image: ${EI_BACKEND_IMAGE}
     build:
       # The Docker image will be built using the specified image tag above
-      context: ../../../eiffel-intelligence
+      context: ../../../
       dockerfile: ./src/main/docker/Dockerfile
       args:
-        URL: ./${EI_BACKEND_WAR_FILE}
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:

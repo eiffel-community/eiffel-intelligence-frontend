@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import cucumber.api.java.Before;
 import org.junit.Ignore;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -31,6 +32,8 @@ public class TestExecutionFlowSteps extends AbstractTestExecutionListener {
         config.initEIFrontend();
         config.initEIBackend("testexecution");
         config.initJenkinsConfig();
+        StepsUtils.installGroovy(config.getJenkinsExternalBaseUrl(),
+                                 config.getJenkinsUsername(), config.getJenkinsPassword());
         config.initRemRemConfig();
     }
 

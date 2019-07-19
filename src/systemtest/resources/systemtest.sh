@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # This script should be executed from the root of the repository.
 # Run: src/systemtest/resources/systemtest.sh [COMMAND]
@@ -71,34 +71,94 @@ function do_stop {
     # docker rmi $(docker images -f "dangling=true" -q)
 }
 
-case "$1" in
-        build)
-            do_build
+function usage {
+    cat <<EOF
+
+Usage: systemtest.sh COMMAND [OPTIONS]
+
+COMMANDS:
+    test :
+        First sets up Docker containers needed for system tests, then check Jenkins
+        container is healthy before starting the system tests defined for Eiffel
+        Intelligence, using maven verify command. After executing the tests, the
+        Docker containers are stopped and removed.
+    start :
+        Start up Docker containers needed for running the system tests. The
+        containers are defined in src/main/docker/docker-compose.yml
+    stop :
+        Stop the Docker containers defined in src/main/docker/docker-compose.yml
+    check :
+        Check if the Jenkins Docker containers is up and running. This container
+        is (usually) the last one to start up.
+    build :
+        Build a war file on the latest code changes in Eiffel Intelligence front-end.
+        It also clones Eiffel Intelligence back-end repository and builds a war file
+        based on those code changes.
+    only_test :
+        Assuming the environment is already set up, this only executes the
+        system tests with maven command.
+
+OPTIONS:
+    -v | --verbose  : Turn on verbose mode while executing.
+    -h | --help     : Shows this helps text.
+
+EOF
+}
+
+
+commands=()
+
+while [[ "$1" != "" ]]; do
+    case "$1" in
+        -v | --verbose)
+            echo "Running with verbose!"
+            verbose="true"
             ;;
-        start)
-            do_build
-            do_start
-            do_check
-            ;;
-        check)
-            do_check
-            ;;
-        stop)
-            do_stop
-            ;;
-        test)
-            do_build
-            do_start
-            do_check
-            do_test
-            do_stop
-            ;;
-        only_test)
-            do_test
+        -h | --help)
+            usage
+            exit
             ;;
         *)
-            echo $"Usage: $0 [ start|stop|test|check|build|only_test ]"
-            exit 1
-esac
+            # Save for positional arguments
+            commands+=("$1")
+    esac
+    shift
+done
+
+# Restore positional arguments to be executed
+set -- "${commands[@]}"
+
+while [[ "$@" ]]; do
+    case "$1" in
+            build)
+                do_build
+                ;;
+            start)
+                do_build
+                do_start
+                do_check
+                ;;
+            check)
+                do_check
+                ;;
+            stop)
+                do_stop
+                ;;
+            test)
+                do_build
+                do_start
+                do_check
+                do_test
+                do_stop
+                ;;
+            only_test)
+                do_test
+                ;;
+            *)
+                usage
+                exit 1
+    esac
+    shift
+done
 
 exit ${STATUS}
