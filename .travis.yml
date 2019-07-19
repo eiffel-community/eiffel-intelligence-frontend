@@ -85,7 +85,16 @@ jobs:
       install: skip
       script:
         - chmod +x src/systemtest/resources/systemtest.sh
-        - src/systemtest/resources/systemtest.sh test
+        - src/systemtest/resources/systemtest.sh start
+        - |
+          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
+          -Dit.test=ArtifactFlowRunner
+        - |
+          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
+          -Dit.test=SourceChangeFlowRunner
+        - |
+          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
+          -Dit.test=TestExecutionFlowRunner
       after_script: skip
     - stage: deploy
       name: deployGitHubPages
