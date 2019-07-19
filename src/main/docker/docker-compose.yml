@@ -206,6 +206,12 @@ services:
   jenkins:
     restart: always
     image: ${JENKINS_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile-Jenkins
+      args:
+        JENKINS_IMAGE: ${JENKINS_IMAGE}
     expose:
       - "8080"
     ports:
