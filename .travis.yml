@@ -87,6 +87,7 @@ jobs:
       script:
         - chmod +x src/systemtest/resources/systemtest.sh
         - src/systemtest/resources/systemtest.sh start
+        - source src/main/docker/env.bash   # Set HOST variable
         - |
           mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
           -Dit.test=ArtifactFlowRunner
