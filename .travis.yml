@@ -38,6 +38,7 @@ before_install:
       docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
     fi
 
+
 # Only used before integrationTests
 install:
   - cd eiffel-intelligence
