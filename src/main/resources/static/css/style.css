@@ -1,11 +1,6 @@
 .content {
     padding: 10px;
 }
-@media (max-width: 576px) {
-    .container {
-        max-width: 480px;
-    }
-}
 .subscription-alert {
     width: 100%;
     padding: 2px;
@@ -266,11 +261,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     height: inherit;
     padding-bottom: 1.75rem;
 }
-@media (max-width: 576px) {
-    .modal.modal-subscription .modal-dialog {
-        width: auto;
-    }
-}
 .modal-subscription .modal-content {
     height: 99%;
 }
@@ -316,4 +306,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
 }
 ::-webkit-scrollbar-button:vertical:single-button:increment:hover {
     border-color: #777777 transparent transparent transparent;
+}
+@media (max-width: 576px) {
+    .container {
+        max-width: 480px;
+    }
+    .modal.modal-subscription .modal-dialog {
+        width: auto;
+    }
 }
