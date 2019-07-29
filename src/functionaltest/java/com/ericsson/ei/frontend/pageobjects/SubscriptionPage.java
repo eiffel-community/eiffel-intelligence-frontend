@@ -47,11 +47,13 @@ public class SubscriptionPage extends PageBaseClass {
         cancelBtn.click();
     }
 
-    public void clickBulkDelete() throws IOException {
+    public void clickCheckAll() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("check-all")));
         WebElement checkbox = driver.findElement(By.id("check-all"));
         checkbox.click();
+    }
 
+    public void clickBulkDelete() throws IOException {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("bulkDelete")));
         WebElement bulkDeleteBtn = driver.findElement(By.id("bulkDelete"));
         bulkDeleteBtn.click();
@@ -146,6 +148,13 @@ public class SubscriptionPage extends PageBaseClass {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.id("getTemplateButton")));
         WebElement getTemplateButton = driver.findElement(By.id("getTemplateButton"));
+        getTemplateButton.click();
+    }
+
+    public void clickBulkDownload() {
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+                ExpectedConditions.elementToBeClickable(By.id("bulkDownload")));
+        WebElement getTemplateButton = driver.findElement(By.id("bulkDownload"));
         getTemplateButton.click();
     }
 
@@ -293,5 +302,4 @@ public class SubscriptionPage extends PageBaseClass {
             return false;
         }
     }
-
 }
