@@ -687,9 +687,12 @@ jQuery(document).ready(function () {
         // Get tag that contains subscriptionName and mode
         var mode = $(this).attr("id").split("-")[0];
         var subscriptionName = $(this).attr("id").split("-")[1];
-        get_subscription_data(subscriptionName, mode, event);
+        if (mode == "delete") {
+            deleteSubscriptions(subscriptionName);
+        } else {
+            get_subscription_data(subscriptionName, mode, event);
+        }
     });
-    // /Stop ## A table button pressed ###########################################
 
     // /Start ## populate JSON ###########################################
     function populate_json(data, save_method_in) {
@@ -1040,17 +1043,6 @@ jQuery(document).ready(function () {
         ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
-
-    // /Start ## Delete Subscription ########################################
-    $('#table').on('click', 'tbody tr td button.delete_record', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        // Get tag that contains subscriptionName
-        var subscription = $(this).attr("id").split("-")[1];
-
-        deleteSubscriptions(subscription);
-    });
-    // /Stop ## Delete Subscription #########################################
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
