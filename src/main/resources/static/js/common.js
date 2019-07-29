@@ -308,6 +308,12 @@ function executeIfLdapIsDeactivated() {
     $("#ldapUserName").text("");
 }
 
+function downloadSubscriptions(subscriptionData) {
+    var foundSubscriptions = subscriptionData.foundSubscriptions;
+    var jsonData = JSON.stringify(foundSubscriptions, null, 2);
+    downloadFile(jsonData, "application/json;charset=utf-8", "subscriptionsData.json");
+}
+
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {
