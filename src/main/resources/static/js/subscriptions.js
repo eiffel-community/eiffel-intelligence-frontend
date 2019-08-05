@@ -449,14 +449,14 @@ jQuery(document).ready(function () {
 
     function isCloneButtonDisabled() {
         if (!isLdapEnabled()) {
-            // LDAP is NOT activated
+            // LDAP is NOT activated, cloning is enabled.
             return false;
         }
 
         // Check if current user is logged in
         var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
         if (isCurrentUserLoggedIn == true) {
-            // Current user is not logged in, edit / delete disabled = true
+            // Current user is logged in, cloning is enabled.
             return false;
         }
 
@@ -505,15 +505,15 @@ jQuery(document).ready(function () {
     }
 
     $("#bulkDelete").click(function () {
-        var selectedsubscriptions = getSelectedSubscriptionNames();
+        var selectedSubscriptions = getSelectedSubscriptionNames();
 
         // Check if no Subscription has been marked to be deleted.
-        if (selectedsubscriptions.length < 1) {
+        if (selectedSubscriptions.length < 1) {
             logMessage("No subscriptions has been marked to be deleted.");
             return;
         }
 
-        subscriptionsToDeleteString = concatenateSubscriptionNames(selectedsubscriptions);
+        subscriptionsToDeleteString = concatenateSubscriptionNames(selectedSubscriptions);
 
         deleteSubscriptions(subscriptionsToDeleteString);
     });
@@ -521,30 +521,30 @@ jQuery(document).ready(function () {
 
     // /Start ## Bulk download ##############################################
     $("#bulkDownload").click(function () {
-        var selectedsubscriptions = getSelectedSubscriptionNames();
+        var selectedSubscriptions = getSelectedSubscriptionNames();
 
         // Check if no Subscription has been marked to be downloaded.
-        if (selectedsubscriptions.length < 1) {
+        if (selectedSubscriptions.length < 1) {
             logMessage("No subscriptions has been marked to be downloaded.");
             return;
         }
-        subscriptionsToDownloadString = concatenateSubscriptionNames(selectedsubscriptions);
+        subscriptionsToDownloadString = concatenateSubscriptionNames(selectedSubscriptions);
 
         get_subscription_data(subscriptionsToDownloadString, "download");
     });
     // /Stop ## Bulk download ##############################################
 
     function getSelectedSubscriptionNames(){
-        var selectedsubscriptions = [];
+        var selectedSubscriptions = [];
         var data = table.rows().nodes();
         $.each(data, function (index, value) {
             if ($(this).find('input').prop('checked') == true) {
-                selectedsubscriptions.push(table.row(index).data().subscriptionName);
+                selectedSubscriptions.push(table.row(index).data().subscriptionName);
             }
         });
         $("#check-all").prop('checked', false);
         reload_table();
-        return selectedsubscriptions;
+        return selectedSubscriptions;
     }
 
     function concatenateSubscriptionNames(nameList) {

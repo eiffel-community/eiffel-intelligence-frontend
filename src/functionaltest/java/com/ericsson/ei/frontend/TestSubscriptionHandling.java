@@ -268,13 +268,13 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private void clickCloneSubscriptionAndVerifyFormOpen() {
         subscriptionPage.clickExpandButtonByXPath(EXPAND_BUTTON_XPATH);
-        subscriptionPage.clickViewButtonByXPath(CLONE_BUTTON_XPATH);
+        subscriptionPage.clickButtonByXPath(CLONE_BUTTON_XPATH);
         assert (subscriptionPage.presenceOfHeader(FORM_HEADER));
     }
 
     private void verifyViewButtonOnSubscription() {
         subscriptionPage.clickExpandButtonByXPath(EXPAND_BUTTON_XPATH2);
-        subscriptionPage.clickViewButtonByXPath(VIEW_BUTTON_XPATH2);
+        subscriptionPage.clickButtonByXPath(VIEW_BUTTON_XPATH2);
         assert (new WebDriverWait(driver, 10).until((webdriver) -> driver.getPageSource().contains("View Subscription")));
         subscriptionPage.clickFormCloseBtn();
     }

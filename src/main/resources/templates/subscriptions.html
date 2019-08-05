@@ -297,7 +297,7 @@
                                     Jenkins: As a jenkins user it is recommended that you set this as an API token and not user password. Not to be mistaken for the job token that is set for a single job." />
                             <div>
                                 <input id="passwordInput" title="Enter password"
-                                    data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add' || $root.mode() == 'clone'),textInput:$data.password"
+                                    data-bind="visible: $root.showPassword() && $root.mode().match(/^(edit|add|clone)$/),textInput:$data.password"
                                     name="password" placeholder="password" class="form-control" type="password" />
                             </div>
 
