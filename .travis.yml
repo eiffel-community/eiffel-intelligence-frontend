@@ -33,7 +33,6 @@ before_install:
   - java -version
   - |
     if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
-      git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
       source src/main/docker/env.bash
       docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
     fi
@@ -41,6 +40,7 @@ before_install:
 
 # Only used before integrationTests
 install:
+  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
   - cd eiffel-intelligence
   - chmod +x pom.xml
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -87,7 +87,7 @@ jobs:
       script:
         - chmod +x src/systemtest/resources/systemtest.sh
         - src/systemtest/resources/systemtest.sh start
-        - source src/main/docker/env.bash   # Set HOST variable
+        - source src/main/docker/env.bash   # Set HOST variable in Travis build
         - |
           mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
           -Dit.test=ArtifactFlowRunner
