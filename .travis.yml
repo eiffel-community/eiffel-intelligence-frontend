@@ -19,7 +19,7 @@ env:
 # Using default 'test' stage for our tests, and only running deploy stage
 # (after merge) on master branch
 stages:
-  - systemTest
+  - test
   - name: deploy
     if: branch = master
 
@@ -54,10 +54,7 @@ after_script:
       docker-compose -f src/main/docker/docker-compose.yml down
       fuser -k ${EI_BACKEND_PORT}/tcp
     fi
-  - |
-    if [[ $TRAVIS_JOB_NAME = systemTests ]]; then
-      src/systemtest/resources/systemtest.sh stop
-    fi
+
 
 # Generate site documentation using mvn site plugin
 before_deploy:
@@ -86,16 +83,6 @@ jobs:
       name: integrationTests
       script:
         - "mvn verify -P integrationTest -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
-    - stage: systemTest
-      name: systemTests
-      install: skip
-      script:
-        - chmod +x src/systemtest/resources/systemtest.sh
-        - src/systemtest/resources/systemtest.sh start
-        - source src/main/docker/env.bash   # Set HOST variable in Travis build
-        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=ArtifactFlowRunner
-        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=SourceChangeFlowRunner
-        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=TestExecutionFlowRunner
     - stage: deploy
       name: deployGitHubPages
       before_install: skip    # do not run again

@@ -68,7 +68,7 @@ function do_stop {
     docker-compose -f src/main/docker/docker-compose.yml down
 
     # Cleaning up dangling docker images which were built using docker-compose command
-    docker rmi $(docker images -f "dangling=true" -q) -q
+    docker rmi $(docker images -f "dangling=true" -q)
 }
 
 function usage {
