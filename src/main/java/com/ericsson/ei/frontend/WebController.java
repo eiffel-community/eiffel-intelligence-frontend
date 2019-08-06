@@ -43,26 +43,32 @@ public class WebController {
         return "index";
     }
 
-    @RequestMapping("/subscriptionpage.html")
+    @RequestMapping("/subscriptions.html")
     public String subscription(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
-        return "subscription";
+        return "subscriptions";
     }
 
-    @RequestMapping("/testRules.html")
+    @RequestMapping("/test-rules.html")
     public String testRules(Model model) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
-        return "testRules";
+        return "test-rules";
     }
 
-    @RequestMapping("/eiInfo.html")
-    public String eiInfo(Model model, HttpServletRequest request) {
+    @RequestMapping("/information.html")
+    public String info(Model model, HttpServletRequest request) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("version", frontEndUtils.getVersion());
         model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());
         model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
         model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
-        return "eiInfo";
+        return "information";
+    }
+
+    @RequestMapping("/rules.html")
+    public String rules(Model model, HttpServletRequest request) {
+        model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
+        return "rules";
     }
 
     @RequestMapping("/login.html")

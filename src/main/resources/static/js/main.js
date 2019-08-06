@@ -29,7 +29,7 @@ jQuery(document).ready(function () {
     function loadDocumentLinks() {
         // eiffelDocumentationUrlLinks variable is configure in application.properties
         var linksList = JSON.parse(eiffelDocumentationUrlLinks);
-        var docLinksDoc = document.getElementById('docLinks');
+        var docLinksDoc = document.getElementById('doc-links');
         var liTag = null;
         var aTag = null;
 

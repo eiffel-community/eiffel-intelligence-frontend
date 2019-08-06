@@ -11,9 +11,6 @@
 #table {
     border-spacing: 0px;
 }
-.modal-subscription {
-    max-width: 650px;
-}
 .sub-action-column {
     min-width: 160px;
 }
@@ -107,9 +104,14 @@
 .pre {
     display: block;
     font-family: monospace;
-    white-space: pre;
+    white-space: pre-wrap;
     margin: 1em;
     font-size: medium;
+}
+.code-block {
+    border: 1px solid #e6e6e6;
+    background: #f7f7f7;
+    padding: 10px;
 }
 .showPasswordButton{
     margin-top: 10px;
@@ -247,8 +249,69 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:b
 table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     word-break: break-word;
 }
+.modal-subscription {
+    height: 100%;
+    padding-left: 0 !important;
+}
+.modal-open .modal.modal-subscription {
+    overflow: hidden;
+}
+.modal-subscription .modal-dialog {
+    max-width: 650px;
+    height: inherit;
+    padding-bottom: 1.75rem;
+}
+.modal-subscription .modal-content {
+    height: 99%;
+}
+.modal-subscription .modal-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.scrollbar-mobile::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.scrollbar-mobile::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+.scrollbar-mobile::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+.scrollbar-mobile::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+}
+.scrollbar-mobile::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+::-webkit-scrollbar-button:single-button {
+    background-color: #ffffff;
+    display: block;
+    border-style: solid;
+    height: 12px;
+    width: 12px;
+}
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0px 6px 6px 6px;
+    border-color: transparent transparent #555555 transparent;
+}
+::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    border-color: transparent transparent #777777 transparent;
+}
+::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 6px 6px 0 6px;
+    border-color: #555555 transparent transparent transparent;
+}
+::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+    border-color: #777777 transparent transparent transparent;
+}
 @media (max-width: 576px) {
     .container {
         max-width: 480px;
+    }
+    .modal.modal-subscription .modal-dialog {
+        width: auto;
     }
 }
