@@ -40,6 +40,10 @@
                 <i class="fa fa-fw fa-lock logged-out-buttons hidden_by_default"></i>
                 Bulk Delete
             </button>
+            <button id="bulkDownload" class="mt-1 btn btn-primary bulk_download">
+                <i class="fa fa-fw fa-download"></i>
+                Bulk Download
+            </button>
             <button id="reloadButton" class="mt-1 btn btn-primary table_reload">
                 <i class="fa fa-fw fa-refresh"></i>
                 Reload
@@ -293,7 +297,7 @@
                                     Jenkins: As a jenkins user it is recommended that you set this as an API token and not user password. Not to be mistaken for the job token that is set for a single job." />
                             <div>
                                 <input id="passwordInput" title="Enter password"
-                                    data-bind="visible: $root.showPassword() && ($root.mode() == 'edit' || $root.mode() == 'add'),textInput:$data.password"
+                                    data-bind="visible: $root.showPassword() && $root.mode().match(/^(edit|add|clone)$/),textInput:$data.password"
                                     name="password" placeholder="password" class="form-control" type="password" />
                             </div>
 

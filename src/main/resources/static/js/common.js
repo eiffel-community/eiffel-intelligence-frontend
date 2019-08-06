@@ -308,6 +308,22 @@ function executeIfLdapIsDeactivated() {
     $("#ldapUserName").text("");
 }
 
+function downloadSubscriptions(subscriptionData, subscriptionNames) {
+    var foundSubscriptions = subscriptionData.foundSubscriptions;
+    var jsonData = JSON.stringify(foundSubscriptions, null, 2);
+    if (jsonData == undefined || subscriptionNames == undefined) {
+        logMessage("Subscription data to download was not found");
+        return;
+    }
+    var fileName = "";
+    if (stringContainsSubstring(subscriptionNames, ",")) {
+        fileName = "subscriptionsData.json";
+    } else {
+        fileName = subscriptionNames + ".json";
+    }
+    downloadFile(jsonData, "application/json;charset=utf-8", fileName);
+}
+
 function checkBackendSecured() {
     var callback = {
         success: function (responseData, textStatus) {

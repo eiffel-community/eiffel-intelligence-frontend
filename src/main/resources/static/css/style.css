@@ -249,6 +249,24 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:b
 table.dataTable.dtr-inline.collapsed > tbody > tr > td > .dtr-details > li {
     word-break: break-word;
 }
+.table-btn .tooltiptext {
+    visibility: hidden;
+    width: 74px;
+    background-color: #555555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    margin-left: -46px;
+    margin-top: -38px;
+}
+.table-btn:hover .tooltiptext {
+    visibility: visible;
+}
 .modal-subscription {
     height: 100%;
     padding-left: 0 !important;
