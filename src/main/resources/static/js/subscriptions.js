@@ -396,16 +396,13 @@ jQuery(document).ready(function () {
                         subscriptionName = data.subscriptionName;
 
                         disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner);
-                        var disablingText = "";
-                        if(disableEditDeleteButtons == true){
-                            disablingText = " disabled";
-                        }
+                        disableCloneButton = isCloneButtonDisabled();
 
                         return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn"><i class="fa fa-fw fa-eye"></i><span class="tooltiptext">View</span></button> ' +
-                               '<button id="clone-' + subscriptionName + '" class="btn btn-sm btn-success clone_record table-btn"' + getCloneButtonDisabledText() + '><i class="fa fa-fw fa-copy"></i><span class="tooltiptext">Clone</span></button> ' +
+                               '<button id="clone-' + subscriptionName + '" class="btn btn-sm btn-success clone_record table-btn"' + getDisabledText(disableCloneButton) + '><i class="fa fa-fw fa-copy"></i><span class="tooltiptext">Clone</span></button> ' +
                                '<button id="download-' + subscriptionName + '" class="btn btn-sm btn-primary download_record table-btn"><i class="fa fa-fw fa-download"></i><span class="tooltiptext">Download</span></button> ' +
-                               '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '><i class="fa fa-fw fa-pencil"></i><span class="tooltiptext">Edit</span></button> ' +
-                               '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '><i class="fa fa-fw fa-trash"></i><span class="tooltiptext">Delete</span></button>';
+                               '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + getDisabledText(disableEditDeleteButtons) + '><i class="fa fa-fw fa-pencil"></i><span class="tooltiptext">Edit</span></button> ' +
+                               '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + getDisabledText(disableEditDeleteButtons) + '><i class="fa fa-fw fa-trash"></i><span class="tooltiptext">Delete</span></button>';
                     }
                 }
             ]
@@ -418,8 +415,8 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
-    function getCloneButtonDisabledText() {
-        if(isCloneButtonDisabled()) {
+    function getDisabledText(disabled) {
+        if(disabled) {
             return " disabled";
         }
         return "";
@@ -673,12 +670,10 @@ jQuery(document).ready(function () {
             event.preventDefault();
         }
 
-        console.log("Names 2 :: " + subscriptionNames);
         // AJAX Callback handling
         var callback = {
             success: function (responseData, textStatus) {
                 if (mode === "download") {
-                    console.log("Names 1 :: " + subscriptionNames);
                     downloadSubscriptions(responseData, subscriptionNames);
                 } else {
                     populate_json(responseData, mode);
