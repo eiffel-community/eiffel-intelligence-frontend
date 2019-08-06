@@ -315,11 +315,11 @@ function downloadSubscriptions(subscriptionData, subscriptionNames) {
         logMessage("Subscription data to download was not found");
         return;
     }
-    var fileName = ".json";
+    var fileName = "";
     if (stringContainsSubstring(subscriptionNames, ",")) {
-        fileName = "subscriptionsData" + fileName;
+        fileName = "subscriptionsData.json";
     } else {
-        fileName = subscriptionNames + fileName;
+        fileName = subscriptionNames + ".json";
     }
     downloadFile(jsonData, "application/json;charset=utf-8", fileName);
 }
