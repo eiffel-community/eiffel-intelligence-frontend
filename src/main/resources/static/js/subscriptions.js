@@ -402,7 +402,7 @@ jQuery(document).ready(function () {
                         }
 
                         return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn"><i class="fa fa-fw fa-eye"></i><span class="tooltiptext">View</span></button> ' +
-                               '<button id="clone-' + subscriptionName + '" class="btn btn-sm btn-success clone_record table-btn"' + function () {if(isCloneButtonDisabled()){return " disabled";} return "";} + '><i class="fa fa-fw fa-copy"></i><span class="tooltiptext">Clone</span></button> ' +
+                               '<button id="clone-' + subscriptionName + '" class="btn btn-sm btn-success clone_record table-btn"' + getCloneButtonDisabledText() + '><i class="fa fa-fw fa-copy"></i><span class="tooltiptext">Clone</span></button> ' +
                                '<button id="download-' + subscriptionName + '" class="btn btn-sm btn-primary download_record table-btn"><i class="fa fa-fw fa-download"></i><span class="tooltiptext">Download</span></button> ' +
                                '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '><i class="fa fa-fw fa-pencil"></i><span class="tooltiptext">Edit</span></button> ' +
                                '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '><i class="fa fa-fw fa-trash"></i><span class="tooltiptext">Delete</span></button>';
@@ -418,6 +418,13 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
+    function getCloneButtonDisabledText() {
+        if(isCloneButtonDisabled()) {
+            return " disabled";
+        }
+        return "";
+    }
+
     function isEditAndDeleteButtonsDisabled(subscriptionOwner) {
         if (!isLdapEnabled()) {
             // LDAP is NOT activated
@@ -426,20 +433,20 @@ jQuery(document).ready(function () {
 
         // Check if current user is logged in
         var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
-        if (isCurrentUserLoggedIn == false) {
+        if (isCurrentUserLoggedIn === false) {
             // Current user is not logged in, edit / delete disabled = true
             return true;
         }
 
         // Check if subscriptionOwner is defined
         var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
-        if (isSubscriptionOwnerDefined == false) {
+        if (isSubscriptionOwnerDefined === false) {
             // Is anonymous subscription
             return false;
         }
 
         var isUserSubscriptionOwner = subscriptionOwner == getCurrentUser() ;
-        if (isUserSubscriptionOwner == false) {
+        if (isUserSubscriptionOwner === false) {
             // Back end is secured, but current user is not owner to subscription, edit / delete disabled = true
             return true;
         }
@@ -455,7 +462,7 @@ jQuery(document).ready(function () {
 
         // Check if current user is logged in
         var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
-        if (isCurrentUserLoggedIn == true) {
+        if (isCurrentUserLoggedIn === true) {
             // Current user is logged in, cloning is enabled.
             return false;
         }
@@ -660,7 +667,7 @@ jQuery(document).ready(function () {
     });
     // /END ## upload_subscriptions #################################################
 
-    function get_subscription_data(subscriptionNames, mode, event) {
+    function get_subscription_data(subscriptionNames, mode, event, subscriptionName) {
         if (event != undefined) {
             event.stopPropagation();
             event.preventDefault();
@@ -670,7 +677,7 @@ jQuery(document).ready(function () {
         var callback = {
             success: function (responseData, textStatus) {
                 if (mode === "download") {
-                    downloadSubscriptions(responseData);
+                    downloadSubscriptions(responseData, subscriptionName);
                 } else {
                     populate_json(responseData, mode);
                 }
@@ -690,7 +697,7 @@ jQuery(document).ready(function () {
         if (mode == "delete") {
             deleteSubscriptions(subscriptionName);
         } else {
-            get_subscription_data(subscriptionName, mode, event);
+            get_subscription_data(subscriptionName, mode, event, subscriptionName);
         }
     });
 
