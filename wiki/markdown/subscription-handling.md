@@ -42,7 +42,7 @@ The date when the subscription was created and saved in Eiffel Intelligence.
 #### _NotificationType_
 What kind of notification type the subscription uses.
 #### _NotificationMeta_
-The URL witch the subscription triggers or email adresses that will be notified on
+The URL which the subscription triggers or email adresses that will be notified on
 a subscription trigger.
 #### _Repeat_
 True or False depending whether or not repeat is activated.
@@ -56,20 +56,20 @@ does will be displayed.
 </kbd>
 
 ##### _View_
-The view button is represented as an eye symbol and will open a modal to view data in
+The view button is represented as an eye symbol and will open a form window to view data in
 the subscription.
 ##### _Clone_
-The clone button is represented as a copy symbol and will open a modal to add a new
+The clone button is represented as a copy symbol and will open a form window to add a new
 subscription containing the same information as the cloned subscription except
 the name that must be unique for all subscriptions.
 ##### _Download_
-The download button is represented as an download symbol and when pressed will open a
+The download button is represented as a download symbol and when pressed will open a
 download window where the user may save the subscription data in .json format.
 ##### _Edit_
-The edit button is represented as an pen symbol and will open a modal to edit data in
+The edit button is represented as a pen symbol and will open a form window to edit data in
 the subscription.
 ##### _Delete_
-The delete button is represented as an trash can symbol and will open confirmation dialogue
+The delete button is represented as a trash can symbol and will open confirmation dialogue
 to delete the subscription.
 
 **_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscriptions.md)_**

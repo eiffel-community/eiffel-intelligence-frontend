@@ -517,9 +517,9 @@ jQuery(document).ready(function () {
             return;
         }
 
-        commaSeperatedNameList = concatenateSubscriptionNames(nameList);
+        commaSeparatedNameList = concatenateSubscriptionNames(nameList);
 
-        deleteSubscriptions(commaSeperatedNameList);
+        deleteSubscriptions(commaSeparatedNameList);
     });
     // /Stop ## Bulk delete #################################################
 
@@ -532,9 +532,9 @@ jQuery(document).ready(function () {
             logMessage("No subscriptions has been marked to be downloaded.");
             return;
         }
-        commaSeperatedNameList = concatenateSubscriptionNames(nameList);
+        commaSeparatedNameList = concatenateSubscriptionNames(nameList);
 
-        get_subscription_data(commaSeperatedNameList, "download");
+        get_subscription_data(commaSeparatedNameList, "download");
     });
     // /Stop ## Bulk download ##############################################
 
@@ -552,13 +552,13 @@ jQuery(document).ready(function () {
     }
 
     function concatenateSubscriptionNames(nameList) {
-        var commaSeperatedNameList = "";
+        var commaSeparatedNameList = "";
         for (i = 0; i < nameList.length; i++) {
-            commaSeperatedNameList += nameList[i] + ",";
+            commaSeparatedNameList += nameList[i] + ",";
         }
         // Remove last comma
-        commaSeperatedNameList = commaSeperatedNameList.slice(0, -1);
-        return commaSeperatedNameList;
+        commaSeparatedNameList = commaSeparatedNameList.slice(0, -1);
+        return commaSeparatedNameList;
     }
 
     function getTemplate() {

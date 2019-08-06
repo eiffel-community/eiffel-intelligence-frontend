@@ -51,47 +51,47 @@ public class SubscriptionPage extends PageBaseClass {
      */
 
     public void clickAddSubscription() {
-        clickButonById(ADD_SUBSCRIPTION_BUTTON_ID);
+        clickButtonById(ADD_SUBSCRIPTION_BUTTON_ID);
     }
 
     public void clickFormsCancelBtn() {
-        clickButonById(FORM_CANCEL_BUTTON_ID);
+        clickButtonById(FORM_CANCEL_BUTTON_ID);
     }
 
     public void clickCheckAll() {
-        clickButonById(CHECK_ALL_BUTTON_ID);
+        clickButtonById(CHECK_ALL_BUTTON_ID);
     }
 
     public void clickReload() {
-        clickButonById(RELOAD_BUTTON_ID);
+        clickButtonById(RELOAD_BUTTON_ID);
     }
 
     public void clickFormsSaveBtn() {
-        clickButonById(SAVE_BUTTON_ID);
+        clickButtonById(SAVE_BUTTON_ID);
     }
 
     public void clickGetTemplate() {
-        clickButonById(GET_TEMPLATE_BUTTON_ID);
+        clickButtonById(GET_TEMPLATE_BUTTON_ID);
     }
 
     public void clickBulkDownload() {
-        clickButonById(BULK_DOWNLOAD_BUTTON_ID);
+        clickButtonById(BULK_DOWNLOAD_BUTTON_ID);
     }
 
     public void clickAddConditionBtn() {
-        clickButonById(ADD_CONDITION_BUTTON_ID);
+        clickButtonById(ADD_CONDITION_BUTTON_ID);
     }
 
     public void clickAddRequirementBtn() {
-        clickButonById(ADD_REQUIREMENT_BUTTON_ID);
+        clickButtonById(ADD_REQUIREMENT_BUTTON_ID);
     }
 
     public void clickReloadLDAP() {
-        clickButonById(RELOAD_BUTTON_ID);
+        clickButtonById(RELOAD_BUTTON_ID);
     }
 
     public void clickBulkDelete() throws IOException {
-        clickButonById(BULK_DELETE_BUTTON_ID);
+        clickButtonById(BULK_DELETE_BUTTON_ID);
         // Click confirm button to confirm delete
         new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.cssSelector(".confirm-delete .modal-footer .btn-danger")));
@@ -99,7 +99,7 @@ public class SubscriptionPage extends PageBaseClass {
         confirmBtn.click();
     }
 
-    public void clickButonById(String id) {
+    public void clickButtonById(String id) {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement button = driver.findElement(By.id(id));
@@ -108,8 +108,8 @@ public class SubscriptionPage extends PageBaseClass {
 
     public void clickFormCloseBtn() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className(CLOSE_BUTTON_CLASS_NAME)));
-        WebElement viewBtn = driver.findElement(By.className(CLOSE_BUTTON_CLASS_NAME));
-        viewBtn.click();
+        WebElement formCloseButton = driver.findElement(By.className(CLOSE_BUTTON_CLASS_NAME));
+        formCloseButton.click();
     }
 
     /*
