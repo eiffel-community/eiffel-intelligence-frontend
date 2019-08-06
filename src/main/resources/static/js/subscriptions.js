@@ -197,7 +197,7 @@ jQuery(document).ready(function () {
         self.choosen_subscription_template.subscribe(function (template_var) {
             if (self.choosen_subscription_template() != null) { // only execute if value exists
                 json_obj_clone = JSON.parse(JSON.stringify(template_vars[template_var]));
-                populate_json(json_obj_clone, "add");
+                populateJson(json_obj_clone, "add");
             }
         });
 
@@ -279,7 +279,7 @@ jQuery(document).ready(function () {
     // /Stop ## Knockout #####################################################
 
     // /Start ## Reload Datatables ###########################################
-    function reload_table() {
+    function reloadTable() {
         if(table != undefined) {
             table.ajax.reload(null, false); // reload datatable ajax
         }
@@ -473,13 +473,13 @@ jQuery(document).ready(function () {
     $("#addSubscription").click(function () {
         vm.choosen_subscription_template(null);
         json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
-        populate_json(json_obj_clone, "add");
+        populateJson(json_obj_clone, "add");
     });
     // /Stop ## Add Subscription ############################################
 
     // /Start ## Reload Table################################################
     $("#reloadButton").click(function () {
-        reload_table();
+        reloadTable();
     });
     // /Stop ## Reload Table#################################################
 
@@ -487,10 +487,10 @@ jQuery(document).ready(function () {
     function deleteSubscriptions(subscriptionsToDeleteString) {
         var callback = {
             success: function (responseData, textStatus) {
-                reload_table();
+                reloadTable();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
+                reloadTable();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     logMessage("Failed to delete subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
@@ -534,7 +534,7 @@ jQuery(document).ready(function () {
         }
         commaSeparatedNameList = concatenateSubscriptionNames(nameList);
 
-        get_subscription_data(commaSeparatedNameList, "download");
+        getSubscriptionData(commaSeparatedNameList, "download");
     });
     // /Stop ## Bulk download ##############################################
 
@@ -547,7 +547,7 @@ jQuery(document).ready(function () {
             }
         });
         $("#check-all").prop('checked', false);
-        reload_table();
+        reloadTable();
         return selectedSubscriptions;
     }
 
@@ -628,11 +628,11 @@ jQuery(document).ready(function () {
                         sticky: false,
                         theme: 'Notify'
                     });
-                    reload_table();
+                    reloadTable();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
+                reloadTable();
                 parseAndLogMessage(XMLHttpRequest.responseText);
             }
         };
@@ -664,7 +664,7 @@ jQuery(document).ready(function () {
     });
     // /END ## upload_subscriptions #################################################
 
-    function get_subscription_data(subscriptionNames, mode, event) {
+    function getSubscriptionData(subscriptionNames, mode, event) {
         if (event != undefined) {
             event.stopPropagation();
             event.preventDefault();
@@ -676,7 +676,7 @@ jQuery(document).ready(function () {
                 if (mode === "download") {
                     downloadSubscriptions(responseData, subscriptionNames);
                 } else {
-                    populate_json(responseData, mode);
+                    populateJson(responseData, mode);
                 }
             }
         };
@@ -694,12 +694,12 @@ jQuery(document).ready(function () {
         if (mode == "delete") {
             deleteSubscriptions(subscriptionName);
         } else {
-            get_subscription_data(subscriptionName, mode, event);
+            getSubscriptionData(subscriptionName, mode, event);
         }
     });
 
     // /Start ## populate JSON ###########################################
-    function populate_json(data, save_method_in) {
+    function populateJson(data, save_method_in) {
         if (save_method_in == "edit" || save_method_in == "view") {
             vm.showPassword(false);
         } else {
@@ -1015,7 +1015,7 @@ jQuery(document).ready(function () {
                 var returnData = [responseData];
                 if (returnData.length > 0) {
                     $('#modal_form').modal('hide');
-                    reload_table();
+                    reloadTable();
                     // Clear ObservableArray
                     vm.subscription([]);
                 }
