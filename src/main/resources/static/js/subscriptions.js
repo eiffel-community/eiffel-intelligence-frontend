@@ -667,17 +667,19 @@ jQuery(document).ready(function () {
     });
     // /END ## upload_subscriptions #################################################
 
-    function get_subscription_data(subscriptionNames, mode, event, subscriptionName) {
+    function get_subscription_data(subscriptionNames, mode, event) {
         if (event != undefined) {
             event.stopPropagation();
             event.preventDefault();
         }
 
+        console.log("Names 2 :: " + subscriptionNames);
         // AJAX Callback handling
         var callback = {
             success: function (responseData, textStatus) {
                 if (mode === "download") {
-                    downloadSubscriptions(responseData, subscriptionName);
+                    console.log("Names 1 :: " + subscriptionNames);
+                    downloadSubscriptions(responseData, subscriptionNames);
                 } else {
                     populate_json(responseData, mode);
                 }
@@ -697,7 +699,7 @@ jQuery(document).ready(function () {
         if (mode == "delete") {
             deleteSubscriptions(subscriptionName);
         } else {
-            get_subscription_data(subscriptionName, mode, event, subscriptionName);
+            get_subscription_data(subscriptionName, mode, event);
         }
     });
 
