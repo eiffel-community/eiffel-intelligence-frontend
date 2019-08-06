@@ -68,7 +68,7 @@ function do_stop {
     docker-compose -f src/main/docker/docker-compose.yml down
 
     # Cleaning up dangling docker images which were built using docker-compose command
-    # docker rmi $(docker images -f "dangling=true" -q)
+    docker rmi $(docker images -f "dangling=true" -q)
 }
 
 function usage {
@@ -86,7 +86,8 @@ COMMANDS:
         Start up Docker containers needed for running the system tests. The
         containers are defined in src/main/docker/docker-compose.yml
     stop :
-        Stop the Docker containers defined in src/main/docker/docker-compose.yml
+        Stop the Docker containers defined in src/main/docker/docker-compose.yml.
+        Removing dangling docker images after containers are shut down.
     check :
         Check if the Jenkins Docker containers is up and running. This container
         is (usually) the last one to start up.

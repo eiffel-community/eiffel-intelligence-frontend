@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import cucumber.api.java.Before;
 import org.junit.Ignore;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
