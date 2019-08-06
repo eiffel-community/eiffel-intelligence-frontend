@@ -36,19 +36,19 @@ while red means no instance is connected.
 Used to select one or many subscription for bulk usages. The top one is a
 select all checkbox.
 #### _SubscriptionName_
-The subsctiption name.
+The subscription name.
 #### _Date_
 The date when the subscription was created and saved in Eiffel Intelligence.
 #### _NotificationType_
 What kind of notification type the subscription uses.
 #### _NotificationMeta_
-The URL the subscription triggers or email adresses that will be notified on
+The URL witch the subscription triggers or email adresses that will be notified on
 a subscription trigger.
 #### _Repeat_
-True or False depending weather or not repeat is activated.
+True or False depending whether or not repeat is activated.
 #### _Action_
 A set of buttons handling different kind of actions for that subscription.
-When hovering with a pointer over the button a descriptor what the button
+When hovering with a pointer over the button a descriptor showing what the button
 does will be displayed.
 
 <kbd>
@@ -59,7 +59,7 @@ does will be displayed.
 The view button is represented as an eye symbol and will open a modal to view data in
 the subscription.
 ##### _Clone_
-The clone button is represented as an copy symbol and will open a modal to add a new
+The clone button is represented as a copy symbol and will open a modal to add a new
 subscription containing the same information as the cloned subscription except
 the name that must be unique for all subscriptions.
 ##### _Download_
@@ -69,7 +69,7 @@ download window where the user may save the subscription data in .json format.
 The edit button is represented as an pen symbol and will open a modal to edit data in
 the subscription.
 ##### _Delete_
-The delete button is represented as an trashcan symbol and will open confirmation dialogue
+The delete button is represented as an trash can symbol and will open confirmation dialogue
 to delete the subscription.
 
 **_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscriptions.md)_**

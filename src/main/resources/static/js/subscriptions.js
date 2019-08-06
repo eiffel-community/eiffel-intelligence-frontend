@@ -424,18 +424,18 @@ jQuery(document).ready(function () {
             return false;
         }
 
-        // Check if subscriptionOwner is defined
-        var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
-        if (isSubscriptionOwnerDefined == false) {
-            // LDAP is NOT activated or is anonymous subscription
-            return false;
-        }
-
         // Check if current user is logged in
         var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
         if (isCurrentUserLoggedIn == false) {
             // Current user is not logged in, edit / delete disabled = true
             return true;
+        }
+
+        // Check if subscriptionOwner is defined
+        var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
+        if (isSubscriptionOwnerDefined == false) {
+            // Is anonymous subscription
+            return false;
         }
 
         var isUserSubscriptionOwner = subscriptionOwner == getCurrentUser() ;
@@ -505,32 +505,32 @@ jQuery(document).ready(function () {
     }
 
     $("#bulkDelete").click(function () {
-        var selectedSubscriptions = getSelectedSubscriptionNames();
+        var nameList = getSelectedSubscriptionNames();
 
         // Check if no Subscription has been marked to be deleted.
-        if (selectedSubscriptions.length < 1) {
+        if (nameList.length < 1) {
             logMessage("No subscriptions has been marked to be deleted.");
             return;
         }
 
-        subscriptionsToDeleteString = concatenateSubscriptionNames(selectedSubscriptions);
+        commaSeperatedNameList = concatenateSubscriptionNames(nameList);
 
-        deleteSubscriptions(subscriptionsToDeleteString);
+        deleteSubscriptions(commaSeperatedNameList);
     });
     // /Stop ## Bulk delete #################################################
 
     // /Start ## Bulk download ##############################################
     $("#bulkDownload").click(function () {
-        var selectedSubscriptions = getSelectedSubscriptionNames();
+        var nameList = getSelectedSubscriptionNames();
 
         // Check if no Subscription has been marked to be downloaded.
-        if (selectedSubscriptions.length < 1) {
+        if (nameList.length < 1) {
             logMessage("No subscriptions has been marked to be downloaded.");
             return;
         }
-        subscriptionsToDownloadString = concatenateSubscriptionNames(selectedSubscriptions);
+        commaSeperatedNameList = concatenateSubscriptionNames(nameList);
 
-        get_subscription_data(subscriptionsToDownloadString, "download");
+        get_subscription_data(commaSeperatedNameList, "download");
     });
     // /Stop ## Bulk download ##############################################
 
