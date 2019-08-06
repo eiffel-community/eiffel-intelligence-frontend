@@ -24,7 +24,7 @@
         <skipTests>false</skipTests>
         <skipUTs>${skipTests}</skipUTs>
         <springBootVersion>${project.parent.version}</springBootVersion>
-        <forkCountTests>1</forkCountTests>
+        <forkCountTests>2.5C</forkCountTests>
     </properties>
 
     <!-- Reporting Plugins -->
