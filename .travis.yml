@@ -87,15 +87,9 @@ jobs:
         - chmod +x src/systemtest/resources/systemtest.sh
         - src/systemtest/resources/systemtest.sh start
         - source src/main/docker/env.bash   # Set HOST variable in Travis build
-        - |
-          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
-          -Dit.test=ArtifactFlowRunner
-        - |
-          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
-          -Dit.test=SourceChangeFlowRunner
-        - |
-          mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B \
-          -Dit.test=TestExecutionFlowRunner
+        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=ArtifactFlowRunner
+        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=SourceChangeFlowRunner
+        - mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B -Dit.test=TestExecutionFlowRunner
         - src/systemtest/resources/systemtest.sh stop
       after_script: skip
     - stage: deploy
