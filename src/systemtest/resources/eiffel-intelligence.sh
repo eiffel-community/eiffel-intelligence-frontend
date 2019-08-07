@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # This script should be executed from the root of the repository.
-# Run: src/systemtest/resources/systemtest.sh [COMMAND]
+# Run: src/systemtest/resources/eiffel-intelligence.sh [COMMAND]
 
 STATUS=0
+verbose=0
+build=false
 
 export CURRENT_DIR=$(pwd)
 echo "Executing script: ${0} from directory: " ${CURRENT_DIR}
@@ -11,16 +13,15 @@ echo "Executing script: ${0} from directory: " ${CURRENT_DIR}
 function do_build {
     echo "Building Eiffel Intelligence front-end war file"
     # Build war file from latest code changes in EI front-end
-    mvn clean -q
-    mvn package -DskipTests=true -q
-
-    # Clone EI back-end and build war file
+    call "mvn clean"
+    call "mvn package -DskipTests=true"
     echo "Cloning Eiffel Intelligence back-end and building war file"
+    # Clone EI back-end and build war file
     if [[ -d "eiffel-intelligence" ]]; then rm -Rf eiffel-intelligence; fi
-    git clone -q --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
-    cd eiffel-intelligence
-    mvn package -DskipTests=true -q
-    cd ..
+    call "git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git"
+    call "cd eiffel-intelligence"
+    call "mvn package -DskipTests=true"
+    call "cd .."
 }
 
 function do_start {
@@ -32,10 +33,15 @@ function do_start {
 
     # Sets Docker image names and ports for containers.
     # Also sets host variable
-    source src/main/docker/env.bash
+    source src/main/docker/env.bash > /dev/null
 
-    # Set up docker containers and build the images of EI front-end, back-end and Jenkins
-    docker-compose -f src/main/docker/docker-compose.yml up -d --build
+    if [[ $build == "true" ]]; then
+        # Set up Docker containers and build the images of EI front-end, back-end and Jenkins
+        call "docker-compose -f src/main/docker/docker-compose.yml up -d --build"
+    else
+        # Set up Docker containers with specified Docker images versions
+        call "docker-compose -f src/main/docker/docker-compose.yml up -d"
+    fi
 
     echo "Sleeping for 2 minutes, to let containers start up properly"
     sleep 2m
@@ -43,7 +49,6 @@ function do_start {
 
 function do_check {
     echo "Checking if Jenkins container is up"
-
     HTTP_CODE=503
     until [[ $HTTP_CODE -eq "403" ]]; do
         HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}\n" localhost:8082)
@@ -56,7 +61,8 @@ function do_check {
 function do_test {
     echo "Starting system test"
     # Set host variable
-    source src/main/docker/env.bash
+    source src/main/docker/env.bash > /dev/null
+    verbose " Executing: mvn verify -P systemTest -Dei.frontend.url=http://${HOST}:8081 -Djenkins.external.url=http://${HOST}:8082 -B"
     mvn verify -P systemTest -Dei.frontend.url="http://${HOST}:8081" -Djenkins.external.url="http://${HOST}:8082" -B
     STATUS=$?
 }
@@ -64,11 +70,24 @@ function do_test {
 function do_stop {
     echo "Stopping Docker containers ..."
     # Sourcing environment variables to avoid warnings
-    source src/main/docker/env.bash
-    docker-compose -f src/main/docker/docker-compose.yml down
+    source src/main/docker/env.bash > /dev/null
+    call "docker-compose -f src/main/docker/docker-compose.yml down"
 
     # Cleaning up dangling docker images which were built using docker-compose command
-    docker rmi $(docker images -f "dangling=true" -q)
+    verbose "Removing unused Docker images if there are any"
+    images=$(docker images -f "dangling=true" -q)
+    if [[ ! -z "$images" ]]; then call "docker rmi $images"; fi
+}
+
+function verbose {
+  if [[ "$verbose" -eq "1" ]]; then
+    echo -e $1
+  fi
+}
+
+function call {
+  verbose "Executing: '$@'"
+  $1
 }
 
 function usage {
@@ -77,22 +96,23 @@ function usage {
 Usage: systemtest.sh COMMAND [OPTIONS]
 
 COMMANDS:
-    test :
-        First sets up Docker containers needed for system tests, then check Jenkins
-        container is healthy before starting the system tests defined for Eiffel
-        Intelligence, using maven verify command. After executing the tests, the
-        Docker containers are stopped and removed.
     start :
-        Start up Docker containers needed for running the system tests. The
-        containers are defined in src/main/docker/docker-compose.yml
+        Starts up a full Dockerized environment with Eiffel Intelligence and
+        surrounding components. The containers are defined in
+        src/main/docker/docker-compose.yml. Then checks if containers are up.
     stop :
-        Stop the Docker containers defined in src/main/docker/docker-compose.yml.
+        Stops the Docker containers defined in src/main/docker/docker-compose.yml.
         Removing dangling docker images after containers are shut down.
+    test :
+        First sets up full Dockerized environment for Eiffel Intelligence. Then
+        check Jenkins container is healthy before starting the system tests
+        defined for Eiffel Intelligence, using maven verify command. After
+        executing the tests, the Docker containers are stopped and removed.
     check :
-        Check if the Jenkins Docker containers is up and running. This container
+        Checks if the Jenkins Docker container is up and running. This container
         is (usually) the last one to start up.
     build :
-        Build a war file on the latest code changes in Eiffel Intelligence front-end.
+        Builds a war file on the latest code changes in Eiffel Intelligence front-end.
         It also clones Eiffel Intelligence back-end repository and builds a war file
         based on those code changes.
     only_test :
@@ -100,7 +120,8 @@ COMMANDS:
         system tests with maven command.
 
 OPTIONS:
-    -v | --verbose  : Turn on verbose mode while executing.
+    -v | --verbose  : Turn on verbose mode while executing. This echoes the shell
+                      commands before executing them.
     -h | --help     : Shows this helps text.
 
 EOF
@@ -112,8 +133,8 @@ commands=()
 while [[ "$1" != "" ]]; do
     case "$1" in
         -v | --verbose)
-            echo "Running with verbose!"
-            verbose="true"
+            verbose=1
+            verbose "Running with verbose mode."
             ;;
         -h | --help)
             usage
@@ -129,13 +150,15 @@ done
 # Restore positional arguments to be executed
 set -- "${commands[@]}"
 
+if [[ -z "${commands}" ]]; then usage exit 1; fi
+
 while [[ "$@" ]]; do
     case "$1" in
             build)
                 do_build
+                build="true"
                 ;;
             start)
-                do_build
                 do_start
                 do_check
                 ;;
