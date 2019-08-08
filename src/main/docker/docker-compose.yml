@@ -389,5 +389,31 @@ services:
       - logging.level.org.springframework.web=DEBUG
       - logging.level.com.ericsson.ei=DEBUG
 
+  ldap:
+    restart: always
+    image: osixia/openldap
+    hostname: "example.org"
+    expose:
+      - "389"
+      - "636"
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+        LDAP_TLS: 'false'
+        LDAP_ORGANISATION: "Test"
+        LDAP_DOMAIN: "example.org"
+        LDAP_BASE_DN: "dc=example,dc=org"
+        LDAP_ADMIN_PASSWORD: "admin"
+
+  ldap-seed:
+    image: osixia/openldap
+    volumes:
+      - ./ldap-seed:/container/service/slapd/assets/test/
+    links:
+      - ldap
+    command: chmod +x /container/service/slapd/assets/test/addAll.sh
+    entrypoint: sh -c '/container/service/slapd/assets/test/addAll.sh'
+
 networks:
   eiffel_2.0_1:
