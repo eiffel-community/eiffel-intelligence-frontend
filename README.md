@@ -35,6 +35,9 @@ Potential future features for Eiffel Intelligence Frontend include:
 * Chrome 63.0.3239.132 or later
 * Firefox 60.2.0 or later
 
+## Compatibility
+To see which versions of back-end and front-end that work together you can check the [Compatibility](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/compatibility.md) page.
+
 # About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
 
