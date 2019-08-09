@@ -34,7 +34,7 @@ before_install:
   - |
     if [[ $TRAVIS_JOB_NAME = integrationTests ]]; then
       source src/main/docker/env.bash
-      docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
+      docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed
     fi
 
 

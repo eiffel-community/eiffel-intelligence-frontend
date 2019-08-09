@@ -1,0 +1,14 @@
+dn: uid=newton,dc=example,dc=org
+uid: newton
+cn: newton
+sn: 3
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+loginShell: /bin/bash
+homeDirectory: /home/newton
+uidNumber: 14583103
+gidNumber: 14564101
+userPassword: password
+mail: newton@example.org
+gecos: Newton User

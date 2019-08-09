@@ -197,7 +197,7 @@ jQuery(document).ready(function () {
         self.choosen_subscription_template.subscribe(function (template_var) {
             if (self.choosen_subscription_template() != null) { // only execute if value exists
                 json_obj_clone = JSON.parse(JSON.stringify(template_vars[template_var]));
-                populate_json(json_obj_clone, "add");
+                populateJson(json_obj_clone, "add");
             }
         });
 
@@ -279,7 +279,7 @@ jQuery(document).ready(function () {
     // /Stop ## Knockout #####################################################
 
     // /Start ## Reload Datatables ###########################################
-    function reload_table() {
+    function reloadTable() {
         if(table != undefined) {
             table.ajax.reload(null, false); // reload datatable ajax
         }
@@ -396,14 +396,13 @@ jQuery(document).ready(function () {
                         subscriptionName = data.subscriptionName;
 
                         disableEditDeleteButtons = isEditAndDeleteButtonsDisabled(subscriptionOwner);
-                        var disablingText = "";
-                        if(disableEditDeleteButtons == true){
-                            disablingText = " disabled";
-                        }
+                        disableCloneButton = isCloneButtonDisabled();
 
-                        return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn">View</button> ' +
-                               '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + disablingText + '>Edit</button> ' +
-                               '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + disablingText + '>Delete</button>';
+                        return '<button id="view-' + subscriptionName + '" class="btn btn-sm btn-success view_record table-btn"><i class="fa fa-fw fa-eye"></i><span class="tooltiptext">View</span></button> ' +
+                               '<button id="clone-' + subscriptionName + '" class="btn btn-sm btn-success clone_record table-btn"' + getDisabledText(disableCloneButton) + '><i class="fa fa-fw fa-copy"></i><span class="tooltiptext">Clone</span></button> ' +
+                               '<button id="download-' + subscriptionName + '" class="btn btn-sm btn-primary download_record table-btn"><i class="fa fa-fw fa-download"></i><span class="tooltiptext">Download</span></button> ' +
+                               '<button id="edit-' + subscriptionName + '" class="btn btn-sm btn-primary edit_record table-btn"' + getDisabledText(disableEditDeleteButtons) + '><i class="fa fa-fw fa-pencil"></i><span class="tooltiptext">Edit</span></button> ' +
+                               '<button id="delete-' + subscriptionName + '" class="btn btn-sm btn-danger delete_record table-btn"' + getDisabledText(disableEditDeleteButtons) + '><i class="fa fa-fw fa-trash"></i><span class="tooltiptext">Delete</span></button>';
                     }
                 }
             ]
@@ -416,33 +415,56 @@ jQuery(document).ready(function () {
         table.responsive.recalc();
     });
 
+    function getDisabledText(disabled) {
+        if(disabled) {
+            return " disabled";
+        }
+        return "";
+    }
+
     function isEditAndDeleteButtonsDisabled(subscriptionOwner) {
         if (!isLdapEnabled()) {
             // LDAP is NOT activated
             return false;
         }
 
-        // Check if subscriptionOwner is defined
-        var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
-        if (isSubscriptionOwnerDefined == false) {
-            // LDAP is NOT activated or is anonymous subscription
-            return false;
-        }
-
         // Check if current user is logged in
         var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
-        if (isCurrentUserLoggedIn == false) {
+        if (isCurrentUserLoggedIn === false) {
             // Current user is not logged in, edit / delete disabled = true
             return true;
         }
 
+        // Check if subscriptionOwner is defined
+        var isSubscriptionOwnerDefined = isStringDefined(subscriptionOwner);
+        if (isSubscriptionOwnerDefined === false) {
+            // Is anonymous subscription
+            return false;
+        }
+
         var isUserSubscriptionOwner = subscriptionOwner == getCurrentUser() ;
-        if (isUserSubscriptionOwner == false) {
+        if (isUserSubscriptionOwner === false) {
             // Back end is secured, but current user is not owner to subscription, edit / delete disabled = true
             return true;
         }
 
         return false;
+    }
+
+    function isCloneButtonDisabled() {
+        if (!isLdapEnabled()) {
+            // LDAP is NOT activated, cloning is enabled.
+            return false;
+        }
+
+        // Check if current user is logged in
+        var isCurrentUserLoggedIn = isStringDefined(getCurrentUser());
+        if (isCurrentUserLoggedIn === true) {
+            // Current user is logged in, cloning is enabled.
+            return false;
+        }
+
+        return true;
     }
 
     // /Stop ## Datatables ##################################################
@@ -451,24 +473,24 @@ jQuery(document).ready(function () {
     $("#addSubscription").click(function () {
         vm.choosen_subscription_template(null);
         json_obj_clone = JSON.parse(JSON.stringify(default_json_empty));
-        populate_json(json_obj_clone, "add");
+        populateJson(json_obj_clone, "add");
     });
     // /Stop ## Add Subscription ############################################
 
     // /Start ## Reload Table################################################
     $("#reloadButton").click(function () {
-        reload_table();
+        reloadTable();
     });
     // /Stop ## Reload Table#################################################
 
-    // /Start ## Bulk delete#################################################
+    // /Start ## Bulk delete ################################################
     function deleteSubscriptions(subscriptionsToDeleteString) {
         var callback = {
             success: function (responseData, textStatus) {
-                reload_table();
+                reloadTable();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
+                reloadTable();
                 var responseJSON = JSON.parse(XMLHttpRequest.responseText);
                 for (var i = 0; i < responseJSON.length; i++) {
                     logMessage("Failed to delete subscription: [" + responseJSON[i].subscription + "] Reason: [" + responseJSON[i].reason + "]");
@@ -476,14 +498,9 @@ jQuery(document).ready(function () {
             }
         };
 
-        $('.confirm-delete .modal-body').text(subscriptionsToDeleteString);
+        $('.confirm-delete .modal-body').text(subscriptionsToDeleteString.replace(new RegExp(',', 'g'), '\n'));
         $('.confirm-delete .btn-danger').unbind();
         $('.confirm-delete .btn-danger').click(function () {
-            $("#check-all").prop('checked', false);
-            // replace all /n with comma
-            if(/\n/.exec(subscriptionsToDeleteString)) {
-                subscriptionsToDeleteString = subscriptionsToDeleteString.replace(new RegExp('\n', 'g'), ',').slice(0, -1);
-            }
             var ajaxHttpSender = new AjaxHttpSender();
             var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "/" + subscriptionsToDeleteString;
             ajaxHttpSender.sendAjax(endpointWithSubscriptionsToDelete, "DELETE", null, callback);
@@ -492,28 +509,57 @@ jQuery(document).ready(function () {
     }
 
     $("#bulkDelete").click(function () {
-        var subscriptionsToDelete = [];
-        var data = table.rows().nodes();
-        $.each(data, function (index, value) {
-            if ($(this).find('input').prop('checked') == true) {
-                subscriptionsToDelete.push(table.row(index).data().subscriptionName);
-            }
-        });
+        var nameList = getSelectedSubscriptionNames();
 
         // Check if no Subscription has been marked to be deleted.
-        if (subscriptionsToDelete.length < 1) {
+        if (nameList.length < 1) {
             logMessage("No subscriptions has been marked to be deleted.");
             return;
         }
 
-        var subscriptionsToDeleteString = "";
-        for (i = 0; i < subscriptionsToDelete.length; i++) {
-            subscriptionsToDeleteString += subscriptionsToDelete[i] + "\n";
-        }
+        commaSeparatedNameList = concatenateSubscriptionNames(nameList);
 
-        deleteSubscriptions(subscriptionsToDeleteString);
+        deleteSubscriptions(commaSeparatedNameList);
     });
-    // /Stop ## Bulk delete##################################################
+    // /Stop ## Bulk delete #################################################
+
+    // /Start ## Bulk download ##############################################
+    $("#bulkDownload").click(function () {
+        var nameList = getSelectedSubscriptionNames();
+
+        // Check if no Subscription has been marked to be downloaded.
+        if (nameList.length < 1) {
+            logMessage("No subscriptions has been marked to be downloaded.");
+            return;
+        }
+        commaSeparatedNameList = concatenateSubscriptionNames(nameList);
+
+        getSubscriptionData(commaSeparatedNameList, "download");
+    });
+    // /Stop ## Bulk download ##############################################
+
+    function getSelectedSubscriptionNames(){
+        var selectedSubscriptions = [];
+        var data = table.rows().nodes();
+        $.each(data, function (index, value) {
+            if ($(this).find('input').prop('checked') == true) {
+                selectedSubscriptions.push(table.row(index).data().subscriptionName);
+            }
+        });
+        $("#check-all").prop('checked', false);
+        reloadTable();
+        return selectedSubscriptions;
+    }
+
+    function concatenateSubscriptionNames(nameList) {
+        var commaSeparatedNameList = "";
+        for (i = 0; i < nameList.length; i++) {
+            commaSeparatedNameList += nameList[i] + ",";
+        }
+        // Remove last comma
+        commaSeparatedNameList = commaSeparatedNameList.slice(0, -1);
+        return commaSeparatedNameList;
+    }
 
     function getTemplate() {
         var request = new XMLHttpRequest();
@@ -582,11 +628,11 @@ jQuery(document).ready(function () {
                         sticky: false,
                         theme: 'Notify'
                     });
-                    reload_table();
+                    reloadTable();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                reload_table();
+                reloadTable();
                 parseAndLogMessage(XMLHttpRequest.responseText);
             }
         };
@@ -618,45 +664,48 @@ jQuery(document).ready(function () {
     });
     // /END ## upload_subscriptions #################################################
 
-    function get_subscription_data(object, mode, event) {
-        event.stopPropagation();
-        event.preventDefault();
-        // Get tag that contains subscriptionName
-        var id = $(object).attr("id").split("-")[1];
+    function getSubscriptionData(subscriptionNames, mode, event) {
+        if (event != undefined) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
         // AJAX Callback handling
         var callback = {
             success: function (responseData, textStatus) {
-                populate_json(responseData, mode);
+                if (mode === "download") {
+                    downloadSubscriptions(responseData, subscriptionNames);
+                } else {
+                    populateJson(responseData, mode);
+                }
             }
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         var contextPath = "/subscriptions/";
-        ajaxHttpSender.sendAjax(contextPath + id, "GET", null, callback);
+        ajaxHttpSender.sendAjax(contextPath + subscriptionNames, "GET", null, callback);
     }
 
-    // /Start ## Edit Subscription ###########################################
-    $('#table').on('click', 'tbody tr td button.edit_record', function (event) {
-        get_subscription_data(this, "edit", event);
+    // /Start ## A table button pressed ###########################################
+    $('#table').on('click', 'tbody tr td button.table-btn', function (event) {
+        // Get tag that contains subscriptionName and mode
+        var mode = $(this).attr("id").split("-")[0];
+        var subscriptionName = $(this).attr("id").split("-")[1];
+        if (mode == "delete") {
+            deleteSubscriptions(subscriptionName);
+        } else {
+            getSubscriptionData(subscriptionName, mode, event);
+        }
     });
-
-    // /Stop ## Edit Subscription ###########################################
-
-    // /Start ## View Subscription ###########################################
-    $('#table').on('click', 'tbody tr td button.view_record', function (event) {
-        get_subscription_data(this, "view", event);
-    });
-    // /Stop ## View Subscription ###########################################
 
     // /Start ## populate JSON ###########################################
-    function populate_json(data, save_method_in) {
-        vm.mode(save_method_in);
-
+    function populateJson(data, save_method_in) {
         if (save_method_in == "edit" || save_method_in == "view") {
             vm.showPassword(false);
         } else {
             vm.showPassword(true);
         }
+
         var returnData = [data];
         if (returnData.length > 0) {
             vm.subscription([]);
@@ -673,6 +722,11 @@ jQuery(document).ready(function () {
                         conditions_array.push(new jmespath_model({ "jmespath": ko.observable(jmespath_temp) }));
                     }
                     item[0].requirements[i] = new conditions_model(conditions_array);
+                }
+
+                if (save_method_in == "clone") {
+                    item[0].subscriptionName = "";
+                    item[0].userName = "";
                 }
 
                 var notificationMessageRawJsonShouldBeReplacedWithFormValue = (
@@ -708,12 +762,16 @@ jQuery(document).ready(function () {
     }
 
     function setViewMode(save_method_in) {
+        vm.mode(save_method_in);
         if (save_method_in === "edit") {
             title_ = 'Edit Subscription';
             enableAllForms();
             $('#subscriptionNameInput').prop('disabled', true);
         } else if (save_method_in === "add") {
             title_ = 'Add Subscription';
+            enableAllForms();
+        } else if (save_method_in === "clone") {
+            title_ = 'Clone Subscription';
             enableAllForms();
         } else {
             title_ = 'View Subscription';
@@ -957,7 +1015,7 @@ jQuery(document).ready(function () {
                 var returnData = [responseData];
                 if (returnData.length > 0) {
                     $('#modal_form').modal('hide');
-                    reload_table();
+                    reloadTable();
                     // Clear ObservableArray
                     vm.subscription([]);
                 }
@@ -980,7 +1038,7 @@ jQuery(document).ready(function () {
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
         var type;
-        if (save_method === 'add') {  // Add new
+        if (save_method === 'add' || save_method === 'clone') {  // Add new
             type = "POST";
 
         } else if (save_method === 'edit') {  // Update existing
@@ -989,17 +1047,6 @@ jQuery(document).ready(function () {
         ajaxHttpSender.sendAjax(backendEndpoints.SUBSCRIPTIONS, type, JSON.stringify(formDataToSend), callback);
     });
     // /Stop ## Save Subscription ###########################################
-
-    // /Start ## Delete Subscription ########################################
-    $('#table').on('click', 'tbody tr td button.delete_record', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        // Get tag that contains subscriptionName
-        var subscription = $(this).attr("id").split("-")[1];
-
-        deleteSubscriptions(subscription);
-    });
-    // /Stop ## Delete Subscription #########################################
 
     function loadTooltip() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "click", html: true });
