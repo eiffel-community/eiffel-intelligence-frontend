@@ -31,7 +31,7 @@ and front-end and Jenkins containers will be built before starting up the enviro
     docker-compose -f src/main/docker/docker-compose.yml up -d --build
 
 **To run with older (specific) versions of Eiffel Intelligence pulled from DockerHub:**
-To avoid building any Eiffel Intelligence images that doesn't exist locally,
+To avoid building any Eiffel Intelligence images that don't exist locally,
 run the command 'docker-compose pull serviceName' on the images you want.
 This will pull the image with the version specified in the docker-compose.yml
 from DockerHub, so that when up command is run this image will be used, and 

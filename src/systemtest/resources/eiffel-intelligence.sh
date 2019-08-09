@@ -13,14 +13,14 @@ echo "Executing script: ${0} from directory: " ${CURRENT_DIR}
 function do_build {
     echo "Building Eiffel Intelligence front-end war file"
     # Build war file from latest code changes in EI front-end
-    call "mvn clean"
-    call "mvn package -DskipTests=true"
+    run "mvn clean"
+    run "mvn package -DskipTests=true"
     echo "Cloning Eiffel Intelligence back-end and building war file"
     # Clone EI back-end and build war file
     if [[ -d "eiffel-intelligence" ]]; then rm -Rf eiffel-intelligence; fi
-    call "git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git"
+    run "git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git"
     cd eiffel-intelligence
-    call "mvn package -DskipTests=true"
+    run "mvn package -DskipTests=true"
     cd ..
 }
 
@@ -38,14 +38,14 @@ function do_start {
         export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
 
         # Set up Docker containers and build the images of EI front-end, back-end and Jenkins
-        call "docker-compose -f src/main/docker/docker-compose.yml up -d --build"
+        run "docker-compose -f src/main/docker/docker-compose.yml up -d --build"
     else
-        # Pull images from DockerHub to avoid building images that doesn't exist
-        call "docker-compose -f src/main/docker/docker-compose.yml pull"
+        # Pull images from DockerHub to avoid building EI images that don't exist locally
+        run "docker-compose -f src/main/docker/docker-compose.yml pull ei-backend-artifact ei-frontend ei-backend-sourcechange ei-backend-testexecution"
         # Jenkins container always need to be built to install Groovy plugin properly
-        call "docker-compose -f src/main/docker/docker-compose.yml build jenkins"
+        run "docker-compose -f src/main/docker/docker-compose.yml build jenkins"
         # Start Docker containers
-        call "docker-compose -f src/main/docker/docker-compose.yml up -d"
+        run "docker-compose -f src/main/docker/docker-compose.yml up -d"
     fi
 
     echo "Sleeping for 2 minutes, to let containers start up properly"
@@ -76,12 +76,12 @@ function do_stop {
     echo "Stopping Docker containers ..."
     # Sourcing environment variables to avoid warnings
     source src/main/docker/env.bash > /dev/null
-    call "docker-compose -f src/main/docker/docker-compose.yml down"
+    run "docker-compose -f src/main/docker/docker-compose.yml down"
 
     # Cleaning up dangling docker images which were built using docker-compose command
     verbose "Removing unused Docker images if there are any"
     images=$(docker images -f "dangling=true" -q)
-    if [[ ! -z "$images" ]]; then call "docker rmi $images"; fi
+    if [[ ! -z "$images" ]]; then run "docker rmi $images"; fi
 }
 
 function verbose {
@@ -90,8 +90,9 @@ function verbose {
   fi
 }
 
-function call {
+function run {
   verbose "Executing: '$@'"
+  # Run the incoming command
   $1
 }
 
@@ -129,7 +130,7 @@ COMMANDS:
 OPTIONS:
     -v | --verbose  : Turn on verbose mode while executing. This echoes the shell
                       commands before executing them.
-    -h | --help     : Shows this helps text.
+    -h | --help     : Shows this help text.
 
 EOF
 }
