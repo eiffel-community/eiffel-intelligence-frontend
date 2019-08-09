@@ -1,0 +1,14 @@
+dn: uid=gauss,dc=example,dc=org
+uid: gauss
+cn: gauss
+sn: 3
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+loginShell: /bin/bash
+homeDirectory: /home/gauss
+uidNumber: 14583102
+gidNumber: 14564100
+userPassword: password
+mail: gauss@example.org
+gecos: Gauss User

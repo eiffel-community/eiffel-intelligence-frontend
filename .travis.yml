@@ -27,7 +27,7 @@ before_install:
   - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - java -version
   - source src/main/docker/env.bash
-  - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server
+  - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed
 
 
 install:
