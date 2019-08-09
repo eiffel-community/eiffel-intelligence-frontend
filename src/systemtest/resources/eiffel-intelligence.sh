@@ -19,27 +19,32 @@ function do_build {
     # Clone EI back-end and build war file
     if [[ -d "eiffel-intelligence" ]]; then rm -Rf eiffel-intelligence; fi
     call "git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git"
-    call "cd eiffel-intelligence"
+    cd eiffel-intelligence
     call "mvn package -DskipTests=true"
-    call "cd .."
+    cd ..
 }
 
 function do_start {
     echo "Starting up Docker environment"
 
-    ## Set variables for Eiffel Intelligence war files.
-    export EI_FRONTEND_WAR_FILE=$(ls target/*.war)
-    export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
-
     # Sets Docker image names and ports for containers.
     # Also sets host variable
-    source src/main/docker/env.bash > /dev/null
+    source src/main/docker/env.bash
 
+    echo "build: $build"
     if [[ $build == "true" ]]; then
+        ## Set variables for Eiffel Intelligence war files.
+        export EI_FRONTEND_WAR_FILE=$(ls target/*.war)
+        export EI_BACKEND_WAR_FILE=$(cd eiffel-intelligence && ls target/*.war)
+
         # Set up Docker containers and build the images of EI front-end, back-end and Jenkins
         call "docker-compose -f src/main/docker/docker-compose.yml up -d --build"
     else
-        # Set up Docker containers with specified Docker images versions
+        # Pull images from DockerHub to avoid building images that doesn't exist
+        call "docker-compose -f src/main/docker/docker-compose.yml pull"
+        # Jenkins container always need to be built to install Groovy plugin properly
+        call "docker-compose -f src/main/docker/docker-compose.yml build jenkins"
+        # Start Docker containers
         call "docker-compose -f src/main/docker/docker-compose.yml up -d"
     fi
 
@@ -93,7 +98,7 @@ function call {
 function usage {
     cat <<EOF
 
-Usage: systemtest.sh COMMAND [OPTIONS]
+Usage: eiffel-intelligence.sh COMMAND [OPTIONS]
 
 COMMANDS:
     start :
@@ -114,7 +119,9 @@ COMMANDS:
     build :
         Builds a war file on the latest code changes in Eiffel Intelligence front-end.
         It also clones Eiffel Intelligence back-end repository and builds a war file
-        based on those code changes.
+        based on those code changes. If latest code changes should be used and tested,
+        add this command before any other command. Example:
+        'eiffel-intelligence.sh build test'
     only_test :
         Assuming the environment is already set up, this only executes the
         system tests with maven command.
@@ -169,7 +176,6 @@ while [[ "$@" ]]; do
                 do_stop
                 ;;
             test)
-                do_build
                 do_start
                 do_check
                 do_test
