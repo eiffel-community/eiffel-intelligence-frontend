@@ -32,6 +32,8 @@ public class SourceChangeFlowSteps extends AbstractTestExecutionListener {
         config.initEIFrontend();
         config.initEIBackend("sourcechange");
         config.initJenkinsConfig();
+        StepsUtils.installGroovy(config.getJenkinsExternalBaseUrl(),
+                                 config.getJenkinsUsername(), config.getJenkinsPassword());
         config.initRemRemConfig();
     }
 

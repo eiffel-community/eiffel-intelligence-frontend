@@ -206,6 +206,12 @@ services:
   jenkins:
     restart: always
     image: ${JENKINS_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile-Jenkins
+      args:
+        JENKINS_IMAGE: ${JENKINS_IMAGE}
     expose:
       - "8080"
     ports:
@@ -228,6 +234,12 @@ services:
   ei-backend-artifact:
     restart: always
     image: ${EI_BACKEND_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -273,6 +285,12 @@ services:
   ei-backend-sourcechange:
     restart: always
     image: ${EI_BACKEND_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -318,6 +336,12 @@ services:
   ei-backend-testexecution:
     restart: always
     image: ${EI_BACKEND_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ./eiffel-intelligence/${EI_BACKEND_WAR_FILE}
     expose:
       - "8080"
     ports:
@@ -365,6 +389,12 @@ services:
   ei-frontend:
     restart: always
     image: ${EI_FRONTEND_IMAGE}
+    build:
+      # The Docker image will be built using the specified image tag above
+      context: ../../../
+      dockerfile: ./src/main/docker/Dockerfile
+      args:
+        URL: ${EI_FRONTEND_WAR_FILE}
     expose:
       - "8080"
     ports:

@@ -37,7 +37,7 @@ public class StepsUtils {
     * @param jenkinsJobName - Name of the jenkins job
     * @param scriptFileName - FileName of the script which is to be executed when the job is triggered
     * @param jenkinsBaseUrl - Base url to jenkins e.g http://localhost:8070
-    * @param jenkinsUserName - Username to the jenkins machine
+    * @param jenkinsUsername - Username to the jenkins machine
     * @param jenkinsPassword - Password to the jenkins machine
     * @param jenkinsToken - Token to the jenkins job.
     *
@@ -61,12 +61,26 @@ public class StepsUtils {
 
         jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
 
+        return jenkinsManager.forceCreateJob(jenkinsJobName, jenkinsXmlAsString);
+    }
+
+    /**
+     * This method installs Groovy script in Jenkins
+     * @param jenkinsBaseUrl - Base url to jenkins e.g http://localhost:8070
+     * @param jenkinsUsername - Username to the jenkins machine
+     * @param jenkinsPassword - Password to the jenkins machine
+     *
+     * @throws Exception
+     */
+    public static void installGroovy(String jenkinsBaseUrl,
+                                     String jenkinsUsername,
+                                     String jenkinsPassword) throws Exception {
+        jenkinsManager = new JenkinsManager(jenkinsBaseUrl, jenkinsUsername, jenkinsPassword);
+
         if(!jenkinsManager.pluginExists("Groovy")) {
             jenkinsManager.installPlugin("Groovy", "2.1");
             jenkinsManager.restartJenkins();
         }
-
-        return jenkinsManager.forceCreateJob(jenkinsJobName, jenkinsXmlAsString);
     }
 
     /**
@@ -93,16 +107,16 @@ public class StepsUtils {
      *
      * @param subscriptionName
      * @param nameOfJobToBeTriggered
-     * @param jenkinsUserame
+     * @param jenkinsUsername
      * @param jenkinsPassword
      * @param jenkinsBaseUrl
      * @throws IOException
      * @throws JSONException
      */
-    public static void createSubscription(String subscriptionName, String nameOfJobToBeTriggered, String jenkinsUserame, String jenkinsPassword, String jenkinsBaseUrl, boolean hasParameters) throws IOException, JSONException {
+    public static void createSubscription(String subscriptionName, String nameOfJobToBeTriggered, String jenkinsUsername, String jenkinsPassword, String jenkinsBaseUrl, boolean hasParameters) throws IOException, JSONException {
         RestPostSubscriptionObject subscription = new RestPostSubscriptionObject(subscriptionName);
         subscription.setRestPostBodyMediaType("application/x-www-form-urlencoded");
-        subscription.setBasicAuth(jenkinsUserame, jenkinsPassword);
+        subscription.setBasicAuth(jenkinsUsername, jenkinsPassword);
         String notificationMeta = jenkinsBaseUrl + "/job/" + nameOfJobToBeTriggered;
         if(hasParameters) {
             notificationMeta += "/buildWithParameters";
@@ -110,6 +124,7 @@ public class StepsUtils {
             notificationMeta += "/build";
         }
         subscription.setNotificationMeta(notificationMeta);
+        subscription.setAuthenticationType("BASIC_AUTH_JENKINS_CSRF");
         subscriptions.put(subscriptionName, subscription);
     }
 

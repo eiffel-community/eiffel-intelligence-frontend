@@ -31,6 +31,8 @@ public class ArtifactFlowSteps extends AbstractTestExecutionListener {
         config.initEIFrontend();
         config.initEIBackend("artifact");
         config.initJenkinsConfig();
+        StepsUtils.installGroovy(config.getJenkinsExternalBaseUrl(),
+                                 config.getJenkinsUsername(), config.getJenkinsPassword());
         config.initRemRemConfig();
     }
 
