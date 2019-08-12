@@ -10,7 +10,7 @@ It is possible to configure several EI Backend instances.
 
 EI Backebnd instances is configured by setting "ei.backend.instances.list.json.content" property, example:
 
-    ei.backend.instances.list.json.content=[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "ei-backend-host-1", "https": false, "defaultBackend":                                             true},\
+    ei.backend.instances.list.json.content=[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "ei-backend-host-1", "https": false, "defaultBackend": true},\
                                             { "contextPath": "", "port": "8090", "name": "EI-Backend-2", "host": "ei-backend-host-2", "https": false, "defaultBackend": false},\
                                             { "contextPath": "", "port": "8090", "name": "EI-Backend-3", "host": "ei-backend-host-3", "https": false, "defaultBackend": false},\
                                             { "contextPath": "", "port": "8090", "name": "EI-Backend-4", "host": "ei-backend-host-4", "https": false, "defaultBackend": false}]
