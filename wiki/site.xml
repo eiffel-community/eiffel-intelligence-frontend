@@ -39,7 +39,9 @@
 
         <menu name="Overview">
             <item name="Home" href="index.html" />
-            <item name="Run in Docker" href="docker.html" />
+            <item collapse="true" name="Running Eiffel Intelligence Front-end" href="running-eiffel-intelligence-frontend.html">
+                <item name="Run in Docker" href="docker.html" />
+            </item>
             <item name="GUI overview" href="GUI-overview.html" />
             <item collapse="true" name="Subscription handling" href="subscription-handling.html">
                 <item name="Add Subscription" href="add-subscription.html" />
