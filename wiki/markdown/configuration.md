@@ -44,7 +44,7 @@ If Eiffel-Intelligence Frontend need to be execute with secure HTTPS connections
 
 Read more in Spring documentations about how to enable HTTPS security in Spring applications.
 
-## Customize documenations links
+## Customize documentation links
 
 It is possible to add and change Documentation url links that is seen in the Eiffel-Intelligence Front-end Web-UI.
 Documentaiton url links is configured by property "ei.eiffel.documentation.urls", example:
