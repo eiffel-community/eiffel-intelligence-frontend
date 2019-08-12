@@ -10,9 +10,9 @@ It is possible to configure several EI Backend instances.
 
 EI Backebnd instances is configured by setting "ei.backend.instances.list.json.content" property, example:
 
-    ei.backend.instances.list.json.content=[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "ei-backend-host-1", "https": false, "defaultBackend":                                             true},
-                                            { "contextPath": "", "port": "8090", "name": "EI-Backend-2", "host": "ei-backend-host-2", "https": false, "defaultBackend": false},
-                                            { "contextPath": "", "port": "8090", "name": "EI-Backend-3", "host": "ei-backend-host-3", "https": false, "defaultBackend": false},
+    ei.backend.instances.list.json.content=[{ "contextPath": "", "port": "8090", "name": "EI-Backend-1", "host": "ei-backend-host-1", "https": false, "defaultBackend":                                             true},\
+                                            { "contextPath": "", "port": "8090", "name": "EI-Backend-2", "host": "ei-backend-host-2", "https": false, "defaultBackend": false},\
+                                            { "contextPath": "", "port": "8090", "name": "EI-Backend-3", "host": "ei-backend-host-3", "https": false, "defaultBackend": false},\
                                             { "contextPath": "", "port": "8090", "name": "EI-Backend-4", "host": "ei-backend-host-4", "https": false, "defaultBackend": false}]
 
 You can set as many EI Backend instances as you intend to use.
@@ -42,5 +42,20 @@ If Eiffel-Intelligence Frontend need to be execute with secure HTTPS connections
     server.ssl.key-store-type: <PKCS12>
     server.ssl.key-alias: <tomcat>
 
-Read more in Spring documentation to enable HTTPS security in Spring applications.
+Read more in Spring documentations about how to enable HTTPS security in Spring applications.
 
+## Customize documenations links
+
+It is possible to add and change Documentation url links that is seen in the Eiffel-Intelligence Front-end Web-UI.
+Documentaiton url links is configured by property "ei.eiffel.documentation.urls", example:
+
+    ei.eiffel.documentation.urls={ "EI Frontend Documentation": "https://eiffel-community.github.io/eiffel-intelligence-frontend",\
+                               "EI Frontend GitHub": "https://github.com/eiffel-community/eiffel-intelligence-frontend",\
+                               "EI Backend Documentation": "https://eiffel-community.github.io/eiffel-intelligence",\
+                               "EI Backend GitHub": "https://github.com/eiffel-community/eiffel-intelligence",\
+                               "Eiffel Github main page": "https://github.com/eiffel-community/eiffel",\
+                               "Test Rules User Guide": "https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/test-rules.md" }
+
+## Other properties
+
+All Eiffel-Intelligence Front-end properties can be found in [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) example file.

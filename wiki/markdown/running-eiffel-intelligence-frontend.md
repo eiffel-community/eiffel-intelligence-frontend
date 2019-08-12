@@ -41,4 +41,4 @@ If only few properties need to be overridden then use java opts, for example
 
     java -jar eiffel-intelligence-frontend-<version>.war -Dspring.data.mongodb.port=27019
 
-All available Eiffel-Intelligence Front-end properties can be found in example [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) file.
+All available Eiffel-Intelligence Front-end properties can be found in [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) example file.
