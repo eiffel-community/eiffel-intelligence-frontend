@@ -19,7 +19,7 @@ You can set as many EI back-end instances as you intend to use.
 
 ## Eiffel-Intelligence front-end server settings
 
-Which port EIffel-Intelligence front-end web-server should be started with is set by the property "server.port":
+Which port EIffel-Intelligence front-end web-server should be started with is set by the property **server.port**:
 
     server.port=8080
 
@@ -49,12 +49,12 @@ Read more in Spring documentation about how to enable HTTPS security in Spring a
 It is possible to add and change Documentation url links that is seen in the Eiffel-Intelligence front-end Web-UI.
 Documentaiton url links is configured by property **ei.eiffel.documentation.urls**, example:
 
-    ei.eiffel.documentation.urls={ "EI Frontend Documentation": "https://eiffel-community.github.io/eiffel-intelligence-frontend",\
-                               "EI Frontend GitHub": "https://github.com/eiffel-community/eiffel-intelligence-frontend",\
-                               "EI Backend Documentation": "https://eiffel-community.github.io/eiffel-intelligence",\
-                               "EI Backend GitHub": "https://github.com/eiffel-community/eiffel-intelligence",\
+    ei.eiffel.documentation.urls={ "EI front-end documentation": "https://eiffel-community.github.io/eiffel-intelligence-frontend",\
+                               "EI front-end GitHub": "https://github.com/eiffel-community/eiffel-intelligence-frontend",\
+                               "EI back-end documentation": "https://eiffel-community.github.io/eiffel-intelligence",\
+                               "EI back-end GitHub": "https://github.com/eiffel-community/eiffel-intelligence",\
                                "Eiffel Github main page": "https://github.com/eiffel-community/eiffel",\
-                               "Test Rules User Guide": "https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/test-rules.md" }
+                               "User guide for test rules page": "https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/test-rules.md" }
 
 ## Other properties
 
