@@ -40,6 +40,7 @@
         <menu name="Overview">
             <item name="Home" href="index.html" />
             <item collapse="true" name="Running Eiffel Intelligence Front-end" href="running-eiffel-intelligence-frontend.html">
+                <item name="Configuration" href="configuration.html" />
                 <item name="Run in Docker" href="docker.html" />
             </item>
             <item name="GUI overview" href="GUI-overview.html" />
