@@ -24,8 +24,11 @@ Which port EIffel-Intelligence front-end web-server should be started with is se
     server.port=8080
 
 **ei.frontend.service.host** property is the hostname on the host where EI front-end application is started on.
+
 **ei.frontend.service.port** property is the port number on the host where EI front-end application is started on.
+
 **ei.frontend.context.path** property is used when EI front-end application is started with a context path in web-server.
+
 If running locally with "mvn spring-boot:run" no context-path is added which means you can leave the **ei.frontend.context.path** property empty.
 
     ei.frontend.service.host=localhost
