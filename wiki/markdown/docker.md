@@ -72,11 +72,12 @@ In web-browser use url with docker host ip number: "\<docker host ip\>:8071/"
 Switch-back-end functionality do not work when "localhost" address is used.
 
 Another option to configure Eiffel Intelligence front-end is to provide the application properties file into the container, which can be made in two ways:
-1. Put application.properties file in Tomcat Catalina config folder in container and run Eiffel Intelligence front-end:
+
+**1** Put application.properties file in Tomcat Catalina config folder in container and run Eiffel Intelligence front-end:
     
     docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties eiffel-intelligence-frontend:0.0.19
 
-2. Put application.properties file in a different folder in container and tell EI where the application.properties is located in the container:
+**2** Put application.properties file in a different folder in container and tell EI where the application.properties is located in the container:
     
     docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties eiffel-intelligence-frontend:0.0.19
 
