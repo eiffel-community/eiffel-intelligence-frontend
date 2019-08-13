@@ -18,14 +18,14 @@ With the Docker image user can try-out the Eiffel-Intelligence front-end on a Do
 
 ## Follow these step to build the Docker image.
 
-1. Build the Eiffel-Intelligence front-end war file:
+ **1**  Build the Eiffel-Intelligence front-end war file:
     
     mvn package -DskipTests
 
 
 This will produce a war file in the "target" folder.
 
-2. Build the Docker image with the war file that was produced from previous step:
+**2** Build the Docker image with the war file that was produced from previous step:
     
     docker build -t eiffel-intelligence-frontend:0.0.19 --build-arg URL=./target/eiffel-intelligence-frontend-0.0.19.war -f src/main/docker/Dockerfile .
 
