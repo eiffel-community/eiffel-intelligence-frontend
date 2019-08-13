@@ -84,6 +84,7 @@ Another option to configure Eiffel Intelligence front-end is to provide the appl
 
 # Run Docker image with provided docker-compose file
 This docker-compose file includes these components, [docker-compose.yml](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/docker-compose.yml):
+
 - MongoDB
 - RabbitMq
 - ER (Event Repository)
