@@ -18,24 +18,23 @@ With the Docker image user can try-out the Eiffel-Intelligence front-end on a Do
 
 ## Follow these step to build the Docker image.
 
-1. Build the Eiffel-Intelligence front-end war file:
-
-`mvn package -DskipTests`
+ **1**  Build the Eiffel-Intelligence front-end war file:
+    
+    mvn package -DskipTests
 
 
 This will produce a war file in the "target" folder.
 
-2. Build the Docker image with the war file that was produced from previous step:
-
-`docker build -t eiffel-intelligence-frontend:0.0.19 --build-arg URL=./target/eiffel-intelligence-frontend-0.0.19.war -f src/main/docker/Dockerfile .`
+**2** Build the Docker image with the war file that was produced from previous step:
+    
+    docker build -t eiffel-intelligence-frontend:0.0.19 --build-arg URL=./target/eiffel-intelligence-frontend-0.0.19.war -f src/main/docker/Dockerfile .
 
 Now docker image has build with tag "eiffel-intelligence-frontend:0.0.19"
 
 ## Run Docker image on local Docker Host
 To run the produced docker image on the local Docker host, execute this command:
-
-
-`docker run -p 8071:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG eiffel-intelligence-frontend:0.0.19`
+    
+    docker run -p 8071:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG eiffel-intelligence-frontend:0.0.19
 
 # Some info of all flags to this command
 
@@ -73,17 +72,19 @@ In web-browser use url with docker host ip number: "\<docker host ip\>:8071/"
 Switch-back-end functionality do not work when "localhost" address is used.
 
 Another option to configure Eiffel Intelligence front-end is to provide the application properties file into the container, which can be made in two ways:
-1. Put application.properties file in Tomcat Catalina config folder in container and run Eiffel Intelligence front-end:
 
-`docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties eiffel-intelligence-frontend:0.0.19`
+**1** Put application.properties file in Tomcat Catalina config folder in container and run Eiffel Intelligence front-end:
+    
+    docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties eiffel-intelligence-frontend:0.0.19
 
-2. Put application.properties file in a different folder in container and tell EI where the application.properties is located in the container:
-
-`docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties eiffel-intelligence-frontend:0.0.19`
+**2** Put application.properties file in a different folder in container and tell EI where the application.properties is located in the container:
+    
+    docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties eiffel-intelligence-frontend:0.0.19
 
 
 # Run Docker image with provided docker-compose file
 This docker-compose file includes these components, [docker-compose.yml](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/docker-compose.yml):
+
 - MongoDB
 - RabbitMq
 - ER (Event Repository)
@@ -111,8 +112,11 @@ To run docker-compose commands, the environment variables needs to be set:
 Two variables need to be set before we can start up all services with docker-compose tool.
 Set Docker host IP to the HOST variable. This is done automatically when sourcing [env.bash](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/docker/env.bash).
 But it is also possible to do it manually. If on Linux:
-`export HOST=$(hostname -I | tr " " "\n"| head -1)`
-If on Windows, get Docker Host IP with command: `dockermachine ip`
+    
+    export HOST=$(hostname -I | tr " " "\n"| head -1)
+If on Windows, get Docker Host IP with command:
+    
+    dockermachine ip
 Set that Docker host IP to HOST environment variable.
 
 Currently we need to provide EI back-end instances list outside of docker-compose.yml file.
@@ -127,25 +131,23 @@ It will take some minutes until all components has started. When all components 
 http://\<docker host ip\>:8081/
 
 Curl command can be used to make request via EI front-end bridge to EI back-end REST API, example for getting all subscriptions:
-
-
-`curl -X GET http://localhost:8081/subscriptions`
+    
+    curl -X GET http://localhost:8081/subscriptions
 
 It is also possible to access these Rest-Api addresses in web-browser and get result presented in a Json view in web-browser.
 
 Following command can be used to get the logs from the EI front-end container/service:
-
-`docker-compose -f src/main/docker/docker-compose.yml logs ei_frontend`
+    
+    docker-compose -f src/main/docker/docker-compose.yml logs ei_frontend
 
 All service names can be retrieved with following command:
-
-`docker-compose -f src/main/docker/docker-compose.yml config --services`
+    
+    docker-compose -f src/main/docker/docker-compose.yml config --services
 
 It is also possible to retrieve the logs by only using "docker logs <container_id or container_name>" command:
-
-`docker logs <container_id or container_name>`
-`docker logs <container_id or container_name>`
+    
+    docker logs <container_id or container_name>
 
 Container id can be retrieved with docker command:
-
-`docker ps`
+    
+    docker ps
