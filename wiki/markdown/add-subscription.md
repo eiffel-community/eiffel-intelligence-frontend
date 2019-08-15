@@ -60,8 +60,8 @@ is disabled in Jenkins._
 
 **Repeat:** It is possible to enable repeat, e.g. whether same subscription
 should be re-triggered for new additions to the aggregated object. If disabled,
-the notification will be triggered only the first time when conditions are
-fulfilled.
+the notification will be triggered only the first time when requirements are
+fulfilled. It doesn't matter if you have multiple requirements, it will only be triggered once.
 
 **Requirement and Conditions:** It is used to add a requirement, which need to
 be fulfilled before a subscription is triggered. Requirement is added in the form
