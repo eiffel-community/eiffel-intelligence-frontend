@@ -1,0 +1,19 @@
+dn: uid=einstein,dc=example,dc=org
+objectClass: top
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+uid: einstein
+cn: einstein
+sn: 3
+userPassword: password
+
+dn: uid=newton,dc=example,dc=org
+objectClass: top
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+uid: newton
+cn: newton
+sn: 3
+userPassword: password2
