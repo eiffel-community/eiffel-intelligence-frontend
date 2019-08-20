@@ -103,7 +103,7 @@ Feature: Authentication test
 
     # Action: Second user logging in on second LDAP
     When a 'GET' request is prepared for REST API '/auth/login'
-    And username "einstein" and password "password" is used as credentials
+    And username "einstein" and password "e=mc2" is used as credentials
     Then request is saved to request list at index 0
     When request is performed from request list at index 0
     Then response code 200 is received

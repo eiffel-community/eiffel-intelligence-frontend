@@ -6,7 +6,7 @@ objectClass: inetOrgPerson
 uid: einstein
 cn: einstein
 sn: 3
-userPassword: password
+userPassword: e=mc2
 
 dn: uid=newton,dc=example,dc=org
 objectClass: top
