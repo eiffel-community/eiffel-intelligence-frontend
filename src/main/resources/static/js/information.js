@@ -109,9 +109,17 @@ jQuery(document).ready(function () {
         tdKey.setAttribute('class', 'left-table-pane');
         tdKey.appendChild(document.createTextNode(key));
         tr.appendChild(tdKey);
-        var tdValue = document.createElement('td');
-        tdValue.appendChild(document.createTextNode(value));
-        tr.appendChild(tdValue);
+        var element = document.createElement('td');
+        var json = parseJSON(value);
+        if (json != undefined) {
+            value = JSON.stringify(json, undefined, 2);
+            pre = document.createElement('pre');
+            pre.appendChild(document.createTextNode(value));
+            element.appendChild(pre);
+        } else {
+            element.appendChild(document.createTextNode(value));
+        }
+        tr.appendChild(element);
         return tr;
     }
 

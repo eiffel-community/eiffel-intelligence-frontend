@@ -104,6 +104,17 @@ function isStringDefined(value) {
     return isDefined;
 }
 
+function parseJSON(value) {
+    try {
+        if (typeof value === 'number' || value.match(/^(true|false)$/)) {
+            return undefined;
+        }
+        return JSON.parse(value);
+    } catch (e) {
+        return undefined;
+    }
+}
+
 // /Stop ## Common functions ##################################
 
 // Start ## Routing ##
