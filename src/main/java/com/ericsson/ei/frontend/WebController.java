@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 import com.ericsson.eiffelcommons.helpers.RegExProvider;
 
@@ -56,7 +57,7 @@ public class WebController {
     }
 
     @RequestMapping("/information.html")
-    public String info(Model model, HttpServletRequest request) {
+    public String info(Model model, HttpServletRequest request) throws EiBackendInstancesException {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("version", frontEndUtils.getVersion());
         model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());

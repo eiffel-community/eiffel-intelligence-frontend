@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +28,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
+import com.ericsson.ei.frontend.model.BackendInstance;
+import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
 import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
@@ -46,20 +46,20 @@ public class EIRequestControllerUtilsTest {
     private WebControllerUtils controllerUtils;
 
     @MockBean
-    private BackEndInstancesUtils backEndInstancesUtils;
+    private BackEndInstancesHandler backEndInstancesUtils;
 
     private HttpServletRequest  mockedRequest;
 
     //private BackEndInformation backendInformation;
 
     @Before
-    public void beforeClass() {
-        BackEndInformation backendInformation = new BackEndInformation("TestName", "TestHost", "12345", "", false, true);
-        BackEndInformation backendInformationNull = new BackEndInformation("NullName", "NullHost", "12345", "", false, false);
+    public void beforeClass() throws EiBackendInstancesException {
+        BackendInstance backendInformation = new BackendInstance("TestName", "TestHost", "12345", "", false, true);
+        BackendInstance backendInformationNull = new BackendInstance("NullName", "NullHost", "12345", "", false, false);
         mockedRequest = Mockito.mock(HttpServletRequest.class);
 
-        when(backEndInstancesUtils.getBackEndInformationByName("TestName")).thenReturn(backendInformation);
-        when(backEndInstancesUtils.getBackEndInformationByName(null)).thenReturn(backendInformationNull);
+        when(backEndInstancesUtils.getBackendInstance("TestName")).thenReturn(backendInformation);
+        when(backEndInstancesUtils.getDefaultBackendInstance()).thenReturn(backendInformationNull);
 
         when(mockedRequest.getMethod()).thenReturn("Test");
     }

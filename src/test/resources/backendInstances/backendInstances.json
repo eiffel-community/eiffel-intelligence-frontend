@@ -14,5 +14,13 @@
         "contextPath": "otherPath",
         "https": false,
         "defaultBackend": true
+    },
+    {
+        "name": "EI-Backend-1",
+        "host": "localhost",
+        "port": 8070,
+        "contextPath":"", 
+        "https":false,
+        "defaultBackend":true
     }
 ]

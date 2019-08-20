@@ -32,8 +32,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,9 +40,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.model.BackendInstance;
+import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,10 +68,8 @@ public class EIRequestControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BackEndInstancesUtils backEndInstanceUtils;
+    private BackEndInstancesHandler backendInstanceUtils;
 
-    @Autowired
-    private BackEndInstanceFileUtils backEndInstanceFileUtils;
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this);
@@ -82,14 +78,18 @@ public class EIRequestControllerTest {
 
     @Before
     public void before() {
-        backEndInstanceFileUtils.setEiInstancesPath(BACKEND_INFO);
-        BackEndInformation backEndInformation = backEndInstanceUtils.getDefaultBackendInformation();
-        backEndInformation.setName("test");
-        backEndInformation.setHost("localhost");
-        backEndInformation.setPort(String.valueOf(mockServerRule.getPort()));
-        backEndInformation.setContextPath("");
-        backEndInformation.setUseSecureHttpBackend(false);
-        backEndInformation.setDefaultBackend(true);
+        BackendInstance backendInstance = new BackendInstance();
+        backendInstance.setName("test");
+        backendInstance.setHost("localhost");
+        backendInstance.setPort(String.valueOf(mockServerRule.getPort()));
+        backendInstance.setContextPath("");
+        backendInstance.setUseSecureHttpBackend(false);
+        backendInstance.setDefaultBackend(true);
+
+        JsonArray backendInstances = new JsonArray();
+        backendInstances.add(backendInstance.getAsJsonObject());
+        backendInstanceUtils.setBackendInstances(backendInstances);
+        System.out.println();
     }
 
     @Test

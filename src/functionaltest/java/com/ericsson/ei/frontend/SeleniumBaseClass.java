@@ -52,6 +52,10 @@ public class SeleniumBaseClass extends TestBaseClass {
 
     @After
     public void tearDown() throws Exception {
+        if (driver != null) {
+            driver.quit();
+        }
+
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 
@@ -59,8 +63,6 @@ public class SeleniumBaseClass extends TestBaseClass {
         if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
-
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 
     protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {

@@ -55,20 +55,4 @@ public class BackEndInformationController {
         return response;
 
     }
-
-    @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
-        LOG.debug("Received request to delete EI back end instance.");
-        ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToDeleteBackEnd(request);
-        return response;
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.POST)
-    public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
-        LOG.debug("Received request to add EI back end instance.");
-        ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToAddBackEnd(request);
-        return response;
-    }
 }

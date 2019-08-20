@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 
-public class TestBridgeCurlFunctions extends TestBaseClass {
+public class TestBridgeCurlFunctions extends SeleniumBaseClass {
     private static MockServerClient mockClient1;
     private static MockServerClient mockClient2;
     private static ClientAndServer mockServer1;
@@ -36,7 +36,9 @@ public class TestBridgeCurlFunctions extends TestBaseClass {
 
     @Before
     public void before() throws Exception {
-        backEndInstancesUtils.setDefaultBackEndInstance("test", BASE_URL, mockServer1.getLocalPort(), "", true);
+        int portServer = mockServer1.getLocalPort();
+
+        setBackendInstance("test", BASE_URL, portServer, "", true);
         setupMockEndpoints();
     }
 

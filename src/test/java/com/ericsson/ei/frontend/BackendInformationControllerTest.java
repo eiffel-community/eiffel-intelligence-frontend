@@ -13,7 +13,6 @@
 */
 package com.ericsson.ei.frontend;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,8 +33,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.model.BackendInstance;
+import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -56,11 +55,11 @@ public class BackendInformationControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BackEndInstancesUtils utils;
+    private BackEndInstancesHandler utils;
 
     private JsonObject instance;
     private JsonArray instances;
-    private List<BackEndInformation> information;
+    private List<BackendInstance> information;
 
     @Before
     public void before() throws Exception {
@@ -68,40 +67,17 @@ public class BackendInformationControllerTest {
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
         information = new ArrayList<>();
         for(JsonElement element : instances) {
-            information.add(new ObjectMapper().readValue(element.toString(), BackEndInformation.class));
+            information.add(new ObjectMapper().readValue(element.toString(), BackendInstance.class));
         }
     }
 
     @Test
     public void testGetInstances() throws Exception {
-        when(utils.getBackEndsAsJsonArray()).thenReturn(instances);
+        when(utils.getBackendInstancesAsJsonArray()).thenReturn(instances);
         mockMvc.perform(MockMvcRequestBuilders.get(PATH_FOR_BACK_END_INFORMATION)
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().string(instances.toString()))
-            .andReturn();
-    }
-
-    @Test
-    public void testAddInstance() throws Exception {
-        when(utils.hasRequiredJsonKeys(any())).thenReturn(true);
-        when(utils.containsNullValues(any())).thenReturn(false);
-        when(utils.containsAdditionalKeys(any())).thenReturn(false);
-        when(utils.checkIfInstanceAlreadyExist(any())).thenReturn(false);
-        when(utils.getBackEndsAsJsonArray()).thenReturn(new JsonArray());
-        mockMvc.perform(MockMvcRequestBuilders.post(PATH_FOR_BACK_END_INFORMATION)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instance.toString()))
-            .andExpect(status().isOk())
-            .andReturn();
-    }
-
-    @Test
-    public void testDeleteInstance() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(PATH_FOR_BACK_END_INFORMATION)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(instance.toString()))
-            .andExpect(status().isOk())
             .andReturn();
     }
 }

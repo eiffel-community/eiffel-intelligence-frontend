@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.model.BackendInstance;
 import com.google.gson.JsonObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,13 +43,13 @@ public class BackEndInformationTest {
     private static final String BACK_END_HOST = "Test_host";
     private static final String BACK_END_PORT = "12345";
 
-    private BackEndInformation backEndInformation;
+    private BackendInstance backEndInformation;
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationTest.class);
 
     @Before
     public void before() throws IOException {
-        backEndInformation = new BackEndInformation(BACK_END_NAME, BACK_END_HOST, BACK_END_PORT, "", true, false);
+        backEndInformation = new BackendInstance(BACK_END_NAME, BACK_END_HOST, BACK_END_PORT, "", true, false);
     }
 
     @Test

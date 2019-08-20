@@ -8,7 +8,6 @@ import static org.mockserver.model.HttpResponse.response;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,9 +17,10 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.ericsson.ei.frontend.pageobjects.AddBackendPage;
+import com.ericsson.ei.frontend.model.BackendInstance;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
 import com.ericsson.ei.frontend.pageobjects.SwitchBackendPage;
+import com.google.gson.JsonArray;
 
 public class TestSwitchBackend extends SeleniumBaseClass {
     private static MockServerClient mockClient1;
@@ -38,28 +38,22 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
 
-    private AddBackendPage addBackendPage;
     private SwitchBackendPage switchBackendPage;
     private SubscriptionPage subscriptionPage;
 
     @Before
     public void before() throws IOException {
-        int portServer1 = mockServer1.getLocalPort();
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", portServer1, "", true);
-        addBackendPage = new AddBackendPage(mockedHttpClient, driver, baseUrl);
+        addBackendInstances();
         switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
         subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
     }
 
     @Test
     public void testSwitchBackend() throws Exception {
-        addAndVerifySecondBackendInstance();
         switchToSecondBackendInstance();
         verifySubscriptionForSecondBackendInstance();
         switchToFirstBackendInstance();
         verifySubscriptionForFirstBackendInstance();
-        removeAndVerifySecondBackendInstance();
     }
 
     @BeforeClass
@@ -80,20 +74,6 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
         mockServer1.stop();
         mockServer2.stop();
-    }
-
-    private void addAndVerifySecondBackendInstance() throws ClientProtocolException, IOException {
-        addBackendPage.loadPage();
-        addSecondBackendInstance();
-        switchBackendPage.loadPage();
-        verifyAddedBackendInstance();
-    }
-
-    private void removeAndVerifySecondBackendInstance() {
-        switchBackendPage.loadPage();
-        switchBackendPage.removeInstanceNumber(1);
-        assertEquals("switchBackendPage.presenceOfInstance returned true when it should have been false", false,
-                switchBackendPage.presenceOfInstance(1));
     }
 
     private void switchToSecondBackendInstance() {
@@ -122,13 +102,28 @@ public class TestSwitchBackend extends SeleniumBaseClass {
         assertEquals(subscription, subscriptionPage.getSubscriptionNameFromSubscription());
     }
 
-    private void verifyAddedBackendInstance() {
-        assertEquals("new_instance", switchBackendPage.getInstanceNameAtPosition(1));
-    }
+    private void addBackendInstances() {
+        int portServer1 = mockServer1.getLocalPort();
 
-    private void addSecondBackendInstance() throws ClientProtocolException, IOException {
+        BackendInstance backend1 = new BackendInstance();
+        backend1.setName("new_instance_default");
+        backend1.setHost("localhost");
+        backend1.setPort(Integer.toString(portServer1));
+        backend1.setContextPath("");
+        backend1.setDefaultBackend(true);
+
         int portServer2 = mockServer2.getLocalPort();
-        addBackendPage.addBackendInstance("new_instance", BASE_URL, portServer2, "");
+        BackendInstance backend2 = new BackendInstance();
+        backend2.setName("new_instance");
+        backend2.setHost(BASE_URL);
+        backend2.setPort(Integer.toString(portServer2));
+        backend2.setContextPath("");
+        backend2.setDefaultBackend(true);
+
+        JsonArray backendInstances = new JsonArray();
+        backendInstances.add(backend1.getAsJsonObject());
+        backendInstances.add(backend2.getAsJsonObject());
+        setBackendInstances(backendInstances);
     }
 
     private static void setupMockEndpoints() throws IOException {

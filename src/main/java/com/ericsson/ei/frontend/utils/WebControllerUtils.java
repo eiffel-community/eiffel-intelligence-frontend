@@ -26,7 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
+import com.ericsson.ei.frontend.model.BackendInstance;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -63,7 +64,7 @@ public class WebControllerUtils {
     private String applicationName;
 
     @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
+    private BackEndInstancesHandler backEndInstancesUtils;
 
     @PostConstruct
     public void init() throws IOException {
@@ -101,14 +102,15 @@ public class WebControllerUtils {
      *
      * @param httpSession
      * @return String URL from found BackendInformation
+     * @throws EiBackendInstancesException
      */
-    public String getBackEndServiceUrl(HttpSession httpSession) {
+    public String getBackEndServiceUrl(HttpSession httpSession) throws EiBackendInstancesException {
         String activeInstance = null;
         if (httpSession.getAttribute("backEndInstanceName") != null) {
             activeInstance = httpSession.getAttribute("backEndInstanceName").toString();
         }
 
-        BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(activeInstance);
+        BackendInstance backEndInformation = backEndInstancesUtils.getBackendInstance(activeInstance);
 
         return backEndInformation.getUrlAsString();
     }

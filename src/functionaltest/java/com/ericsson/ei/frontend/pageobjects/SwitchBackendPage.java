@@ -28,8 +28,8 @@ public class SwitchBackendPage extends PageBaseClass {
     public Object getInstanceNameAtPosition(int position) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("BackendInstance" + position + "Name")));
-        WebElement backendInstance1Name = driver.findElement(By.id("BackendInstance" + position + "Name"));
-        return backendInstance1Name.getText();
+        WebElement backendInstanceName = driver.findElement(By.id("BackendInstance" + position + "Name"));
+        return backendInstanceName.getText();
     }
 
     public void switchToBackendInstance(int backendNumber) {
@@ -42,13 +42,6 @@ public class SwitchBackendPage extends PageBaseClass {
         WebElement switcher = driver.findElement(By.id("switcher"));
         switcher.click();
         waitForJQueryToLoad();
-    }
-
-    public void removeInstanceNumber(int number) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
-                .until(ExpectedConditions.elementToBeClickable(By.id("removeBtn" + number)));
-        WebElement removeBtn = driver.findElement(By.id("removeBtn1"));
-        removeBtn.click();
     }
 
     public boolean presenceOfInstance(int number) {
