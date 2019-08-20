@@ -106,7 +106,9 @@ function isStringDefined(value) {
 
 function parseJSON(value) {
     try {
-        if (typeof value === 'number' || value.match(/^\d+$/) || value.match(/^(true|false)$/)) {
+        var isNumber = "/^\d+$/";
+        var isBoolean = "/^(true|false)$/";
+        if (typeof value === 'number' || value.match(isNumber) || value.match(isBoolean)) {
             return undefined;
         }
         return JSON.parse(value);
