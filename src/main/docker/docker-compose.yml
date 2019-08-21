@@ -421,14 +421,12 @@ services:
 
   ldap:
     restart: always
-    image: osixia/openldap
+    image: ${LDAP_IMAGE}
     hostname: "example.org"
     expose:
       - "389"
-      - "636"
     ports:
-      - "389:389"
-      - "636:636"
+      - "${LDAP_FIRST_PORT}:389"
     environment:
         LDAP_TLS: 'false'
         LDAP_ORGANISATION: "Test"
@@ -437,13 +435,35 @@ services:
         LDAP_ADMIN_PASSWORD: "admin"
 
   ldap-seed:
-    image: osixia/openldap
+    image: ${LDAP_IMAGE}
     volumes:
       - ./ldap-seed:/container/service/slapd/assets/test/
     links:
       - ldap
-    command: chmod +x /container/service/slapd/assets/test/addAll.sh
-    entrypoint: sh -c '/container/service/slapd/assets/test/addAll.sh'
+    entrypoint: bash -c 'sleep 5s && ldapadd -h ldap -D "cn=admin,dc=example,dc=org" -w admin -f /container/service/slapd/assets/test/ldap-users-first.ldif'
+
+  ldap2:
+    restart: always
+    image: ${LDAP_IMAGE}
+    hostname: "example.org"
+    expose:
+      - "389"
+    ports:
+      - "${LDAP_SECOND_PORT}:389"
+    environment:
+        LDAP_TLS: 'false'
+        LDAP_ORGANISATION: "Test"
+        LDAP_DOMAIN: "example.org"
+        LDAP_BASE_DN: "dc=example,dc=org"
+        LDAP_ADMIN_PASSWORD: "admin"
+
+  ldap2-seed:
+    image: ${LDAP_IMAGE}
+    volumes:
+      - ./ldap-seed:/container/service/slapd/assets/test/
+    links:
+      - ldap2
+    entrypoint: bash -c 'sleep 5s && ldapadd -h ldap2 -D "cn=admin,dc=example,dc=org" -w admin -f /container/service/slapd/assets/test/ldap-users-second.ldif'
 
 networks:
   eiffel_2.0_1:
