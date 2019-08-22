@@ -7,34 +7,40 @@ description of the elements available on this form.
     <img style="border:1px solid black" src="images/subscription_add_part1.png"></img>
 </kbd>
 
-**Load Subscription Template:** In this dropdown list, options are given to
+## Load Subscription Template
+In this dropdown list, options are given to
 select a specific template for the subscription form. Currently, the following
 options are listed: Jenkins Pipeline Parametrized Job Trigger, REST POST and
 Mail Trigger.
 
-**SubscriptionName:** A field to give a name to the current subscription. Only
+## SubscriptionName
+A field to give a name to the current subscription. Only
 letters, underscore and numbers are allowed in this field.
 
 <kbd>
     <img style="border:1px solid black" src="images/subscription_add_part2.png"></img>
 </kbd>
 
-**NotificationType:** There are two options: REST POST and
+## NotificationType
+There are two options: REST POST and
 Mail Trigger, depending on how a subscriber want to be notified when a
 subscription is fulfilled. If Notification type MAIL is selected an email
 subject may be entered, but it is optional.
 
-**RestPostMediaType:** Options for selecting a
+## RestPostMediaType
+Options for selecting a
 specific form content type. The options available in the list depends on the
 selected template type.
 
-**NotificationMessage:** It is used to send a message to a specific client. The
+## NotificationMessage
+It is used to send a message to a specific client. The
 format of the message depends on the options selected in the NotificationMessage
 and RestPostMediaType. A button, “Add Key/Value pair”, in this field may be
 used to add more messages, if the selected RestPostBodyMediaType is FORM/POST
 parameters.
 
-**NotificationMeta:** Is the selected subscriber to notify when a subscription
+## NotificationMeta
+Is the selected subscriber to notify when a subscription
 is triggered. It could be an email address such as `example@mail.com` or a url
 like `host.com/endpoint`. If you wish to trigger Jenkins job when a subscription
 is fulfilled then the url for the job could be set as the notificationMeta.
@@ -46,7 +52,8 @@ used as a password for authentication against the entire jenkins instance.
     <img style="border:1px solid black" src="images/subscription_add_part3.png"></img>
 </kbd>
 
-**Authentication:** A list to select authentication type.
+## Authentication
+A list to select authentication type.
 * NO_AUTH: _No Authentication used_
 * BASIC_AUTH: _Username and password will be Base 64 encoded_
 * BASIC_AUTH_JENKINS_CSRF: Jenkins CSRF Protection (crumb), _Username and password will
@@ -58,12 +65,14 @@ is disabled in Jenkins._
     <img style="border:1px solid black" src="images/subscription_add_part4.png"></img>
 </kbd>
 
-**Repeat:** It is possible to enable repeat, e.g. whether same subscription
+## Repeat
+It is possible to enable repeat, e.g. whether same subscription
 should be re-triggered for new additions to the aggregated object. If disabled,
 the notification will be triggered only the first time when requirements are
 fulfilled. It doesn't matter if you have multiple requirements, it will only be triggered once.
 
-**Requirement and Conditions:** It is used to add a requirement, which need to
+## Requirement and Conditions
+It is used to add a requirement, which need to
 be fulfilled before a subscription is triggered. Requirement is added in the form
 of a condition (with a specific format). More than one conditions may be added
 under one requirement by using “Add Condition” button. It should be noted
