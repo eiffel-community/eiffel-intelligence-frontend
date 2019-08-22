@@ -104,6 +104,19 @@ function isStringDefined(value) {
     return isDefined;
 }
 
+function parseJsonObject(value) {
+    try {
+        var json = JSON.parse(value);
+        if (json !== null && typeof json === "object") {
+            return json;
+        } else {
+            return undefined;
+        }
+    } catch (e) {
+        return undefined;
+    }
+}
+
 // /Stop ## Common functions ##################################
 
 // Start ## Routing ##
