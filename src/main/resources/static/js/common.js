@@ -104,7 +104,7 @@ function isStringDefined(value) {
     return isDefined;
 }
 
-function parseJSON(value) {
+function parseJsonObject(value) {
     try {
         var json = JSON.parse(value);
         if (json !== null && typeof json === "object") {

@@ -110,7 +110,7 @@ jQuery(document).ready(function () {
         tdKey.appendChild(document.createTextNode(key));
         tr.appendChild(tdKey);
         var element = document.createElement('td');
-        var json = parseJSON(value);
+        var json = parseJsonObject(value);
         if (json != undefined) {
             value = JSON.stringify(json, undefined, 2);
             pre = document.createElement('pre');
