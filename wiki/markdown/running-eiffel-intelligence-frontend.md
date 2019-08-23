@@ -27,11 +27,16 @@ If you run from source code, you can run Eiffel-Intelligence front-end with mave
 
 ## Running with java command
 
-Another opthion is to run the executable war file (located in target folder, if running from source code):
+Another option is to run the executable war file with java command.
+If running from source code, war file is generated and produced by maven command (mvn install command can be used as well):
+
+    mvn package -DskipTests
+
+This command should produce a eiffel-intelligence-frontend-<version>.war file in target folder, target/eiffel-intelligence-frontend-<version>.war.
+
+War file is executed by following command and with default configuration:
 
     java -jar eiffel-intelligence-frontend-<version>.war
-
-if you want to run with default configuration.
 
 Own configuration can be provided with
 
@@ -48,7 +53,7 @@ If only few properties need to be overriden then use Java opts, for example
 
 ## Running in Tomcat instance
 
-To run Eiffel-Intelligence front-end in Tomcat, the war file most be put into the webapp folder in tomcat installation folder, also called catalina home folder:
+To run Eiffel-Intelligence front-end in Tomcat, the war file must be put into the webapp folder in tomcat installation folder, also called catalina home folder:
 
     (catalina home)/webapp/
 
@@ -74,7 +79,7 @@ Start Tomcat and Eiffel-Intelligence front-end in background/daemon mode by exec
 
 To run Tomcat and Eiffel-Intelligence front-end with logs printed to console:
     
-    catalina home)/bin/catalina.sh start
+    catalina home)/bin/catalina.sh run
 
 ## Eiffel-Intelligence fron-tend configurations and properties
 
