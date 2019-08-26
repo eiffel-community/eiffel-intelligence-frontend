@@ -4,7 +4,7 @@
 
 Eiffel intelligence front-end is a Spring microservice distributed in a war file.
 
-Release Eiffel Interlligence front-end war files can be downloaded from Jitpack:
+Eiffel Intelligence front-end release war files can be downloaded from Jitpack:
 [jitpack.io](https://jitpack.io/#eiffel-community/eiffel-intelligence-frontend) and look for the
 latest version. Now replace the latest version in the link below:
 
@@ -57,7 +57,7 @@ To run Eiffel Intelligence front-end in Tomcat, the war file must be put into th
 
     (catalina home)/webapp/
 
-If Eiffel Intelligence front-end should be run without any conext-path in the url address, then overwrite ROOT.war file in webapp folder with eiffel-intelligence-frontend-<version>.war file:
+If Eiffel Intelligence front-end should be run without any context-path in the url address, then overwrite ROOT.war file in webapp folder with eiffel-intelligence-frontend-<version>.war file:
 
     cp eiffel-intelligence-frontend-<version>.war (catalina home)/webapp/ROOT.war
 
@@ -85,4 +85,4 @@ To run Tomcat and Eiffel Intelligence front-end with logs printed to console:
 
 All available Eiffel Intelligence front-end properties can be found in [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) example file.
 
-More documentation of each Eiffel Intelligence front-end properties and configurations can be found in [Configuration page](https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/configuration.md)
+More documentation of each Eiffel Intelligence front-end property and configurations can be found in [Configuration page](https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/markdown/configuration.md)
