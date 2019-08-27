@@ -51,7 +51,7 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 # Documentation
 
 1. [**Introduction**](./wiki/markdown/index.md)
-1. [**Running Eiffel-Intelligence frontend**](./wiki/markdown/running-eiffel-intelligence-frontend.md)
+1. [**Running Eiffel-Intelligence front-end**](./wiki/markdown/running-eiffel-intelligence-frontend.md)
     -  [**Run in Docker**](./wiki/markdown/docker.md)
     -  [**Configuration**](./wiki/markdown/configuration.md)
 1. [**GUI Overview**](./wiki/markdown/GUI-overview.md)
