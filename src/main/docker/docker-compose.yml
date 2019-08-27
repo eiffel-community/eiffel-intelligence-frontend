@@ -251,7 +251,7 @@ services:
       eiffel_2.0_1:
         aliases:
           - ei-backend-artifact
-    environment:       # Overrides settings in application config file
+    environment:       # Overrides settings in application.properties file
       - SpringApplicationName=ei-backend-artifact
       - server.port=8080
       - rules.path=/rules/ArtifactRules-Eiffel-Agen-Version.json
@@ -267,13 +267,12 @@ services:
       - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-artifact
       - missedNotificationDataBaseName=MissedNotification-artifact
-      - search.query.prefix=object
-      - aggregated.object.name=aggregatedObject
+      - aggregated.collection.name=aggregated-objects-artifact
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
       - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
-      - logging.level.root=OFF
-      - logging.level.org.springframework.web=DEBUG
+      - logging.level.root=ERROR
+      - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=DEBUG
       - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
       - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
@@ -302,7 +301,7 @@ services:
       eiffel_2.0_1:
         aliases:
           - ei-backend-sourcechange
-    environment:       # Overrides settings in application config file
+    environment:       # Overrides settings in application.properties file
       - SpringApplicationName=ei-backend-sourcechange
       - server.port=8080
       - rules.path=/rules/SourceChangeObjectRules-Eiffel-Agen-Version.json
@@ -318,13 +317,12 @@ services:
       - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-sourcechange
       - missedNotificationDataBaseName=MissedNotification-sourcechange
-      - search.query.prefix=object
-      - aggregated.object.name=aggregatedObject
+      - aggregated.collection.name=aggregated-objects-sourcechange
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
       - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
-      - logging.level.root=OFF
-      - logging.level.org.springframework.web=DEBUG
+      - logging.level.root=ERROR
+      - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=DEBUG
       - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
       - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
@@ -353,7 +351,7 @@ services:
       eiffel_2.0_1:
         aliases:
           - ei-backend-testexecution
-    environment:       # Overrides settings in application config file
+    environment:       # Overrides settings in application.properties file
       - SpringApplicationName=ei-backend-testexecution
       - server.port=8080
       - rules.path=/rules/TestExecutionObjectRules-Eiffel-Agen-Version.json
@@ -369,8 +367,7 @@ services:
       - spring.data.mongodb.port=${MONGODB_PORT}
       - spring.data.mongodb.database=eiffel-intelligence-testexecution
       - missedNotificationDataBaseName=MissedNotification-testexecution
-      - search.query.prefix=object
-      - aggregated.object.name=aggregatedObject
+      - aggregated.collection.name=aggregated-objects-testexecution
       - spring.mail.host=
       - spring.mail.port=
       - spring.mail.username=
@@ -378,8 +375,8 @@ services:
       - spring.mail.properties.mail.smtp.auth=false
       - spring.mail.properties.mail.smtp.starttls.enable=false
       - er.url=http://eiffel-er:${EIFFEL_ER_INTERNAL_PORT}/search
-      - logging.level.root=OFF
-      - logging.level.org.springframework.web=DEBUG
+      - logging.level.root=ERROR
+      - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=DEBUG
       - WAIT_MB_HOSTS=rabbitmq:${RABBITMQ_WEB_PORT}
       - WAIT_DB_HOSTS=mongodb:${MONGODB_PORT}
@@ -407,7 +404,7 @@ services:
       eiffel_2.0_1:
         aliases:
           - ei-frontend
-    environment:      # Overrides settings in application config file
+    environment:      # Overrides settings in application.properties file
       - spring.application.name=eiffel-intelligence-frontend
       - server.port=8080
       - ei.frontend.service.host=${HOST}
@@ -415,8 +412,8 @@ services:
       - ei.frontend.context.path=
       - ei.backend.instances.list.json.content=${EI_INSTANCES_LIST}
       - ei.backend.instances.filepath=/tmp/eiInstancesListFile.json
-      - logging.level.root=OFF
-      - logging.level.org.springframework.web=DEBUG
+      - logging.level.root=ERROR
+      - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=DEBUG
 
   ldap:
