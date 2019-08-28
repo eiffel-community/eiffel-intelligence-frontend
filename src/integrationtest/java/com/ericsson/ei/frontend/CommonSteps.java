@@ -143,7 +143,6 @@ public class CommonSteps extends AbstractTestExecutionListener {
     }
 
     @When("^username \"([^\"]*)\" and password \"([^\"]*)\" is used as credentials$")
-    //@When("^username \"(\\w+)\" and password \"(\\w+)\" is used as credentials$")
     public void with_credentials(String username, String password) throws Throwable {
         String auth = username + ":" + password;
         String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
