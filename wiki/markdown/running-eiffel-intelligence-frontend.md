@@ -8,7 +8,7 @@ Eiffel Intelligence front-end release war files can be downloaded from Jitpack:
 [jitpack.io](https://jitpack.io/#eiffel-community/eiffel-intelligence-frontend) and look for the
 latest version. Now replace the latest version in the link below:
 
-    https://jitpack.io/com/github/eiffel-community/eiffel-intelligence-frontend/<version>/eiffel-intelligence-<version>.war
+    https://jitpack.io/com/github/eiffel-community/eiffel-intelligence-frontend/{version}/eiffel-intelligence-{version}.war
 
 ## Running with maven command
 
@@ -32,15 +32,15 @@ If running from source code, war file is generated and produced by maven command
 
     mvn package -DskipTests
 
-This command should produce a eiffel-intelligence-frontend-<version>.war file in target folder, target/eiffel-intelligence-frontend-<version>.war.
+This command should produce a eiffel-intelligence-frontend-{version}.war file in target folder, target/eiffel-intelligence-frontend-{version}.war.
 
 War file is executed by following command and with default configuration:
 
-    java -jar eiffel-intelligence-frontend-<version>.war
+    java -jar eiffel-intelligence-frontend-{version}.war
 
 Own configuration can be provided with
 
-    java -jar eiffel-intelligence-frontend-<version>.war --spring.config.location=file:<path to own application.properties>
+    java -jar eiffel-intelligence-frontend-{version}.war --spring.config.location=file:<path to own application.properties>
 
 remember to keep the name of the properties file if you are a beginner to
 Spring. More advanced Spring user can look [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
@@ -48,7 +48,7 @@ for more information about using external configuration.
 
 If only few properties need to be overriden, then use Java opts, for example
 
-    java -jar eiffel-intelligence-frontend-<version>.war -Dspring.data.mongodb.port=27019
+    java -jar eiffel-intelligence-frontend-{version}.war -Dspring.data.mongodb.port=27019
 
 
 ## Running in Tomcat instance
@@ -57,9 +57,9 @@ To run Eiffel Intelligence front-end in Tomcat, the war file must be put into th
 
     (catalina home)/webapp/
 
-If Eiffel Intelligence front-end should be run without any context-path in the url address, then overwrite ROOT.war file in webapp folder with eiffel-intelligence-frontend-<version>.war file:
+If Eiffel Intelligence front-end should be run without any context-path in the url address, then overwrite ROOT.war file in webapp folder with eiffel-intelligence-frontend-{version}.war file:
 
-    cp eiffel-intelligence-frontend-<version>.war (catalina home)/webapp/ROOT.war
+    cp eiffel-intelligence-frontend-{version}.war (catalina home)/webapp/ROOT.war
 
 Remove "ROOT" folder in webapp folder:
 
