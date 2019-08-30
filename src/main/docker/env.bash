@@ -14,8 +14,8 @@ export MAILSERVER_IMAGE="mailhog/mailhog"
 export REMREM_GENERATE_IMAGE="eiffelericsson/eiffel-remrem-generate:2.0.4"
 export REMREM_PUBLISH_IMAGE="eiffelericsson/eiffel-remrem-publish:2.0.2"
 export JENKINS_IMAGE="bitnami/jenkins:2.138.3"
-export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:1.0.2"
-export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:1.0.3"
+export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:2.0.0"
+export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:2.0.0"
 export LDAP_IMAGE="osixia/openldap:1.2.4"
 
 export MONGODB_PORT=27017
