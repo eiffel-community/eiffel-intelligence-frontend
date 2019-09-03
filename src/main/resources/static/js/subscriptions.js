@@ -502,7 +502,7 @@ jQuery(document).ready(function () {
         $('.confirm-delete .btn-danger').unbind();
         $('.confirm-delete .btn-danger').click(function () {
             var ajaxHttpSender = new AjaxHttpSender();
-            var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "/" + subscriptionsToDeleteString;
+            var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "?names=" + subscriptionsToDeleteString;
             ajaxHttpSender.sendAjax(endpointWithSubscriptionsToDelete, "DELETE", null, callback);
         });
         $('.confirm-delete').modal('show');
@@ -682,8 +682,8 @@ jQuery(document).ready(function () {
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/subscriptions/";
-        ajaxHttpSender.sendAjax(contextPath + subscriptionNames, "GET", null, callback);
+        var endpoint = backendEndpoints.SUBSCRIPTIONS + "?names=" + subscriptionNames;
+        ajaxHttpSender.sendAjax(endpoint, "GET", null, callback);
     }
 
     // /Start ## A table button pressed ###########################################

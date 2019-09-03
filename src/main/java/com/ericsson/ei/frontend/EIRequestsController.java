@@ -184,7 +184,7 @@ public class EIRequestsController {
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value = "/subscriptions/*", method = RequestMethod.DELETE)
+    @RequestMapping(value = { "/subscriptions", "/subscriptions/*" }, method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteRequests(Model model, HttpServletRequest incomingRequest) {
         String eiRequestUrl;
         try {
