@@ -169,7 +169,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     private void verifySubscriptionsRequestDeleteAndPost() throws InterruptedException, IOException {
         Thread.sleep(1000);
         String downloadedSubscriptionsTemplate = getJSONStringFromFile(DOWNLOADED_TEMPLATE_FILE_PATH);
-        mockClient.verify(request().withMethod("DELETE").withPath("/subscriptions/Subscription1,Subscription2,Subscription3"));
+        mockClient.verify(request().withMethod("DELETE").withPath("/subscriptions?subscriptionName=Subscription1,Subscription2,Subscription3"));
         mockClient.verify(request().withMethod("POST").withPath("/subscriptions").withBody(downloadedSubscriptionsTemplate));
     }
 
