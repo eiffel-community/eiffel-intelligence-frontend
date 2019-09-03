@@ -14,6 +14,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 
 #### Quick access to endpoints:
 * [/auth](#auth)
+* [/status](#status)
 * [/backend](#backend)
 * [/download](#download)
 * [/information](#information)
@@ -54,11 +55,6 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
         <td>Check if LDAP security is enabled</td>
     </tr>
     <tr>
-        <td>/auth/checkStatus</td>
-        <td>GET</td>
-        <td>Used to check the back-end status</td>
-    </tr>
-    <tr>
         <td>/auth/login</td>
         <td>GET</td>
         <td>Login to EI with a username and password</td>
@@ -86,6 +82,26 @@ It is possible to provide both username and password directly in the request, as
 
 More information and examples can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/authentication.md)
 
+## <a id="status" /> /status
+
+<table>
+    <tr>
+        <th>Context Path</th>
+        <th>Type</th>
+        <th>Explanation</th>
+    </tr>
+    <tr>
+        <td>/status</td>
+        <td>GET</td>
+        <td>Get back-end status including status of services back-end is dependent on.</td>
+    </tr>
+</table>
+
+#### Some curl examples
+
+This command would return a JSON object containing the status of the back-end and servers back-end is dependent on..
+
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/status
 
 ## <a id="backend" /> /backend
 

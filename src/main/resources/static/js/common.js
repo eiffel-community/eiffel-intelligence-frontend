@@ -353,7 +353,8 @@ function checkBackendSecured() {
         }
     };
     var ajaxHttpSender = new AjaxHttpSender();
-    ajaxHttpSender.sendAjax(backendEndpoints.AUTH, "GET", null, callback);
+    var data = null;
+    ajaxHttpSender.sendAjax(backendEndpoints.AUTH, "GET", data, callback);
 }
 
 function checkLoggedInUser() {
