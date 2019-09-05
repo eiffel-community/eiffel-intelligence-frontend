@@ -502,7 +502,7 @@ jQuery(document).ready(function () {
         $('.confirm-delete .btn-danger').unbind();
         $('.confirm-delete .btn-danger').click(function () {
             var ajaxHttpSender = new AjaxHttpSender();
-            var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "?subscriptionName=" + subscriptionsToDeleteString;
+            var endpointWithSubscriptionsToDelete = backendEndpoints.SUBSCRIPTIONS + "?subscriptionNames=" + subscriptionsToDeleteString;
             ajaxHttpSender.sendAjax(endpointWithSubscriptionsToDelete, "DELETE", null, callback);
         });
         $('.confirm-delete').modal('show');
@@ -682,7 +682,7 @@ jQuery(document).ready(function () {
         };
         // Perform AJAX
         var ajaxHttpSender = new AjaxHttpSender();
-        var endpoint = backendEndpoints.SUBSCRIPTIONS + "?subscriptionName=" + subscriptionNames;
+        var endpoint = backendEndpoints.SUBSCRIPTIONS + "?subscriptionNames=" + subscriptionNames;
         ajaxHttpSender.sendAjax(endpoint, "GET", null, callback);
     }
 

@@ -322,7 +322,8 @@ function executeIfLdapIsDeactivated() {
 }
 
 function downloadSubscriptions(subscriptionData, subscriptionNames) {
-    var jsonData = JSON.stringify(subscriptionData, null, 2);
+    var foundSubscriptions = subscriptionData.foundSubscriptions;
+    var jsonData = JSON.stringify(foundSubscriptions, null, 2);
     if (jsonData == undefined || subscriptionNames == undefined) {
         logMessage("Subscription data to download was not found");
         return;
