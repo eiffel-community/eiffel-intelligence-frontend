@@ -334,14 +334,30 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <td>Request to update one (or more) subscription object(s) included in JSON format</td>
     </tr>
     <tr>
-        <td>/subscriptions/*subscription name*</td>
+        <td>/subscriptions/{subscriptionName}</td>
         <td>GET</td>
-        <td>Fetches information about a single (or multiple) subscription(s) from the back-end</td>
+        <td>Fetches information about a single subscription from the back-end</td>
     </tr>
     <tr>
-        <td>/subscriptions/*subscription name*</td>
+        <td>/subscriptions/{subscriptionName}</td>
         <td>DELETE</td>
         <td>Deletes a single (or multiple) subscription(s) from the back-end</td>
+    </tr>
+    <tr>
+        <td>/subscriptions?subscriptionNames={names}</td>
+        <td>GET</td>
+        <td>
+            Fetches information about one or more subscriptions from the back-end.
+            Multiple subscriptions are listed with a comma separator e.g. Sub1,Sub2,...
+        </td>
+    </tr>
+    <tr>
+        <td>/subscriptions?subscriptionNames={names}</td>
+        <td>DELETE</td>
+        <td>
+            Deletes one or more subscriptions from the back-end.
+            Multiple subscriptions are listed with a comma separator e.g. Sub1,Sub2,...
+        </td>
     </tr>
 </table>
 
