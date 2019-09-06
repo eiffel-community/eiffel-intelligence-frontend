@@ -88,6 +88,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
@@ -127,23 +132,11 @@
             <artifactId>selenium-server</artifactId>
             <version>3.141.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-client-java -->
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-client-java</artifactId>
-            <version>5.4.1</version>
-            <exclusions>
-            	<exclusion>
-            		<groupId>com.vaadin.external.google</groupId>
-            		<artifactId>android-json</artifactId>
-            	</exclusion>
-            </exclusions>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-netty -->
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-netty</artifactId>
-            <version>5.4.1</version>
+            <version>5.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

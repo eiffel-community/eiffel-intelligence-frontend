@@ -2,6 +2,7 @@ package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.mockserver.stop.Stop.stopQuietly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -15,7 +16,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -63,9 +63,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     private static final String TEMPLATE_JENKINS = "Jenkins Pipeline Parameterized Job Trigger";
     private static final String EXPECTED_JENKINS_URL = "http://<JenkinsHost:port>/job/<JobName>/job/<branch>/build";
 
-    private static MockServerClient mockClient;
-    private static ClientAndServer mockServer;
-    private static final String BASE_URL = "localhost";
+    private static ClientAndServer clientAndServer;
 
     @MockBean
     protected CloseableHttpClient mockedHttpClient;
@@ -74,13 +72,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @BeforeClass
     public static void setUpMocks() throws IOException {
-        mockServer = startClientAndServer();
-        mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
+        clientAndServer = startClientAndServer();
     }
 
     @Before
     public void before() throws IOException {
-        int portServer = mockServer.getLocalPort();
+        int portServer = clientAndServer.getLocalPort();
         backEndInstancesUtils.setDefaultBackEndInstanceToNull();
         backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost",
                 portServer, "", true);
@@ -94,9 +91,10 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         setupMockEndpoints(security, username);
         removeAllSubscriptions();
         clickAndVerifyGetTemplateButton();
-        clickAndVerifyBulkDownloadButton();
         uploadSubscriptions();
         verifySubscriptionsRequestDeleteAndPost();
+        setupMockEndpointMultiSubscription();
+        clickAndVerifyBulkDownloadButton();
     }
 
     @Test
@@ -152,7 +150,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @AfterClass
     public static void tearDownMocks() throws IOException {
-        mockClient.stop();
+        stopQuietly(clientAndServer);
     }
 
     private void loadAndRefreshSubscriptionPage() {
@@ -176,13 +174,13 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         Thread.sleep(1000);
         String downloadedSubscriptionsTemplate = getJSONStringFromFile(
                 DOWNLOADED_TEMPLATE_FILE_PATH);
-        mockClient.verify(request().withMethod("DELETE")
-                                   .withPath("/subscriptions")
-                                   .withQueryStringParameter("subscriptionName",
-                                           "Subscription1,Subscription2,Subscription3"));
-        mockClient.verify(request().withMethod("POST")
-                                   .withPath("/subscriptions")
-                                   .withBody(downloadedSubscriptionsTemplate));
+        clientAndServer.verify(request().withMethod("DELETE")
+                                        .withPath("/subscriptions")
+                                        .withQueryStringParameter("subscriptionNames",
+                                                "Subscription1,Subscription2,Subscription3"));
+        clientAndServer.verify(request().withMethod("POST")
+                                        .withPath("/subscriptions")
+                                        .withBody(downloadedSubscriptionsTemplate));
     }
 
     private void clickAndVerifyBulkDownloadButton() throws IOException {
@@ -313,48 +311,62 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     }
 
     private void setupMockEndpoints(boolean security, String user) throws IOException {
-        mockClient.clear(request());
+        clientAndServer.clear(request());
+        String subscriptionResponse = getJSONStringFromFile(
+                SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
+
+        clientAndServer.when(request().withMethod("GET").withPath("/subscriptions"))
+                       .respond(response().withStatusCode(200).withBody(subscriptionResponse));
+        clientAndServer.when(
+                request().withMethod("DELETE")
+                         .withPath("/subscriptions")
+                         .withQueryStringParameter("subscriptionNames",
+                                 "Subscription1,Subscription2,Subscription3"))
+                       .respond(response().withStatusCode(200).withBody(""));
+        clientAndServer.when(request().withMethod("POST").withPath("/subscriptions"))
+                       .respond(response().withStatusCode(200).withBody(""));
+
+        String subscriptionResponse2 = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
+        clientAndServer.when(request().withMethod("GET").withPath("/subscriptions/Subscription2"))
+                       .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
+        clientAndServer.when(request().withMethod("GET").withPath("/subscriptions/Subscription1"))
+                       .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
+
+        String responseStatus = "{\"status\":\"OK\"}";
+        clientAndServer.when(request().withMethod("GET").withPath("/auth/checkStatus"))
+                       .respond(response().withStatusCode(200).withBody(responseStatus));
+
+        String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
+        clientAndServer.when(
+                request().withMethod("DELETE")
+                         .withPath("/subscriptions")
+                         .withQueryStringParameter("subscriptionNames",
+                                 "Subscription1,Subscription2,Subscription3"))
+                       .respond(response().withStatusCode(200).withBody(""));
+        clientAndServer.when(
+                request().withMethod("GET").withPath("/download/subscriptionsTemplate"))
+                       .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
+
+        String responseAuth = "{\"security\":" + security + "}";
+        String responseUser = "{\"user\":\"" + user + "\"}";
+        clientAndServer.when(request().withMethod("GET").withPath("/auth"))
+                       .respond(response().withStatusCode(200).withBody(responseAuth));
+        clientAndServer.when(request().withMethod("GET").withPath("/auth/login"))
+                       .respond(response().withStatusCode(200).withBody(responseUser));
+    }
+
+    private void setupMockEndpointMultiSubscription() throws IOException {
+        clientAndServer.clear(request());
         String subscriptionResponse = getJSONStringFromFile(
                 SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
         String downloadBulkSubscriptionResponse = "{\"foundSubscriptions\": " + subscriptionResponse
                 + "}";
-        mockClient.when(request().withMethod("GET").withPath("/subscriptions"))
-                  .respond(response().withStatusCode(200).withBody(subscriptionResponse));
-        mockClient.when(
+        clientAndServer.when(
                 request().withMethod("GET")
-                         .withPath("/subscriptions/Subscription1,Subscription2,Subscription3"))
-                  .respond(response().withStatusCode(200)
-                                     .withBody(downloadBulkSubscriptionResponse));
-        mockClient.when(request().withMethod("DELETE").withPath("/subscriptions"))
-                  .respond(response().withStatusCode(200).withBody(""));
-        mockClient.when(request().withMethod("POST").withPath("/subscriptions"))
-                  .respond(response().withStatusCode(200).withBody(""));
-
-        String subscriptionResponse2 = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
-        String downloadSubscriptionResponse = "{\"foundSubscriptions\": " + subscriptionResponse2
-                + "}";
-        mockClient.when(request().withMethod("GET").withPath("/subscriptions/Subscription2"))
-                  .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
-        mockClient.when(request().withMethod("GET").withPath("/subscriptions/Subscription1"))
-                  .respond(response().withStatusCode(200).withBody(downloadSubscriptionResponse));
-
-        String responseStatus = "{\"status\":\"OK\"}";
-        mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus"))
-                  .respond(response().withStatusCode(200).withBody(responseStatus));
-
-        String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
-        mockClient.when(
-                request().withMethod("DELETE")
-                         .withPath("/subscriptions/Subscription1,Subscription2,Subscription3"))
-                  .respond(response().withStatusCode(200).withBody(""));
-        mockClient.when(request().withMethod("GET").withPath("/download/subscriptionsTemplate"))
-                  .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
-
-        String responseAuth = "{\"security\":" + security + "}";
-        String responseUser = "{\"user\":\"" + user + "\"}";
-        mockClient.when(request().withMethod("GET").withPath("/auth"))
-                  .respond(response().withStatusCode(200).withBody(responseAuth));
-        mockClient.when(request().withMethod("GET").withPath("/auth/login"))
-                  .respond(response().withStatusCode(200).withBody(responseUser));
+                         .withPath("/subscriptions")
+                         .withQueryStringParameter("subscriptionNames",
+                                 "Subscription1,Subscription2,Subscription3"))
+                       .respond(response().withStatusCode(200)
+                                          .withBody(downloadBulkSubscriptionResponse));
     }
 }
