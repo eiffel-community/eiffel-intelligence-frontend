@@ -321,7 +321,16 @@ Example curl commands to these endpoints [can be found here](https://github.com/
     <tr>
         <td>/subscriptions</td>
         <td>GET</td>
-        <td>Fetches all available subscriptions from the back-end</td>
+        <td>
+            Fetches all available subscriptions from the back-end.
+            Selected subscriptions can be fetched by using the optional subscriptionNames parameter
+            and a comma separated list e.g. subscriptionNames={name1},{name2}
+        </td>
+    </tr>
+        <tr>
+        <td>/subscriptions/{subscriptionName}</td>
+        <td>GET</td>
+        <td>Fetches information about a single subscription from the back-end</td>
     </tr>
     <tr>
         <td>/subscriptions</td>
@@ -333,31 +342,18 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <td>PUT</td>
         <td>Request to update one (or more) subscription object(s) included in JSON format</td>
     </tr>
-    <tr>
-        <td>/subscriptions/{subscriptionName}</td>
-        <td>GET</td>
-        <td>Fetches information about a single subscription from the back-end</td>
+        <tr>
+        <td>/subscriptions</td>
+        <td>DELETE</td>
+        <td>
+            Selected subscriptions can be deleted by using the required subscriptionNames parameter
+            and a comma separated list e.g. subscriptionNames={name1},{name2}
+        </td>
     </tr>
     <tr>
         <td>/subscriptions/{subscriptionName}</td>
         <td>DELETE</td>
         <td>Deletes a single (or multiple) subscription(s) from the back-end</td>
-    </tr>
-    <tr>
-        <td>/subscriptions?subscriptionNames={names}</td>
-        <td>GET</td>
-        <td>
-            Fetches information about one or more subscriptions from the back-end.
-            Multiple subscriptions are listed with a comma separator e.g. Sub1,Sub2,...
-        </td>
-    </tr>
-    <tr>
-        <td>/subscriptions?subscriptionNames={names}</td>
-        <td>DELETE</td>
-        <td>
-            Deletes one or more subscriptions from the back-end.
-            Multiple subscriptions are listed with a comma separator e.g. Sub1,Sub2,...
-        </td>
     </tr>
 </table>
 
