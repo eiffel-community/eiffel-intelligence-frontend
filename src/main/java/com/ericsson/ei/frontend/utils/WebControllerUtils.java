@@ -64,7 +64,7 @@ public class WebControllerUtils {
     private String applicationName;
 
     @Autowired
-    private BackEndInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backEndInstancesUtils;
 
     @PostConstruct
     public void init() throws IOException {
@@ -104,13 +104,18 @@ public class WebControllerUtils {
      * @return String URL from found BackendInformation
      * @throws EiBackendInstancesException
      */
-    public String getBackEndServiceUrl(HttpSession httpSession) throws EiBackendInstancesException {
+    public String getBackEndServiceUrl(HttpSession httpSession) {
         String activeInstance = null;
         if (httpSession.getAttribute("backEndInstanceName") != null) {
             activeInstance = httpSession.getAttribute("backEndInstanceName").toString();
         }
 
-        BackendInstance backEndInformation = backEndInstancesUtils.getBackendInstance(activeInstance);
+        BackendInstance backEndInformation = null;
+        try {
+            backEndInformation = backEndInstancesUtils.getBackendInstance(activeInstance);
+        } catch(EiBackendInstancesException e) {
+            backEndInformation = backEndInstancesUtils.getDefaultBackendInstance();
+        }
 
         return backEndInformation.getUrlAsString();
     }

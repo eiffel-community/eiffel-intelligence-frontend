@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
@@ -46,7 +46,7 @@ public class EIRequestControllerUtilsTest {
     private WebControllerUtils controllerUtils;
 
     @MockBean
-    private BackEndInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backEndInstancesUtils;
 
     private HttpServletRequest  mockedRequest;
 

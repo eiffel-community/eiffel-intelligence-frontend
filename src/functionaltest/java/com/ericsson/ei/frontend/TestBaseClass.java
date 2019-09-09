@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 import com.google.gson.JsonArray;
 
@@ -36,7 +36,7 @@ public class TestBaseClass {
     private String filePath = "";
 
     @Autowired
-    protected BackEndInstancesHandler backendInstancesUtils;
+    protected BackendInstancesHandler backendInstancesUtils;
 
     @Autowired
     protected MockMvc mockMvc;

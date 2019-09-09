@@ -50,7 +50,7 @@ public class EIRequestsControllerUtils {
     private static final String BACKEND_NAME_KEY_NAME = "backendname";
 
     @Autowired
-    private BackEndInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backEndInstancesUtils;
 
     /**
      * Processes an HttpServletRequest and extract the URL parameters from it and

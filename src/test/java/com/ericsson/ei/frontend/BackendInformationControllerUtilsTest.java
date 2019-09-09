@@ -41,8 +41,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInformationControllerUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInformationControllerUtils;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -56,10 +56,10 @@ public class BackendInformationControllerUtilsTest {
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
     @MockBean
-    private BackEndInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backEndInstancesUtils;
 
     @Autowired
-    private BackEndInformationControllerUtils backendInfoContrUtils;
+    private BackendInformationControllerUtils backendInfoContrUtils;
 
     private JsonObject instance;
     private JsonArray instances;

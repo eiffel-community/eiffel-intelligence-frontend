@@ -28,8 +28,8 @@ public class SwitchBackendPage extends PageBaseClass {
     public Object getInstanceNameAtPosition(int position) {
         new WebDriverWait(driver, TIMEOUT_TIMER)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("BackendInstance" + position + "Name")));
-        WebElement backendInstanceName = driver.findElement(By.id("BackendInstance" + position + "Name"));
-        return backendInstanceName.getText();
+        WebElement backendInstanceNameElement = driver.findElement(By.id("BackendInstance" + position + "Name"));
+        return backendInstanceNameElement.getText();
     }
 
     public void switchToBackendInstance(int backendNumber) {

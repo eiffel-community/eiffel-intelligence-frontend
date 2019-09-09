@@ -40,8 +40,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-public class BackEndInstancesHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInstancesHandler.class);
+public class BackendInstancesHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(BackendInstancesHandler.class);
 
     @Value("${ei.backend.instances.list.json.content:#{null}}")
     private String backendInstancesJsonString;
@@ -80,7 +80,8 @@ public class BackEndInstancesHandler {
         }
 
         throw new EiBackendInstancesException(
-                "EI Backend instance '" + backendName +  "' does not exist in EI Backend Instances list.");    }
+                "EI Backend instance '" + backendName +  "' does not exist in EI Backend Instances list.");
+        }
 
     /**
      * Returns the default backend if set, otherwise it will return

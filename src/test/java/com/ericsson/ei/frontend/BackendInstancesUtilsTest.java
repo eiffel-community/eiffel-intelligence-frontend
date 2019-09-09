@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -42,7 +42,7 @@ public class BackendInstancesUtilsTest {
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
     @Autowired
-    private BackEndInstancesHandler utils;
+    private BackendInstancesHandler utils;
 
     private JsonObject instance;
     private JsonArray instances;

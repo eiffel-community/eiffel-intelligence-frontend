@@ -41,7 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
@@ -68,7 +68,7 @@ public class EIRequestControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BackEndInstancesHandler backendInstanceUtils;
+    private BackendInstancesHandler backendInstanceUtils;
 
 
     @Rule
@@ -89,7 +89,6 @@ public class EIRequestControllerTest {
         JsonArray backendInstances = new JsonArray();
         backendInstances.add(backendInstance.getAsJsonObject());
         backendInstanceUtils.setBackendInstances(backendInstances);
-        System.out.println();
     }
 
     @Test

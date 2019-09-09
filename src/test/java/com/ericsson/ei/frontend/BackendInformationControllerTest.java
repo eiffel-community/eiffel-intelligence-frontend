@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ericsson.ei.frontend.model.BackendInstance;
-import com.ericsson.ei.frontend.utils.BackEndInstancesHandler;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -55,7 +55,7 @@ public class BackendInformationControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BackEndInstancesHandler utils;
+    private BackendInstancesHandler utils;
 
     private JsonObject instance;
     private JsonArray instances;

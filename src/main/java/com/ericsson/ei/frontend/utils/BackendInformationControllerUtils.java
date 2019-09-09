@@ -33,12 +33,12 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonArray;
 
 @Component
-public class BackEndInformationControllerUtils {
+public class BackendInformationControllerUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationControllerUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BackendInformationControllerUtils.class);
 
     @Autowired
-    private BackEndInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backendInstancesUtils;
 
     /**
      * Processes a request to get all available back ends and returns
@@ -50,7 +50,7 @@ public class BackEndInformationControllerUtils {
      */
     public ResponseEntity<String> handleRequestForInstances(HttpServletRequest request) {
         try {
-            JsonArray allAvailableInstances = backEndInstancesUtils.getBackendInstancesAsJsonArray();
+            JsonArray allAvailableInstances = backendInstancesUtils.getBackendInstancesAsJsonArray();
 
             return new ResponseEntity<>(
                     allAvailableInstances.toString(),
