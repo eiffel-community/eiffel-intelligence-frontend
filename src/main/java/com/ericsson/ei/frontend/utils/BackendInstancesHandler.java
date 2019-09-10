@@ -22,9 +22,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +31,9 @@ import org.springframework.stereotype.Component;
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackendInstance;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,7 +50,15 @@ public class BackendInstancesHandler {
 
     @PostConstruct
     private void init() {
-        parseBackendInstancesStringToBackendInstances();
+        JsonArray backendInstancesJsonArray = parseBackendInstancesJsonString();
+        backendInstances = parseBackendInstancesJsonArray(backendInstancesJsonArray);
+    }
+
+    private JsonArray parseBackendInstancesJsonString() {
+        JsonParser parser = new JsonParser();
+        JsonElement backendInstancesJsonElement = parser.parse(backendInstancesJsonString);
+        JsonArray backendInstancesJsonArray = backendInstancesJsonElement.getAsJsonArray();
+        return backendInstancesJsonArray;
     }
 
     /**
@@ -104,36 +113,37 @@ public class BackendInstancesHandler {
      *
      * @param backendInstances
      */
-    public void setBackendInstances(JsonArray backendInstances) {
+    public void setBackendInstances(JsonArray backendInstancesJsonArray) {
         cleanBackendInstances();
-        backendInstancesJsonString = backendInstances.toString();
-        parseBackendInstancesStringToBackendInstances();
+        backendInstances = parseBackendInstancesJsonArray(backendInstancesJsonArray);
     }
 
-    private void parseBackendInstancesStringToBackendInstances() {
+    private List<BackendInstance> parseBackendInstancesJsonArray(JsonArray backendInstancesJsonArray) {
         try {
             if(backendInstancesJsonString == null && backendInstancesJsonString.isEmpty()) {
                 LOG.debug("No backend instances provided.");
-                return;
+                return null;
             }
 
-            JSONArray backendInstancesJsonArray = new JSONArray(backendInstancesJsonString);
+            List<BackendInstance> backendInstances = new ArrayList<>();
             for(Object jsonElement: backendInstancesJsonArray) {
-                JSONObject backendInstanceJsonObject = (JSONObject)jsonElement;
+                JsonObject backendInstanceJsonObject = (JsonObject)jsonElement;
                 BackendInstance backendInstance = new BackendInstance();
-                backendInstance.setName(backendInstanceJsonObject.getString("name"));
-                backendInstance.setHost(backendInstanceJsonObject.getString("host"));
-                backendInstance.setPort(Integer.toString(backendInstanceJsonObject.getInt("port")));
-                backendInstance.setContextPath(backendInstanceJsonObject.getString("contextPath"));
-                backendInstance.setUseSecureHttpBackend(backendInstanceJsonObject.getBoolean("https"));
-                backendInstance.setDefaultBackend(backendInstanceJsonObject.getBoolean("defaultBackend"));
+                backendInstance.setName(backendInstanceJsonObject.get("name").getAsString());
+                backendInstance.setHost(backendInstanceJsonObject.get("host").getAsString());
+                backendInstance.setPort(backendInstanceJsonObject.get("port").getAsString());
+                backendInstance.setContextPath(backendInstanceJsonObject.get("contextPath").getAsString());
+                backendInstance.setUseSecureHttpBackend(backendInstanceJsonObject.get("https").getAsBoolean());
+                backendInstance.setDefaultBackend(backendInstanceJsonObject.get("defaultBackend").getAsBoolean());
 
                 backendInstances.add(backendInstance);
             }
+            return backendInstances;
         } catch (JSONException e) {
             LOG.error("Incorrect instances provided. Please check application properties so that name, host, port, "
                     + "contextPath, https and defaultBackend fields exists. Stacktrace {}", ExceptionUtils.getStackTrace(e));
             System.exit(-1);
+            return null;
         }
     }
 
