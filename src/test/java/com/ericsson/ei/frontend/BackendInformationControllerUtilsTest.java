@@ -96,7 +96,7 @@ public class BackendInformationControllerUtilsTest {
         ResponseEntity<String> expectedResponse;
 
         expectedResponse = createExpectedResponse(instances.toString(), HttpStatus.OK);
-        response = backendInfoContrUtils.handleRequestForInstances(mockedRequest);
+        response = backendInfoContrUtils.getBackendInstancesResponse(mockedRequest);
         assertEquals(expectedResponse, response);
     }
 

@@ -48,7 +48,7 @@ public class BackendInformationControllerUtils {
      * @param request
      * @return new ResponseEntity
      */
-    public ResponseEntity<String> handleRequestForInstances(HttpServletRequest request) {
+    public ResponseEntity<String> getBackendInstancesResponse(HttpServletRequest request) {
         try {
             JsonArray allAvailableInstances = backendInstancesUtils.getBackendInstancesAsJsonArray();
 

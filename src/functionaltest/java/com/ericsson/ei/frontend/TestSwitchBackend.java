@@ -103,20 +103,20 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     }
 
     private void addBackendInstances() {
-        int portServer1 = mockServer1.getLocalPort();
+        int server1Port = mockServer1.getLocalPort();
 
         BackendInstance backend1 = new BackendInstance();
         backend1.setName("new_instance_default");
         backend1.setHost("localhost");
-        backend1.setPort(Integer.toString(portServer1));
+        backend1.setPort(Integer.toString(server1Port));
         backend1.setContextPath("");
         backend1.setDefaultBackend(true);
 
-        int portServer2 = mockServer2.getLocalPort();
+        int server2Port = mockServer2.getLocalPort();
         BackendInstance backend2 = new BackendInstance();
         backend2.setName("new_instance");
         backend2.setHost(BASE_URL);
-        backend2.setPort(Integer.toString(portServer2));
+        backend2.setPort(Integer.toString(server2Port));
         backend2.setContextPath("");
         backend2.setDefaultBackend(true);
 

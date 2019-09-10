@@ -64,7 +64,7 @@ public class WebControllerUtils {
     private String applicationName;
 
     @Autowired
-    private BackendInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backendInstancesUtils;
 
     @PostConstruct
     public void init() throws IOException {
@@ -112,9 +112,9 @@ public class WebControllerUtils {
 
         BackendInstance backEndInformation = null;
         try {
-            backEndInformation = backEndInstancesUtils.getBackendInstance(activeInstance);
+            backEndInformation = backendInstancesUtils.getBackendInstance(activeInstance);
         } catch(EiBackendInstancesException e) {
-            backEndInformation = backEndInstancesUtils.getDefaultBackendInstance();
+            backEndInformation = backendInstancesUtils.getDefaultBackendInstance();
         }
 
         return backEndInformation.getUrlAsString();

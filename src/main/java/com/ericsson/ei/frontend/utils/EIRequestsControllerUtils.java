@@ -50,7 +50,7 @@ public class EIRequestsControllerUtils {
     private static final String BACKEND_NAME_KEY_NAME = "backendname";
 
     @Autowired
-    private BackendInstancesHandler backEndInstancesUtils;
+    private BackendInstancesHandler backendInstancesUtils;
 
     /**
      * Processes an HttpServletRequest and extract the URL parameters from it and
@@ -111,7 +111,7 @@ public class EIRequestsControllerUtils {
 
     private String getUrlFromBackendInstancesUtils(List<NameValuePair> params) throws EiBackendInstancesException {
         String backEndName = extractBackEndNameFromParameters(params);
-        BackendInstance backendInstance = backEndInstancesUtils.getBackendInstance(backEndName);
+        BackendInstance backendInstance = backendInstancesUtils.getBackendInstance(backEndName);
         if (backendInstance == null) {
             throw new EiBackendInstancesException(
                     "EI Backend instance '" + backEndName +  "' does not exist in EI Backend Instances list.");
@@ -120,7 +120,7 @@ public class EIRequestsControllerUtils {
     }
 
     private String getDefaultBackendInstanceUrl() {
-        BackendInstance backendInstance = backEndInstancesUtils.getDefaultBackendInstance();
+        BackendInstance backendInstance = backendInstancesUtils.getDefaultBackendInstance();
         return backendInstance.getUrlAsString();
     }
 

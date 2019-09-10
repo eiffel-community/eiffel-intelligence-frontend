@@ -36,9 +36,9 @@ public class TestBridgeCurlFunctions extends SeleniumBaseClass {
 
     @Before
     public void before() throws Exception {
-        int portServer = mockServer1.getLocalPort();
+        int serverPort = mockServer1.getLocalPort();
 
-        setBackendInstance("test", BASE_URL, portServer, "", true);
+        setBackendInstance("test", BASE_URL, serverPort, "", true);
         setupMockEndpoints();
     }
 

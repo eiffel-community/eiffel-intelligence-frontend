@@ -52,8 +52,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     @Before
     public void before() throws IOException {
-        int portServer = mockServer.getLocalPort();
-        setBackendInstance("new_instance_default", "localhost", portServer, "", true);
+        int serverPort = mockServer.getLocalPort();
+        setBackendInstance("new_instance_default", "localhost", serverPort, "", true);
 
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
         testRulesPage.loadPage();
@@ -77,7 +77,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         mockServer = startClientAndServer();
         mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
         mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus"))
-        .respond(response().withStatusCode(200));
+            .respond(response().withStatusCode(200));
     }
 
     @AfterClass

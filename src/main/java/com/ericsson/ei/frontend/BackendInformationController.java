@@ -43,7 +43,7 @@ public class BackendInformationController {
     @RequestMapping(value = "/backend", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
         LOG.debug("Received request for retrieving EI Backend instances list.");
-        ResponseEntity<String> response = backEndInfoContUtils.handleRequestForInstances(request);
+        ResponseEntity<String> response = backEndInfoContUtils.getBackendInstancesResponse(request);
         return response;
     }
 

@@ -42,8 +42,8 @@ public class TestSubscriptionCRUD extends SeleniumBaseClass {
     @Override
     @Before
     public void init() throws Exception {
-        int portServer = mockServerRule.getPort();
-        setBackendInstance("test", "localhost", portServer, "", false);
+        int serverPort = mockServerRule.getPort();
+        setBackendInstance("test", "localhost", serverPort, "", false);
 
         subscriptionRequestBody = getJSONStringFromFile(SUBSCRIPTION_FILE_PATH);
 

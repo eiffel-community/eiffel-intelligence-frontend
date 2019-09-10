@@ -76,8 +76,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     @Before
     public void before() throws IOException {
-        int portServer = mockServer.getLocalPort();
-        setBackendInstance("new_instance_default", "localhost", portServer, "", true);
+        int serverPort = mockServer.getLocalPort();
+        setBackendInstance("new_instance_default", "localhost", serverPort, "", true);
         subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
     }
 

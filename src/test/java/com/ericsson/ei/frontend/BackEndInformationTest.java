@@ -43,13 +43,13 @@ public class BackEndInformationTest {
     private static final String BACK_END_HOST = "Test_host";
     private static final String BACK_END_PORT = "12345";
 
-    private BackendInstance backEndInformation;
+    private BackendInstance backendInformation;
 
     private static final Logger LOG = LoggerFactory.getLogger(BackEndInformationTest.class);
 
     @Before
     public void before() throws IOException {
-        backEndInformation = new BackendInstance(BACK_END_NAME, BACK_END_HOST, BACK_END_PORT, "", true, false);
+        backendInformation = new BackendInstance(BACK_END_NAME, BACK_END_HOST, BACK_END_PORT, "", true, false);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class BackEndInformationTest {
         instance.addProperty(HTTPS, true);
         instance.addProperty(DEFAULT, false);
 
-        assertEquals(instance, backEndInformation.getAsJsonObject());
+        assertEquals(instance, backendInformation.getAsJsonObject());
     }
 
     @Test
@@ -73,15 +73,15 @@ public class BackEndInformationTest {
         LOG.error("urlWithHttp = " + urlWithHttp);
         LOG.error("urlWithHttpwothPath = " + urlWithHttpwothPath);
         LOG.error("urlWithHttps = " + urlWithHttps);
-        backEndInformation.setUseSecureHttpBackend(true);
-        assertEquals(urlWithHttps, backEndInformation.getUrlAsString());
+        backendInformation.setUseSecureHttpBackend(true);
+        assertEquals(urlWithHttps, backendInformation.getUrlAsString());
 
-        backEndInformation.setUseSecureHttpBackend(false);
-        assertEquals(urlWithHttp, backEndInformation.getUrlAsString());
+        backendInformation.setUseSecureHttpBackend(false);
+        assertEquals(urlWithHttp, backendInformation.getUrlAsString());
 
-        backEndInformation.setContextPath("/path/");
-        LOG.error("backEndInformation = " + backEndInformation.getUrlAsString());
-        assertEquals(urlWithHttpwothPath, backEndInformation.getUrlAsString());
+        backendInformation.setContextPath("/path/");
+        LOG.error("backEndInformation = " + backendInformation.getUrlAsString());
+        assertEquals(urlWithHttpwothPath, backendInformation.getUrlAsString());
 
     }
 }
