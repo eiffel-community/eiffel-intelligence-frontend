@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.gson.JsonParser;
 
-public class TestSubscriptionCRUD extends TestBaseClass {
+public class TestSubscriptionCRUD extends SeleniumBaseClass {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
@@ -42,7 +42,9 @@ public class TestSubscriptionCRUD extends TestBaseClass {
     @Override
     @Before
     public void init() throws Exception {
-        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", mockServerRule.getPort(), "", false);
+        int serverPort = mockServerRule.getPort();
+        setBackendInstance("test", "localhost", serverPort, "", false);
+
         subscriptionRequestBody = getJSONStringFromFile(SUBSCRIPTION_FILE_PATH);
 
         String auth = USERNAME + ":" + PASSWORD;

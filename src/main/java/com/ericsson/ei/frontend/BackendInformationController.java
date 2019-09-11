@@ -29,21 +29,21 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ericsson.ei.frontend.utils.BackEndInformationControllerUtils;
+import com.ericsson.ei.frontend.utils.BackendInformationControllerUtils;
 
 @Controller
-public class BackEndInformationController {
+public class BackendInformationController {
 
-    public static final Logger LOG = LoggerFactory.getLogger(BackEndInformationController.class);
+    public static final Logger LOG = LoggerFactory.getLogger(BackendInformationController.class);
 
     @Autowired
-    private BackEndInformationControllerUtils backEndInfoContUtils;
+    private BackendInformationControllerUtils backEndInfoContUtils;
 
     @CrossOrigin
     @RequestMapping(value = "/backend", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
         LOG.debug("Received request for retrieving EI Backend instances list.");
-        ResponseEntity<String> response = backEndInfoContUtils.handleRequestForInstances(request);
+        ResponseEntity<String> response = backEndInfoContUtils.getBackendInstancesResponse(request);
         return response;
     }
 
@@ -54,21 +54,5 @@ public class BackEndInformationController {
         ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToSwitchBackEnd(request);
         return response;
 
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteBackEndInstance(Model model, HttpServletRequest request) {
-        LOG.debug("Received request to delete EI back end instance.");
-        ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToDeleteBackEnd(request);
-        return response;
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.POST)
-    public ResponseEntity<String> addInstanceInformation(Model model, HttpServletRequest request) {
-        LOG.debug("Received request to add EI back end instance.");
-        ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToAddBackEnd(request);
-        return response;
     }
 }

@@ -28,8 +28,6 @@ public class TestNavigation extends SeleniumBaseClass {
         indexPage.clickEiInfoBtn();
         indexPage.clickInformationBtn();
         indexPage.clickRulesBtn();
-        indexPage.clickAdminBackendInstancesBtn();
-        indexPage.clickAddBackendInstanceBtn();
         indexPage.clickSwitchBackendInstanceBtn();
         indexPage.clickSubscriptionPage();
     }

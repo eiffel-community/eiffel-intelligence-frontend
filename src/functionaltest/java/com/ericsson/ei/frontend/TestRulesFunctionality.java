@@ -23,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
+
 public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private static MockServerClient mockClient;
@@ -52,8 +53,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     @Before
     public void before() throws IOException {
         int serverPort = mockServer.getLocalPort();
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("new_instance_default", "localhost", serverPort, "", true);
+        setBackendInstance("new_instance_default", "localhost", serverPort, "", true);
+
         testRulesPage = new TestRulesPage(null, driver, baseUrl);
         testRulesPage.loadPage();
     }
@@ -75,6 +76,8 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     public static void setUpMocks() throws IOException {
         mockServer = startClientAndServer();
         mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
+        mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus"))
+            .respond(response().withStatusCode(200));
     }
 
     @AfterClass
