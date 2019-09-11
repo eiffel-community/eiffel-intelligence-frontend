@@ -1,16 +1,15 @@
 package com.ericsson.ei.frontend.pageobjects;
 
+import java.io.IOException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.IOException;
 
 public class IndexPage extends PageBaseClass {
     public IndexPage(CloseableHttpClient mockedHttpClient, FirefoxDriver driver, String baseUrl) {
@@ -62,22 +61,6 @@ public class IndexPage extends PageBaseClass {
     public void clickReloadButton() throws IOException {
         WebElement reloadButton = driver.findElement(By.className("table_reload"));
         reloadButton.click();
-    }
-
-
-    public void clickAdminBackendInstancesBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#conf-backend']")));
-        WebElement adminBackendInstancesBtn = driver.findElement(By.xpath("//a[@href='#conf-backend']"));
-        adminBackendInstancesBtn.click();
-    }
-
-    public AddBackendPage clickAddBackendInstanceBtn() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#add-backend']")));
-        WebElement addInstanceBtn = driver.findElement(By.xpath("//a[@href='#add-backend']"));
-        addInstanceBtn.click();
-        AddBackendPage addBackendPage = new AddBackendPage(mockedHttpClient, driver, baseUrl);
-        waitForJQueryToLoad();
-        return addBackendPage;
     }
 
     public SwitchBackendPage clickSwitchBackendInstanceBtn() throws IOException {

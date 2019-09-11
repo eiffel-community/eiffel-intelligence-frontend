@@ -1,6 +1,5 @@
 package com.ericsson.ei.frontend;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,9 +17,10 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.ericsson.ei.frontend.utils.BackEndInstanceFileUtils;
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
+import com.ericsson.ei.frontend.model.BackendInstance;
+import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
+import com.google.gson.JsonArray;
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,30 +36,34 @@ public class TestBaseClass {
     private String filePath = "";
 
     @Autowired
-    protected BackEndInstanceFileUtils backEndInstanceFileUtils;
-
-    @Autowired
-    protected BackEndInstancesUtils backEndInstancesUtils;
+    protected BackendInstancesHandler backendInstancesUtils;
 
     @Autowired
     protected MockMvc mockMvc;
 
     @PostConstruct
     public void init() throws Exception {
-        File tempFile = File.createTempFile("tempfile", ".json");
-        tempFile.deleteOnExit();
-
-        filePath = tempFile.getAbsolutePath().toString();
-        Files.write(Paths.get(filePath), "[]".getBytes());
-        backEndInstanceFileUtils.setEiInstancesPath(filePath);
-
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
-        backEndInstancesUtils.setDefaultBackEndInstance("test", "localhost", 12345, "", true);
-
         webControllerUtils.setFrontendServicePort(testServerPort);
     }
 
     protected static String getJSONStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8).replaceAll("[\\r\\n ]", "");
+    }
+
+    protected void setBackendInstance(String name, String host, int port, String contextPath, boolean isDefaultBackend) {
+        BackendInstance backendInstance = new BackendInstance();
+        backendInstance.setName(name);
+        backendInstance.setHost(host);
+        backendInstance.setPort(Integer.toString(port));
+        backendInstance.setContextPath(contextPath);
+        backendInstance.setDefaultBackend(true);
+
+        JsonArray backendInstances = new JsonArray();
+        backendInstances.add(backendInstance.getAsJsonObject());
+        backendInstancesUtils.setBackendInstances(backendInstances);
+    }
+
+    protected void setBackendInstances(JsonArray backendInstances) {
+        backendInstancesUtils.setBackendInstances(backendInstances);
     }
 }

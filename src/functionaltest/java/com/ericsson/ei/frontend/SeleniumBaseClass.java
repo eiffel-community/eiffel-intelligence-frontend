@@ -23,6 +23,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -34,6 +36,8 @@ import com.ericsson.ei.config.SeleniumConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SeleniumBaseClass extends TestBaseClass {
+    private static final Logger LOG = LoggerFactory.getLogger(SeleniumBaseClass.class);
+
     @Autowired
     @InjectMocks
     EIRequestsController eIRequestsController;
@@ -52,6 +56,11 @@ public class SeleniumBaseClass extends TestBaseClass {
 
     @After
     public void tearDown() throws Exception {
+        if (driver != null) {
+            LOG.info("Closing firefoxdriver.");
+            driver.quit();
+        }
+
         File tempDownloadDirectory = SeleniumConfig.getTempDownloadDirectory();
         FileUtils.deleteDirectory(tempDownloadDirectory);
 
@@ -59,8 +68,6 @@ public class SeleniumBaseClass extends TestBaseClass {
         if (!verificationErrorString.equals("")) {
             fail(verificationErrorString);
         }
-
-        backEndInstancesUtils.setDefaultBackEndInstanceToNull();
     }
 
     protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {

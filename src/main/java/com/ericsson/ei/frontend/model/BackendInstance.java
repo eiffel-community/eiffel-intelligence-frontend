@@ -18,7 +18,6 @@ package com.ericsson.ei.frontend.model;
 
 import org.springframework.stereotype.Component;
 
-import com.ericsson.ei.frontend.utils.BackEndInstancesUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
@@ -35,7 +34,14 @@ import lombok.ToString;
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class BackEndInformation {
+public class BackendInstance {
+
+    private static final String NAME_KEY = "name";
+    private static final String HOST_KEY = "host";
+    private static final String PORT_KEY = "port";
+    private static final String CONTEXT_PATH_KEY = "contextPath";
+    private static final String HTTPS_KEY = "https";
+    private static final String DEFAULT_KEY = "defaultBackend";
 
     private String name;
     private String host;
@@ -56,12 +62,12 @@ public class BackEndInformation {
      */
     public JsonObject getAsJsonObject() {
         JsonObject instance = new JsonObject();
-        instance.addProperty(BackEndInstancesUtils.NAME, name);
-        instance.addProperty(BackEndInstancesUtils.HOST, host);
-        instance.addProperty(BackEndInstancesUtils.PORT, Integer.valueOf(port));
-        instance.addProperty(BackEndInstancesUtils.CONTEXT_PATH, contextPath);
-        instance.addProperty(BackEndInstancesUtils.HTTPS, useSecureHttpBackend);
-        instance.addProperty(BackEndInstancesUtils.DEFAULT, defaultBackend);
+        instance.addProperty(NAME_KEY, name);
+        instance.addProperty(HOST_KEY, host);
+        instance.addProperty(PORT_KEY, Integer.valueOf(port));
+        instance.addProperty(CONTEXT_PATH_KEY, contextPath);
+        instance.addProperty(HTTPS_KEY, useSecureHttpBackend);
+        instance.addProperty(DEFAULT_KEY, defaultBackend);
         return instance;
     }
 

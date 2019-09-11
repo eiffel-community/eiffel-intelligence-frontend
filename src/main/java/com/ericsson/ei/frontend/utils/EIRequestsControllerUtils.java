@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
-import com.ericsson.ei.frontend.model.BackEndInformation;
+import com.ericsson.ei.frontend.model.BackendInstance;
 
 import lombok.Getter;
 
@@ -50,7 +50,7 @@ public class EIRequestsControllerUtils {
     private static final String BACKEND_NAME_KEY_NAME = "backendname";
 
     @Autowired
-    private BackEndInstancesUtils backEndInstancesUtils;
+    private BackendInstancesHandler backendInstancesUtils;
 
     /**
      * Processes an HttpServletRequest and extract the URL parameters from it and
@@ -90,22 +90,38 @@ public class EIRequestsControllerUtils {
             List<NameValuePair> params = getParameters(requestQuery);
             if (requestQuery.contains(BACKEND_URL_KEY_NAME)) {
                 requestUrl = extractUrlFromParameters(params);
-            } else {
-                String backEndName = extractBackEndNameFromParameters(params);
-                BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(backEndName);
-                if (backEndInformation == null) {
-                    throw new EiBackendInstancesException(
-                            "EI Backend instance '" + backEndName +  "' does not exist in EI Backend Instances list.");
+            } else if(requestQuery.contains(BACKEND_NAME_KEY_NAME)) {
+                try {
+                    requestUrl = getUrlFromBackendInstancesUtils(params);
+                } catch (EiBackendInstancesException e) {
+                    //Try to get default backend information if the requested one does not exist
+                    requestUrl = getDefaultBackendInstanceUrl();
                 }
-                requestUrl = backEndInformation.getUrlAsString();
+
+            } else {
+                requestUrl = getDefaultBackendInstanceUrl();
             }
         } else {
-            BackEndInformation backEndInformation = backEndInstancesUtils.getBackEndInformationByName(null);
-            requestUrl = backEndInformation.getUrlAsString();
+            requestUrl = getDefaultBackendInstanceUrl();
         }
 
         LOG.debug("Forwarding request to url '" + requestUrl + "'.");
         return requestUrl;
+    }
+
+    private String getUrlFromBackendInstancesUtils(List<NameValuePair> params) throws EiBackendInstancesException {
+        String backEndName = extractBackEndNameFromParameters(params);
+        BackendInstance backendInstance = backendInstancesUtils.getBackendInstance(backEndName);
+        if (backendInstance == null) {
+            throw new EiBackendInstancesException(
+                    "EI Backend instance '" + backEndName +  "' does not exist in EI Backend Instances list.");
+        }
+        return backendInstance.getUrlAsString();
+    }
+
+    private String getDefaultBackendInstanceUrl() {
+        BackendInstance backendInstance = backendInstancesUtils.getDefaultBackendInstance();
+        return backendInstance.getUrlAsString();
     }
 
     private List<NameValuePair> getParameters(String requestQuery) {

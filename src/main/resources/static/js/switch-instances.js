@@ -21,23 +21,6 @@ jQuery(document).ready(function () {
             return true;
         };
 
-        self.removeInstance = function () {
-            self.instances.remove(this);
-            $.ajax({
-                url: frontendServiceUrl + frontendServiceBackEndPath,
-                type: "DELETE",
-                data: ko.toJSON(this),
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    parseAndLogMessage(XMLHttpRequest.responseText);
-                },
-                success: function (responseData, XMLHttpRequest, textStatus) {
-                    $.jGrowl(responseData.message, { sticky: false, theme: 'Notify' });
-                }
-            });
-        };
-
         self.submit = function () {
             sessionStorage.selectedActive = selected.name;
             navigateToRoute('subscriptions');

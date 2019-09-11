@@ -1,19 +1,21 @@
 package com.ericsson.ei.config;
 
+import java.io.File;
+import java.util.Properties;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
+import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ericsson.ei.frontend.exception.OSNotSupportedException;
 import com.ericsson.ei.frontend.exception.PropertiesNotLoadedException;
 import com.google.common.io.Files;
-import org.apache.commons.lang3.SystemUtils;
-import org.openqa.selenium.firefox.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Properties;
-
-import java.io.File;
 
 public class SeleniumConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
@@ -27,10 +29,6 @@ public class SeleniumConfig {
     private static FirefoxDriver driver;
 
     public static FirefoxDriver initFirefoxDriver() throws PropertiesNotLoadedException, OSNotSupportedException {
-        if (driver != null) {
-            return driver;
-        }
-
         FirefoxOptions firefoxOptions = new FirefoxOptions()
                 .setHeadless(true)
                 .setLogLevel(FirefoxDriverLogLevel.ERROR);

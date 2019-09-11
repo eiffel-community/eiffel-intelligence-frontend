@@ -31,6 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,7 +49,7 @@ public class WebControllerTest {
     private WebControllerUtils controllerUtils;
 
     @Before
-    public void beforeClass() {
+    public void beforeClass() throws EiBackendInstancesException {
         when(controllerUtils.getFrontEndServiceUrl()).thenReturn(FRONT_END_SERVICE_URL);
         when(controllerUtils.getBackEndServiceUrl(any())).thenReturn(BACK_END_SERVICE_URL);
     }
@@ -81,11 +82,6 @@ public class WebControllerTest {
     @Test
     public void testLogin() throws Exception {
         testGet("/login.html");
-    }
-
-    @Test
-    public void testAddInstances() throws Exception {
-        testGet("/add-instances.html");
     }
 
     @Test
