@@ -203,9 +203,15 @@ public class CommonSteps extends AbstractTestExecutionListener {
         assertEquals(true, response.getBody().contains(contains));
     }
 
+    @Then("^response body does not contain \'(.*)\'$")
+    public void response_body_does_not_contain(String contains) throws Throwable {
+        LOGGER.info("Response body: {}", response.getBody());
+        LOGGER.info("Does not contain: {}", contains);
+        assertEquals(true, !response.getBody().contains(contains));
+    }
+
     @Then("^remove \'(.*)\' from request headers at list index (\\d+)$")
     public void remove_key_from_request_headers_at_list_index(String headerKey, int index) {
         httpRequestList.get(index).removeHeader(headerKey);
     }
-
 }
