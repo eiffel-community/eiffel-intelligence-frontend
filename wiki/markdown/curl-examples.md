@@ -15,7 +15,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 #### Quick access to endpoints:
 * [/auth](#auth)
 * [/backend](#backend)
-* [/download](#download)
+* [/templates](#templates)
 * [/information](#information)
 * [/query](#query)
 * [/rules](#rules)
@@ -187,7 +187,7 @@ In the below command the JSON object is put in a file and sent along with the re
     curl -X DELETE --data @data.json localhost:8080/backend
 
 
-## <a id="download" />/download
+## <a id="templates" />/templates
 
 <table>
     <tr>
@@ -196,38 +196,37 @@ In the below command the JSON object is put in a file and sent along with the re
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/download/subscriptionsTemplate</td>
+        <td>/templates/subscriptions</td>
         <td>GET</td>
         <td>Downloads a template with several predefined subscriptions</td>
     </tr>
     <tr>
-        <td>/download/rulesTemplate</td>
+        <td>/templates/rules</td>
         <td>GET</td>
-        <td>Downloads a template with predefined rules</td>
+        <td>Downloads a template with several predefined rules</td>
     </tr>
     <tr>
-        <td>/download/eventsTemplate</td>
+        <td>/templates/events</td>
         <td>GET</td>
-        <td>Downloads a template with predefined events</td>
+        <td>Downloads a template with several predefined events</td>
     </tr>
 </table>
 
-The EI front-end supports these endpoints. More information can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/download-files.md)
+The Eiffel Intelligence front-end supports these endpoints. More information can be found in the [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/templates.md)
 
 #### Some curl examples
 
 This command would return a list of rules.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/rulesTemplate
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/templates/rules
 
 This command returns a list of predefined template events.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/download/eventsTemplate
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/templates/events
 
 This command returns a list of several subscriptions. It is also possible to specify a file in which to save the downloaded objects in to.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/download/subscriptionsTemplate --output myFile.json
-
+    curl -X GET -H "Content-type: application/json" localhost:8080/templates/subscriptions --output myFile.json
 
 ## <a id="information" />/information
 
@@ -276,7 +275,6 @@ The response is a json object containing all the connected components and data a
 
 Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md)
 
-
 ## <a id="rules" />/rules
 
 <table>
@@ -306,7 +304,6 @@ For these endpoints to be reachable the Eiffel Intelligence back-end [needs to b
 The below command would result in a json response of `{"status":true}` if this functionality is enabled.
 
     curl -X GET -H "Content-type: application/json" localhost:8080/rules/rule-check/testRulePageEnabled
-
 
 Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/running-rules-on-objects.md)
 
@@ -356,7 +353,6 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <td>Deletes a single (or multiple) subscription(s) from the back-end</td>
     </tr>
 </table>
-
 
 The `/subscriptions` endpoint can be called with `GET`, `POST`, `PUT` and `DELETE`.
 More information, and examples, on the `/subscriptions` API can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).

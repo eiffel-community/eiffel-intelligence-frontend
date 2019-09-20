@@ -1,11 +1,11 @@
 # Configuration
 
-To be able to execute and use Eiffel-Intelligence front-end, some configuration need to provided.
+To be able to execute and use Eiffel Intelligence front-end, some configuration need to provided.
 All configurations is made via application.properties file. These properties can also be provided as Java properties arguments as well.
 
-## Eiffel-Intelligence back-end
+## Eiffel Intelligence back-end
 
-Eiffel-Intelligence front-end is dependent that at least one EI back-end instance is up and running.
+Eiffel Intelligence front-end is dependent that at least one EI back-end instance is up and running.
 It is possible to configure several EI Backend instances.
 
 EI back-end instances is configured by setting **ei.backend.instances.list.json.content** property, example:
@@ -17,9 +17,9 @@ EI back-end instances is configured by setting **ei.backend.instances.list.json.
 
 You can set as many EI back-end instances as you intend to use.
 
-## Eiffel-Intelligence front-end server settings
+## Eiffel Intelligence front-end server settings
 
-Which port EIffel-Intelligence front-end web-server should be started with is set by the property **server.port**:
+Which port Eiffel Intelligence front-end web-server should be started with is set by the property **server.port**:
 
     server.port=8080
 
@@ -37,7 +37,7 @@ If running locally with "mvn spring-boot:run" no context-path is added which mea
 
 ## HTTPS security
 
-If Eiffel-Intelligence front-end need to be executed with secure HTTPS connections, then these properties need to be set:
+If Eiffel Intelligence front-end need to be executed with secure HTTPS connections, then these properties need to be set:
 
     ei.use.secure.http.frontend=false
     server.ssl.key-store: <keystore.p12>
@@ -49,8 +49,8 @@ Read more in Spring documentation about how to enable HTTPS security in Spring a
 
 ## Customize documentation links
 
-It is possible to add and change Documentation url links that is seen in the Eiffel-Intelligence front-end Web-UI.
-Documentaiton url links is configured by property **ei.eiffel.documentation.urls**, example:
+It is possible to add and change Documentation url links that is seen in the Eiffel Intelligence front-end Web-UI.
+Documentation url links is configured by property **ei.eiffel.documentation.urls**, example:
 
     ei.eiffel.documentation.urls={ "EI front-end documentation": "https://eiffel-community.github.io/eiffel-intelligence-frontend",\
                                "EI front-end GitHub": "https://github.com/eiffel-community/eiffel-intelligence-frontend",\
@@ -61,4 +61,4 @@ Documentaiton url links is configured by property **ei.eiffel.documentation.urls
 
 ## Other properties
 
-All Eiffel-Intelligence front-end properties can be found in [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) example file.
+All Eiffel Intelligence front-end properties can be found in [application.properties](https://github.com/Ericsson/eiffel-intelligence-frontend/blob/master/src/main/resources/application.properties) example file.
