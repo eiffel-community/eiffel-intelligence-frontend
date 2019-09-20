@@ -160,7 +160,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         System.out.println();
     }
 
-    @When("^request is sent for (\\d+) seconds until reponse code no longer matches (\\d+)$")
+    @When("^request is sent for (\\d+) seconds until response code no longer matches (\\d+)$")
     public void request_sent_body_not_received(int seconds, int statusCode) throws Throwable {
         long stopTime = System.currentTimeMillis() + (seconds * 1000);
         do {

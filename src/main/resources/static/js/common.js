@@ -12,7 +12,7 @@ function addBackendParameter(url) {
 
     var delimiter = "?";
     if (stringContainsSubstring(url, delimiter)) {
-        // url has delimeter ?, then delimeter should be &
+        // url has delimiter ?, then delimiter should be &
         delimiter = "&";
     }
 

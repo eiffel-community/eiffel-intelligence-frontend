@@ -68,17 +68,17 @@ public class EIRequestControllerUtilsTest {
     public void testGetEIRequestURL() throws Exception {
         String url = null;
 
-        // Test name null and no querystring.
+        // Test name null and no query string.
         when(mockedRequest.getServletPath()).thenReturn("/subscription");
         when(mockedRequest.getQueryString()).thenReturn(null);
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
         assertEquals("http://NullHost:12345/subscription", url);
 
-        // Test name TestName and querystring.
+        // Test name TestName and query string.
         when(mockedRequest.getServletPath()).thenReturn("/query");
-        when(mockedRequest.getQueryString()).thenReturn("someQuary=Something");
+        when(mockedRequest.getQueryString()).thenReturn("someQuery=Something");
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
-        assertEquals("http://NullHost:12345/query?someQuary=Something", url);
+        assertEquals("http://NullHost:12345/query?someQuery=Something", url);
 
         // Test url given in input from request.
         when(mockedRequest.getServletPath()).thenReturn("/subscription");

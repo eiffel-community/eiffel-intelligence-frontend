@@ -27,9 +27,9 @@ import com.ericsson.ei.frontend.utils.WebControllerUtils;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WebControllerUtilsTest {
-	private static final String HOST = "testHost";
-	private static final int PORT = 12345;
-	private static final String CONTEXT_PATH = "/path";
+    private static final String HOST = "testHost";
+    private static final int PORT = 12345;
+    private static final String CONTEXT_PATH = "/path";
     private WebControllerUtils controllerUtils;
 
     @Test

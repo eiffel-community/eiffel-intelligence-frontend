@@ -62,11 +62,10 @@ public class EIRequestsController {
     private EIRequestsControllerUtils eiRequestsControllerUtils;
 
     /**
-     * Bridge all EI Http Requests with GET method. Used for fetching Subscription by id or all subscriptions and EI Env
-     * Info.
+     * Bridge all Eiffel Intelligence HTTP GET requests.
      *
      * @param model
-     * @param request
+     * @param incomingRequest
      * @return
      */
     @CrossOrigin
@@ -78,7 +77,8 @@ public class EIRequestsController {
         try {
             eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         } catch (EiBackendInstancesException e) {
-            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            LOG.error("Some failure when forwarding request to EI Backend. "
+                    + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
             return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -90,7 +90,7 @@ public class EIRequestsController {
     }
 
     /**
-     * Bridge all EI Http Requests with POST method.
+     * Bridge all Eiffel Intelligence HTTP POST requests.
      *
      * @param model
      * @param incomingRequest
@@ -104,7 +104,8 @@ public class EIRequestsController {
         try {
             eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         } catch (EiBackendInstancesException e) {
-            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            LOG.error("Some failure when forwarding request to EI Backend. "
+                    + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
             return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -121,7 +122,7 @@ public class EIRequestsController {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input Request JSON Content to be forwarded:\n" + requestBody);
+        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody);
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
@@ -135,7 +136,8 @@ public class EIRequestsController {
     }
 
     /**
-     * Bridge all EI Http Requests with PUT method. E.g. Making Update Subscription Request.
+     * Bridge all Eiffel Intelligence HTTP PUT requests. For example updating
+     * an existing subscription.
      *
      * @param model
      * @param incomingRequest
@@ -148,7 +150,8 @@ public class EIRequestsController {
         try {
             eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         } catch (EiBackendInstancesException e) {
-            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            LOG.error("Some failure when forwarding request to EI Backend. "
+                    + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
             return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -163,7 +166,7 @@ public class EIRequestsController {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input Request JSON Content to be forwarded:\n" + requestBody);
+        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody);
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
@@ -177,7 +180,8 @@ public class EIRequestsController {
     }
 
     /**
-     * Bridge all EI Http Requests with DELETE method. Used for DELETE subscriptions.
+     * Bridge all Eiffel Intelligence HTTP DELETE requests. For example to
+     * delete a subscription.
      *
      * @param model
      * @param incomingRequest
@@ -190,7 +194,8 @@ public class EIRequestsController {
         try {
             eiRequestUrl = eiRequestsControllerUtils.getEIRequestURL(incomingRequest);
         } catch (EiBackendInstancesException e) {
-            LOG.info("Some failure when forwarding request to EI Backend. Error: " + e.getMessage());
+            LOG.error("Some failure when forwarding request to EI Backend. "
+                    + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
             return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -234,7 +239,7 @@ public class EIRequestsController {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
             responseBody = "{\"statusCode\": " + statusCode + ", \"error\": \"Forward Request Error: "
                     + String.valueOf(e) + "\"}";
-            LOG.error("Forward Request Errors: " + e);
+            LOG.error("Forward request errors: " + e);
         }
 
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -243,8 +248,8 @@ public class EIRequestsController {
     }
 
     /**
-     * This function copies headers from the made request and puts it into the response. It also extracts any
-     * x-path-tokens if found.
+     * This function copies headers from the made request and puts it into the response. It also
+     * extracts any x-path-tokens if found.
      *
      * @param headers
      * @param eiResponse
@@ -284,7 +289,7 @@ public class EIRequestsController {
     }
 
     /**
-     * This function copies headers from the incomming request into the outgoing request headers.
+     * This function copies headers from the incoming request into the outgoing request headers.
      *
      * @param outgoingRequest
      * @param incomingRequest
@@ -316,8 +321,8 @@ public class EIRequestsController {
     }
 
     /**
-     * This function adds an x-path-token to an outgoing request if it exists for the back-end the request is made
-     * towards.
+     * This function adds an x-path-token to an outgoing request if it exists, for the back-end the
+     * request is made towards.
      *
      * @param outgoingRequest
      * @param incomingRequest
@@ -348,7 +353,8 @@ public class EIRequestsController {
     }
 
     /**
-     * builds an xPathTokenKey, the token will be unique key for each http(s) host and port and stored for each session.
+     * builds an xPathTokenKey, the token will be unique key for each http(s) host and port and
+     * stored for each session.
      *
      * @param uri
      * @return
