@@ -6,9 +6,9 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/integrationtest/resources/features/download.feature", glue = {
+@CucumberOptions(features = "src/integrationtest/resources/features/templates.feature", glue = {
         "com.ericsson.ei.frontend" }, plugin = {
-                "html:target/cucumber-reports/DownloadRunnerIT" })
-public class DownloadRunnerIT {
+                "html:target/cucumber-reports/TemplatesRunnerIT" })
+public class TemplatesRunnerIT {
 
 }

@@ -6,7 +6,7 @@ var table;
 var subscriptionNameRegex = $('#subscriptionNameRegex').text();
 var notificationMetaRegex = $('#notificationMetaRegex').text();
 
-// Minimum leangth is 4 due to ellipsis being 3 long
+// Minimum length is 4 due to ellipsis being 3 long
 var usernameMaxDisplayLength = 15;
 
 var backendEndpoints = {
@@ -14,8 +14,8 @@ var backendEndpoints = {
     LOGIN: "/auth/login",
     CHECK_STATUS: "/status",
     SUBSCRIPTIONS: "/subscriptions",
-    DOWNLOAD: "/download/",
-    DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/download/subscriptionsTemplate",
+    TEMPLATES: "/templates/",
+    DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/templates/subscriptions",
     INFORMATION: "/information",
     RULES: "/rules",
     TEST_RULES_PAGE_ENABLED: "/rules/rule-check/testRulePageEnabled",
@@ -75,7 +75,7 @@ function getNotificationMetaRegex() {
 
 function getUsernameMaxDisplayLength() {
     if (usernameMaxDisplayLength < 4) {
-        // Minimum leangth is 4 due to ellipsis being 3 long
+        // Minimum length is 4 due to ellipsis being 3 long
         return 4;
     }
     return usernameMaxDisplayLength;
