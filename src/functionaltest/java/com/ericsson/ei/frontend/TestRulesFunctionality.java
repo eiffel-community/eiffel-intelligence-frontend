@@ -76,7 +76,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     public static void setUpMocks() throws IOException {
         mockServer = startClientAndServer();
         mockClient = new MockServerClient(BASE_URL, mockServer.getLocalPort());
-        mockClient.when(request().withMethod("GET").withPath("/auth/checkStatus"))
+        mockClient.when(request().withMethod("GET").withPath("/status"))
             .respond(response().withStatusCode(200));
     }
 
