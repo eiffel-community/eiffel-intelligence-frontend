@@ -14,6 +14,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 
 #### Quick access to endpoints:
 * [/auth](#auth)
+* [/status](#status)
 * [/backend](#backend)
 * [/templates](#templates)
 * [/information](#information)
@@ -44,7 +45,7 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -52,11 +53,6 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
         <td>/auth</td>
         <td>GET</td>
         <td>Check if LDAP security is enabled</td>
-    </tr>
-    <tr>
-        <td>/auth/checkStatus</td>
-        <td>GET</td>
-        <td>Used to check the back-end status</td>
     </tr>
     <tr>
         <td>/auth/login</td>
@@ -86,12 +82,32 @@ It is possible to provide both username and password directly in the request, as
 
 More information and examples can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/authentication.md)
 
+## <a id="status" /> /status
+
+<table>
+    <tr>
+        <th>Endpoint</th>
+        <th>Type</th>
+        <th>Explanation</th>
+    </tr>
+    <tr>
+        <td>/status</td>
+        <td>GET</td>
+        <td>Get back-end status including status of services back-end is dependent on.</td>
+    </tr>
+</table>
+
+#### Some curl examples
+
+This command would return a JSON object containing the status of the back-end and servers back-end is dependent on..
+
+    curl -X GET -H "Content-type: application/json" http://localhost:8080/status
 
 ## <a id="backend" /> /backend
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -191,7 +207,7 @@ In the below command the JSON object is put in a file and sent along with the re
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -232,7 +248,7 @@ This command returns a list of several subscriptions. It is also possible to spe
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -252,7 +268,7 @@ The response is a json object containing all the connected components and data a
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -279,7 +295,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>
@@ -311,7 +327,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 
 <table>
     <tr>
-        <th>Context Path</th>
+        <th>Endpoint</th>
         <th>Type</th>
         <th>Explanation</th>
     </tr>

@@ -21,10 +21,10 @@ function checkBackendStatus() {
         return;
     }
 
-    if (isBackEndStatusOk()) {
-        removeStatusIndicator();
-    } else {
+    if (!isBackEndStatusOk()) {
         addStatusIndicator(statusType.DANGER, statusText.BACKEND_DOWN);
+    } else {
+        removeStatusIndicator();
     }
 
     routeSpecificFunctions(currentUrl);
@@ -79,26 +79,24 @@ function reloadIfStatusChanged(isStatusChanged) {
 function updateBackendStatus() {
     var callback = {
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            if (XMLHttpRequest.status == 401) {
-                functionsToExecuteIfUserIsLoggedOut();
-                setBackEndStatusOk(true);
-            } else {
-                executeIfLdapIsDeactivated();
-                setBackEndStatusOk(false);
-            }
+            executeIfLdapIsDeactivated();
+            setBackEndStatusOk(false);
         },
         success: function (data, textStatus) {
             checkBackendSecured();
-            setBackEndStatusOk(true);
+            if (data.eiffelIntelligenceStatus == "AVAILABLE") {
+                setBackEndStatusOk(true);
+            } else {
+                setBackEndStatusOk(false);
+            }
         },
         complete: function () {
             checkBackendStatus();
          }
     };
     var ajaxHttpSender = new AjaxHttpSender();
-    var contentType = "application/string; charset=utf-8";
-    var datatype = "text";
-    ajaxHttpSender.sendAjax(backendEndpoints.CHECK_STATUS, "GET", null, callback, contentType, datatype);
+    var data = null;
+    ajaxHttpSender.sendAjax(backendEndpoints.CHECK_STATUS, "GET", data, callback);
 }
 
 function addStatusIndicator(statusType, statusText) {
