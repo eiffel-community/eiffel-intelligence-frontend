@@ -27,7 +27,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
             SeleniumConfig.getTempDownloadDirectory().getPath(),
-            "subscriptionsTemplate.json");
+            "subscriptions.json");
     private static final String DOWNLOADED_BULK_SUBSCRIPTIONS_FILE_PATH = String.join(
             File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(),
             "subscriptionsData.json");
