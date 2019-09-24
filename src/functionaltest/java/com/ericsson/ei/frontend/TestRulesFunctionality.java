@@ -37,7 +37,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private static final String DOWNLOADED_RULES_FILE_PATH = String.join(File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(),
             "rules.json");
     private static final String DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH = String.join(File.separator,
-            SeleniumConfig.getTempDownloadDirectory().getPath(), "eventsTemplate.json");
+            SeleniumConfig.getTempDownloadDirectory().getPath(), "events.json");
     private static final String EVENTS_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
             "EventsTemplateObject.json");
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
