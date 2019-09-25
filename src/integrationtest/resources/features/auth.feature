@@ -9,15 +9,6 @@ Feature: Authentication test
     Then response code 200 is received
     And response body '{"security":true}' is received
 
-  @AuthCheckStatusScenario
-  Scenario: Check status test
-    Given frontend is up and running
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
-    And username "gauss" and password "password" is used as credentials
-    And request is sent
-    Then response code 200 is received
-    And response body 'Backend server is up and running' is received
-
   @AuthMultipleUsersLoginAndLogoutScenario
   Scenario: Multiple Users Login And Logout test
     Given frontend is up and running
@@ -75,13 +66,13 @@ Feature: Authentication test
     Given frontend is up and running
     
     # Invalid Username
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
+    When a 'GET' request is prepared for REST API '/auth/login'
     And username "invalid_username" and password "password" is used as credentials
     And request is sent
     Then response code 401 is received
     
     # Invalid Password
-    When a 'GET' request is prepared for REST API '/auth/checkStatus'
+    When a 'GET' request is prepared for REST API '/auth/login'
     And username "gauss" and password "invalid_password" is used as credentials
     And request is sent
     Then response code 401 is received
