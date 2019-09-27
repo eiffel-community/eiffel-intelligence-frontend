@@ -73,7 +73,7 @@ public class SeleniumBaseClass extends TestBaseClass {
     protected void initBaseMocks(CloseableHttpClient mockedHttpClient) throws ClientProtocolException, IOException {
         CloseableHttpResponse responseData = createMockedHTTPResponse("\"\":\"\"", 200);
         Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth/checkStatus")));
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/status")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth")));

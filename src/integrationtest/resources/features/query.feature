@@ -5,7 +5,7 @@ Feature: Query test
   Scenario: Query missed notifications
     Given frontend is up and running
     When a 'GET' request is prepared for REST API '/queryMissedNotifications'
-    And param key 'SubscriptionName' with value 'NonExistingSubscription' is added
+    And param key 'subscriptionName' with value 'NonExistingSubscription' is added
     And request is sent
     Then response code 200 is received
     And response body '{"queryResponseEntity":{}}' is received

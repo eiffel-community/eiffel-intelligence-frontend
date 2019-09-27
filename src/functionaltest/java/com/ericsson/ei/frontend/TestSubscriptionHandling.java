@@ -330,8 +330,8 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         clientAndServer.when(request().withMethod("GET").withPath("/subscriptions/Subscription1"))
                        .respond(response().withStatusCode(200).withBody(subscriptionResponse2));
 
-        String responseStatus = "{\"status\":\"OK\"}";
-        clientAndServer.when(request().withMethod("GET").withPath("/auth/checkStatus"))
+        String responseStatus = "{\"eiffelIntelligenceStatus\" : \"AVAILABLE\"}";
+        clientAndServer.when(request().withMethod("GET").withPath("/status"))
                        .respond(response().withStatusCode(200).withBody(responseStatus));
 
         String mockedTemplateResponse = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
