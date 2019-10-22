@@ -4,7 +4,7 @@ Feature: Query test
   @QueryMissedNotificationsScenario
   Scenario: Query missed notifications
     Given frontend is up and running
-    When a 'GET' request is prepared for REST API '/queryMissedNotifications'
+    When a 'GET' request is prepared for REST API '/failed-notifications'
     And param key 'SubscriptionName' with value 'NonExistingSubscription' is added
     And request is sent
     Then response code 200 is received
