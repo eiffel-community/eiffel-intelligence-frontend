@@ -157,7 +157,6 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @When("^request is performed from request list at index (\\d+)$")
     public void request_sent_using_list(int index) throws Throwable {
         response = httpRequestList.get(index).performRequest();
-        System.out.println();
     }
 
     @When("^request is sent for (\\d+) seconds until reponse code no longer matches (\\d+)$")
