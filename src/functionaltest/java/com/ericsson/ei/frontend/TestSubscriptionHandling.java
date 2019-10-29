@@ -27,7 +27,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private static final String DOWNLOADED_TEMPLATE_FILE_PATH = String.join(File.separator,
             SeleniumConfig.getTempDownloadDirectory().getPath(),
-            "subscriptions.json");
+            "subscriptionsTemplate.json");
     private static final String DOWNLOADED_BULK_SUBSCRIPTIONS_FILE_PATH = String.join(
             File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(),
             "subscriptionsData.json");
@@ -342,7 +342,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
                                  "Subscription1,Subscription2,Subscription3"))
                        .respond(response().withStatusCode(200).withBody(""));
         clientAndServer.when(
-                request().withMethod("GET").withPath("/download/subscriptionsTemplate"))
+                request().withMethod("GET").withPath("/templates/subscriptions"))
                        .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
 
         String responseAuth = "{\"security\":" + security + "}";

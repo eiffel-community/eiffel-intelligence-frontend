@@ -42,9 +42,9 @@ public class Utils {
     /**
      * Extracts a BZip2 archive to a destination folder.
      *
-     * @param firefoxTarballFilePath
+     * @param firefoxBZip2FilePath
      *            string containing the firefox BZip2 filepath.
-     * @param destination
+     * @param destinationPath
      *            string containing a destination path.
      */
     public static void extractBZip2InDir(final String firefoxBZip2FilePath, String destinationPath) {
@@ -73,20 +73,20 @@ public class Utils {
     }
 
     /**
-     * Downloads a file from a given URL to a given destination path.
+     * Downloads a file from a given URL to a given destinationPath path.
      *
      * @param url
      *            string containing a URL.
-     * @param destination
-     *            string containing a destination path.
+     * @param destinationPath
+     *            string containing a destinationPath path.
      */
-    public static void downloadFileFromUrlToDestination(final String url, final String destination) {
-        final File file = new File(destination);
+    public static void downloadFileFromUrlToDestination(final String url, final String destinationPath) {
+        final File file = new File(destinationPath);
         URL urlObj = null;
 
         try {
             urlObj = new URL(url);
-            LOGGER.debug("Downloading file.\nSource: {}\nDestination: {}", url, destination);
+            LOGGER.debug("Downloading file.\nSource: {}\nDestination: {}", url, destinationPath);
             FileUtils.copyURLToFile(urlObj, file);
         } catch (MalformedURLException e) {
             LOGGER.error("Failed to create URL object.\nURL: {}\nError: {}", url, e.getMessage());
