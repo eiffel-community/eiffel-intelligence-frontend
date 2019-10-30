@@ -31,13 +31,13 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private static final String BASE_URL = "localhost";
 
     private static final String DOWNLOADED_RULES_TEMPLATE_FILE_PATH = String.join(File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(),
-            "rulesTemplate.json");
+            "rules.json");
     private static final String RULES_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
             "RulesTemplateObject.json");
     private static final String DOWNLOADED_RULES_FILE_PATH = String.join(File.separator, SeleniumConfig.getTempDownloadDirectory().getPath(),
             "rules.json");
     private static final String DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH = String.join(File.separator,
-            SeleniumConfig.getTempDownloadDirectory().getPath(), "eventsTemplate.json");
+            SeleniumConfig.getTempDownloadDirectory().getPath(), "events.json");
     private static final String EVENTS_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
             "EventsTemplateObject.json");
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
@@ -108,7 +108,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private void verifyDownloadEventsTemplateButton() throws IOException {
         String downloadEventsTemplateMockedResponse = getJSONStringFromFile(EVENTS_TEMPLATE_FILE_PATH);
-        mockClient.when(request().withMethod("GET").withPath("/download/eventsTemplate"))
+        mockClient.when(request().withMethod("GET").withPath("/templates/events"))
                 .respond(response().withStatusCode(200).withBody(downloadEventsTemplateMockedResponse));
 
         testRulesPage.clickDownloadEventsTemplate();
@@ -124,7 +124,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     }
 
     private void verifyDownloadRulesButton() throws IOException {
-        mockClient.when(request().withMethod("GET").withPath("/download/rules"))
+        mockClient.when(request().withMethod("GET").withPath("/templates/rules"))
                 .respond(response().withStatusCode(200).withBody(downloadedRulesTemplate));
         testRulesPage.clickDownloadRulesButton();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_FILE_PATH)));
@@ -140,7 +140,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private void verifyDownloadRulesTemplateButton() throws IOException {
         String mockedResponse = getJSONStringFromFile(RULES_TEMPLATE_FILE_PATH);
-        mockClient.when(request().withMethod("GET").withPath("/download/rulesTemplate"))
+        mockClient.when(request().withMethod("GET").withPath("/templates/rules"))
                 .respond(response().withStatusCode(200).withBody(mockedResponse));
         testRulesPage.clickDownloadRulesTemplate();
         new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));

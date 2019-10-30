@@ -277,7 +277,7 @@ jQuery(document).ready(function () {
         };
 
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = backendEndpoints.DOWNLOAD + name;
+        var contextPath = backendEndpoints.TEMPLATES + name;
         ajaxHttpSender.sendAjax(contextPath, "GET", "", callback);
     }
 
@@ -285,14 +285,14 @@ jQuery(document).ready(function () {
     $(".download_rules_template").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
-        getTemplate("rulesTemplate");
+        getTemplate("rules");
     });
 
     // Download the events template
     $(".download_events_template").click(function (event) {
         event.stopPropagation();
         event.preventDefault();
-        getTemplate("eventsTemplate");
+        getTemplate("events");
     });
 
     // Start to check is backend Test Rule service status

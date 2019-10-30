@@ -111,7 +111,7 @@ public class BackendInstancesHandler {
     /**
      * Sets the backendInstances list, useful when mocking for tests
      *
-     * @param backendInstances
+     * @param backendInstancesJsonArray
      */
     public void setBackendInstances(JsonArray backendInstancesJsonArray) {
         cleanBackendInstances();

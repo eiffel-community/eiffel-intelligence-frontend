@@ -1,6 +1,6 @@
 # GUI Overview
 
-Eiffel Intelligence Frontend GUI can be divided into two parts a navigation
+Eiffel Intelligence front-end GUI can be divided into two parts: a navigation
 window and a work window.
 
 <kbd>
