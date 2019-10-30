@@ -308,7 +308,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         assert (subscriptionPage.buttonDisabledByXPath(DELETE_BUTTON_XPATH2));
     }
 
-    private void setupMockEndpoints(boolean security, String user) throws IOException {
+    private void setupMockEndpoints(boolean security, String userName) throws IOException {
         clientAndServer.clear(request());
         String subscriptionResponse = getJSONStringFromFile(
                 SUBSCRIPTION_FOR_RELOAD_TEST_FILE_PATH_LDAP);
@@ -345,12 +345,12 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
                 request().withMethod("GET").withPath("/templates/subscriptions"))
                        .respond(response().withStatusCode(200).withBody(mockedTemplateResponse));
 
-        String responseAuth = "{\"security\":" + security + "}";
-        String responseUser = "{\"user\":\"" + user + "\"}";
-        clientAndServer.when(request().withMethod("GET").withPath("/auth"))
-                       .respond(response().withStatusCode(200).withBody(responseAuth));
-        clientAndServer.when(request().withMethod("GET").withPath("/auth/login"))
-                       .respond(response().withStatusCode(200).withBody(responseUser));
+        String responseSecurityStatus = "{\"security\":" + security + "}";
+        String responseLoggedInUserName = "{\"user\":\"" + userName + "\"}";
+        clientAndServer.when(request().withMethod("GET").withPath("/authentication"))
+                       .respond(response().withStatusCode(200).withBody(responseSecurityStatus));
+        clientAndServer.when(request().withMethod("GET").withPath("/authentication/login"))
+                       .respond(response().withStatusCode(200).withBody(responseLoggedInUserName));
     }
 
     private void setupMockEndpointMultiSubscription() throws IOException {

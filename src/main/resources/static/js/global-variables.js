@@ -10,8 +10,9 @@ var notificationMetaRegex = $('#notificationMetaRegex').text();
 var usernameMaxDisplayLength = 15;
 
 var backendEndpoints = {
-    AUTH: "/auth",
-    LOGIN: "/auth/login",
+    AUTH: "/authentication",
+    LOGIN: "/authentication/login",
+    LOGOUT: "/authentication/logout",
     CHECK_STATUS: "/status",
     SUBSCRIPTIONS: "/subscriptions",
     TEMPLATES: "/templates/",

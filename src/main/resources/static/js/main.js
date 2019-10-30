@@ -22,8 +22,7 @@ jQuery(document).ready(function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/auth/logout";
-        ajaxHttpSender.sendAjax(contextPath, "GET", null, callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.LOGOUT, "GET", null, callback);
     });
 
     function loadDocumentLinks() {

@@ -1,7 +1,7 @@
 @SubscriptionsFeature
 Feature: Subscriptions test
 
-  @AddSubscriptionNoAuthScenario
+  @AddSubscriptionNoAuthenticationScenario
   Scenario: Add subscription
     Given frontend is up and running
     When a 'POST' request is prepared for REST API '/subscriptions'
@@ -18,7 +18,7 @@ Feature: Subscriptions test
     And request is sent
     Then response code 200 is received
 
-  @ModifySubscriptionNoAuthScenario
+  @ModifySubscriptionNoAuthenticationScenario
   Scenario: Modify subscription
     Given frontend is up and running
     When a 'PUT' request is prepared for REST API '/subscriptions'
@@ -63,7 +63,7 @@ Feature: Subscriptions test
     And response body contains 'Subscription_IT_2'
     And response body contains 'Subscription_IT_3'
 
-  @DeleteSubscriptionNoAuthScenario
+  @DeleteSubscriptionNoAuthenticationScenario
   Scenario: Delete subscription
     Given frontend is up and running
     When a 'DELETE' request is prepared for REST API '/subscriptions'

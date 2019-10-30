@@ -54,8 +54,8 @@ public class EIRequestControllerTest {
     private static final String SUBSCRIPTIONS_ONE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String INFORMATION_ENDPOINT = "/information";
     private static final String DOWNLOAD_RULES_TEMPLATE_ENDPOINT = "/templates/rules";
-    private static final String AUTH_ENDPOINT = "/auth";
-    private static final String AUTH_LOGIN_ENDPOINT = "/auth/login";
+    private static final String AUTH_ENDPOINT = "/authentication";
+    private static final String AUTH_LOGIN_ENDPOINT = "/authentication/login";
 
     private static final String SUBSCRIPTIONS_RESPONSE_PATH = "src/test/resources/backendResponses/subscriptionsResponse.json";
     private static final String SUBSCRIPTIONS_ONE_RESPONSE_PATH = "src/test/resources/backendResponses/subscriptionsOneResponse.json";
