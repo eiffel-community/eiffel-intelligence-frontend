@@ -1,3 +1,4 @@
+/* global backendEndpoints */
 jQuery(document).ready(function () {
     (function ($) {
         $.fn.invisible = function () {
