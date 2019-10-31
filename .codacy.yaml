@@ -4,7 +4,7 @@ exclude_paths:
   - 'benchmarks/**/*'
   - '*.min.js'
   - '**/tests/**'
-  - '**/functionaltests/**/*'
+  - '**/integrationtest/**/*'
   - 'wiki/**'
   - '.github/**'
   - 'CODE_OF_CONDUCT.md'

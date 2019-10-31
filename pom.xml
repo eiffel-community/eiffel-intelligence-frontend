@@ -251,6 +251,7 @@
                                 <source>src/integrationtest/resources</source>
                                 <source>src/systemtest/java</source>
                                 <source>src/systemtest/resources</source>
+                                <source>src/main/docker</source>
                             </sources>
                         </configuration>
                     </execution>
