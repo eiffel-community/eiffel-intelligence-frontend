@@ -18,7 +18,8 @@
 <img src="./images/eiffel-intelligence-logo.png" alt="Eiffel Intelligence" width="350"/>
 
 [![Build Status](https://travis-ci.org/eiffel-community/eiffel-intelligence-frontend.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-intelligence-frontend)
-[![Coverage Status](https://coveralls.io/repos/github/eiffel-community/eiffel-intelligence-frontend/badge.svg?branch=master)](https://coveralls.io/github/eiffel-community/eiffel-intelligence-frontend?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bbbaaa716e4542188ea66b9104e0e9b6)](https://www.codacy.com/manual/eiffel-intelligence-maintainers/eiffel-intelligence-frontend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eiffel-community/eiffel-intelligence-frontend&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/bbbaaa716e4542188ea66b9104e0e9b6)](https://www.codacy.com/app/eiffel-intelligence-maintainers/eiffel-intelligence-frontend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eiffel-community/eiffel-intelligence-frontend&amp;utm_campaign=Badge_Coverage)
 [![](https://jitpack.io/v/eiffel-community/eiffel-intelligence-frontend.svg)](https://jitpack.io/#eiffel-community/eiffel-intelligence-frontend)
 
 
