@@ -33,17 +33,6 @@ stages:
     if: branch = master
 
 # Only used before integrationTests
-install:
-  - echo '############# Starting EI back-end.'
-  - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
-  - cd eiffel-intelligence
-  - chmod +x pom.xml
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - export EIFFEL_WAR=$(ls target/*.war)
-  - java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
-  - cd ..
-  - echo '############# EI back-end started.'
-
 # Generate site documentation using mvn site plugin
 before_deploy:
   - rm -rf docs
@@ -73,10 +62,19 @@ jobs:
         - source src/main/docker/env.bash
         - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed ldap2 ldap2-seed
         - echo '############# Docker compose DONE! Sleeping.'
-        - sleep 60
+        - sleep 20
+        - echo '############# Starting EI back-end.'
+        - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+        - cd eiffel-intelligence
+        - chmod +x pom.xml
+        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        - export EIFFEL_WAR=$(ls target/*.war)
+        - java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
+        - cd ..
+        - echo '############# EI back-end started.'
       script:
         - echo '############# Sleeping before test.'
-        - sleep 60
+        - sleep 40
         - "mvn verify -P integrationTest -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
       after_script:
         - docker-compose -f src/main/docker/docker-compose.yml down
