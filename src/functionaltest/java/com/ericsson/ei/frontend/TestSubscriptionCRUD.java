@@ -41,7 +41,7 @@ public class TestSubscriptionCRUD extends SeleniumBaseClass {
 
     @Override
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         int serverPort = mockServerRule.getPort();
         setBackendInstance("test", "localhost", serverPort, "", false);
 

@@ -66,10 +66,14 @@ jobs:
         - mvn test -B
     - stage: test
       name: integrationTests
-      script:
+      # To ensure docker containers are fully up and running we sleep 60s
+      before_script:
         - source src/main/docker/env.bash
         - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed ldap2 ldap2-seed
+        - sleep 60
+      script:
         - "mvn verify -P integrationTest -DskipUTs -Dei.backend.instances.list.json.content=\"[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]\" -B"
+      after_script:
         - docker-compose -f src/main/docker/docker-compose.yml down
         - fuser -k ${EI_BACKEND_PORT}/tcp
     - stage: deploy
