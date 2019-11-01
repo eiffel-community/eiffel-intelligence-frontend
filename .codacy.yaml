@@ -3,6 +3,7 @@ exclude_paths:
   - 'spec/**/*'
   - 'benchmarks/**/*'
   - '*.min.js'
+  - '**/assets/**/*'
   - '**/tests/**'
   - '**/integrationtest/**/*'
   - 'wiki/**'
