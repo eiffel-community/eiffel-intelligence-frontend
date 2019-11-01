@@ -129,7 +129,7 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     private static void setupMockEndpoints() throws IOException {
         mockClient2.when(request().withMethod("GET").withPath("/status")).respond(response().withStatusCode(200).withBody("{\"eiffelIntelligenceStatus\" : \"AVAILABLE\"}"));
 
-        mockClient2.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
+        mockClient2.when(request().withMethod("GET").withPath("/authentication")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
 
         String newInstanceSubscriptionResponse = getJSONStringFromFile(NEW_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH);
         mockClient2.when(request().withMethod("GET").withPath("/subscriptions"))
@@ -141,6 +141,6 @@ public class TestSwitchBackend extends SeleniumBaseClass {
 
         mockClient1.when(request().withMethod("GET").withPath("/status")).respond(response().withStatusCode(200).withBody("{\"eiffelIntelligenceStatus\" : \"AVAILABLE\"}"));
 
-        mockClient1.when(request().withMethod("GET").withPath("/auth")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
+        mockClient1.when(request().withMethod("GET").withPath("/authentication")).respond(response().withStatusCode(200).withBody("{\"security\":false}"));
     }
 }

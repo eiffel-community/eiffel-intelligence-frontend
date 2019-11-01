@@ -165,7 +165,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         do {
             response = httpRequest.performRequest();
         } while (response.getStatusCode() == statusCode && stopTime > System.currentTimeMillis());
-        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+        assertEquals("Response code for URL: " + getUrl(), HttpStatus.OK.value(), response.getStatusCode());
     }
 
     @Then("^request is saved to request list at index (\\d+)$")
@@ -177,13 +177,13 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @Then("^response code (\\d+) is received$")
     public void get_response_code(int statusCode) throws Throwable {
         LOGGER.debug("Response code: {}", response.getStatusCode());
-        assertEquals(statusCode, response.getStatusCode());
+        assertEquals("Response code for URL: " + getUrl(), statusCode, response.getStatusCode());
     }
 
     @Then("^response body \'(.*)\' is received$")
     public void get_response_body(String body) throws Throwable {
         LOGGER.debug("Response body: {}", response.getBody());
-        assertEquals(body, response.getBody());
+        assertEquals("Response body for URL: " + getUrl(), body, response.getBody());
     }
 
     @Then("^response body from file \'(.*)\' is received$")
@@ -192,25 +192,30 @@ public class CommonSteps extends AbstractTestExecutionListener {
         String fileContent = FileUtils.readFileToString(new File(filePath), "UTF-8");
         LOGGER.debug("File path: {}", filePath);
         LOGGER.debug("Response body: {}", response.getBody());
-        assertEquals(fileContent.replaceAll("\\s+", ""), response.getBody().replaceAll("\\s+", ""));
+        assertEquals("File content", fileContent.replaceAll("\\s+", ""), response.getBody().replaceAll("\\s+", ""));
     }
 
     @Then("^response body contains \'(.*)\'$")
-    public void response_body_contains(String contains) throws Throwable {
+    public void response_body_contains(String value) throws Throwable {
         LOGGER.debug("Response body: {}", response.getBody());
-        LOGGER.debug("Contains: {}", contains);
-        assertEquals(true, response.getBody().contains(contains));
+        LOGGER.debug("Contains: {}", value);
+        assertEquals("Response body to contain '" + value + "'", true, response.getBody().contains(value));
     }
 
     @Then("^response body does not contain \'(.*)\'$")
-    public void response_body_does_not_contain(String contains) throws Throwable {
+    public void response_body_does_not_contain(String value) throws Throwable {
         LOGGER.info("Response body: {}", response.getBody());
-        LOGGER.info("Does not contain: {}", contains);
-        assertEquals(true, !response.getBody().contains(contains));
+        LOGGER.info("Does not contain: {}", value);
+        assertEquals("Response body not to contain '" + value + "'", true, !response.getBody().contains(value));
     }
 
     @Then("^remove \'(.*)\' from request headers at list index (\\d+)$")
     public void remove_key_from_request_headers_at_list_index(String headerKey, int index) {
         httpRequestList.get(index).removeHeader(headerKey);
+    }
+
+    private String getUrl() {
+        final String url = String.format("%s%s", httpRequest.getBaseUrl(), httpRequest.getEndpoint());
+        return url;
     }
 }
