@@ -76,7 +76,7 @@ public class SeleniumBaseClass extends TestBaseClass {
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/status")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient)
-                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/auth")));
+                .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/authentication")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient)
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptions")));

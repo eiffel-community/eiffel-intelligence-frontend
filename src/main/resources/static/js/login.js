@@ -1,3 +1,4 @@
+/* global backendEndpoints */
 jQuery(document).ready(function () {
     function rerouteToSubscription() {
         checkBackendSecured();
@@ -62,8 +63,7 @@ jQuery(document).ready(function () {
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
-        var contextPath = "/auth/login";
-        ajaxHttpSender.sendAjax(contextPath, "GET", "", callback);
+        ajaxHttpSender.sendAjax(backendEndpoints.LOGIN, "GET", "", callback);
     }
 
     var observableObject = $("#viewModelDOMObject")[0];

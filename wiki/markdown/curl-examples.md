@@ -13,7 +13,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
     curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
 
 #### Quick access to endpoints:
-* [/auth](#auth)
+* [/authentication](#authentication)
 * [/status](#status)
 * [/backend](#backend)
 * [/templates](#templates)
@@ -28,20 +28,20 @@ This is possible to do by injecting the back-end URL as a query parameter.
 The parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end instance does not have to be specified in the list of available instances.
 
 An example of a way to add such parameter is examplified below, note that the "?" indicates that parameters has been added to the front-end url.
-`localhost:8080` is the front-end url, and we want to access the context path /auth but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
+`localhost:8080` is the front-end url, and we want to access the context path /authentication but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
 
 
-    curl -X GET http://localhost:8080/auth?backendurl="http://127.0.0.1:8090/"
+    curl -X GET http://localhost:8080/authentication?backendurl="http://127.0.0.1:8090/"
 
 Example with Tomcat:
 
-    curl -X GET http://localhost:8080/eifrontend/auth?backendurl="http://127.0.0.1:8090/eibackend/"
+    curl -X GET http://localhost:8080/eifrontend/authentication?backendurl="http://127.0.0.1:8090/eibackend/"
 
 This way of entering the `backendurl` may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
 
 **Note: It is not possible to add the `backendurl` parameter as a JSON parameter.**
 
-## <a id="auth" /> /auth
+## <a id="authentication" /> /authentication
 
 <table>
     <tr>
@@ -50,17 +50,17 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/auth</td>
+        <td>/authentication</td>
         <td>GET</td>
         <td>Check if LDAP security is enabled</td>
     </tr>
     <tr>
-        <td>/auth/login</td>
+        <td>/authentication/login</td>
         <td>GET</td>
         <td>Login to EI with a username and password</td>
     </tr>
     <tr>
-        <td>/auth/logout</td>
+        <td>/authentication/logout</td>
         <td>GET</td>
         <td>Logout from EI</td>
     </tr>
@@ -68,17 +68,17 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
 
 A curl call with the command:
 
-    curl -X GET http://localhost:8080/auth
+    curl -X GET http://localhost:8080/authentication
 
 Gives the response data `{"security":false}`. The `security` parameter would be true if LDAP was enabled.
 
 It is also possible to login and logout using curl. The below command provides the `-u` flag followed by a username.
 
-    curl -X GET -H "Content-type: application/json" -u <user> localhost:8080/auth/login
+    curl -X GET -H "Content-type: application/json" -u <user> localhost:8080/authentication/login
 
 It is possible to provide both username and password directly in the request, as seen below.
 
-    curl -X GET -H "Content-type: application/json" -u <user>:<password> localhost:8080/auth/login
+    curl -X GET -H "Content-type: application/json" -u <user>:<password> localhost:8080/authentication/login
 
 More information and examples can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/authentication.md)
 
