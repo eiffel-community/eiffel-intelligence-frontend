@@ -164,7 +164,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
         long stopTime = System.currentTimeMillis() + (seconds * 1000);
         do {
             response = httpRequest.performRequest();
-        } while (response.getStatusCode() == statusCode && stopTime > System.currentTimeMillis());;
+        } while (response.getStatusCode() == statusCode && stopTime > System.currentTimeMillis());
         assertEquals("Response code for URL: " + getUrl(), HttpStatus.OK.value(), response.getStatusCode());
     }
 
