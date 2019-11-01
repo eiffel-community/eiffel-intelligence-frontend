@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 
-public class TestBridgeCurlFunctions extends SeleniumBaseClass {
+public class TestBridgeCurlFunctions extends TestBaseClass {
     private static MockServerClient mockClient1;
     private static MockServerClient mockClient2;
     private static ClientAndServer mockServer1;
