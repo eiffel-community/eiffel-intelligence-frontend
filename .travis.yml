@@ -61,7 +61,7 @@ jobs:
         - source src/main/docker/env.bash
         - docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed ldap2 ldap2-seed
         - echo 'Sleeping till Jenkins is up.'
-        - timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST:$JENKINS_PORT/login)" != "200" ]]; do sleep 5; done' || false
+        - timeout 90 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST:$JENKINS_PORT/login)" != "200" ]]; do sleep 5; done' || false
         - git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
         - cd eiffel-intelligence
         - chmod +x pom.xml
