@@ -251,6 +251,7 @@
                                 <source>src/integrationtest/resources</source>
                                 <source>src/systemtest/java</source>
                                 <source>src/systemtest/resources</source>
+                                <source>src/main/docker</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -278,7 +279,7 @@
                     </includes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -325,6 +326,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                </configuration>
             </plugin>
         </plugins>
     </build>
