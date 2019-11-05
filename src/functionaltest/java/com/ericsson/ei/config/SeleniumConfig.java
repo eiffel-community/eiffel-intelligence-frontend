@@ -68,33 +68,25 @@ public class SeleniumConfig {
     }
 
     private static FirefoxBinary getFirefoxBinary() {
-        LOGGER.error("1111111111 : Get firefox Driver.");
         String firefoxPath = getFirefoxDirPath().getPath();
         File firefoxBinaryFilePath = new File(
                 String.join(File.separator, firefoxPath, "firefox", "firefox"));
 
         if (firefoxBinaryFilePath.isFile()) {
-            LOGGER.error("1111111111 : Firefox Driver exists.");
             LOGGER.debug("Reusing existing firefox binary.");
             return new FirefoxBinary(firefoxBinaryFilePath);
         }
-        LOGGER.error("1111111111 : Firefox Driver not found.");
 
         LOGGER.debug("Downloading and extracting new Firefox binary.");
         final String firefoxTarFileUrl = getFirefoxTarFileUrl();
-        LOGGER.error("1111111111 : Firefox tar url ::: " + firefoxTarFileUrl);
 
         String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxTarFileUrl);
         String firefoxTarFilePath = String.join(
                 File.separator, firefoxPath, firefoxBZip2FileNameLinux);
 
-        LOGGER.error("1111111111 : Start download of firefox tar ");
         Utils.downloadFileFromUrlToDestination(firefoxTarFileUrl, firefoxTarFilePath);
-        LOGGER.error("1111111111 : Start extraction of firefox tar ");
         Utils.extractBZip2InDir(firefoxTarFilePath, firefoxPath);
-        LOGGER.error("1111111111 : Make firefox tar executable ");
         Utils.makeBinFileExecutable(firefoxBinaryFilePath);
-        LOGGER.error("1111111111 : Done geting firefox binary ");
 
         return new FirefoxBinary(firefoxBinaryFilePath);
     }

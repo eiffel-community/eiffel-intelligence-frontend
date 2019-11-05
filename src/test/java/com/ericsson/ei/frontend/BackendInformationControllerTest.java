@@ -57,13 +57,11 @@ public class BackendInformationControllerTest {
     @MockBean
     private BackendInstancesHandler utils;
 
-    private JsonObject instance;
     private JsonArray instances;
     private List<BackendInstance> information;
 
     @Before
     public void before() throws Exception {
-        instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
         information = new ArrayList<>();
         for(JsonElement element : instances) {
