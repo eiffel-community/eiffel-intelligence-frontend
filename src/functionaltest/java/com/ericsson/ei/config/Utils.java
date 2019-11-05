@@ -53,6 +53,7 @@ public class Utils {
                 new BZip2CompressorInputStream(new FileInputStream(firefoxBZip2FilePath)))) {
             TarArchiveEntry entry;
             while ((entry = fileInput.getNextTarEntry()) != null) {
+                LOGGER.error("2222222 Hanlding " + entry);
                 if (entry.isDirectory()) {
                     continue;
                 }
@@ -61,8 +62,11 @@ public class Utils {
                 if (!parent.exists()) {
                     parent.mkdirs();
                 }
+                LOGGER.error("2222222 Extracting ::: " + curfile.getName());
                 final FileOutputStream fileOutput = new FileOutputStream(curfile);
+                LOGGER.error("2222222 Copying ::: " + curfile.getName() );
                 IOUtils.copy(fileInput, fileOutput);
+                LOGGER.error("2222222 Done ::: " + curfile.getName() );
                 fileOutput.close();
             }
         } catch (FileNotFoundException e) {
