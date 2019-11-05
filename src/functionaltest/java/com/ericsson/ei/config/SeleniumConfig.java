@@ -30,7 +30,7 @@ public class SeleniumConfig {
 
     public static FirefoxDriver initFirefoxDriver() throws PropertiesNotLoadedException, OSNotSupportedException {
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                .setHeadless(false)
+                .setHeadless(true)
                 .setLogLevel(FirefoxDriverLogLevel.ERROR);
 
         firefoxOptions.addPreference("browser.download.folderList", 2);

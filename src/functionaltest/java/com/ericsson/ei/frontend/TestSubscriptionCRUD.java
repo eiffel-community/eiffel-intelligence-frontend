@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.gson.JsonParser;
 
-public class TestSubscriptionCRUD extends SeleniumBaseClass {
+public class TestSubscriptionCRUD extends TestBaseClass {
     private static final String SUBSCRIPTION_ENDPOINT = "/subscriptions";
     private static final String SUBSCRIPTION_DELETE_ENDPOINT = "/subscriptions/Subscription_1";
     private static final String SUBSCRIPTION_FILE_PATH = "src/functionaltest/resources/responses/subscription.json";
