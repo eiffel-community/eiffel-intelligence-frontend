@@ -1,6 +1,6 @@
 package com.ericsson.ei.frontend.exception;
 
-public class PropertiesNotLoadedException extends Exception {
+public class PropertiesNotLoadedException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

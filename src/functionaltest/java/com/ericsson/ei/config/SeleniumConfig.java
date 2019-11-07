@@ -20,36 +20,33 @@ import com.google.common.io.Files;
 public class SeleniumConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
 
-    private static String propertiesPath = String.join(File.separator, "src", "functionaltest", "resources");
+    private static String propertiesPath = String.join(File.separator, "src", "functionaltest",
+            "resources");
     private static String propertiesFile = "functional-test.properties";
-
-    private static String firefoxBZip2FileUrlLinux = "";
 
     private static File tempDownloadDirectory = Files.createTempDir();
     private static FirefoxDriver driver;
 
-    public static FirefoxDriver initFirefoxDriver() throws PropertiesNotLoadedException, OSNotSupportedException {
+    public static FirefoxDriver initFirefoxDriver()
+            throws PropertiesNotLoadedException, OSNotSupportedException {
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                .setHeadless(true)
-                .setLogLevel(FirefoxDriverLogLevel.ERROR);
+                                                            .setHeadless(true)
+                                                            .setLogLevel(
+                                                                    FirefoxDriverLogLevel.ERROR);
 
         firefoxOptions.addPreference("browser.download.folderList", 2);
         firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
         firefoxOptions.addPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
 
-        boolean successfullyLoadedProperties = loadProperties();
-        if (!successfullyLoadedProperties) {
-            LOGGER.error("Properties was not properly loaded.");
-            throw new PropertiesNotLoadedException();
-        }
-
         if (SystemUtils.IS_OS_LINUX) {
-            FirefoxBinary firefoxBinary = installFirefoxBinary();
+            FirefoxBinary firefoxBinary = getFirefoxBinary();
             firefoxOptions.setBinary(firefoxBinary);
 
-            System.setProperty("webdriver.gecko.driver", "src/functionaltest/resources/geckodriver");
+            System.setProperty("webdriver.gecko.driver",
+                    "src/functionaltest/resources/geckodriver");
         } else if (SystemUtils.IS_OS_WINDOWS) {
-            System.setProperty("webdriver.gecko.driver", "src/functionaltest/resources/geckodriver.exe");
+            System.setProperty("webdriver.gecko.driver",
+                    "src/functionaltest/resources/geckodriver.exe");
         } else {
             LOGGER.error(SystemUtils.OS_NAME + " currently not supported.");
             throw new OSNotSupportedException();
@@ -57,7 +54,7 @@ public class SeleniumConfig {
 
         driver = new FirefoxDriver(firefoxOptions);
 
-        //Make sure all firefox browsers are closed after all tests have finished
+        // Make sure all firefox browsers are closed after all tests have finished
         Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));
         return driver;
     }
@@ -70,32 +67,58 @@ public class SeleniumConfig {
         return "http://localhost:" + randomServerPort;
     }
 
-    private static FirefoxBinary installFirefoxBinary() {
-        String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxBZip2FileUrlLinux);
-
-        String firefoxBZip2FilePath = String.join(
-                File.separator, tempDownloadDirectory.getPath(), firefoxBZip2FileNameLinux);
-        Utils.downloadFileFromUrlToDestination(firefoxBZip2FileUrlLinux, firefoxBZip2FilePath);
-        Utils.extractBZip2InDir(firefoxBZip2FilePath, tempDownloadDirectory.getPath());
+    private static FirefoxBinary getFirefoxBinary() {
+        // Firefox binary will be stored in <repository>/target/firefox/firefox/<binary>
+        String firefoxPath = getFirefoxDirPath().getPath();
         File firefoxBinaryFilePath = new File(
-                String.join(File.separator, tempDownloadDirectory.getPath(), "firefox", "firefox"));
+                String.join(File.separator, firefoxPath, "firefox", "firefox"));
+
+        if (firefoxBinaryFilePath.isFile()) {
+            LOGGER.debug("Reusing existing firefox binary.");
+            return new FirefoxBinary(firefoxBinaryFilePath);
+        }
+
+        LOGGER.debug("Downloading and extracting new Firefox binary.");
+        final String firefoxTarFileUrl = getFirefoxTarFileUrl();
+
+        String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxTarFileUrl);
+        String firefoxTarFilePath = String.join(
+                File.separator, firefoxPath, firefoxBZip2FileNameLinux);
+
+        Utils.downloadFileFromUrlToDestination(firefoxTarFileUrl, firefoxTarFilePath);
+        Utils.extractBZip2InDir(firefoxTarFilePath, firefoxPath);
         Utils.makeBinFileExecutable(firefoxBinaryFilePath);
-        FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxBinaryFilePath);
-        return firefoxBinary;
+
+        return new FirefoxBinary(firefoxBinaryFilePath);
     }
-    private static boolean loadProperties() {
-        final String propertiesFilePath = String.join(File.separator, propertiesPath, propertiesFile);
+
+    private static File getFirefoxDirPath() {
+        String relPath = SeleniumConfig.class.getProtectionDomain()
+                                             .getCodeSource()
+                                             .getLocation()
+                                             .getFile();
+        File firefoxDir = new File(relPath + "../firefox");
+        if (!firefoxDir.exists()) {
+            firefoxDir.mkdir();
+        }
+        return firefoxDir;
+    }
+
+    private static String getFirefoxTarFileUrl() {
+        final String propertiesFilePath = String.join(
+                File.separator, propertiesPath, propertiesFile);
         final Properties properties = Utils.getProperties(propertiesFilePath);
 
-        firefoxBZip2FileUrlLinux = properties.getProperty("test.selenium.firefox.BZip2File.url.linux");
+        final String firefoxTarFileUrl = properties.getProperty(
+                "test.selenium.firefox.TarFile.url.linux");
 
-        if (StringUtils.isEmpty(firefoxBZip2FileUrlLinux)) {
-            LOGGER.error("Failed to load properties, firefoxBZip2FileUrlLinux is not set.");
-            return false;
-        } else {
-            LOGGER.debug("Properties have been loaded.");
-            return true;
+        if (StringUtils.isEmpty(firefoxTarFileUrl)) {
+            final String message = "Failed to load firefox binary URL from properties.";
+            LOGGER.error(message);
+            throw new PropertiesNotLoadedException(message);
         }
+
+        return firefoxTarFileUrl;
     }
 
 }
