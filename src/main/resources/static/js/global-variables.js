@@ -1,6 +1,6 @@
 var router = new Navigo(null, true, '#');
 var frontendServiceUrl = $('#frontendServiceUrl').text();
-var frontendServiceBackEndPath = "/backend";
+var frontendServiceBackEndPath = "/backends";
 var ldapEnabled = true;
 var table;
 var subscriptionNameRegex = $('#subscriptionNameRegex').text();

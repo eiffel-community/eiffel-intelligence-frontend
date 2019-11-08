@@ -63,28 +63,6 @@ public class BackendInformationControllerUtils {
         }
     }
 
-    /**
-     * Processes requests to switch back end, and sets the back end name to a session variable that is
-     * kept for current session.
-     *
-     * @param request
-     * @return new ResponseEntity
-     */
-    public ResponseEntity<String> handleRequestToSwitchBackEnd(HttpServletRequest request) {
-        try {
-            String selectedInstanceName = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            request.getSession().setAttribute("backEndInstanceName", selectedInstanceName);
-
-            return new ResponseEntity<>(
-                    "{\"message\": \"Backend instance with name '" + selectedInstanceName + "' was selected.\"}",
-                    getHeaders(), HttpStatus.OK);
-        } catch (Exception e) {
-            LOG.error("Error while switching instance: " + e.getMessage());
-            String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
-            return new ResponseEntity<>(response, getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

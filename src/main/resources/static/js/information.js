@@ -1,7 +1,6 @@
 jQuery(document).ready(function () {
 
     // Fetch injected URL from DOM
-    var frontEndServiceUrl = $('#frontendServiceUrl').text();
     var frontEndVersion = $('#frontEndVersion').text();
     var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
     var frontEndAppName = $('#frontendAppName').text();
@@ -30,7 +29,7 @@ jQuery(document).ready(function () {
         var tableContent = [
             { key: 'Application name', value: frontEndAppName },
             { key: 'Version', value: frontEndVersion },
-            { key: 'EI front-end URL', value: frontEndServiceUrl }
+            { key: 'EI front-end URL', value: getFrontEndServiceUrl() }
         ];
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);

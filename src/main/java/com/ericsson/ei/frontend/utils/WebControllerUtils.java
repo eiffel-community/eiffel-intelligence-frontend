@@ -95,28 +95,4 @@ public class WebControllerUtils {
 
         return requestedUrl;
     }
-
-    /**
-     * Extract the back end instance name from the session if any, and requests the
-     * BackendInformation for this name, or null if no name was found.
-     *
-     * @param httpSession
-     * @return String URL from found BackendInformation
-     * @throws EiBackendInstancesException
-     */
-    public String getBackEndServiceUrl(HttpSession httpSession) {
-        String activeInstance = null;
-        if (httpSession.getAttribute("backEndInstanceName") != null) {
-            activeInstance = httpSession.getAttribute("backEndInstanceName").toString();
-        }
-
-        BackendInstance backEndInformation = null;
-        try {
-            backEndInformation = backendInstancesUtils.getBackendInstance(activeInstance);
-        } catch(EiBackendInstancesException e) {
-            backEndInformation = backendInstancesUtils.getDefaultBackendInstance();
-        }
-
-        return backEndInformation.getUrlAsString();
-    }
 }

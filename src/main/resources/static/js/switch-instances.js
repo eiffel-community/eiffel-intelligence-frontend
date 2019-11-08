@@ -1,6 +1,5 @@
 jQuery(document).ready(function () {
     var frontendServiceUrl = $('#frontendServiceUrl').text();
-    var frontendServiceBackEndPath = "/backend";
     document.getElementById('switcher').disabled = true;
 
     function multipleInstancesModel(backendInstanceData) {

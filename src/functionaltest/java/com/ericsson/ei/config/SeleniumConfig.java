@@ -18,6 +18,9 @@ import com.ericsson.ei.frontend.exception.PropertiesNotLoadedException;
 import com.google.common.io.Files;
 
 public class SeleniumConfig {
+    private static final FirefoxDriverLogLevel SELENIUM_LOG_LEVEL = FirefoxDriverLogLevel.ERROR;
+    private static final boolean SELENIUM_HEADLESS = false;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
 
     private static String propertiesPath = String.join(File.separator, "src", "functionaltest",
@@ -30,9 +33,8 @@ public class SeleniumConfig {
     public static FirefoxDriver initFirefoxDriver()
             throws PropertiesNotLoadedException, OSNotSupportedException {
         FirefoxOptions firefoxOptions = new FirefoxOptions()
-                                                            .setHeadless(true)
-                                                            .setLogLevel(
-                                                                    FirefoxDriverLogLevel.ERROR);
+                                                            .setHeadless(SELENIUM_HEADLESS)
+                                                            .setLogLevel(SELENIUM_LOG_LEVEL);
 
         firefoxOptions.addPreference("browser.download.folderList", 2);
         firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
