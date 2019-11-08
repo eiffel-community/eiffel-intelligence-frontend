@@ -18,7 +18,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 * [/backend](#backend)
 * [/templates](#templates)
 * [/information](#information)
-* [/query](#query)
+* [/aggregated-objects](#aggregated-objects)
 * [/rules](#rules)
 * [/subscriptions](#subscriptions)
 
@@ -273,23 +273,24 @@ The response is a json object containing all the connected components and data a
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/queryAggregatedObject</td>
+        <td>/aggregated-objects</td>
         <td>GET</td>
         <td>Download a subscription template json file</td>
-    </tr>
+    </tr> 
     <tr>
-        <td>/queryMissedNotifications</td>
-        <td>GET</td>
-        <td>Queries any missed notifications</td>
-    </tr>
-    <tr>
-        <td>/query</td>
+        <td>/aggregated-objects/query</td>
         <td>POST</td>
         <td>Free style query; user specified queries</td>
     </tr>
+    <tr>
+        <td>/failed-notifications</td>
+        <td>GET</td>
+        <td>Queries any missed notifications</td>
+    </tr>
+
 </table>
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md)
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/failed-notifications.md)
 
 ## <a id="rules" />/rules
 
