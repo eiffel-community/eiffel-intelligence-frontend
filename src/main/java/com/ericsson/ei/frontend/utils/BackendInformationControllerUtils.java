@@ -17,7 +17,6 @@
 package com.ericsson.ei.frontend.utils;
 
 import java.net.URI;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 

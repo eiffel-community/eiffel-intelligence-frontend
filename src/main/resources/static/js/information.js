@@ -1,4 +1,4 @@
-/* global getFrontEndServiceUrl() backendEndpoints */
+/* global getFrontEndServiceUrl backendEndpoints */
 jQuery(document).ready(function () {
 
     // Fetch injected URL from DOM

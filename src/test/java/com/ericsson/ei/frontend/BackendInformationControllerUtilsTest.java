@@ -48,7 +48,6 @@ import com.google.gson.JsonParser;
 @AutoConfigureMockMvc
 public class BackendInformationControllerUtilsTest {
 
-    private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
     @MockBean
