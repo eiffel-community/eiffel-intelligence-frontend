@@ -19,7 +19,7 @@ import com.google.common.io.Files;
 
 public class SeleniumConfig {
     private static final FirefoxDriverLogLevel SELENIUM_LOG_LEVEL = FirefoxDriverLogLevel.ERROR;
-    private static final boolean SELENIUM_HEADLESS = false;
+    private static final boolean SELENIUM_HEADLESS = true;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
 
