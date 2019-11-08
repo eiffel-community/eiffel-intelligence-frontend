@@ -264,7 +264,7 @@ The response is a json object containing all the connected components and data a
 
     curl -X GET -H "Content-type: application/json" localhost:8080/information
 
-## <a id="query" />/query
+## <a id="query" />/aggregated-objects
 
 <table>
     <tr>
@@ -273,9 +273,9 @@ The response is a json object containing all the connected components and data a
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/aggregated-objects</td>
+        <td>/aggregated-objects/{id}</td>
         <td>GET</td>
-        <td>Download a subscription template json file</td>
+        <td>query an aggregated object with its id</td>
     </tr> 
     <tr>
         <td>/aggregated-objects/query</td>
