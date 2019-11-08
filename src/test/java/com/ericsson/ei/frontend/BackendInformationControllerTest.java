@@ -38,7 +38,6 @@ import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,10 +45,9 @@ import com.google.gson.JsonParser;
 @AutoConfigureMockMvc
 public class BackendInformationControllerTest {
 
-    private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
-    private static final String PATH_FOR_BACK_END_INFORMATION = "/backend";
+    private static final String PATH_FOR_BACK_END_INFORMATION = "/backends";
 
     @Autowired
     private MockMvc mockMvc;
