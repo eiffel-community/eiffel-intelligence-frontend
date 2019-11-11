@@ -82,7 +82,7 @@ public class SeleniumBaseClass extends TestBaseClass {
                 .execute(Mockito.argThat(request -> (request).getURI().toString().contains("/subscriptions")));
 
         Mockito.doReturn(responseData).when(mockedHttpClient).execute(Mockito
-                .argThat(request -> (request).getURI().toString().contains("/rules/rule-check/testRulePageEnabled")));
+                .argThat(request -> (request).getURI().toString().contains("/rule-test")));
 
     }
 

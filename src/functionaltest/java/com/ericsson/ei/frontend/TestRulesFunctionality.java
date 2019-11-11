@@ -87,7 +87,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
 
     private void verifyAggregatedObjectButton() throws IOException {
         String findAggregatedObjectResponse = getJSONStringFromFile(AGGREGATED_OBJECT_FILE_PATH);
-        mockClient.when(request().withMethod("POST").withPath("/rules/rule-check/aggregation"))
+        mockClient.when(request().withMethod("POST").withPath("/rule-test/run-full-aggregation"))
                 .respond(response().withStatusCode(200).withBody(findAggregatedObjectResponse));
 
         testRulesPage.clickFindAggregatedObject();

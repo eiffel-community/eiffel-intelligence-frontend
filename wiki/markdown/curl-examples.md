@@ -305,12 +305,12 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <td>Get the current rules content</td>
     </tr>
     <tr>
-        <td>/rules/rule-check/testRulePageEnabled</td>
+        <td>/rule-test</td>
         <td>GET</td>
         <td>Check if TestRules is enabled in the back-end</td>
     </tr>
     <tr>
-        <td>/rules/rule-check/aggregation</td>
+        <td>/rule-test/run-full-aggregation</td>
         <td>POST</td>
         <td>Takes rules and events from an object and returns an aggregated object</td>
     </tr>
@@ -319,7 +319,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 For these endpoints to be reachable the Eiffel Intelligence back-end [needs to be configured](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties) with `testaggregated.enabled: true`.
 The below command would result in a json response of `{"status":true}` if this functionality is enabled.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/rules/rule-check/testRulePageEnabled
+    curl -X GET -H "Content-type: application/json" localhost:8080/rule-test
 
 Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/running-rules-on-objects.md)
 
