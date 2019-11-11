@@ -19,8 +19,8 @@ var backendEndpoints = {
     DOWNLOAD_SUBSCRIPTIONS_TEMPLATE: "/templates/subscriptions",
     INFORMATION: "/information",
     RULES: "/rules",
-    TEST_RULES_PAGE_ENABLED: "/rules/rule-check/testRulePageEnabled",
-    CHECK_AGGREGATION: "/rules/rule-check/aggregation"
+    TEST_RULES_PAGE_ENABLED: "/rule-test",
+    CHECK_AGGREGATION: "/rule-test/run-full-aggregation"
 };
 
 var PAGES_FOR_STATUS_INDICATION = "subscriptions test-rules ei-info login";
