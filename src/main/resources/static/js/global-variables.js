@@ -1,3 +1,4 @@
+/* global Navigo */
 var router = new Navigo(null, true, "#");
 var frontendServiceUrl = $("#frontendServiceUrl").text();
 var frontendServiceBackEndPath = "/backends";

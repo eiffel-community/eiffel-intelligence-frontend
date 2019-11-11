@@ -1,4 +1,4 @@
-/* global getFrontEndServiceUrl getFrontendServiceBackEndPath */
+/* global getFrontEndServiceUrl getFrontendServiceBackEndPath navigateToRoute */
 jQuery(document).ready(function () {
     document.getElementById("switcher").disabled = true;
 

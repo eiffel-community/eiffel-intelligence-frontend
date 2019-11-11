@@ -11,9 +11,9 @@ jQuery(document).ready(function () {
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
 
     function createTable() {
-        var tbl = document.createElement("table");
-        tbl.setAttribute("class", "table table-bordered table-striped dataTable table-text-setting");
-        return tbl;
+        var table = document.createElement("table");
+        table.setAttribute("class", "table table-bordered table-striped dataTable table-text-setting");
+        return table;
     }
 
     function createLabel(inputText) {
@@ -54,7 +54,7 @@ jQuery(document).ready(function () {
     }
 
     function generateGeneralInfo(tableContent, labelText) {
-        var tbdy = document.createElement("tbody");
+        var tableBody = document.createElement("tbody");
 
         var label = createLabel(labelText);
         body.appendChild(label);
@@ -62,17 +62,17 @@ jQuery(document).ready(function () {
         var div = document.createElement("div");
         div.setAttribute("class", "table-responsive");
 
-        var tbl = createTable();
+        var table = createTable();
 
         for (i = 0; i < tableContent.length; i++) {
-            key = tableContent[i].key;
-            value = tableContent[i].value;
+            var key = tableContent[i].key;
+            var value = tableContent[i].value;
             var tr = createTableRow(key, value);
-            tbdy.appendChild(tr);
+            tableBody.appendChild(tr);
         }
 
-        tbl.appendChild(tbdy);
-        div.appendChild(tbl);
+        table.appendChild(tableBody);
+        div.appendChild(table);
         body.appendChild(div);
     }
 
@@ -83,23 +83,23 @@ jQuery(document).ready(function () {
         var label = createLabel(tableLabel);
         body.appendChild(label);
 
-        var tbdy = null;
-        var tbl = null;
+        var tableBody = null;
+        var table = null;
 
         dataList.forEach(function (dataSubList) {
-            tbdy = document.createElement("tbody");
-            tbl = createTable();
+            tableBody = document.createElement("tbody");
+            table = createTable();
 
             Object.keys(dataSubList).forEach(function (dataKey) {
-                value = dataSubList[dataKey];
+                var value = dataSubList[dataKey];
                 var tr = createTableRow(dataKey, value);
-                tbdy.appendChild(tr);
+                tableBody.appendChild(tr);
             });
 
         });
 
-        tbl.appendChild(tbdy);
-        div.appendChild(tbl);
+        table.appendChild(tableBody);
+        div.appendChild(table);
         body.appendChild(div);
     }
 
@@ -113,7 +113,7 @@ jQuery(document).ready(function () {
         var json = parseJsonObject(value);
         if (json != undefined) {
             value = JSON.stringify(json, undefined, 2);
-            pre = document.createElement("pre");
+            var pre = document.createElement("pre");
             pre.appendChild(document.createTextNode(value));
             element.appendChild(pre);
         } else {
