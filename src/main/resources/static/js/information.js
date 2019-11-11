@@ -17,7 +17,7 @@ jQuery(document).ready(function () {
     }
 
     function createLabel(inputText) {
-        var label = document.createElement("p");
+        var label = document.createElement('p');
         label.innerHTML = inputText;
         label.setAttribute("class", "section-p-text table-text-setting font-weight-bold");
         return label;

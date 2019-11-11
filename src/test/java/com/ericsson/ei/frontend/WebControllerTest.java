@@ -13,7 +13,6 @@
 */
 package com.ericsson.ei.frontend;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -40,7 +39,6 @@ import com.ericsson.ei.frontend.utils.WebControllerUtils;
 public class WebControllerTest {
 
     private static String FRONT_END_SERVICE_URL = "http://localhost:9090/somePath";
-    private static String BACK_END_SERVICE_URL = "http://localhost:9090/somePath";
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,7 +49,6 @@ public class WebControllerTest {
     @Before
     public void beforeClass() throws EiBackendInstancesException {
         when(controllerUtils.getFrontEndServiceUrl()).thenReturn(FRONT_END_SERVICE_URL);
-        //when(controllerUtils.getBackEndServiceUrl(any())).thenReturn(BACK_END_SERVICE_URL);
     }
 
     @Test

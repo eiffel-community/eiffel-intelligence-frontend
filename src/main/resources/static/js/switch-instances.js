@@ -1,6 +1,6 @@
+/* global getFrontEndServiceUrl getFrontendServiceBackEndPath */
 jQuery(document).ready(function () {
-    var frontendServiceUrl = $('#frontendServiceUrl').text();
-    document.getElementById('switcher').disabled = true;
+    document.getElementById("switcher").disabled = true;
 
     function multipleInstancesModel(backendInstanceData) {
         var self = this;
@@ -15,21 +15,21 @@ jQuery(document).ready(function () {
         });
 
         self.checked = function () {
-            document.getElementById('switcher').disabled = false;
+            document.getElementById("switcher").disabled = false;
             selected = JSON.parse(ko.toJSON(this));
             return true;
         };
 
         self.submit = function () {
             sessionStorage.selectedActive = selected.name;
-            navigateToRoute('subscriptions');
+            navigateToRoute("subscriptions");
         };
     }
 
     $.ajax({
-        url: frontendServiceUrl + frontendServiceBackEndPath,
+        url: getFrontEndServiceUrl() + getFrontendServiceBackEndPath(),
         type: "GET",
-        contentType: 'application/json; charset=utf-8',
+        contentType: "application/json; charset=utf-8",
         cache: false,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             parseAndLogMessage(XMLHttpRequest.responseText);
