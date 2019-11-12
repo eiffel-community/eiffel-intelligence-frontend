@@ -285,8 +285,7 @@ The response is a json object containing all the connected components and data a
     </tr>    
 </table>
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/failed-notifications.md)
-
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md) 
 
 ## <a id="failed-notifications" />/failed-notifications
 
