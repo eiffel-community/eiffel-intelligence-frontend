@@ -18,7 +18,8 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 * [/backends](#backends)
 * [/templates](#templates)
 * [/information](#information)
-* [/query](#query)
+* [/aggregated-objects](#aggregated-objects)
+* [/failed-notifications](#failed-notifications)
 * [/rules](#rules)
 * [/subscriptions](#subscriptions)
 
@@ -230,7 +231,7 @@ The response is a json object containing all the connected components and data a
 
     curl -X GET -H "Content-type: application/json" localhost:8080/information
 
-## <a id="query" />/query
+## <a id="aggregated-objects" />/aggregated-objects
 
 <table>
     <tr>
@@ -239,23 +240,37 @@ The response is a json object containing all the connected components and data a
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/queryAggregatedObject</td>
+        <td>/aggregated-objects/{id}</td>
         <td>GET</td>
-        <td>Download a subscription template json file</td>
-    </tr>
+        <td>query an aggregated object with its id</td>
+    </tr> 
     <tr>
-        <td>/queryMissedNotifications</td>
-        <td>GET</td>
-        <td>Queries any missed notifications</td>
-    </tr>
-    <tr>
-        <td>/query</td>
+        <td>/aggregated-objects/query</td>
         <td>POST</td>
         <td>Free style query; user specified queries</td>
-    </tr>
+    </tr>    
 </table>
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md)
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md) 
+
+## <a id="failed-notifications" />/failed-notifications
+
+<table>
+    <tr>
+        <th>Endpoint</th>
+        <th>Type</th>
+        <th>Explanation</th>
+      </tr>
+      <tr>
+        <td>/failed-notifications</td>
+        <td>GET</td>
+        <td>Queries any failed notifications</td>
+      </tr>      
+</table>
+
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/failed-notifications.md)
+
+
 
 ## <a id="rules" />/rules
 
