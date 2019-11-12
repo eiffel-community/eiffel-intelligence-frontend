@@ -1,10 +1,11 @@
-var router = new Navigo(null, true, '#');
-var frontendServiceUrl = $('#frontendServiceUrl').text();
-var frontendServiceBackEndPath = "/backend";
+/* global Navigo */
+var router = new Navigo(null, true, "#");
+var frontendServiceUrl = $("#frontendServiceUrl").text();
+var frontendServiceBackEndPath = "/backends";
 var ldapEnabled = true;
 var table;
-var subscriptionNameRegex = $('#subscriptionNameRegex').text();
-var notificationMetaRegex = $('#notificationMetaRegex').text();
+var subscriptionNameRegex = $("#subscriptionNameRegex").text();
+var notificationMetaRegex = $("#notificationMetaRegex").text();
 
 // Minimum length is 4 due to ellipsis being 3 long
 var usernameMaxDisplayLength = 15;

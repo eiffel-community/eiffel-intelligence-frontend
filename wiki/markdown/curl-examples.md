@@ -3,7 +3,7 @@
 ## Introduction
 
 The front-end has a bridge functionality that is built in as a part of the front-end's web server and handles requests coming from the web GUI towards any of the back-ends configured.
-The `/backend` endpoint is the only additional endpoint which does not exist in [Eiffel Intelligence backend](https://github.com/eiffel-community/eiffel-intelligence).
+The `/backends` endpoint is the only additional endpoint which does not exist in [Eiffel Intelligence backend](https://github.com/eiffel-community/eiffel-intelligence).
 The front-end may also be used by other tools such as CURL or any kind of program that can make HTTP(S) requests.
 Below are some examples of using CURL towards different endpoints, together with example responses.
 Most endpoints are also documented in the [Eiffel Intelligence backend repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
@@ -15,7 +15,7 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 #### Quick access to endpoints:
 * [/authentication](#authentication)
 * [/status](#status)
-* [/backend](#backend)
+* [/backends](#backends)
 * [/templates](#templates)
 * [/information](#information)
 * [/query](#query)
@@ -103,7 +103,7 @@ This command would return a JSON object containing the status of the back-end an
 
     curl -X GET -H "Content-type: application/json" http://localhost:8080/status
 
-## <a id="backend" /> /backend
+## <a id="backends" /> /backends
 
 <table>
     <tr>
@@ -112,19 +112,9 @@ This command would return a JSON object containing the status of the back-end an
         <th>Explanation</th>
     </tr>
     <tr>
-        <td>/backend</td>
+        <td>/backends</td>
         <td>GET</td>
         <td>Retrieves a json list of available back-end instances</td>
-    </tr>
-    <tr>
-        <td>/backend</td>
-        <td>POST</td>
-        <td>Adds one back-end instance</td>
-    </tr>
-    <tr>
-        <td>/backend</td>
-        <td>DELETE</td>
-        <td>Deletes a given backend instance</td>
     </tr>
 </table>
 
@@ -139,30 +129,17 @@ If you want to see a list of back-ends and see if there is a default back-end se
 
 ###### Example GET request using curl:
 
-    curl -X GET http://*front-end-url*/*context-path-if-any*/backend
+    curl -X GET http://*front-end-url*/*context-path-if-any*/backends
 
 ###### Example GET request using curl, with host, port using Tomcat:
 
-    curl -X GET http://localhost:8080/eifrontend/backend
+    curl -X GET http://localhost:8080/eifrontend/backends
 
 ###### Example GET request using curl, with EI default settings:
 
-    curl -X GET http://localhost:8080/backend
+    curl -X GET http://localhost:8080/backends
 
 The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up empty there are no back-ends specified in the front-end. If there is no JSON object with the key set to true there is no default back-end.
-
-In the response list all objects have a key `active` set to `true` or `false`. This key reveals which back-end instance has been selected in the GUI. A curl commands shows the default back-end as the `active` one. If no default back-end exists, the active should usually be the first object in the list.
-
-If the back-end list lacks a default back-end one may be added by using a HTTP POST request. The injected object should be specified in JSON and look like the example below.
-
-    [
-        {"name":"Any default name", "host":"*Your back-end url*", "port":8090, "contextPath":"", "https":false, "defaultBackend":true}
-    ]
-
-You may add a back-end using for example CURL:
-
-    curl -d '{"name":"My Default Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":true}' \
-        -H "Content-Type: application/json" -X POST http://localhost:8080/*front-end-context-path*/backend
 
 __Note:__ `name` must be unique.
 
@@ -191,17 +168,6 @@ Second entry has different `host`, third entry has different `port`, third entry
     ]
 
 The second entry is invalid due to having the same name as the first entry. The third entry is invalid due to having the same value in all fields as the first entry.
-
-#### Deleting a back-end instance via curl
-
-It is possible to delete a back-end instance using curl. The full JSON object has to be specified to identify which instance should be deleted. It is not possible to delete a default back-end instance.
-
-    {"name":"My Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":false},
-
-In the below command the JSON object is put in a file and sent along with the request.
-
-    curl -X DELETE --data @data.json localhost:8080/backend
-
 
 ## <a id="templates" />/templates
 

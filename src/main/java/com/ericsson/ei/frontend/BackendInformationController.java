@@ -40,19 +40,11 @@ public class BackendInformationController {
     private BackendInformationControllerUtils backEndInfoContUtils;
 
     @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.GET)
+    @RequestMapping(value = "/backends", method = RequestMethod.GET)
     public ResponseEntity<String> getInstances(Model model, HttpServletRequest request) {
         LOG.debug("Received request for retrieving EI Backend instances list.");
         ResponseEntity<String> response = backEndInfoContUtils.getBackendInstancesResponse(request);
         return response;
     }
 
-    @CrossOrigin
-    @RequestMapping(value = "/backend", method = RequestMethod.PUT)
-    public ResponseEntity<String> switchBackEndInstance(Model model, HttpServletRequest request) {
-        LOG.debug("Received request to switch EI back end instance.");
-        ResponseEntity<String> response  = backEndInfoContUtils.handleRequestToSwitchBackEnd(request);
-        return response;
-
-    }
 }

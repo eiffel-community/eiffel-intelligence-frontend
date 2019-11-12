@@ -20,14 +20,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
-import com.ericsson.ei.frontend.model.BackendInstance;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -94,29 +90,5 @@ public class WebControllerUtils {
         requestedUrl = String.format("%s://%s:%d%s", http, frontendServiceHost, frontendServicePort, contextPath);
 
         return requestedUrl;
-    }
-
-    /**
-     * Extract the back end instance name from the session if any, and requests the
-     * BackendInformation for this name, or null if no name was found.
-     *
-     * @param httpSession
-     * @return String URL from found BackendInformation
-     * @throws EiBackendInstancesException
-     */
-    public String getBackEndServiceUrl(HttpSession httpSession) {
-        String activeInstance = null;
-        if (httpSession.getAttribute("backEndInstanceName") != null) {
-            activeInstance = httpSession.getAttribute("backEndInstanceName").toString();
-        }
-
-        BackendInstance backEndInformation = null;
-        try {
-            backEndInformation = backendInstancesUtils.getBackendInstance(activeInstance);
-        } catch(EiBackendInstancesException e) {
-            backEndInformation = backendInstancesUtils.getDefaultBackendInstance();
-        }
-
-        return backEndInformation.getUrlAsString();
     }
 }

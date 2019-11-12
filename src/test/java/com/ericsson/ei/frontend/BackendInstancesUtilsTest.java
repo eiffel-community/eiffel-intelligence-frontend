@@ -31,20 +31,17 @@ import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.model.BackendInstance;
 import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class BackendInstancesUtilsTest {
 
-    private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
     @Autowired
     private BackendInstancesHandler utils;
 
-    private JsonObject instance;
     private JsonArray instances;
 
     @Rule
@@ -52,7 +49,6 @@ public class BackendInstancesUtilsTest {
 
     @Before
     public void before() throws IOException {
-        instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
     }
 
@@ -69,7 +65,7 @@ public class BackendInstancesUtilsTest {
         // No back end data exist
         exceptionRule.expect(EiBackendInstancesException.class);
         utils.setBackendInstances(new JsonArray());
-        BackendInstance result2 = utils.getBackendInstance("does not exist");
+        utils.getBackendInstance("does not exist");
     }
 
     @Test

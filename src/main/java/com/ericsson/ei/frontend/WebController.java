@@ -61,7 +61,6 @@ public class WebController {
         model.addAttribute("version", frontEndUtils.getVersion());
         model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());
         model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
-        model.addAttribute("backendServerUrl", frontEndUtils.getBackEndServiceUrl(request.getSession()));
         return "information";
     }
 

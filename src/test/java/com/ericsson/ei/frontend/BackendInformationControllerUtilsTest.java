@@ -14,13 +14,11 @@
 package com.ericsson.ei.frontend;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.URI;
-import java.util.List;
 import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +38,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ericsson.ei.frontend.model.BackendInstance;
 import com.ericsson.ei.frontend.utils.BackendInformationControllerUtils;
 import com.ericsson.ei.frontend.utils.BackendInstancesHandler;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,7 +48,6 @@ import com.google.gson.JsonParser;
 @AutoConfigureMockMvc
 public class BackendInformationControllerUtilsTest {
 
-    private static final String BACKEND_INSTANCE_FILE_PATH = "src/test/resources/backendInstances/backendInstance.json";
     private static final String BACKEND_INSTANCES_FILE_PATH = "src/test/resources/backendInstances/backendInstances.json";
 
     @MockBean
@@ -61,11 +56,7 @@ public class BackendInformationControllerUtilsTest {
     @Autowired
     private BackendInformationControllerUtils backendInfoContrUtils;
 
-    private JsonObject instance;
     private JsonArray instances;
-    private JsonArray instancesWithActive;
-    private JsonArray instancesWithNotDefaultActive;
-    private List<BackendInstance> information;
 
     private HttpServletRequest mockedRequest;
     private HttpSession mockedSession;
@@ -74,7 +65,6 @@ public class BackendInformationControllerUtilsTest {
 
     @Before
     public void before() throws Exception {
-        instance = new JsonParser().parse(new FileReader(BACKEND_INSTANCE_FILE_PATH)).getAsJsonObject();
         instances = new JsonParser().parse(new FileReader(BACKEND_INSTANCES_FILE_PATH)).getAsJsonArray();
 
         mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -97,19 +87,6 @@ public class BackendInformationControllerUtilsTest {
 
         expectedResponse = createExpectedResponse(instances.toString(), HttpStatus.OK);
         response = backendInfoContrUtils.getBackendInstancesResponse(mockedRequest);
-        assertEquals(expectedResponse, response);
-    }
-
-    @Test
-    public void testHandleRequestToSwitchBackEnd() throws Exception {
-        ResponseEntity<String> response;
-        ResponseEntity<String> expectedResponse;
-
-        // Test name is given.
-        when(stream.collect(any())).thenReturn("TestName");
-        expectedResponse = createExpectedResponse(
-                "{\"message\": \"Backend instance with name 'TestName' was selected.\"}".toString(), HttpStatus.OK);
-        response = backendInfoContrUtils.handleRequestToSwitchBackEnd(mockedRequest);
         assertEquals(expectedResponse, response);
     }
 

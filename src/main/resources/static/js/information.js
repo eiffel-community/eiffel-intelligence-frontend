@@ -1,25 +1,25 @@
+/* global getFrontEndServiceUrl backendEndpoints */
 jQuery(document).ready(function () {
 
     // Fetch injected URL from DOM
-    var frontEndServiceUrl = $('#frontendServiceUrl').text();
-    var frontEndVersion = $('#frontEndVersion').text();
-    var frontEndApplicationPropertiesVersion = $('#frontEndApplicationPropertiesVersion').text();
-    var frontEndAppName = $('#frontendAppName').text();
+    var frontEndVersion = $("#frontEndVersion").text();
+    var frontEndApplicationPropertiesVersion = $("#frontEndApplicationPropertiesVersion").text();
+    var frontEndAppName = $("#frontendAppName").text();
 
-    var body = document.getElementById('eiPageFrame');
+    var body = document.getElementById("eiPageFrame");
     var generalEIInfoLabel = "General Eiffel Intelligence Information";
     var generalEIFrontEndInfoLabel = "General Eiffel Intelligence Front-End Information";
 
     function createTable() {
-        var tbl = document.createElement('table');
-        tbl.setAttribute('class', 'table table-bordered table-striped dataTable table-text-setting');
-        return tbl;
+        var table = document.createElement("table");
+        table.setAttribute("class", "table table-bordered table-striped dataTable table-text-setting");
+        return table;
     }
 
     function createLabel(inputText) {
         var label = document.createElement('p');
         label.innerHTML = inputText;
-        label.setAttribute('class', 'section-p-text table-text-setting font-weight-bold');
+        label.setAttribute("class", "section-p-text table-text-setting font-weight-bold");
         return label;
     }
 
@@ -28,9 +28,9 @@ jQuery(document).ready(function () {
             frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
         }
         var tableContent = [
-            { key: 'Application name', value: frontEndAppName },
-            { key: 'Version', value: frontEndVersion },
-            { key: 'EI front-end URL', value: frontEndServiceUrl }
+            { key: "Application name", value: frontEndAppName },
+            { key: "Version", value: frontEndVersion },
+            { key: "EI front-end URL", value: getFrontEndServiceUrl() }
         ];
 
         generateGeneralInfo(tableContent, generalEIFrontEndInfoLabel);
@@ -43,77 +43,77 @@ jQuery(document).ready(function () {
         }
 
         var tableContent = [
-            { key: 'Application name', value: data.applicationName },
-            { key: 'Version', value: data.version },
-            { key: 'Rules path', value: data.rulesPath },
-            { key: 'EI back-end connected server', value: sessionStorage.getItem(sessionStorage.selectedActive) },
-            { key: 'EI test rules functionality enabled', value: data.testRulesEnabled }
+            { key: "Application name", value: data.applicationName },
+            { key: "Version", value: data.version },
+            { key: "Rules path", value: data.rulesPath },
+            { key: "EI back-end connected server", value: sessionStorage.getItem(sessionStorage.selectedActive) },
+            { key: "EI test rules functionality enabled", value: data.testRulesEnabled }
         ];
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);
     }
 
     function generateGeneralInfo(tableContent, labelText) {
-        var tbdy = document.createElement('tbody');
+        var tableBody = document.createElement("tbody");
 
         var label = createLabel(labelText);
         body.appendChild(label);
 
-        var div = document.createElement('div');
-        div.setAttribute('class', 'table-responsive');
+        var div = document.createElement("div");
+        div.setAttribute("class", "table-responsive");
 
-        var tbl = createTable();
+        var table = createTable();
 
         for (i = 0; i < tableContent.length; i++) {
-            key = tableContent[i].key;
-            value = tableContent[i].value;
+            var key = tableContent[i].key;
+            var value = tableContent[i].value;
             var tr = createTableRow(key, value);
-            tbdy.appendChild(tr);
+            tableBody.appendChild(tr);
         }
 
-        tbl.appendChild(tbdy);
-        div.appendChild(tbl);
+        table.appendChild(tableBody);
+        div.appendChild(table);
         body.appendChild(div);
     }
 
     function generateEIInformationBasedOnList(dataList, tableLabel) {
-        var div = document.createElement('div');
-        div.setAttribute('class', 'table-responsive');
+        var div = document.createElement("div");
+        div.setAttribute("class", "table-responsive");
 
         var label = createLabel(tableLabel);
         body.appendChild(label);
 
-        var tbdy = null;
-        var tbl = null;
+        var tableBody = null;
+        var table = null;
 
         dataList.forEach(function (dataSubList) {
-            tbdy = document.createElement('tbody');
-            tbl = createTable();
+            tableBody = document.createElement("tbody");
+            table = createTable();
 
             Object.keys(dataSubList).forEach(function (dataKey) {
-                value = dataSubList[dataKey];
+                var value = dataSubList[dataKey];
                 var tr = createTableRow(dataKey, value);
-                tbdy.appendChild(tr);
+                tableBody.appendChild(tr);
             });
 
         });
 
-        tbl.appendChild(tbdy);
-        div.appendChild(tbl);
+        table.appendChild(tableBody);
+        div.appendChild(table);
         body.appendChild(div);
     }
 
     function createTableRow(key, value) {
-        var tr = document.createElement('tr');
-        var tdKey = document.createElement('td');
-        tdKey.setAttribute('class', 'left-table-pane');
+        var tr = document.createElement("tr");
+        var tdKey = document.createElement("td");
+        tdKey.setAttribute("class", "left-table-pane");
         tdKey.appendChild(document.createTextNode(key));
         tr.appendChild(tdKey);
-        var element = document.createElement('td');
+        var element = document.createElement("td");
         var json = parseJsonObject(value);
         if (json != undefined) {
             value = JSON.stringify(json, undefined, 2);
-            pre = document.createElement('pre');
+            var pre = document.createElement("pre");
             pre.appendChild(document.createTextNode(value));
             element.appendChild(pre);
         } else {
