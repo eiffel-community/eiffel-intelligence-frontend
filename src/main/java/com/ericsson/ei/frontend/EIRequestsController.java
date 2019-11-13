@@ -71,7 +71,7 @@ public class EIRequestsController {
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/subscriptions/*",
             "/information", "/templates/*", "/authentication", "/authentication/*",
-            "/queryAggregatedObject", "/failed-notifications", "/query", "/rules", "/status",
+            "/aggregated-objects/*", "/failed-notifications", "/aggregated-objects/query", "/rules", "/status",
             "/rule-test" }, method = RequestMethod.GET)
     public ResponseEntity<String> getRequests(Model model, HttpServletRequest incomingRequest) {
         String eiRequestUrl;
@@ -99,7 +99,7 @@ public class EIRequestsController {
      */
     @CrossOrigin
     @RequestMapping(value = { "/subscriptions", "/rule-test/run-full-aggregation",
-            "/query" }, method = RequestMethod.POST)
+            "/aggregated-objects/query" }, method = RequestMethod.POST)
     public ResponseEntity<String> postRequests(Model model, HttpServletRequest incomingRequest) {
         String eiRequestUrl;
         try {

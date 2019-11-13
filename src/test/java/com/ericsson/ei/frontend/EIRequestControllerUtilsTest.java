@@ -75,10 +75,10 @@ public class EIRequestControllerUtilsTest {
         assertEquals("http://NullHost:12345/subscription", url);
 
         // Test name TestName and query string.
-        when(mockedRequest.getServletPath()).thenReturn("/query");
+        when(mockedRequest.getServletPath()).thenReturn("/aggregated-objects/query");
         when(mockedRequest.getQueryString()).thenReturn("someQuery=Something");
         url = eiRequestsControllerUtils.getEIRequestURL(mockedRequest);
-        assertEquals("http://NullHost:12345/query?someQuery=Something", url);
+        assertEquals("http://NullHost:12345/aggregated-objects/query?someQuery=Something", url);
 
         // Test url given in input from request.
         when(mockedRequest.getServletPath()).thenReturn("/subscription");

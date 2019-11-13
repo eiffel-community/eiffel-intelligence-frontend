@@ -6,9 +6,9 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/integrationtest/resources/features/query.feature", glue = {
+@CucumberOptions(features = "src/integrationtest/resources/features/failed-notifications.feature", glue = {
         "com.ericsson.ei.frontend" }, plugin = {
                 "html:target/cucumber-reports/QueryRunnerIT" })
-public class QueryRunnerIT {
+public class FailedNotificationsRunnerIT {
 
 }
