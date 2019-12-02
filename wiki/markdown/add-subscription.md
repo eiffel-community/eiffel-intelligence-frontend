@@ -55,8 +55,8 @@ used as a password for authentication against the entire jenkins instance.
 
 ## Authentication
 A list to select authentication type. These credentials should be used by 
-Eiffel Intelligence to perform the notification towards an external API or 
-email. It is not recommended to
+Eiffel Intelligence to perform the HTTP POST notification towards an external 
+API.  
 * NO_AUTH: _No Authentication used_
 * BASIC_AUTH: _Username and password will be Base 64 encoded_
 * BASIC_AUTH_JENKINS_CSRF: Jenkins CSRF Protection (crumb), _Username and password will
@@ -83,4 +83,5 @@ requirement are connected by a logical “AND”. Thus all conditions under
 one requirement need to be satisfied before a subscription is fulfilled. 
 More than one requirements may be added with the “Add Requirement” button.
 Requirements are connected by a logical “OR”.
+
 **_More information about how to write Requirement and Conditions can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/subscriptions.md#writing-requirements-and-conditions)._**
