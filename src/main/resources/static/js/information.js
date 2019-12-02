@@ -127,7 +127,7 @@ jQuery(document).ready(function () {
         var callback = {
             success: function (responseData, textStatus) {
                 createGeneralEIInfo(responseData);
-                generateEIInformationBasedOnList(responseData.rabbitmq, "Eiffel Intelligence Connected RabbitMq Instances");
+                generateEIInformationBasedOnList(responseData.rmqProperties, "Eiffel Intelligence Connected RabbitMq Instances");
                 generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
                 generateEIInformationBasedOnList(responseData.threads, "Eiffel Intelligence Backend Java Threads Settings");
                 generateEIInformationBasedOnList(responseData.email, "Eiffel Intelligence Backend E-Mail Settings");
