@@ -365,7 +365,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 </table>
 
 The `/subscriptions` endpoint can be called with `GET`, `POST`, `PUT` and `DELETE`.
-More information, and examples, on the `/subscriptions` API can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).
+More information, and examples, on the `/subscriptions` API can be found in the [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).
 
 A `POST` request with subscriptions in a file may look as the following example.
 
