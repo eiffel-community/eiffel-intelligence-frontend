@@ -41,7 +41,7 @@ context path /eifrontend/:
 
     curl -X GET http://localhost:8080/eifrontend/authentication?backendurl="http://127.0.0.1:8090/eibackend/"
 
-This way of entering the `backendurl` may be the easiest way. It works with GET, POST and PUT requests. 
+This way of entering the `backendurl` may be the easiest way. It works with all CRUD operations. 
 
 **Note: It is not possible to add the `backendurl` parameter as a JSON parameter.**
 
