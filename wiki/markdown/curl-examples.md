@@ -2,11 +2,12 @@
 
 ## Introduction
 
-The front-end has a bridge functionality that is built in as a part of the front-end's web server and handles requests coming from the web GUI towards any of the back-ends configured.
-The `/backends` endpoint is the only additional endpoint which does not exist in [Eiffel Intelligence backend](https://github.com/eiffel-community/eiffel-intelligence).
-The front-end may also be used by other tools such as CURL or any kind of program that can make HTTP(S) requests.
-Below are some examples of using CURL towards different endpoints, together with example responses.
-Most endpoints are also documented in the [Eiffel Intelligence backend repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
+The front-end has a bridge functionality that is built in as a part of the front-end's web server 
+and handles requests coming from the web GUI towards any of the configured Eiffel Intelligence back-ends. 
+The `/backends` endpoint is the only additional endpoint which does not exist in [Eiffel Intelligence back-end](https://github.com/eiffel-community/eiffel-intelligence).
+The front-end may also be used by other tools such as CURL or any kind of program that can make HTTP(S) 
+requests. Below are some examples of using CURL towards different endpoints, together with example 
+responses. Most endpoints are also documented in the [Eiffel Intelligence back-end repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
 
 **Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
 
@@ -24,21 +25,23 @@ Most endpoints are also documented in the [Eiffel Intelligence backend repositor
 * [/subscriptions](#subscriptions)
 
 #### Specified back-end
-As a user of the front-end you may want to specify your own back-end URL if you do not want to use the default back-end.
-This is possible to do by injecting the back-end URL as a query parameter.
-The parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end instance does not have to be specified in the list of available instances.
+As a user of the front-end you may want to specify your own back-end URL if you do not want to use the 
+default back-end. This is possible to do by injecting the back-end URL as a query parameter. The 
+parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end 
+instance does not have to be specified in the list of available instances.
 
-An example of a way to add such parameter is examplified below, note that the "?" indicates that parameters has been added to the front-end url.
-`localhost:8080` is the front-end url, and we want to access the context path /authentication but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
-
+An example of a way to add such parameter is exemplified below, note that the "?" indicates that 
+parameters has been added to the front-end url.`localhost:8080` is the front-end url, and we want to 
+access the context path /authentication but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
 
     curl -X GET http://localhost:8080/authentication?backendurl="http://127.0.0.1:8090/"
 
-Example with Tomcat:
+Example with Eiffel Intelligence front-end deployed with Tomcat, and the 
+context path /eifrontend/:
 
     curl -X GET http://localhost:8080/eifrontend/authentication?backendurl="http://127.0.0.1:8090/eibackend/"
 
-This way of entering the `backendurl` may be the easiest way. It works with GET, POST and PUT requests. Currently entering just a back-end name is not supported.
+This way of entering the `backendurl` may be the easiest way. It works with all CRUD operations. 
 
 **Note: It is not possible to add the `backendurl` parameter as a JSON parameter.**
 
@@ -67,7 +70,7 @@ This way of entering the `backendurl` may be the easiest way. It works with GET,
     </tr>
 </table>
 
-A curl call with the command:
+A curl request with the command:
 
     curl -X GET http://localhost:8080/authentication
 
@@ -119,14 +122,17 @@ This command would return a JSON object containing the status of the back-end an
     </tr>
 </table>
 
-While the web GUI may use the back-end instances list and select different back-ends in an easy way, a user that uses the front-end without the included web GUI may need to specify a back-end URL. This may be done by adding a `backendurl` parameter to the request.
+While the web GUI may use the back-end instances list and select different back-ends in an easy way, 
+a user that uses the front-end without the included web GUI may need to specify a back-end URL. This 
+may be done by adding a `backendurl` parameter to the request.
 
-Note that for users where the front-end and back-end is running with the help of Tomcat there will be context paths used.
+Note that for users where the front-end and back-end is deployed with Tomcat there will be context paths used.
 
 #### Default back-end
 
-The front-end can be configured to use a default back-end, this means that if no back-end is specified when making a HTTP request to the front-end the default back-end will be used.
-If you want to see a list of back-ends and see if there is a default back-end set, you may use the command:
+The front-end can be configured to use a default back-end, this means that if no back-end is specified 
+when making a HTTP request to the front-end the default back-end will be used. If you want to see a 
+list of back-ends and see if there is a default back-end set, you may use the command:
 
 ###### Example GET request using curl:
 
@@ -140,12 +146,15 @@ If you want to see a list of back-ends and see if there is a default back-end se
 
     curl -X GET http://localhost:8080/backends
 
-The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up empty there are no back-ends specified in the front-end. If there is no JSON object with the key set to true there is no default back-end.
+The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up 
+empty there are no back-ends specified in the front-end. If there is no JSON object with the key set 
+to true there is no default back-end.
 
 __Note:__ `name` must be unique.
 
-Only one back-end instance can be added at a time.
-Even with different names all elements must be unique, you may not have two or more elements with the same `host`, `port`, `contextPath` or `https` value, one of these three keys must be different. Only the `contextPath` key may be left empty.
+Only one back-end instance can be added at a time. Even with different names all elements must be 
+unique, you may not have two or more elements with the same `host`, `port`, `contextPath` or `https` 
+value, one of these three keys must be different. Only the `contextPath` key may be left empty.
 
 ###### Example of __valid__ back-end list:
 
@@ -158,7 +167,8 @@ Even with different names all elements must be unique, you may not have two or m
     ]
 
 All entries has different `names`.
-Second entry has different `host`, third entry has different `port`, third entry has different `contextPath`, fifth entry has `https` changed to true.
+Second entry has different `host`, third entry has different `port`, third entry has different `contextPath`, 
+fifth entry has `https` changed to true.
 
 ###### Example of __invalid__ back-end list:
 
@@ -168,7 +178,8 @@ Second entry has different `host`, third entry has different `port`, third entry
         {"name":"My Back-End 2","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":false}
     ]
 
-The second entry is invalid due to having the same name as the first entry. The third entry is invalid due to having the same value in all fields as the first entry.
+The second entry is invalid due to having the same name as the first entry. The third entry is invalid 
+due to having the same value in all fields as the first entry.
 
 ## <a id="templates" />/templates
 
@@ -195,7 +206,8 @@ The second entry is invalid due to having the same name as the first entry. The 
     </tr>
 </table>
 
-The Eiffel Intelligence front-end supports these endpoints. More information can be found in the [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/templates.md)
+The Eiffel Intelligence front-end supports these endpoints. More information can be found in the 
+[Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/templates.md)
 
 #### Some curl examples
 
@@ -207,7 +219,8 @@ This command returns a list of predefined template events.
 
     curl -X GET -H "Content-type: application/json" http://localhost:8080/templates/events
 
-This command returns a list of several subscriptions. It is also possible to specify a file in which to save the downloaded objects in to.
+This command returns a list of several subscriptions. It is also possible to specify a file in which 
+to save the downloaded objects to.
 
     curl -X GET -H "Content-type: application/json" localhost:8080/templates/subscriptions --output myFile.json
 
@@ -352,19 +365,20 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 </table>
 
 The `/subscriptions` endpoint can be called with `GET`, `POST`, `PUT` and `DELETE`.
-More information, and examples, on the `/subscriptions` API can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).
+More information, and examples, on the `/subscriptions` API can be found in the [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).
 
 A `POST` request with subscriptions in a file may look as the following example.
 
     curl -X POST -d @file_containing_list_of_json_objects -H "Content-Type: application/json" \
         http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 
-Here is an example using this endpoint and the result it gives in case we have the templated subscriptions added.
+Here is an example using this endpoint and the result it gives if template subscriptions exists.
 The `backendurl` parameters is passed in to use a specified instance instead of the default back-end instance.
 
     curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 
-The back-end used is running on localhost and port 8080. EI front-end forwards the request to 127.0.0.1 and port 8090 as requested in the query parameters and the result is as follows:
+The back-end used is running on localhost and port 8080. EI front-end forwards the request to 127.0.0.1 
+and port 8090 as requested in the query parameters and the result is a list of existing subscriptions:
 
     [
         {
@@ -393,7 +407,6 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
             "userName":"functionalUser",
             "password":"",
             "ldapUserName":"",
-            "notificationMessageKeyValuesAuth":[],
             "_id":{
                 "$oid":"5c012117aeb9d61aed160a2c"
             },
@@ -424,7 +437,6 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
             "subscriptionName":"Subscription2",
             "password":"",
             "ldapUserName":"",
-            "notificationMessageKeyValuesAuth":[],
             "_id":{
                 "$oid":"5c012117aeb9d61aed160a2d"
             },
@@ -455,11 +467,9 @@ The back-end used is running on localhost and port 8080. EI front-end forwards t
             "subscriptionName":"Subscription3_Mail_Notification",
             "password":"",
             "ldapUserName":"",
-            "notificationMessageKeyValuesAuth":[],
             "_id":{
                 "$oid":"5c012117aeb9d61aed160a2e"
             },
             "authenticationType":"NO_AUTH"
         }
     ]
-
