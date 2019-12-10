@@ -72,4 +72,4 @@ the subscription.
 The delete button is represented as a trash can symbol and will open confirmation dialogue
 to delete the subscription.
 
-**_More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscriptions.md)_**
+**More Subscriptions related information can be found [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md) and [here](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/subscriptions.md)**

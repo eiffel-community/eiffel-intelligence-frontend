@@ -7,7 +7,7 @@ and handles requests coming from the web GUI towards any of the configured Eiffe
 The `/backends` endpoint is the only additional endpoint which does not exist in [Eiffel Intelligence back-end](https://github.com/eiffel-community/eiffel-intelligence).
 The front-end may also be used by other tools such as CURL or any kind of program that can make HTTP(S) 
 requests. Below are some examples of using CURL towards different endpoints, together with example 
-responses. Most endpoints are also documented in the [Eiffel Intelligence back-end repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown)
+responses. Most endpoints are also documented in the [Eiffel Intelligence back-end repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki)
 
 **Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
 
@@ -84,7 +84,7 @@ It is possible to provide both username and password directly in the request, as
 
     curl -X GET -H "Content-type: application/json" -u <user>:<password> localhost:8080/authentication/login
 
-More information and examples can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/authentication.md)
+More information and examples can be found in the [EI back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/authentication.md)
 
 ## <a id="status" /> /status
 
@@ -207,7 +207,7 @@ due to having the same value in all fields as the first entry.
 </table>
 
 The Eiffel Intelligence front-end supports these endpoints. More information can be found in the 
-[Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/templates.md)
+[Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/templates.md)
 
 #### Some curl examples
 
@@ -264,7 +264,7 @@ The response is a json object containing all the connected components and data a
     </tr>    
 </table>
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/query-aggregated-objects.md) 
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/query-aggregated-objects.md) 
 
 ## <a id="failed-notifications" />/failed-notifications
 
@@ -281,9 +281,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
       </tr>      
 </table>
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/failed-notifications.md)
-
-
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/failed-notifications.md)
 
 ## <a id="rules" />/rules
 
@@ -310,12 +308,14 @@ Example curl commands to these endpoints [can be found here](https://github.com/
     </tr>
 </table>
 
-For these endpoints to be reachable the Eiffel Intelligence back-end [needs to be configured](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties) with `testaggregated.enabled: true`.
-The below command would result in a json response of `{"status":true}` if this functionality is enabled.
+For these endpoints to be reachable the Eiffel Intelligence back-end 
+[needs to be configured](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties) 
+with `testaggregated.enabled: true`. The below command would result in a 
+json response of `{"status":true}` if this functionality is enabled.
 
     curl -X GET -H "Content-type: application/json" localhost:8080/rule-test
 
-Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/running-rules-on-objects.md)
+Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/running-rules-on-objects.md)
 
 ## <a id="subscriptions" />/subscriptions
 
@@ -365,7 +365,8 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 </table>
 
 The `/subscriptions` endpoint can be called with `GET`, `POST`, `PUT` and `DELETE`.
-More information, and examples, on the `/subscriptions` API can be found in the [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/markdown/subscription-API.md).
+More information, and examples, on the `/subscriptions` API can be found in the 
+[Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki/subscription-API.md).
 
 A `POST` request with subscriptions in a file may look as the following example.
 
