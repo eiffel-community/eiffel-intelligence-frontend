@@ -60,10 +60,10 @@ Visit [Eiffel Community](https://eiffel-community.github.io) to get started and 
 
 1. [**Introduction**](wiki/index.md)
 2. [**Running Eiffel-Intelligence front-end**](wiki/running-eiffel-intelligence-frontend.md)
-   * [**Run in Docker**](wiki/docker.md)
-   * [**Configuration**](wiki/configuration.md)
+    - [**Run in Docker**](wiki/docker.md)
+    - [**Configuration**](wiki/configuration.md)
 3. [**GUI Overview**](wiki/GUI-overview.md)
 4. [**Subscription Handling**](wiki/subscription-handling.md)
-   * [**Add Subscription**](wiki/add-subscription.md)
+    - [**Add Subscription**](wiki/add-subscription.md)
 5. [**Test Rules User Guide**](wiki/test-rules.md)
 6. [**CURL examples**](wiki/curl-examples.md)
