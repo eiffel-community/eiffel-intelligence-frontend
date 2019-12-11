@@ -13,7 +13,7 @@ Intelligence front-end on a Docker Host or in a Kubernetes cluster.
 - Docker Compose
   Linux and Windows:  https://docs.docker.com/compose/install/
 
-## Follow these step to build the Docker image.
+## Follow These Steps to Build the Docker Image
 
  **1**  Build the Eiffel Intelligence front-end war file:
 
@@ -27,14 +27,14 @@ This will produce a war file in the "target" folder.
 
 Now docker image has build with tag "eiffel-intelligence-frontend:2.0.0"
 
-## Run Docker image on local Docker Host
+## Run Docker Image on Local Docker Host
 To run the produced docker image on the local Docker host, execute this command:
 
     docker run -p 8071:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG eiffel-intelligence-frontend:2.0.0
 
-# Some info of all flags to this command
+## Some Info about Flags to This Command
 
-## Eiffel Intelligence Spring Properties
+### Eiffel Intelligence Spring Properties
 
 <B>"-e server.port=8080"</B> - Is the Spring property setting for Eiffel 
 Intelligence applications web port.
@@ -49,7 +49,7 @@ Intelligence Spring properties.
 
 [application.properties](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties)
 
-## Docker flags
+### Docker Flags
 
 <B>"--expose 8080"</B> - this Docker flag tells that containers internal port 
 shall be exposed to outside of the Docker Host. This flag do not set which port 
@@ -79,7 +79,7 @@ Eiffel Intelligence where the application.properties is located in the container
 
     docker run -p 8070:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties eiffel-intelligence-frontend:2.0.0
 
-# Run Docker image with provided docker-compose file
+## Run Docker Image with Provided docker-compose File
 This docker-compose file includes these components, [docker-compose.yml](../src/main/docker/docker-compose.yml):
 
 - MongoDB
@@ -94,7 +94,7 @@ This docker-compose file includes these components, [docker-compose.yml](../src/
 NOTE: Only MongoDB, RabbitMQ, ER and EI components are needed to start.
 The rest of the components can be commented out if not needed.
 
-### 1 Source environment variables used in docker-compose.yml
+### 1 Source Environment Variables Used in docker-compose.yml
 
 For easier configuration, the Docker images to be used and ports for the different
 services are set in [env.bash](../src/main/docker/env.bash)
@@ -122,7 +122,7 @@ Currently we need to provide EI back-end instances list outside of docker-compos
 This is also done via the [env.bash](../src/main/docker/env.bash)
 file.
 
-### 2 Then run following docker-compose command to startup all components:
+### 2 Then Run Following docker-compose Command to Start up All Components:
 
     docker-compose -f src/main/docker/docker-compose.yml up -d
 
@@ -135,7 +135,7 @@ REST API, example for getting all subscriptions:
 
     curl -X GET http://localhost:8081/subscriptions
 
-It is also possible to access these Rest-Api addresses in web-browser and get 
+It is also possible to access these REST API addresses in web-browser and get 
 result presented in a Json view in web-browser.
 
 Following command can be used to get the logs from the EI front-end container/service:

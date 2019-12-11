@@ -10,43 +10,43 @@ the Eiffel Intelligence front-end, once the authentication (if enabled) is done.
     <img style="border:1px solid black" src="images/subscription_overview.png"></img>
 </kbd>
 
-#### _Add Subscription_
+#### Add Subscription
 This button opens a form with a number of fields to create a subscription
 through subscription endpoint (POST /subscriptions).
-#### _Upload Subscriptions_
+#### Upload Subscriptions
 This button help uploads a subscription by opening a file explorer.
-#### _Bulk Delete_
+#### Bulk Delete
 This button deletes all the selected subscriptions in the table from the
 database.
-#### _Bulk Download_
+#### Bulk Download
 This button downloads all the selected subscriptions in the table.
-#### _Reload_
+#### Reload
 This button reloads the data from the database and refresh the data in the
 subscription table.
-#### _Get Template_
+#### Get Template
 This button downloads a subscription template.
-#### _EI Back-end Status_
+#### EI Back-end Status
 This button indicates, through its color, whether a back-end instance is
 connected with front-end or not. The green color means back-end is connected
 while red means no instance is connected.
 
 ## Single Subscription Handling
 
-#### _Checkbox_
+#### Checkbox
 Used to select one or many subscription for bulk usages. The top one is a
 select all checkbox.
-#### _SubscriptionName_
+#### SubscriptionName
 The subscription name.
-#### _Date_
+#### Date
 The date when the subscription was created and saved in Eiffel Intelligence.
-#### _NotificationType_
+#### NotificationType
 What kind of notification type the subscription uses.
-#### _NotificationMeta_
+#### NotificationMeta
 The URL which the subscription triggers or email adresses that will be notified on
 a subscription trigger.
-#### _Repeat_
+#### Repeat
 True or False depending whether or not repeat is activated.
-#### _Action_
+#### Action
 A set of buttons handling different kind of actions for that subscription.
 When hovering with a pointer over the button a descriptor showing what the button
 does will be displayed.
@@ -55,20 +55,20 @@ does will be displayed.
     <img style="border:1px solid black" src="images/subscription_buttons.png"></img>
 </kbd>
 
-##### _View_
+##### View
 The view button is represented as an eye symbol and will open a form window to view data in
 the subscription.
-##### _Clone_
+##### Clone
 The clone button is represented as a copy symbol and will open a form window to add a new
 subscription containing the same information as the cloned subscription except
 the name that must be unique for all subscriptions.
-##### _Download_
+##### Download
 The download button is represented as a download symbol and when pressed will open a
 download window where the user may save the subscription data in .json format.
-##### _Edit_
+##### Edit
 The edit button is represented as a pen symbol and will open a form window to edit data in
 the subscription.
-##### _Delete_
+##### Delete
 The delete button is represented as a trash can symbol and will open confirmation dialogue
 to delete the subscription.
 

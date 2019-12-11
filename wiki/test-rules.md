@@ -103,6 +103,6 @@ And then run curl command below.
 
     curl -X POST -d "@<path to file>" -H "Content-Type: application/json" http://<host>:8080/rule-test/run-full-aggregation?backendurl="http://127.0.0.1:8090/"
 
-## Write rules
+## Write Rules
 
 **More information about how to write rules can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/rules.md).**

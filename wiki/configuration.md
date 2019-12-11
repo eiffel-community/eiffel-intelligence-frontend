@@ -4,7 +4,7 @@ To be able to execute and use Eiffel Intelligence front-end, some configuration
 need to provided. All configurations is made via application.properties file. 
 These properties can also be provided as Java properties arguments as well.
 
-## Eiffel Intelligence back-end
+## Eiffel Intelligence Back-end
 
 Eiffel Intelligence front-end is dependent of at least one Eiffel Intelligence 
 back-end instance being up and running. It is possible to configure several back-end instances.
@@ -18,7 +18,7 @@ EI back-end instances is configured by setting **ei.backend.instances.list.json.
 
 You can set as many Eiffel Intelligence back-end instances as you intend to use.
 
-## Eiffel Intelligence front-end server settings
+## Eiffel Intelligence Front-end Server Settings
 
 Which port Eiffel Intelligence front-end web-server should be started with is set by the property **server.port**:
 
@@ -40,7 +40,7 @@ means you can leave the **ei.frontend.context.path** property empty.
     ei.frontend.service.port=${server.port}
     ei.frontend.context.path=
 
-## HTTPS security
+## HTTPS Security
 
 If Eiffel Intelligence front-end needs to be executed with secure HTTPS connections, 
 then these properties need to be set:
@@ -53,8 +53,7 @@ then these properties need to be set:
 
 Read more in Spring documentation about how to enable HTTPS security in Spring applications.
 
-## Customize documentation links
-
+## Customize Documentation Links
 It is possible to add and change Documentation url links that is seen in the Eiffel 
 Intelligence front-end Web-UI. Documentation url links is configured by 
 property **ei.eiffel.documentation.urls**, example:
@@ -66,6 +65,5 @@ property **ei.eiffel.documentation.urls**, example:
                                "Eiffel Github main page": "https://github.com/eiffel-community/eiffel",\
                                "User guide for test rules page": "https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/test-rules.md" }
 
-## Other properties
-
+## Other Properties
 All Eiffel Intelligence front-end properties can be found in [application.properties](../src/main/resources/application.properties) example file.

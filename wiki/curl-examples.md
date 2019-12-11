@@ -1,4 +1,4 @@
-# Curl Examples to front-end
+# Curl Examples to Front-end
 
 ## Introduction
 
@@ -13,7 +13,7 @@ responses. Most endpoints are also documented in the [Eiffel Intelligence back-e
 
     curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
 
-#### Quick access to endpoints:
+### Quick Access to Endpoints:
 * [/authentication](#authentication)
 * [/status](#status)
 * [/backends](#backends)
@@ -24,7 +24,7 @@ responses. Most endpoints are also documented in the [Eiffel Intelligence back-e
 * [/rules](#rules)
 * [/subscriptions](#subscriptions)
 
-#### Specified back-end
+### Specified Back-end
 As a user of the front-end you may want to specify your own back-end URL if you do not want to use the 
 default back-end. This is possible to do by injecting the back-end URL as a query parameter. The 
 parameters key should be `backendurl` then enter the full HTTP URL you wish to use. This back-end 
@@ -101,8 +101,7 @@ More information and examples can be found in the [EI back-end documentation](ht
     </tr>
 </table>
 
-#### Some curl examples
-
+#### Curl Examples
 This command would return a JSON object containing the status of the back-end and servers back-end is dependent on..
 
     curl -X GET -H "Content-type: application/json" http://localhost:8080/status
@@ -128,22 +127,19 @@ may be done by adding a `backendurl` parameter to the request.
 
 Note that for users where the front-end and back-end is deployed with Tomcat there will be context paths used.
 
-#### Default back-end
+### Default Back-end
 
 The front-end can be configured to use a default back-end, this means that if no back-end is specified 
 when making a HTTP request to the front-end the default back-end will be used. If you want to see a 
 list of back-ends and see if there is a default back-end set, you may use the command:
 
-###### Example GET request using curl:
-
+###### Example GET Request Using Curl
     curl -X GET http://*front-end-url*/*context-path-if-any*/backends
 
-###### Example GET request using curl, with host, port using Tomcat:
-
+###### Example GET Request Using Curl with Context Path
     curl -X GET http://localhost:8080/eifrontend/backends
 
-###### Example GET request using curl, with EI default settings:
-
+###### Example GET Request Using Curl with Eiffel Intelligence Default Settings
     curl -X GET http://localhost:8080/backends
 
 The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up 
@@ -156,7 +152,7 @@ Only one back-end instance can be added at a time. Even with different names all
 unique, you may not have two or more elements with the same `host`, `port`, `contextPath` or `https` 
 value, one of these three keys must be different. Only the `contextPath` key may be left empty.
 
-###### Example of __valid__ back-end list:
+###### Example of Valid Back-end List:
 
     [
         {"name":"My Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":true},
@@ -170,7 +166,7 @@ All entries has different `names`.
 Second entry has different `host`, third entry has different `port`, third entry has different `contextPath`, 
 fifth entry has `https` changed to true.
 
-###### Example of __invalid__ back-end list:
+###### Example of Invalid Back-end List:
 
     [
         {"name":"My Back-End","host":"localhost","port":8090,"contextPath":"","https":false,"defaultBackend":true},
@@ -209,7 +205,7 @@ due to having the same value in all fields as the first entry.
 The Eiffel Intelligence front-end supports these endpoints. More information can be found in the 
 [Eiffel Intelligence back-end documentation](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/templates.md)
 
-#### Some curl examples
+#### Curl Examples
 
 This command would return a list of rules.
 
