@@ -1,4 +1,4 @@
-# Home
+# What is Eiffel Intelligence Front-end?
 
 Eiffel Intelligence front-end provides Eiffel Intelligence (EI) users a simple
 and easy to use GUI. More precisely, Eiffel Intelligence front-end allows the

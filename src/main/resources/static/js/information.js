@@ -3,7 +3,6 @@ jQuery(document).ready(function () {
 
     // Fetch injected URL from DOM
     var frontEndVersion = $("#frontEndVersion").text();
-    var frontEndApplicationPropertiesVersion = $("#frontEndApplicationPropertiesVersion").text();
     var frontEndAppName = $("#frontendAppName").text();
 
     var body = document.getElementById("eiPageFrame");
@@ -24,9 +23,6 @@ jQuery(document).ready(function () {
     }
 
     function createFrontEndGeneralInfo() {
-        if (frontEndApplicationPropertiesVersion) {
-            frontEndVersion = frontEndVersion + " (" + frontEndApplicationPropertiesVersion + ")";
-        }
         var tableContent = [
             { key: "Application name", value: frontEndAppName },
             { key: "Version", value: frontEndVersion },

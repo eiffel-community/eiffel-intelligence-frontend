@@ -27,7 +27,6 @@ public class ConfigurationLogger {
                 + "ei.frontend.service.host: " + env.getProperty("ei.frontend.service.host") + "\n"
                 + "ei.frontend.context.path: " + env.getProperty("ei.frontend.context.path") + "\n"
                 + "ei.use.secure.http.frontend: " + env.getProperty("ei.use.secure.http.frontend") + "\n"
-                + "ei.backend.instances.filepath: " + env.getProperty("ei.backend.instances.filepath") + "\n"
                 + "ei.backend.instances.list.json.content: " + env.getProperty("ei.backend.instances.list.json.content") + "\n"
                 + "ei.eiffel.documentation.urls: " + env.getProperty("ei.eiffel.documentation.urls") + "\n"
                 + "logging.level.root: " + env.getProperty("logging.level.root") + "\n"
