@@ -18,7 +18,7 @@ export LDAP_IMAGE="osixia/openldap:1.2.4"
 
 # Update EI in docker-compose.yml to use spring.data.mongodb.uri when updating this image version to version 3+
 export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:2.0.0"
-# Remember to remove ei.backend.instances.filepath= property when updating to EI-f version 3+
+# Update EI front-end in docker-compose.yml, remove ei.backend.instances.filepath= property when updating to EI-f version 3+
 export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:2.0.0"
 
 export MONGODB_PORT=27017
