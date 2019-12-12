@@ -84,4 +84,4 @@ one requirement need to be satisfied before a subscription is fulfilled.
 More than one requirements may be added with the “Add Requirement” button.
 Requirements are connected by a logical “OR”.
 
-**_More information about how to write Requirement and Conditions can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/subscriptions.md#writing-requirements-and-conditions)._**
+**More information about how to write Requirement and Conditions can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/subscriptions.md#writing-requirements-and-conditions).**
