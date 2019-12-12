@@ -35,7 +35,10 @@ public class WebControllerUtilsTest {
     @Test
     public void testGetFrontEndServiceUrl() throws Exception {
       String expectedUrl = String.format("http://%s:%s%s", HOST, PORT, CONTEXT_PATH);
-      controllerUtils = new WebControllerUtils(HOST, PORT, CONTEXT_PATH, false, null, null, null, null, null);
+      controllerUtils = new WebControllerUtils();
+      controllerUtils.setFrontendServiceHost(HOST);
+      controllerUtils.setFrontendServicePort(PORT);
+      controllerUtils.setFrontendContextPath(CONTEXT_PATH);
       assertEquals(expectedUrl, controllerUtils.getFrontEndServiceUrl());
     }
 }
