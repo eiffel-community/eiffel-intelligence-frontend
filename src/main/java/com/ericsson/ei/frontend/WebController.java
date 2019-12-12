@@ -59,7 +59,6 @@ public class WebController {
     public String info(Model model, HttpServletRequest request) {
         model.addAttribute("frontendServiceUrl", frontEndUtils.getFrontEndServiceUrl());
         model.addAttribute("version", frontEndUtils.getVersion());
-        model.addAttribute("applicationPropertiesVersion", frontEndUtils.getApplicationPropertiesVersion());
         model.addAttribute("frontendAppName", frontEndUtils.getApplicationName());
         return "information";
     }
