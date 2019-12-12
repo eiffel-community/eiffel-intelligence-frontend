@@ -373,7 +373,10 @@ jQuery(document).ready(function () {
                     "targets": [6],
                     "orderable": true,
                     "title": "NotificationMeta",
-                    "data": "notificationMeta"
+                    "data": "notificationMeta",
+                    "render": function (data, type, row, meta) {
+                        return encodeURI(data);
+                    }
                 },
                 {
                     "targets": [7],
