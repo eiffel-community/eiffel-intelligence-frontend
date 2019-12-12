@@ -23,7 +23,9 @@
 [![](https://jitpack.io/v/eiffel-community/eiffel-intelligence-frontend.svg)](https://jitpack.io/#eiffel-community/eiffel-intelligence-frontend)
 
 # Eiffel Intelligence Frontend
-Eiffel Intelligence Frontend is part of the [Eiffel Intelligence](https://github.com/eiffel-community/eiffel-intelligence) implementation of the [Eiffel Protocol](https://github.com/eiffel-community/eiffel). Eiffel Intelligence Frontend allows the configuration of subscription and aggregation rules in Eiffel Intelligence.
+Eiffel Intelligence Frontend is part of the [Eiffel Intelligence](https://github.com/eiffel-community/eiffel-intelligence) 
+implementation of the [Eiffel Protocol](https://github.com/eiffel-community/eiffel). 
+Eiffel Intelligence Frontend allows the configuration of subscription and aggregation rules in Eiffel Intelligence.
 
 Potential future features for Eiffel Intelligence Frontend include:
 *  Real time testing of aggregation models for new bounded contexts
@@ -36,7 +38,8 @@ Potential future features for Eiffel Intelligence Frontend include:
 *  Firefox 60.2.0 or later
 
 ## Compatibility
-To see which versions of back-end and front-end that work together you can check the [Compatibility](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/markdown/compatibility.md) page.
+To see which versions of back-end and front-end that work together you can 
+check the [Compatibility](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/compatibility.md) page.
 
 ## About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
@@ -44,20 +47,23 @@ The contents of this repository are licensed under the [Apache License 2.0](./LI
 To get involved, please see [Code of Conduct](./CODE_OF_CONDUCT.md) and [contribution guidelines](./CONTRIBUTING.md).
 
 ## About Eiffel
-This repository forms part of the Eiffel Community. Eiffel is a protocol for technology agnostic machine-to-machine communication in continuous integration and delivery pipelines, aimed at securing scalability, flexibility and traceability. Eiffel is based on the concept of decentralized real time messaging, both to drive the continuous integration and delivery system and to document it.
+This repository forms part of the Eiffel Community. Eiffel is a protocol for 
+technology agnostic machine-to-machine communication in continuous integration 
+and delivery pipelines, aimed at securing scalability, flexibility and 
+traceability. Eiffel is based on the concept of decentralized real time 
+messaging, both to drive the continuous integration and delivery system and 
+to document it.
 
 Visit [Eiffel Community](https://eiffel-community.github.io) to get started and get involved.
 
 ## Documentation
 
-1.  [**Introduction**](./wiki/markdown/index.md)
-1.  [**Running Eiffel-Intelligence front-end**](./wiki/markdown/running-eiffel-intelligence-frontend.md)
-    -  [**Run in Docker**](./wiki/markdown/docker.md)
-    -  [**Configuration**](./wiki/markdown/configuration.md)
-1.  [**GUI Overview**](./wiki/markdown/GUI-overview.md)
-1.  [**Subscription Handling**](./wiki/markdown/subscription-handling.md)
-    -  [**Add Subscription**](./wiki/markdown/add-subscription.md)
-1.  [**Test Rules User Guide**](./wiki/markdown/test-rules.md)
-1.  [**CURL examples**](./wiki/markdown/curl-examples.md)
-
-[**Eiffel Intelligence frontend documentation can be found here**](https://eiffel-community.github.io/eiffel-intelligence-frontend/)
+1. [**Introduction**](wiki/index.md)
+2. [**Running Eiffel-Intelligence front-end**](wiki/running-eiffel-intelligence-frontend.md)
+    - [**Run in Docker**](wiki/docker.md)
+    - [**Configuration**](wiki/configuration.md)
+3. [**GUI Overview**](wiki/GUI-overview.md)
+4. [**Subscription Handling**](wiki/subscription-handling.md)
+    - [**Add Subscription**](wiki/add-subscription.md)
+5. [**Test Rules User Guide**](wiki/test-rules.md)
+6. [**CURL examples**](wiki/curl-examples.md)
