@@ -43,7 +43,7 @@ The date when the subscription was created and saved in Eiffel Intelligence.
 What kind of notification type the subscription uses.
 #### _NotificationMeta_
 The URL which the subscription triggers or email adresses that will be notified on
-a subscription trigger.
+a subscription trigger. The notification meta will be presented in URL encoded format to prevent XSS.
 #### _Repeat_
 True or False depending whether or not repeat is activated.
 #### _Action_
