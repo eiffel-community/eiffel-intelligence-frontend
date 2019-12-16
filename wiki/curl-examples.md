@@ -306,7 +306,7 @@ Example curl commands to these endpoints [can be found here](https://github.com/
 
 For these endpoints to be reachable the Eiffel Intelligence back-end 
 [needs to be configured](https://github.com/eiffel-community/eiffel-intelligence/blob/master/src/main/resources/application.properties) 
-with `testaggregated.enabled: true`. The below command would result in a 
+with `test.aggregation.enabled: true`. The below command would result in a
 json response of `{"status":true}` if this functionality is enabled.
 
     curl -X GET -H "Content-type: application/json" localhost:8080/rule-test
