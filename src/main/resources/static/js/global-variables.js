@@ -34,7 +34,7 @@ var statusType = {
 var statusText = {
     BACKEND_DOWN: "<strong>Back-end, MongoDB and/or RabbitMQ is down!</strong> Wait for them go up or switch to another back-end before continuing!",
     UNKNOWN_BACK_END_STATUS: "<strong>Back-end status is unknown!</strong> Wait for it to update or switch to another back-end before continuing!",
-    TEST_RULES_DISABLED: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [testaggregated.enabled] as [true]"
+    TEST_RULES_DISABLED: "<strong>Test Rule service is disabled!</strong> To enable it set the backend property [test.aggregation.enabled] as [true]"
 };
 
 var backEndStatus = true;
