@@ -373,7 +373,8 @@ jQuery(document).ready(function () {
                     "targets": [6],
                     "orderable": true,
                     "title": "NotificationMeta",
-                    "data": "notificationMeta"
+                    "data": "notificationMeta",
+                    "render": $.fn.dataTable.render.text()
                 },
                 {
                     "targets": [7],
