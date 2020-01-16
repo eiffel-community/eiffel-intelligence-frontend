@@ -408,7 +408,6 @@ services:
       - ei.frontend.service.port=${EI_FRONTEND_PORT}
       - ei.frontend.context.path=
       - ei.backend.instances.list.json.content=${EI_INSTANCES_LIST}
-      - ei.backend.instances.filepath=/tmp/eiInstancesListFile.json
       - logging.level.root=ERROR
       - logging.level.org.springframework.web=ERROR
       - logging.level.com.ericsson.ei=DEBUG
