@@ -331,7 +331,16 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         </td>
     </tr>
         <tr>
-        <td>/subscriptions/{subscriptionName}</td>
+        <td>/subscriptions?subscriptionNames={name1},{name2}</td>
+        <td>GET</td>
+        <td>
+            Fetches information about one or more subscriptions from the back-end. The parameter 
+            subscriptionNames can take a comma separated list of names.
+        </td>
+    </tr>
+    </tr>
+        <tr>
+        <td>/subscriptions/{name}</td>
         <td>GET</td>
         <td>Fetches information about a single subscription from the back-end</td>
     </tr>
@@ -345,18 +354,18 @@ Example curl commands to these endpoints [can be found here](https://github.com/
         <td>PUT</td>
         <td>Request to update one (or more) subscription object(s) included in JSON format</td>
     </tr>
-        <tr>
-        <td>/subscriptions</td>
+    <tr>
+        <td>/subscriptions?subscriptionNames={name1}</td>
         <td>DELETE</td>
         <td>
-            Selected subscriptions can be deleted by using the required subscriptionNames parameter
+            One (or more) subscription(s) can be deleted by using the required subscriptionNames parameter
             and a comma separated list e.g. subscriptionNames={name1},{name2}
         </td>
     </tr>
     <tr>
-        <td>/subscriptions/{subscriptionName}</td>
+        <td>/subscriptions/{name}</td>
         <td>DELETE</td>
-        <td>Deletes a single (or multiple) subscription(s) from the back-end</td>
+        <td>Deletes a single subscription from the back-end</td>
     </tr>
 </table>
 
@@ -374,7 +383,7 @@ The `backendurl` parameters is passed in to use a specified instance instead of 
 
     curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 
-The back-end used is running on localhost and port 8080. EI front-end forwards the request to 127.0.0.1 
+The front-end used is running on localhost and port 8080. EI front-end forwards the request to 127.0.0.1 
 and port 8090 as requested in the query parameters and the result is a list of existing subscriptions:
 
     [
