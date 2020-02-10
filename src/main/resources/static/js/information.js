@@ -34,16 +34,12 @@ jQuery(document).ready(function () {
 
     function createGeneralEIInfo(data) {
 
-        if (data.applicationPropertiesVersion) {
-            data.version = data.version + " (" + data.applicationPropertiesVersion + ")";
-        }
-
         var tableContent = [
             { key: "Application name", value: data.applicationName },
             { key: "Version", value: data.version },
             { key: "Rules path", value: data.rulesPath },
             { key: "EI back-end connected server", value: sessionStorage.getItem(sessionStorage.selectedActive) },
-            { key: "EI test rules functionality enabled", value: data.testRulesEnabled }
+            { key: "EI test rules functionality enabled", value: data.testAggregationEnabled }
         ];
 
         generateGeneralInfo(tableContent, generalEIInfoLabel);
@@ -124,16 +120,16 @@ jQuery(document).ready(function () {
             success: function (responseData, textStatus) {
                 createGeneralEIInfo(responseData);
                 generateEIInformationBasedOnList(responseData.rmqProperties, "Eiffel Intelligence Connected RabbitMq Instances");
-                generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDb Instances");
-                generateEIInformationBasedOnList(responseData.threads, "Eiffel Intelligence Backend Java Threads Settings");
-                generateEIInformationBasedOnList(responseData.email, "Eiffel Intelligence Backend E-Mail Settings");
-                generateEIInformationBasedOnList(responseData.mailServerValues, "Eiffel Intelligence Backend SMTP Settings");
-                generateEIInformationBasedOnList(responseData.waitList, "Eiffel Intelligence Backend WaitList settings");
-                generateEIInformationBasedOnList([responseData.objectHandler], "Eiffel Intelligence Backend ObjectHandler Settings");
-                generateEIInformationBasedOnList([responseData.subscriptionHandler], "Eiffel Intelligence Backend SubscriptionHandler Settings");
-                generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence Backend InformSubscriber Settings");
-                generateEIInformationBasedOnList([responseData.erUrl], "End point for downstream/upstream search in EventRepository");
-                generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence Backend LDAP Settings");
+                generateEIInformationBasedOnList(responseData.mongodb, "Eiffel Intelligence Connected MongoDB Instances");
+                generateEIInformationBasedOnList(responseData.threads, "Eiffel Intelligence back-end Java Threads Settings");
+                generateEIInformationBasedOnList(responseData.email, "Eiffel Intelligence back-end E-Mail Settings");
+                generateEIInformationBasedOnList(responseData.mailServerValues, "Eiffel Intelligence back-end SMTP Settings");
+                generateEIInformationBasedOnList(responseData.waitList, "Eiffel Intelligence back-end WaitList settings");
+                generateEIInformationBasedOnList([responseData.objectHandler], "Eiffel Intelligence back-end ObjectHandler Settings");
+                generateEIInformationBasedOnList([responseData.subscriptionHandler], "Eiffel Intelligence back-end SubscriptionHandler Settings");
+                generateEIInformationBasedOnList([responseData.informSubscriber], "Eiffel Intelligence back-end InformSubscriber Settings");
+                generateEIInformationBasedOnList([responseData.eventRepository], "End point for downstream/upstream search in EventRepository");
+                generateEIInformationBasedOnList([responseData.ldap], "Eiffel Intelligence back-end LDAP Settings");
             }
         };
         var ajaxHttpSender = new AjaxHttpSender();
