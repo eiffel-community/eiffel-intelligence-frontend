@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-intelligence-frontend</artifactId>
-    <version>3.0.2</version>
+    <version>3.0.3</version>
     <packaging>war</packaging>
 
     <parent>
@@ -51,10 +51,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
             <version>${springBootVersion}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
             	<exclusion>
 		      <groupId>org.apache.logging.log4j</groupId>
 		      <artifactId>log4j-to-slf4j</artifactId>
