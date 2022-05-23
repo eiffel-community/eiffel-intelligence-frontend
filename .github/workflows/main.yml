@@ -1,0 +1,160 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  unitAndFunctionalTests:    
+    if: github.repository == 'eiffel-community/eiffel-intelligence-frontend'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    env: 
+      EI_BACKEND_PORT: 8099
+      JAVA_HOME: /usr/lib/jvm/java-1.8.0-openjdk-amd64
+      M2_HOME: /opt/apache-maven-3.6.3
+      MAVEN_HOME: /opt/apache-maven-3.6.3
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      # Run before every job
+      - name: Install Java
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y openjdk-8-jdk 
+          java -version 
+          uname -a 
+          chmod +x pom.xml 
+         
+      - name: Install Maven
+        shell: bash
+        run: |  
+          wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp
+          tar xf /tmp/apache-maven-3.6.3-bin.tar.gz -C /opt
+          echo "${M2_HOME}/bin" >> $GITHUB_PATH
+                   
+      - name: Run unit and functional tests
+        run: |
+          mvn test -B
+          
+          
+  integrationTests:
+    if: github.repository == 'eiffel-community/eiffel-intelligence-frontend'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    env: 
+      EI_BACKEND_PORT: 8099
+      JAVA_HOME: /usr/lib/jvm/java-1.8.0-openjdk-amd64
+      M2_HOME: /opt/apache-maven-3.6.3
+      MAVEN_HOME: /opt/apache-maven-3.6.3
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      # Run before every job
+      - name: Install Java
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y openjdk-8-jdk 
+          java -version 
+          uname -a 
+          chmod +x pom.xml 
+          mvn --version
+          
+      - name: Install Maven
+        shell: bash
+        run: |  
+          wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp
+          tar xf /tmp/apache-maven-3.6.3-bin.tar.gz -C /opt
+          ln -s /opt/apache-maven-3.6.3 /opt/maven
+          echo "${M2_HOME}/bin" >> $GITHUB_PATH
+          
+      # To ensure docker containers are fully up and running we sleep 60s
+      - name: Before script
+        run: |
+          source src/main/docker/env.bash
+          docker-compose -f src/main/docker/docker-compose.yml up -d eiffel-er mongodb rabbitmq jenkins mail-server ldap ldap-seed ldap2 ldap2-seed
+          echo 'Sleeping till Jenkins is up.'
+          timeout 90 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST:$JENKINS_PORT/login)" != "200" ]]; do sleep 5; done' || false
+          git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
+          cd eiffel-intelligence
+          chmod +x pom.xml
+          mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+          export EIFFEL_WAR=$(ls target/*.war)
+          java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
+          cd ..
+          echo 'Sleeping till EI is up.'
+          timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST:$EI_BACKEND_PORT/status)" != "200" ]]; do sleep 5; done' || false   
+          
+      - name: Run Integration tests
+        run: |
+          mvn --version
+          mvn verify -P integrationTest -DskipUTs -Dei.backend.instances.list.json.content="[{ 'contextPath': '', 'port': '${EI_BACKEND_PORT}', 'name': 'EI-Backend-1', 'host': 'localhost', 'https': false, 'defaultBackend': true}]" -B
+          
+      - name: After script
+        run: |    
+          docker-compose -f src/main/docker/docker-compose.yml down || true
+          fuser -k ${EI_BACKEND_PORT}/tcp
+        
+  reportCoverage:
+    if: github.repository == 'eiffel-community/eiffel-intelligence-frontend' && github.event_name == 'push'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    env: 
+      EI_BACKEND_PORT: 8099
+      JAVA_HOME: /usr/lib/jvm/java-1.8.0-openjdk-amd64
+      M2_HOME: /opt/apache-maven-3.6.3
+      MAVEN_HOME: /opt/apache-maven-3.6.3
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      # Run before every job
+      - name: Install Java
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8-jdk
+          java -version
+          uname -a
+          chmod +x pom.xml
+          mvn --version
+          
+      - name: Install Maven
+        shell: bash
+        run: |  
+          wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp
+          tar xf /tmp/apache-maven-3.6.3-bin.tar.gz -C /opt
+          echo "${M2_HOME}/bin" >> $GITHUB_PATH
+          
+      - name: Run cobertura
+        shell: bash
+        run: |
+          mvn cobertura:cobertura -Dcobertura.report.format=xml -B
+          
+      # Generating test coverage report and publishing to Codacy
+      - name: Run report coverage
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: 4f71427f28dc44a7b762bb14f21094ea
+          coverage-reports: target/site/cobertura/coverage.xml
