@@ -40,7 +40,7 @@ import cucumber.api.java.en.When;
 
 @Ignore
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = EIFrontendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = EIFrontendApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties = "spring.main.allow-bean-definition-overriding=true")
 @ContextConfiguration(classes = EIFrontendApplication.class, loader = SpringBootContextLoader.class)
 @TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class, CommonSteps.class })
 public class CommonSteps extends AbstractTestExecutionListener {
