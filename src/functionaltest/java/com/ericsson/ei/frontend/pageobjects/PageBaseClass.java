@@ -21,7 +21,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.mockito.Mockito.when;
 
-import java.time.Duration;
 
 public class PageBaseClass {
     CloseableHttpClient mockedHttpClient;
@@ -44,7 +43,7 @@ public class PageBaseClass {
 
     public void waitForJQueryToLoad() {
         try {
-            WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait webDriverWait = new WebDriverWait(driver, 10);
             webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
                     .executeScript("return document.readyState").equals("complete"));
             webDriverWait.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
@@ -65,7 +64,7 @@ public class PageBaseClass {
     }
 
     public void clickAlarmButton(){
-        new WebDriverWait(driver,  Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id("alertsLink")));
+        new WebDriverWait(driver,  TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("alertsLink")));
         WebElement alarmBtn = driver.findElement(By.id("alertsLink"));
         alarmBtn.click();
         waitForJQueryToLoad();

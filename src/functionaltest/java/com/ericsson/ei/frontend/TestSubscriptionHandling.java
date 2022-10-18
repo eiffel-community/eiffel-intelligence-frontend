@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.AfterClass;
@@ -186,7 +185,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         subscriptionPage.loadPage();
         subscriptionPage.clickCheckAll();
         subscriptionPage.clickBulkDownload();
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+        new WebDriverWait(driver, 10).until(
                 (webdriver) -> Files.exists(Paths.get(DOWNLOADED_BULK_SUBSCRIPTIONS_FILE_PATH)));
         String downloadedSubscriptionsTemplate = getJSONStringFromFile(
                 DOWNLOADED_BULK_SUBSCRIPTIONS_FILE_PATH);
@@ -195,10 +194,10 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     }
 
     private void clickAndVerifyGetTemplateButton() throws IOException {
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+        new WebDriverWait(driver, 10).until(
                 (webdriver) -> subscriptionPage.presenceOfClickGetTemplateButton());
         subscriptionPage.clickGetTemplate();
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+        new WebDriverWait(driver, 10).until(
                 (webdriver) -> Files.exists(Paths.get(DOWNLOADED_TEMPLATE_FILE_PATH)));
         String subscriptionTemplate = getJSONStringFromFile(SUBSCRIPTION_TEMPLATE_FILE_PATH);
         String downloadedSubscriptionsTemplate = getJSONStringFromFile(
@@ -290,7 +289,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
     private void verifyViewButtonOnSubscription() {
         subscriptionPage.clickExpandButtonByXPath(EXPAND_BUTTON_XPATH2);
         subscriptionPage.clickButtonByXPath(VIEW_BUTTON_XPATH2);
-        assert (new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+        assert (new WebDriverWait(driver, 10).until(
                 (webdriver) -> driver.getPageSource().contains("View Subscription")));
         subscriptionPage.clickFormCloseBtn();
     }

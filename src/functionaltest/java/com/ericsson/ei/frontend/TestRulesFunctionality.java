@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.AfterClass;
@@ -98,7 +97,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private void verifyAddAndRemoveEventButton() {
         testRulesPage.clickAddEventButton();
         testRulesPage.clickRemoveEventNumber(3);
-        assert (new WebDriverWait(driver, Duration.ofSeconds(10)).until((webdriver) -> !testRulesPage.presenceOfEventNumber(3)));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfEventNumber(3)));
     }
 
     private void verifyUploadEventsFile() {
@@ -113,7 +112,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
                 .respond(response().withStatusCode(200).withBody(downloadEventsTemplateMockedResponse));
 
         testRulesPage.clickDownloadEventsTemplate();
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH)));
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH)));
         downloadedEventsTemplate = getJSONStringFromFile(DOWNLOADED_EVENTS_TEMPLATE_FILE_PATH);
         assertEquals(downloadEventsTemplateMockedResponse, downloadedEventsTemplate);
     }
@@ -121,14 +120,14 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private void verifyAddAndRemoveRuleButton() {
         testRulesPage.clickAddRuleButton();
         testRulesPage.clickRemoveRuleNumber(3);
-        assert (new WebDriverWait(driver, Duration.ofSeconds(10)).until((webdriver) -> !testRulesPage.presenceOfRuleNumber(3)));
+        assert (new WebDriverWait(driver, 10).until((webdriver) -> !testRulesPage.presenceOfRuleNumber(3)));
     }
 
     private void verifyDownloadRulesButton() throws IOException {
         mockClient.when(request().withMethod("GET").withPath("/templates/rules"))
                 .respond(response().withStatusCode(200).withBody(downloadedRulesTemplate));
         testRulesPage.clickDownloadRulesButton();
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_FILE_PATH)));
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_FILE_PATH)));
         String downloadedRules = getJSONStringFromFile(DOWNLOADED_RULES_FILE_PATH);
         assertEquals(downloadedRulesTemplate, downloadedRules);
     }
@@ -144,7 +143,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         mockClient.when(request().withMethod("GET").withPath("/templates/rules"))
                 .respond(response().withStatusCode(200).withBody(mockedResponse));
         testRulesPage.clickDownloadRulesTemplate();
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
+        new WebDriverWait(driver, 10).until((webdriver) -> Files.exists(Paths.get(DOWNLOADED_RULES_TEMPLATE_FILE_PATH)));
         downloadedRulesTemplate = getJSONStringFromFile(DOWNLOADED_RULES_TEMPLATE_FILE_PATH);
         assertEquals(mockedResponse, downloadedRulesTemplate);
     }

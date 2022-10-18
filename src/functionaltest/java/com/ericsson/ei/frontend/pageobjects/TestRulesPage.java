@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
-import java.time.Duration;
 
 public class TestRulesPage extends PageBaseClass {
     private static final String ROUTE = "/#test-rules";
@@ -53,7 +52,7 @@ public class TestRulesPage extends PageBaseClass {
     }
 
     public void clickDownloadRulesTemplate() throws IOException {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.className("download_rules_template")));
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
@@ -61,53 +60,53 @@ public class TestRulesPage extends PageBaseClass {
     }
 
     public void clickDownloadEventsTemplate() throws IOException {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.elementToBeClickable(By.className("download_events_template")));
         WebElement downloadEventsTemplateButton = driver.findElement(By.className("download_events_template"));
         downloadEventsTemplateButton.click();
     }
 
     public void uploadRulesTemplate(String filePath) {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.presenceOfElementLocated(By.id("uploadRulesFile")));
         WebElement uploadRulesInputField = driver.findElement(By.id("uploadRulesFile"));
         uploadRulesInputField.sendKeys(filePath);
     }
 
     public void uploadEventsTemplate(String filePath) {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(
                 ExpectedConditions.presenceOfElementLocated(By.id("uploadEventsFile")));
         WebElement uploadEventsInputField = driver.findElement(By.id("uploadEventsFile"));
         uploadEventsInputField.sendKeys(filePath);
     }
 
     public String getFirstRuleText() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule2")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule2")));
         WebElement textArea = driver.findElement(By.className("formRules"));
        
         return textArea.getText().replaceAll("[\\n ]", "");
     }
 
     public String getFirstEventText() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("Events2")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Events2")));
         WebElement textArea = driver.findElement(By.className("formEvents"));
         return textArea.getText().replaceAll("[\\n ]", "");
     }
 
     public void clickDownloadRulesButton() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.className("download_rules")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("download_rules")));
         WebElement downloadRulesButton = driver.findElement(By.className("download_rules"));
         downloadRulesButton.click();
     }
 
     public void clickAddRuleButton() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.className("add_rule")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.className("add_rule")));
         WebElement addRuleButton = driver.findElement(By.className("add_rule"));
         addRuleButton.click();
     }
 
     public void clickRemoveRuleNumber(int number) {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule" + number)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule" + number)));
         WebElement removeRuleButton = driver.findElement(By.id("Rule" + number)).findElement(By.className("remove-item"));
 
         // We need the following two lines in order to be sure that the remove event button is not obscured...
@@ -118,13 +117,13 @@ public class TestRulesPage extends PageBaseClass {
     }
 
     public void clickAddEventButton() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.className("add_event")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("add_event")));
         WebElement addEventButton = driver.findElement(By.className("add_event"));
         addEventButton.click();
     }
 
     public void clickRemoveEventNumber(int number) {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("Events" + number)));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Events" + number)));
         WebElement removeEventButton = driver.findElement(By.id("Events" + number)).findElement(By.className("remove-item"));
 
         // We need the following two lines in order to be sure that the remove event button is not obscured...
@@ -135,14 +134,14 @@ public class TestRulesPage extends PageBaseClass {
     }
 
     public void clickFindAggregatedObject() throws IOException {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.className("find_aggregated_object")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className("find_aggregated_object")));
 
         WebElement findAggregatedObjectButton = driver.findElement(By.className("find_aggregated_object"));
         findAggregatedObjectButton.click();
     }
 
     public String getAggregatedResultData() {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("aggregatedObjectContent")));
+        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("aggregatedObjectContent")));
         WebElement aggregatedResultDataElement = driver.findElement(By.id("aggregatedObjectContent"));
         return aggregatedResultDataElement.getAttribute("textContent").replaceAll("[\\n ]", "");
     }
