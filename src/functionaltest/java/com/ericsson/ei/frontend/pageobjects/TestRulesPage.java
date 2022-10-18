@@ -56,7 +56,6 @@ public class TestRulesPage extends PageBaseClass {
                 ExpectedConditions.elementToBeClickable(By.className("download_rules_template")));
         WebElement downloadRulesTemplateButton = driver.findElement(By.className("download_rules_template"));
         downloadRulesTemplateButton.click();
-        
     }
 
     public void clickDownloadEventsTemplate() throws IOException {
@@ -82,14 +81,13 @@ public class TestRulesPage extends PageBaseClass {
 
     public String getFirstRuleText() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Rule2")));
-        WebElement textArea = driver.findElement(By.className("formRules"));
-       
+        WebElement textArea = driver.findElementsByClassName("formRules").get(0);
         return textArea.getText().replaceAll("[\\n ]", "");
     }
 
     public String getFirstEventText() {
         new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("Events2")));
-        WebElement textArea = driver.findElement(By.className("formEvents"));
+        WebElement textArea = driver.findElementsByClassName("formEvents").get(0);
         return textArea.getText().replaceAll("[\\n ]", "");
     }
 

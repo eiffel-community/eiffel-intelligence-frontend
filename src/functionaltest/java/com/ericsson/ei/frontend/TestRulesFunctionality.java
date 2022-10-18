@@ -152,3 +152,4 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
         driver.executeScript("$('button.btn').prop(\"disabled\", false);");
     }
 }
+

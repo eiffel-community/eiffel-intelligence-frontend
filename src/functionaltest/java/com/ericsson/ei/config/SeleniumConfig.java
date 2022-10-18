@@ -82,9 +82,11 @@ public class SeleniumConfig {
 
         LOGGER.debug("Downloading and extracting new Firefox binary.");
         final String firefoxTarFileUrl = getFirefoxTarFileUrl();
+
         String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxTarFileUrl);
         String firefoxTarFilePath = String.join(
                 File.separator, firefoxPath, firefoxBZip2FileNameLinux);
+
         Utils.downloadFileFromUrlToDestination(firefoxTarFileUrl, firefoxTarFilePath);
         Utils.extractBZip2InDir(firefoxTarFilePath, firefoxPath);
         Utils.makeBinFileExecutable(firefoxBinaryFilePath);
@@ -108,8 +110,10 @@ public class SeleniumConfig {
         final String propertiesFilePath = String.join(
                 File.separator, propertiesPath, propertiesFile);
         final Properties properties = Utils.getProperties(propertiesFilePath);
+
         final String firefoxTarFileUrl = properties.getProperty(
                 "test.selenium.firefox.TarFile.url.linux");
+
         if (StringUtils.isEmpty(firefoxTarFileUrl)) {
             final String message = "Failed to load firefox binary URL from properties.";
             LOGGER.error(message);
