@@ -96,4 +96,3 @@ public class IndexPage extends PageBaseClass {
         return infoPage;
     }
 }
-
