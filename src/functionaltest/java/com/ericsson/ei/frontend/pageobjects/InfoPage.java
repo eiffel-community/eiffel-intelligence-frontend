@@ -1,5 +1,7 @@
 package com.ericsson.ei.frontend.pageobjects;
 
+import java.time.Duration;
+
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,7 +15,7 @@ public class InfoPage extends PageBaseClass {
     }
 
     public String getConnectedBackend() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id("connectedBackend")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id("connectedBackend")));
         WebElement connectedBackendTextBox = driver.findElement(By.id("connectedBackend"));
         return connectedBackendTextBox.getText();
     }

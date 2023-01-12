@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.openqa.selenium.By;
@@ -39,7 +40,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean presenceOfHeader(String loc) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
             return true;
         } catch (TimeoutException e) {
             return false;
@@ -93,21 +94,21 @@ public class SubscriptionPage extends PageBaseClass {
     public void clickBulkDelete() throws IOException {
         clickButtonById(BULK_DELETE_BUTTON_ID);
         // Click confirm button to confirm delete
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                 ExpectedConditions.elementToBeClickable(By.cssSelector(".confirm-delete .modal-footer .btn-danger")));
         WebElement confirmBtn = driver.findElement(By.cssSelector(".confirm-delete .modal-footer .btn-danger"));
         confirmBtn.click();
     }
 
     public void clickButtonById(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                 ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement button = driver.findElement(By.id(id));
         button.click();
     }
 
     public void clickFormCloseBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.className(CLOSE_BUTTON_CLASS_NAME)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.className(CLOSE_BUTTON_CLASS_NAME)));
         WebElement formCloseButton = driver.findElement(By.className(CLOSE_BUTTON_CLASS_NAME));
         formCloseButton.click();
     }
@@ -117,53 +118,53 @@ public class SubscriptionPage extends PageBaseClass {
      */
 
     public void selectDropdown(String loc, String value) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
         WebElement selectEle = driver.findElement(By.id(loc));
         Select dropdown = new Select(selectEle);
         dropdown.selectByVisibleText(value);
     }
 
     public boolean isRadioCheckboxSelected(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement checkbox = driver.findElement(By.id(id));
         boolean radioBtnIsSelected = checkbox.isSelected();
         return radioBtnIsSelected;
     }
 
     public boolean isCheckboxSelected(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
         WebElement checkbox = driver.findElement(By.id(id));
         boolean isSelected = checkbox.isSelected();
         return isSelected;
     }
 
     public void clickSpanAroundCheckbox(String id, String spanId) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.presenceOfElementLocated(By.id(spanId)));
 
         WebElement checkbox = driver.findElement(By.id(id));
         WebElement span = driver.findElement(By.id(spanId));
 
         span.click();
 
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementSelectionStateToBe(checkbox, true));
     }
 
     public String getValueFromElement(String id) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(id)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id(id)));
         WebElement metaTxt = driver.findElement(By.id(id));
         return metaTxt.getAttribute("value");
     }
 
     public void addFieldValue(String loc, String value) {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id(loc)));
         WebElement ele = driver.findElement(By.id(loc));
         ele.clear();
         ele.sendKeys(value);
     }
 
     public void clickUploadSubscriptionFunctionality(String filePath) throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                 ExpectedConditions.presenceOfElementLocated(By.id("upload_sub")));
         WebElement uploadInputField = driver.findElement(By.id("upload_sub"));
         uploadInputField.sendKeys(filePath);
@@ -179,7 +180,7 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public String getSubscriptionNameFromSubscription() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                 ExpectedConditions.elementToBeClickable(By.xpath("//tr[@class='odd']/td[3]")));
         WebElement subscriptionNameElement = driver.findElement(By.xpath("//tr[@class='odd']/td[3]"));
         return subscriptionNameElement.getText();
@@ -187,7 +188,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean expandButtonExist(String XPath) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath(XPath)));
         } catch (Exception e) {
             return false;
         }
@@ -200,14 +201,14 @@ public class SubscriptionPage extends PageBaseClass {
         String findInRow;
         try {
             findInRow = "[2]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                     ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
             return true;
         } catch (Exception e) {
         }
         try {
             findInRow = "[1]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                     ExpectedConditions.elementToBeClickable(By.xpath(XPath + findInRow)));
             return true;
         } catch (Exception e) {
@@ -217,7 +218,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean buttonDisabledByXPath(String XPath) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                     ExpectedConditions.presenceOfElementLocated(By.xpath(XPath)));
             WebElement element = driver.findElement(By.xpath(XPath));
             return !element.isEnabled();
@@ -228,7 +229,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean textExistsInTable(String txt) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                     ExpectedConditions.elementToBeClickable(By.xpath("//tr[td[contains(.,'" + txt + "')]]")));
         } catch (Exception e) {
             return false;
@@ -238,7 +239,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean textDoesNotExistsInTable(String txt) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
                     ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[contains(.,'" + txt + "')]]")));
         } catch (Exception e) {
             return false;
@@ -249,7 +250,7 @@ public class SubscriptionPage extends PageBaseClass {
     public boolean clickExpandButtonByXPath(String loc) {
         try {
             if (expandButtonExist(loc)) {
-                new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
+                new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath(loc)));
                 driver.findElement(By.xpath(loc))
                       .click();
             } else {
@@ -272,7 +273,7 @@ public class SubscriptionPage extends PageBaseClass {
         // next row.
         try {
             String Xpath2 = XPath + "[2]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath2)));
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath2)));
             driver.findElement(By.xpath(Xpath2))
                   .click();
             return;
@@ -280,7 +281,7 @@ public class SubscriptionPage extends PageBaseClass {
         }
         try {
             String Xpath1 = XPath + "[1]";
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath1)));
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath(Xpath1)));
             driver.findElement(By.xpath(Xpath1))
                   .click();
             return;
@@ -290,7 +291,7 @@ public class SubscriptionPage extends PageBaseClass {
 
     public boolean noPresenceOfHeader(String loc) {
         try {
-            new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.invisibilityOfElementLocated(By.id(loc)));
+            new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.invisibilityOfElementLocated(By.id(loc)));
             return true;
         } catch (TimeoutException e) {
             return false;
