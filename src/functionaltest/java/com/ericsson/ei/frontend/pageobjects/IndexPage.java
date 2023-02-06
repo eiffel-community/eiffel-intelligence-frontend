@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -41,7 +42,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public TestRulesPage clickTestRulesPage() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#test-rules']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#test-rules']")));
         WebElement testRulesBtn = driver.findElement(By.xpath("//a[@href='#test-rules']"));
         testRulesBtn.click();
         TestRulesPage testRulesPage = new TestRulesPage(mockedHttpClient, driver, baseUrl);
@@ -50,7 +51,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public SubscriptionPage clickSubscriptionPage() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#subscriptions']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#subscriptions']")));
         WebElement subscriptionBtn = driver.findElement(By.xpath("//a[@href='#subscriptions']"));
         subscriptionBtn.click();
         SubscriptionPage subscriptionPage = new SubscriptionPage(mockedHttpClient, driver, baseUrl);
@@ -64,7 +65,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public SwitchBackendPage clickSwitchBackendInstanceBtn() throws IOException {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#switch-backend']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#switch-backend']")));
         WebElement switchBackendBtn = driver.findElement(By.xpath("//a[@href='#switch-backend']"));
         switchBackendBtn.click();
         SwitchBackendPage switchBackendPage = new SwitchBackendPage(mockedHttpClient, driver, baseUrl);
@@ -73,13 +74,13 @@ public class IndexPage extends PageBaseClass {
     }
 
     public void clickEiInfoBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#ei-info']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#ei-info']")));
         WebElement eiffelInfoBtn = driver.findElement(By.xpath("//a[@href='#ei-info']"));
         eiffelInfoBtn.click();
     }
 
     public InfoPage clickInformationBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#information']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#information']")));
         WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#information']"));
         eiInfoBtn.click();
         InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);
@@ -88,7 +89,7 @@ public class IndexPage extends PageBaseClass {
     }
 
     public InfoPage clickRulesBtn() {
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#rules']")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='#rules']")));
         WebElement eiInfoBtn = driver.findElement(By.xpath("//a[@href='#rules']"));
         eiInfoBtn.click();
         InfoPage infoPage = new InfoPage(mockedHttpClient, driver, baseUrl);

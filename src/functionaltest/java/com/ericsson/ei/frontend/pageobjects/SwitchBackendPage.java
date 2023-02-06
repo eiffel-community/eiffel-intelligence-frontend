@@ -1,6 +1,7 @@
 package com.ericsson.ei.frontend.pageobjects;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -26,19 +27,19 @@ public class SwitchBackendPage extends PageBaseClass {
     }
 
     public Object getInstanceNameAtPosition(int position) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("BackendInstance" + position + "Name")));
         WebElement backendInstanceNameElement = driver.findElement(By.id("BackendInstance" + position + "Name"));
         return backendInstanceNameElement.getText();
     }
 
     public void switchToBackendInstance(int backendNumber) {
-        new WebDriverWait(driver, TIMEOUT_TIMER)
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER))
                 .until(ExpectedConditions.elementToBeClickable(By.id("SelectBackendInstance" + backendNumber)));
         WebElement selectBox = driver.findElement(By.id("SelectBackendInstance" + backendNumber));
         selectBox.click();
 
-        new WebDriverWait(driver, TIMEOUT_TIMER).until(ExpectedConditions.elementToBeClickable(By.id("switcher")));
+        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(ExpectedConditions.elementToBeClickable(By.id("switcher")));
         WebElement switcher = driver.findElement(By.id("switcher"));
         switcher.click();
         waitForJQueryToLoad();
