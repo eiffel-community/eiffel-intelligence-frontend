@@ -19,7 +19,7 @@ jobs:
   unitAndFunctionalTests:    
     if: github.repository == 'eiffel-community/eiffel-intelligence-frontend'
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env: 
       EI_BACKEND_PORT: 8099
       M2_HOME: /opt/apache-maven-3.6.3
@@ -52,7 +52,7 @@ jobs:
   integrationTests:
     if: github.repository == 'eiffel-community/eiffel-intelligence-frontend'
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env: 
       EI_BACKEND_PORT: 8099
       M2_HOME: /opt/apache-maven-3.6.3
@@ -105,7 +105,7 @@ jobs:
   reportCoverage:
     if: github.repository == 'eiffel-community/eiffel-intelligence-frontend' && github.event_name == 'push'
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env: 
       EI_BACKEND_PORT: 8099
       M2_HOME: /opt/apache-maven-3.6.3
