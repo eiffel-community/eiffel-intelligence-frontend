@@ -22,7 +22,7 @@ export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:3.0.0"
 export MONGODB_PORT=27017
 export RABBITMQ_AMQP_PORT=5672
 export RABBITMQ_WEB_PORT=15672
-export EIFFEL_ER_PORT=8084
+export EIFFEL_ER_PORT=8083
 export EIFFEL_ER_INTERNAL_PORT=8080
 
 export JENKINS_PORT=8082
