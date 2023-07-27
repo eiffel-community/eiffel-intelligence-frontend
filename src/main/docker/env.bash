@@ -13,7 +13,7 @@ export EIFFEL_ER_IMAGE="eiffelericsson/eiffel-er:0.0.67"
 export MAILSERVER_IMAGE="mailhog/mailhog"
 export REMREM_GENERATE_IMAGE="eiffelericsson/eiffel-remrem-generate:2.0.4"
 export REMREM_PUBLISH_IMAGE="eiffelericsson/eiffel-remrem-publish:2.0.2"
-export JENKINS_IMAGE="jenkins/jenkins:2.332.2-lts"
+export JENKINS_IMAGE="jenkins/jenkins:2.346.1-lts"
 export LDAP_IMAGE="osixia/openldap:1.2.4"
 
 export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:3.0.0"
@@ -22,7 +22,7 @@ export EI_FRONTEND_IMAGE="eiffelericsson/eiffel-intelligence-frontend:3.0.0"
 export MONGODB_PORT=27017
 export RABBITMQ_AMQP_PORT=5672
 export RABBITMQ_WEB_PORT=15672
-export EIFFEL_ER_PORT=8084
+export EIFFEL_ER_PORT=8083
 export EIFFEL_ER_INTERNAL_PORT=8080
 
 export JENKINS_PORT=8082
