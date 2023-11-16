@@ -112,6 +112,7 @@ public class EIRequestsController {
         }
         String requestBody = "";
 
+
         try {
             // Replaces \r with nothing in case system is run on windows \r may disturb
             // tests. \r does not affect EI functionality.
@@ -119,11 +120,12 @@ public class EIRequestsController {
                                          .lines()
                                          .collect(Collectors.joining(System.lineSeparator()))
                                          .replaceAll("(\\r)", "");
+
         } catch (IOException e) {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody);
+        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody.replaceAll("\"password\":\"[^\"]*\"", "\"password\":\"\""));
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
@@ -167,7 +169,7 @@ public class EIRequestsController {
             LOG.error("Forward Request Errors: " + e);
         }
 
-        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody);
+        LOG.debug("Input request JSON content to be forwarded:\n" + requestBody.replaceAll("\"password\":\"[^\"]*\"", "\"password\":\"\""));
 
         HttpEntity inputReqJsonEntity = new ByteArrayEntity(requestBody.getBytes());
 
