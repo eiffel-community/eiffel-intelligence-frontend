@@ -13,7 +13,7 @@ export EIFFEL_ER_IMAGE="eiffelericsson/eiffel-er:0.0.67"
 export MAILSERVER_IMAGE="mailhog/mailhog"
 export REMREM_GENERATE_IMAGE="eiffelericsson/eiffel-remrem-generate:2.0.4"
 export REMREM_PUBLISH_IMAGE="eiffelericsson/eiffel-remrem-publish:2.0.2"
-export JENKINS_IMAGE="jenkins/2.361.4-lts-jdk17"
+export JENKINS_IMAGE="jenkins/jenkins:2.361.4-lts-jdk17"
 export LDAP_IMAGE="osixia/openldap:1.2.4"
 
 export EI_BACKEND_IMAGE="eiffelericsson/eiffel-intelligence-backend:3.0.0"
