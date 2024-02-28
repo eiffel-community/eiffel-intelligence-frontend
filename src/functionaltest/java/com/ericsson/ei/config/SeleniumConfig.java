@@ -41,8 +41,9 @@ public class SeleniumConfig {
         firefoxOptions.addPreference("browser.helperApps.neverAsk.saveToDisk", "application/json");
 
         if (SystemUtils.IS_OS_LINUX) {
-            FirefoxBinary firefoxBinary = getFirefoxBinary();
-            firefoxOptions.setBinary(firefoxBinary);
+            //setting up in github actions 
+            /*FirefoxBinary firefoxBinary = getFirefoxBinary();
+            firefoxOptions.setBinary(firefoxBinary);*/
 
             System.setProperty("webdriver.gecko.driver",
                     "src/functionaltest/resources/geckodriver");
