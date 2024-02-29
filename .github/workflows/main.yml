@@ -73,15 +73,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       # Run before every job
-      - name: Install Java
-        run: |
-          sudo apt-get update 
-          sudo apt-get install -y openjdk-8-jdk 
-          java -version 
-          uname -a 
-          chmod +x pom.xml 
-          mvn --version
-          
+      
       - name: Install Maven
         shell: bash
         run: |  
