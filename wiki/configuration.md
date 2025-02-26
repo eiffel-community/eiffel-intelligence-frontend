@@ -62,6 +62,7 @@ Set the below properties to enable Microsoft EntraId SSO and Multi-factor authen
     spring.cloud.azure.active-directory.credential.client-secret=<Your Azure App Secret>    # The client secret for your Azure application.
     spring.cloud.azure.active-directory.redirect-uri=<Redirect URI>    # The redirect URI configured in your Azure application.
     spring.cloud.azure.active-directory.profile.tenant-id=<Your Tenant ID>    # The tenant ID of your Microsoft Entra ID instance.
+    spring.cloud.azure.active-directory.api-scope=<Application ID URI>    # The Application ID URI of your Microsoft Entra ID instance.
 
 ### Example values for Entra Id
 
@@ -70,6 +71,7 @@ Set the below properties to enable Microsoft EntraId SSO and Multi-factor authen
     spring.cloud.azure.active-directory.credential.client-secret=abcdef1234567890abcdef1234567890
     spring.cloud.azure.active-directory.redirect-uri=http://localhost:8080/login/oauth2/code/
     spring.cloud.azure.active-directory.profile.tenant-id=12345678-90ab-cdef-1234-567890abcdef
+    spring.cloud.azure.active-directory.api-scope=api://12345678-90ab-cdef-1234-567890abcdef/.default
 
 ## Customize Documentation Links
 It is possible to add and change Documentation url links that is seen in the Eiffel 
