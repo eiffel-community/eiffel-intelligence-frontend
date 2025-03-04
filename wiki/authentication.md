@@ -45,7 +45,7 @@ Example of full response
     < Date: Mon, 03 Mar 2025 04:37:49 GMT
     < 
     * Connection #0 to host localhost left intact
-    {"user":"zvinkal"}
+    {"user":"myuser"}
 
 ## Step 2: Making API Requests with Tokens
 
@@ -65,6 +65,6 @@ For all APIs include the `Authorization` header with the `azure-token`.
         -H "X-Auth-Token: <xauth-token>" -H "Authorization: Bearer <azure-token> \
         http://localhost:8080/subscriptions
 
-**More information about how to make API Requests can be found [here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/curl-examples.md).**
+**More information about how to make API Requests can be found [here](https://github.com/eiffel-community/eiffel-intelligence-frontend/blob/master/wiki/curl-examples.md).**
 
 
