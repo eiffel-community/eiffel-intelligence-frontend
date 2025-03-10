@@ -32,7 +32,7 @@ public class SecurityConfigAzureAD extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/authentication/*").permitAll()
+            .antMatchers("/authentication/*","/status").permitAll()
             .anyRequest().authenticated()
             .and()
             .oauth2Login()  // Enable Azure MFA for H2M

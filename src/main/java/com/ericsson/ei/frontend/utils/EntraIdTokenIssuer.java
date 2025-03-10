@@ -22,17 +22,18 @@ public class EntraIdTokenIssuer {
     @Value("${spring.cloud.azure.active-directory.api-scope}")
     private String scope;
 
-    // This method now returns a plain string containing the token
+    /**
+     * Retrieves an access token for the configured Azure AD scope.
+     * @return the access token as a string
+     * @throws RuntimeException if token retrieval fails
+     */
     public String getAccessToken() {
-        try {
             // Build the ClientSecretCredential using Spring's property values
             TokenCredential clientSecretCredential = new ClientSecretCredentialBuilder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .tenantId(tenantId)
-                .authorityHost("https://login.microsoftonline.com")
                 .build();
-
             // Get the token using the scope defined (default is ".default")
             String token = clientSecretCredential
                 .getToken(new TokenRequestContext().addScopes(scope))
@@ -41,9 +42,5 @@ public class EntraIdTokenIssuer {
 
             // Return the token string
             return token;
-        } catch (Exception e) {
-            // In case of error, return the error message as string
-            return "Error: " + e.getMessage();
-        }
     }
 }
