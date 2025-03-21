@@ -38,6 +38,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,16 +51,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
 import com.ericsson.ei.frontend.utils.EIRequestsControllerUtils;
+import com.ericsson.ei.frontend.utils.EntraIdTokenIssuer;
 
 @RestController
 public class EIRequestsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EIRequestsController.class);
     private static final String X_AUTH_TOKEN = "x-auth-token";
+    private static final String AZURE_TOKEN = "azure-token";
     List<String> HEADERS_TO_COPY = new ArrayList<>(Arrays.asList(X_AUTH_TOKEN, "authorization"));
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
+    @Autowired
+    private EntraIdTokenIssuer entraIdTokenIssuer;
+    @Value("${spring.cloud.azure.active-directory.enabled}")
+    private Boolean azureEnabled;
 
     /**
      * Bridge all Eiffel Intelligence HTTP GET requests.
@@ -280,6 +287,9 @@ public class EIRequestsController {
             if (headerShouldBeCopied) {
                 headerNameList.add(header.getName());
                 headers.add(header.getName(), header.getValue());
+                if (azureEnabled) {
+                    headers.add(AZURE_TOKEN, entraIdTokenIssuer.getAccessToken());
+                }
             } else {
                 notCopiedHeaderNameList.add(header.getName());
             }
