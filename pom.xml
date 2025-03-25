@@ -214,7 +214,7 @@
         <dependency>
             <groupId>com.github.eiffel-community</groupId>
             <artifactId>eiffel-commons</artifactId>
-            <version>0.0.12</version>
+            <version>0.0.15-openjdk-8</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
