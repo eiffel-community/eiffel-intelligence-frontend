@@ -142,7 +142,7 @@ jobs:
       - name: Run jacoco report
         shell: bash
         run: |
-          mvn jacoco:prepare-agent test jacoco:report -B
+          mvn -U -V -B clean test jacoco:report -Dformats=xml
           
       # Generating test coverage report and publishing to Codacy
       - name: Run report coverage
