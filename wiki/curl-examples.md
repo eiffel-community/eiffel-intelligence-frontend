@@ -9,9 +9,11 @@ The front-end may also be used by other tools such as CURL or any kind of progra
 requests. Below are some examples of using CURL towards different endpoints, together with example 
 responses. Most endpoints are also documented in the [Eiffel Intelligence back-end repository](https://github.com/eiffel-community/eiffel-intelligence/tree/master/wiki)
 
+**Note**: Please include required authentication tokens in headers only when authentication is enabled. If no authentication is used then need not require any authentication token while making Api requests. 
+
 **Note**: If you have multiple url parameters, you need to add quotation mark around the entire query. For example:
 
-    curl -X GET "http://localhost:8080/endpoint?varible1=1&varible2=2"
+    curl -X GET -H "Authorization: Bearer <azure-token> "http://localhost:8080/endpoint?varible1=1&varible2=2"
 
 ### Quick Access to Endpoints:
 * [/authentication](#authentication)
@@ -34,12 +36,12 @@ An example of a way to add such parameter is exemplified below, note that the "?
 parameters has been added to the front-end url.`localhost:8080` is the front-end url, and we want to 
 access the context path /authentication but on URL `http://127.0.0.1:8090/` that is the back-end we wish to use.
 
-    curl -X GET http://localhost:8080/authentication?backendurl="http://127.0.0.1:8090/"
+    curl -X GET -H "Authorization: Bearer <azure-token> http://localhost:8080/authentication?backendurl="http://127.0.0.1:8090/"
 
 Example with Eiffel Intelligence front-end deployed with Tomcat, and the 
 context path /eifrontend/:
 
-    curl -X GET http://localhost:8080/eifrontend/authentication?backendurl="http://127.0.0.1:8090/eibackend/"
+    curl -X GET -H "Authorization: Bearer <azure-token> http://localhost:8080/eifrontend/authentication?backendurl="http://127.0.0.1:8090/eibackend/"
 
 This way of entering the `backendurl` may be the easiest way. It works with all CRUD operations. 
 
@@ -104,7 +106,7 @@ More information and examples can be found in the [EI back-end documentation](ht
 #### Curl Examples
 This command would return a JSON object containing the status of the back-end and servers back-end is dependent on..
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/status
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> http://localhost:8080/status
 
 ## <a id="backends" /> /backends
 
@@ -134,13 +136,13 @@ when making a HTTP request to the front-end the default back-end will be used. I
 list of back-ends and see if there is a default back-end set, you may use the command:
 
 ###### Example GET Request Using Curl
-    curl -X GET http://*front-end-url*/*context-path-if-any*/backends
+    curl -X GET -H "Authorization: Bearer <azure-token> http://*front-end-url*/*context-path-if-any*/backends
 
 ###### Example GET Request Using Curl with Context Path
-    curl -X GET http://localhost:8080/eifrontend/backends
+    curl -X GET -H "Authorization: Bearer <azure-token> http://localhost:8080/eifrontend/backends
 
 ###### Example GET Request Using Curl with Eiffel Intelligence Default Settings
-    curl -X GET http://localhost:8080/backends
+    curl -X GET -H "Authorization: Bearer <azure-token> http://localhost:8080/backends
 
 The default back-end should have the key `defaultBackend` set to `true`. If the JSON list ends up 
 empty there are no back-ends specified in the front-end. If there is no JSON object with the key set 
@@ -209,16 +211,16 @@ The Eiffel Intelligence front-end supports these endpoints. More information can
 
 This command would return a list of rules.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/templates/rules
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> http://localhost:8080/templates/rules
 
 This command returns a list of predefined template events.
 
-    curl -X GET -H "Content-type: application/json" http://localhost:8080/templates/events
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> http://localhost:8080/templates/events
 
 This command returns a list of several subscriptions. It is also possible to specify a file in which 
 to save the downloaded objects to.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/templates/subscriptions --output myFile.json
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> localhost:8080/templates/subscriptions --output myFile.json
 
 ## <a id="information" />/information
 
@@ -238,7 +240,7 @@ to save the downloaded objects to.
 This endpoint support `GET` requests, which returns information about EI back-end and connected components.
 The response is a json object containing all the connected components and data about them.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/information
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> localhost:8080/information
 
 ## <a id="aggregated-objects" />/aggregated-objects
 
@@ -309,7 +311,7 @@ For these endpoints to be reachable the Eiffel Intelligence back-end
 with `test.aggregation.enabled: true`. The below command would result in a
 json response of `{"status":true}` if this functionality is enabled.
 
-    curl -X GET -H "Content-type: application/json" localhost:8080/rule-test
+    curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer <azure-token> localhost:8080/rule-test
 
 Example curl commands to these endpoints [can be found here](https://github.com/eiffel-community/eiffel-intelligence/blob/master/wiki/running-rules-on-objects.md)
 
@@ -376,12 +378,13 @@ More information, and examples, on the `/subscriptions` API can be found in the
 A `POST` request with subscriptions in a file may look as the following example.
 
     curl -X POST -d @file_containing_list_of_json_objects -H "Content-Type: application/json" \
+        -H "X-Auth-Token: <xauth-token>" -H "Authorization: Bearer <azure-token> \
         http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 
 Here is an example using this endpoint and the result it gives if template subscriptions exists.
 The `backendurl` parameters is passed in to use a specified instance instead of the default back-end instance.
 
-    curl -X GET http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
+    curl -X GET -H "Authorization: Bearer <azure-token> http://localhost:8080/subscriptions?backendurl="http://127.0.0.1:8090/"
 
 The front-end used is running on localhost and port 8080. EI front-end forwards the request to 127.0.0.1 
 and port 8090 as requested in the query parameters and the result is a list of existing subscriptions:
