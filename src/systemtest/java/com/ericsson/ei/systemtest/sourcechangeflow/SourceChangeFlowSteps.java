@@ -1,22 +1,24 @@
 package com.ericsson.ei.systemtest.sourcechangeflow;
 
-import com.ericsson.ei.systemtest.utils.Config;
-import com.ericsson.ei.systemtest.utils.PropertiesHandler;
-import com.ericsson.ei.systemtest.utils.StepsUtils;
-import com.ericsson.eiffelcommons.utils.ResponseEntity;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ericsson.ei.systemtest.utils.Config;
+import com.ericsson.ei.systemtest.utils.PropertiesHandler;
+import com.ericsson.ei.systemtest.utils.StepsUtils;
+import com.ericsson.eiffelcommons.http.ResponseEntity;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 @Ignore
 public class SourceChangeFlowSteps extends AbstractTestExecutionListener {

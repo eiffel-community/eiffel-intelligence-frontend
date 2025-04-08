@@ -12,7 +12,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 import com.ericsson.ei.systemtest.utils.Config;
 import com.ericsson.ei.systemtest.utils.PropertiesHandler;
 import com.ericsson.ei.systemtest.utils.StepsUtils;
-import com.ericsson.eiffelcommons.utils.ResponseEntity;
+import com.ericsson.eiffelcommons.http.ResponseEntity;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
