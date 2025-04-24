@@ -24,7 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ericsson.ei.frontend.utils.WebControllerUtils;
-import com.ericsson.eiffelcommons.helpers.RegExProvider;
+import com.ericsson.eiffelcommons.constants.RegExProvider;
 
 @Controller
 public class WebController {

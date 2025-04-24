@@ -29,9 +29,9 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import com.ericsson.ei.utils.AMQPCommunication;
-import com.ericsson.eiffelcommons.utils.HttpRequest;
-import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
-import com.ericsson.eiffelcommons.utils.ResponseEntity;
+import com.ericsson.eiffelcommons.http.HttpRequest;
+import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.http.ResponseEntity;
 
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -121,7 +121,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
 
     @When("^param key \'(.*)\' with value \'(.*)\' is added$")
     public void add_param(String key, String value) throws Throwable {
-        httpRequest.addParam(key, value);
+        httpRequest.addParameter(key, value);
     }
 
     @When("^body is set to file \'(.*)\'$")
