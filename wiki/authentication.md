@@ -47,6 +47,8 @@ Example of full response
     * Connection #0 to host localhost left intact
     {"user":"myuser"}
 
+**Note**: The `azure-token` is valid for 1 hour, after which it expires. Your application should re-authenticate at the `/authentication/login` endpoint to obtain a new token as needed.  
+
 ## Step 2: Making API Requests with Tokens
 
 Once you have obtained the tokens, include them in your API requests as follows:
