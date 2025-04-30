@@ -18,12 +18,12 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ericsson.eiffelcommons.JenkinsManager;
-import com.ericsson.eiffelcommons.helpers.JenkinsXmlData;
+import com.ericsson.eiffelcommons.jenkins.JenkinsManager;
+import com.ericsson.eiffelcommons.jenkins.JenkinsXmlData;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
-import com.ericsson.eiffelcommons.utils.HttpRequest;
-import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
-import com.ericsson.eiffelcommons.utils.ResponseEntity;
+import com.ericsson.eiffelcommons.http.HttpRequest;
+import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.http.ResponseEntity;
 
 public class StepsUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepsUtils.class);
@@ -176,7 +176,7 @@ public class StepsUtils {
             .setBaseUrl(frontendBaseUrl)
             .setEndpoint("/subscriptions")
             .addHeader("Content-Type", "application/json")
-            .addParam("backendurl", backendBaseUrl)
+            .addParameter("backendurl", backendBaseUrl)
             .setBody(subscription.getAsSubscriptions().toString())
             .performRequest();
 
@@ -282,7 +282,7 @@ public class StepsUtils {
         ResponseEntity response = new HttpRequest(HttpMethod.DELETE)
                 .setBaseUrl(frontendBaseUrl)
                 .setEndpoint("/subscriptions/" + subscriptionName)
-                .addParam("backendurl", backendBaseUrl)
+                .addParameter("backendurl", backendBaseUrl)
                 .performRequest();
 
         return response;
