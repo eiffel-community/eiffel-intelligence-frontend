@@ -101,6 +101,7 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickButtonById(String id) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER));
         int attempts = 0;
         while (attempts < 2) {
             try {
