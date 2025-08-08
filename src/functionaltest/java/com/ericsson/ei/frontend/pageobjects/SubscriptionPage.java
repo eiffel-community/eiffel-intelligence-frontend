@@ -101,10 +101,17 @@ public class SubscriptionPage extends PageBaseClass {
     }
 
     public void clickButtonById(String id) {
-        new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_TIMER)).until(
-                ExpectedConditions.elementToBeClickable(By.id(id)));
-        WebElement button = driver.findElement(By.id(id));
-        button.click();
+        int attempts = 0;
+        while (attempts < 2) {
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
+                WebElement button = driver.findElement(By.id(id));
+                button.click();
+                break;
+            } catch (Exception e) {
+                attempts++;
+            }
+        }
     }
 
     public void clickFormCloseBtn() {
