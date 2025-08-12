@@ -47,6 +47,7 @@ jobs:
                    
       - name: Run unit and functional tests
         run: |
+          mvn clean
           mvn test -B
           
           
