@@ -103,9 +103,11 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         setupMockEndpoints(security, username);
         loadAndRefreshSubscriptionPage();
         clickAddSubscriptionAndVerifyFormOpen();
+        Thread.sleep(1000);
         clickFormCancelAndVerifyFormClosed();
         Thread.sleep(1000);
         clickCloneSubscriptionAndVerifyFormOpen();
+        Thread.sleep(1000);
         clickFormCancelAndVerifyFormClosed();
         clickAddSubscriptionAndVerifyFormOpen();
         verifySelectTemplateMail();
