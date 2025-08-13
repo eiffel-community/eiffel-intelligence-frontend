@@ -104,6 +104,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
         loadAndRefreshSubscriptionPage();
         clickAddSubscriptionAndVerifyFormOpen();
         clickFormCancelAndVerifyFormClosed();
+        Thread.sleep(1000);
         clickCloneSubscriptionAndVerifyFormOpen();
         clickFormCancelAndVerifyFormClosed();
         clickAddSubscriptionAndVerifyFormOpen();
