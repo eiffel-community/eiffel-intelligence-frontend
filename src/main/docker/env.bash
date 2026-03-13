@@ -8,7 +8,7 @@ else
 fi
 
 export MONGODB_IMAGE="mongo:latest"
-export RABBITMQ_IMAGE="bitnami/rabbitmq:3.7.8-debian-9"
+export RABBITMQ_IMAGE="rabbitmq:3.13-management"
 export EIFFEL_ER_IMAGE="eiffelericsson/eiffel-er:0.0.67"
 export MAILSERVER_IMAGE="mailhog/mailhog"
 export REMREM_GENERATE_IMAGE="eiffelericsson/eiffel-remrem-generate:2.0.4"

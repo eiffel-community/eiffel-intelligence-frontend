@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -88,7 +88,7 @@ public class EIRequestsController {
             LOG.error("Some failure when forwarding request to EI Backend. "
                     + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
-            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
         HttpGet outgoingRequest = new HttpGet(eiRequestUrl);
 
@@ -115,7 +115,7 @@ public class EIRequestsController {
             LOG.error("Some failure when forwarding request to EI Backend. "
                     + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
-            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
         String requestBody = "";
 
@@ -163,7 +163,7 @@ public class EIRequestsController {
             LOG.error("Some failure when forwarding request to EI Backend. "
                     + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
-            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
         String requestBody = "";
 
@@ -207,7 +207,7 @@ public class EIRequestsController {
             LOG.error("Some failure when forwarding request to EI Backend. "
                     + "Error: " + e.getMessage());
             String response = "{\"message\": \"Internal Error: " + e.getMessage() + "\"}";
-            return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
         HttpDelete outgoingRequest = new HttpDelete(eiRequestUrl);
 

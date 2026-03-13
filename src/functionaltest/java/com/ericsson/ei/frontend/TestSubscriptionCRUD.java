@@ -8,8 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.codec.binary.StringUtils;
+import java.util.Base64;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class TestSubscriptionCRUD extends TestBaseClass {
         subscriptionRequestBody = getJSONStringFromFile(SUBSCRIPTION_FILE_PATH);
 
         String credentials = USERNAME + ":" + PASSWORD;
-        encodedCredentials = StringUtils.newStringUtf8(Base64.encodeBase64(credentials.getBytes()));
+        encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
         responseBodyPost = new JsonParser().parse("{\"msg\": \"Inserted Successfully\"," + "\"statusCode\": 200}").toString();
         responseBodyPut = new JsonParser().parse("{\"msg\": \"Updated Successfully\"," + "\"statusCode\": 200}").toString();
         responseBodyDelete = new JsonParser().parse("{\"msg\": \"Deleted Successfully\"," + "\"statusCode\": 200}").toString();

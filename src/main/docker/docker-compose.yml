@@ -67,8 +67,8 @@ services:
         aliases:
           - rabbitmq
     environment:
-      - RABBITMQ_USERNAME=myuser
-      - RABBITMQ_PASSWORD=myuser
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=myuser
       - RABBITMQ_VHOST=/
 
   eiffel-er:

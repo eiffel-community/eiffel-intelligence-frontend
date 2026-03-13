@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -19,7 +18,6 @@ import com.google.common.io.Files;
 
 public class SeleniumConfig {
     private static final FirefoxDriverLogLevel SELENIUM_LOG_LEVEL = FirefoxDriverLogLevel.ERROR;
-    private static final boolean SELENIUM_HEADLESS = true;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumConfig.class);
 
@@ -32,9 +30,9 @@ public class SeleniumConfig {
 
     public static FirefoxDriver initFirefoxDriver()
             throws PropertiesNotLoadedException, OSNotSupportedException {
-        FirefoxOptions firefoxOptions = new FirefoxOptions()
-                                                            .setHeadless(SELENIUM_HEADLESS)
-                                                            .setLogLevel(SELENIUM_LOG_LEVEL);
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.addArguments("-headless");
+        firefoxOptions.setLogLevel(SELENIUM_LOG_LEVEL);
 
         firefoxOptions.addPreference("browser.download.folderList", 2);
         firefoxOptions.addPreference("browser.download.dir", tempDownloadDirectory.getPath());
@@ -68,31 +66,6 @@ public class SeleniumConfig {
 
     public static String getBaseUrl(int randomServerPort) {
         return "http://localhost:" + randomServerPort;
-    }
-
-    private static FirefoxBinary getFirefoxBinary() {
-        // Firefox binary will be stored in <repository>/target/firefox/firefox/<binary>
-        String firefoxPath = getFirefoxDirPath().getPath();
-        File firefoxBinaryFilePath = new File(
-                String.join(File.separator, firefoxPath, "firefox", "firefox"));
-
-        if (firefoxBinaryFilePath.isFile()) {
-            LOGGER.debug("Reusing existing firefox binary.");
-            return new FirefoxBinary(firefoxBinaryFilePath);
-        }
-
-        LOGGER.debug("Downloading and extracting new Firefox binary.");
-        final String firefoxTarFileUrl = getFirefoxTarFileUrl();
-
-        String firefoxBZip2FileNameLinux = FilenameUtils.getName(firefoxTarFileUrl);
-        String firefoxTarFilePath = String.join(
-                File.separator, firefoxPath, firefoxBZip2FileNameLinux);
-
-        Utils.downloadFileFromUrlToDestination(firefoxTarFileUrl, firefoxTarFilePath);
-        Utils.extractBZip2InDir(firefoxTarFilePath, firefoxPath);
-        Utils.makeBinFileExecutable(firefoxBinaryFilePath);
-
-        return new FirefoxBinary(firefoxBinaryFilePath);
     }
 
     private static File getFirefoxDirPath() {

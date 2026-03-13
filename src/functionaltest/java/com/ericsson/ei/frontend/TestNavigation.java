@@ -5,13 +5,13 @@ import java.io.IOException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.ericsson.ei.frontend.pageobjects.IndexPage;
 
 public class TestNavigation extends SeleniumBaseClass {
 
-    @MockBean
+    @MockitoBean
     protected CloseableHttpClient mockedHttpClient;
 
     private IndexPage indexPage;
