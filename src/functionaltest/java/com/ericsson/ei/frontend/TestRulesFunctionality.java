@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
@@ -44,7 +44,7 @@ public class TestRulesFunctionality extends SeleniumBaseClass {
     private static final String AGGREGATED_OBJECT_FILE_PATH = String.join(File.separator, "src", "functionaltest", "resources", "responses",
             "AggregatedObjectResponse.json");
 
-    @MockBean
+    @MockitoBean
     protected CloseableHttpClient mockedHttpClient;
 
     private TestRulesPage testRulesPage;

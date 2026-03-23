@@ -8,13 +8,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.ericsson.ei.frontend.pageobjects.TestRulesPage;
 
 public class TestAlarm extends SeleniumBaseClass {
 
-    @MockBean
+    @MockitoBean
     protected CloseableHttpClient mockedHttpClient;
 
     private TestRulesPage testRulesPage;

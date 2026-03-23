@@ -1,4 +1,4 @@
-FROM tomcat:8.0-jre8
+FROM tomcat:11.0-jre17
 MAINTAINER Eiffel-Community
 
 ARG URL

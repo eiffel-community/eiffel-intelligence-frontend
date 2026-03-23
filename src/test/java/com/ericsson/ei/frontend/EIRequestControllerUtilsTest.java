@@ -16,16 +16,16 @@ package com.ericsson.ei.frontend;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ericsson.ei.frontend.exceptions.EiBackendInstancesException;
@@ -42,10 +42,10 @@ public class EIRequestControllerUtilsTest {
     @Autowired
     EIRequestsControllerUtils eiRequestsControllerUtils;
 
-    @MockBean
+    @MockitoBean
     private WebControllerUtils controllerUtils;
 
-    @MockBean
+    @MockitoBean
     private BackendInstancesHandler backEndInstancesUtils;
 
     private HttpServletRequest  mockedRequest;

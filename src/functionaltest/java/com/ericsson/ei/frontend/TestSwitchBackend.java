@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.ericsson.ei.frontend.model.BackendInstance;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
@@ -35,7 +35,7 @@ public class TestSwitchBackend extends SeleniumBaseClass {
     private static final String DEFAULT_INSTANCE_SUBSCRIPTION_RESPONSE_FILEPATH = String.join(File.separator, "src", "functionaltest", "resources",
             "responses", "DefaultInstanceSubscriptionResponse.json");
 
-    @MockBean
+    @MockitoBean
     protected CloseableHttpClient mockedHttpClient;
 
     private SwitchBackendPage switchBackendPage;

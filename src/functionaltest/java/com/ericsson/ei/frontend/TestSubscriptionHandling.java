@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.ericsson.ei.config.SeleniumConfig;
 import com.ericsson.ei.frontend.pageobjects.SubscriptionPage;
@@ -66,7 +66,7 @@ public class TestSubscriptionHandling extends SeleniumBaseClass {
 
     private static ClientAndServer clientAndServer;
 
-    @MockBean
+    @MockitoBean
     protected CloseableHttpClient mockedHttpClient;
 
     private SubscriptionPage subscriptionPage;

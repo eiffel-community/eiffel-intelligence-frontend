@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -145,7 +145,7 @@ public class CommonSteps extends AbstractTestExecutionListener {
     @When("^username \"([^\"]*)\" and password \"([^\"]*)\" is used as credentials$")
     public void with_credentials(String username, String password) throws Throwable {
         String auth = username + ":" + password;
-        String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
         httpRequest.addHeader("Authorization", "Basic " + encodedAuth);
     }
 
