@@ -23,7 +23,7 @@
         <output-relative-path>src/main/java</output-relative-path>
         <skipTests>false</skipTests>
         <skipUTs>${skipTests}</skipUTs>
-        <springBootVersion>4.0.4</springBootVersion>
+        <springBootVersion>${project.parent.version}</springBootVersion>
         <forkCountTests>2.5C</forkCountTests>
     </properties>
 
