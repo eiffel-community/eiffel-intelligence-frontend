@@ -153,5 +153,5 @@ jobs:
       - name: Run report coverage
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
-          project-token: 4f71427f28dc44a7b762bb14f21094ea
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: target/site/jacoco/jacoco.xml
