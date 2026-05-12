@@ -63,7 +63,7 @@ public class EIRequestsController {
 
     @Autowired
     private EIRequestsControllerUtils eiRequestsControllerUtils;
-    @Autowired
+    @Autowired(required = false)
     private EntraIdTokenIssuer entraIdTokenIssuer;
     @Value("${spring.cloud.azure.active-directory.enabled}")
     private Boolean azureEnabled;
