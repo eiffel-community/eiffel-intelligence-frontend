@@ -95,6 +95,7 @@ jobs:
           git clone --depth=50 --branch=master https://github.com/eiffel-community/eiffel-intelligence.git
           cd eiffel-intelligence
           chmod +x pom.xml
+          mvn install -DskipTests=true -f openapi/pom.xml -B
           mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
           export EIFFEL_WAR=$(ls target/*.war)
           java -Dspring.config.additional-location=file:../src/integrationtest/resources/integration-test.properties -Dserver.port=${EI_BACKEND_PORT} -jar ${EIFFEL_WAR} &
